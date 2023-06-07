@@ -1,0 +1,96 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger: none
+
+resources:
+  - repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  - name: imageRepository
+    value: 'fdpg-print-frontend'
+  - name: containerRegistry
+    value: 'tmffdpgregistry.azurecr.io'
+  - name: registryServiceConnectionName
+    value: 'tmffdpgregistry_service_connection'
+  - name: dockerfilePath
+    value: '$(Build.SourcesDirectory)/print.Dockerfile'
+  - name: azureSubscription
+    value: 'fdpg_deployment_service_connection'
+  - name: azureResourceGroup
+    value: tmf-fdpg-shared
+  - name: tag
+    value: '$(Build.BuildId)'
+  - name: isMain
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isDev
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
+  - name: pipeDate
+    value: $[format('{0:yyyyMMdd}', pipeline.startTime)]
+  - name: pipeTime
+    value: $[format('{0:HHmmss}', pipeline.startTime)]
+  - name: buildNumberOfDate
+    value: $[counter(format('{0}_{1:yyyyMMdd}', variables['Build.SourceBranch'], pipeline.startTime), 1)]
+
+  # Agent VM image name
+  - name: vmImageName
+    value: 'ubuntu-latest'
+
+stages:
+  - stage: Build
+    displayName: Build and push stage
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+        steps:
+          - script: |
+              npmVersionString=$(node -p "require('./package.json').version")
+              echo "##vso[task.setvariable variable=softwareVersion;isOutput=true]$npmVersionString"
+
+              if [ $(isDev) = True ]; then
+                echo "##vso[task.setvariable variable=tag;isOutput=true]latest"
+                echo "##vso[build.updatebuildnumber]latest_${npmVersionString}_$(pipeDate)_$(buildNumberOfDate)"
+              elif [ $(isMain) = True ]; then
+                echo "##vso[task.setvariable variable=tag;isOutput=true]${npmVersionString}_$(pipeDate)_$(buildNumberOfDate)"
+                echo "##vso[build.updatebuildnumber]${npmVersionString}_$(pipeDate)_$(buildNumberOfDate)"
+              else
+                echo "##vso[task.setvariable variable=tag;isOutput=true]test-latest"
+                echo "##vso[build.updatebuildnumber]test-latest_${npmVersionString}_$(pipeDate)_$(buildNumberOfDate)"
+              fi
+            name: dockerTag
+
+          - template: build.template.yml
+            parameters:
+              ENV: 'print'
+              YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules
+
+
+          - task: Docker@2
+            displayName: Build container
+            inputs:
+              command: 'build'
+              repository: $(imageRepository)
+              dockerfile: $(dockerfilePath)
+              containerRegistry: $(registryServiceConnectionName)
+              tags: |
+                $(dockerTag.tag)
+              arguments: >-
+                --build-arg SOFTWARE_VERSION=$(dockerTag.softwareVersion)
+                --build-arg BUILD_DATE=$(pipeDate)
+                --build-arg BUILD_TIME=$(pipeTime)
+                --build-arg BUILD_NO_OF_DATE=$(buildNumberOfDate)
+                --build-arg SOURCE_BRANCH=$(Build.SourceBranch)
+
+          - task: Docker@2
+            displayName: Push container to registry
+            inputs:
+              command: 'push'
+              repository: $(imageRepository)
+              containerRegistry: $(registryServiceConnectionName)
+              addPipelineData: true
+              tags: |
+                $(dockerTag.tag)

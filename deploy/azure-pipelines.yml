@@ -1,0 +1,68 @@
+name: $(Date:yyyyMMdd)$(Rev:.r)_$(SourceBranchName)
+
+trigger:
+  branches:
+    include:
+      - develop
+      - main
+  paths:
+    exclude:
+      - src/print-module
+
+pool:
+  vmImage: 'ubuntu-latest'
+  demands:
+    - npm
+
+steps:
+  - task: SonarCloudPrepare@1
+    displayName: SonarCloud Prepare
+    inputs:
+      SonarCloud: 'SonarCloud'
+      organization: 'appsfactory'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'TMF-FTDP-Webapp'
+      cliProjectName: 'TMF-FTDP-Webapp'
+      cliSources: './src'
+      extraProperties: |
+        # Additional properties that will be passed to the scanner,
+        # Put one key=value per line, example:
+        # sonar.verbose=true
+        sonar.javascript.lcov.reportPaths=./reports/coverage/lcov.info
+        sonar.exclusions=**/*.spec.ts,**/__mocks__/**,**/test/**,**/*.mock.ts
+
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '18.x'
+    displayName: 'Install Node.js v18'
+
+  - template: unit-test.template.yml
+    parameters:
+      YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules
+
+  - task: SonarCloudAnalyze@1
+    displayName: SonarCloud Analyze
+
+  - task: SonarCloudPublish@1
+    displayName: SonarCloud Publish
+    inputs:
+      pollingTimeoutSec: '300'
+
+  - ${{ if ne(variables['Build.SourceBranchName'], 'main') }}:
+      - template: build-and-publish.template.yml
+        parameters:
+          ENV: 'dev'
+          YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules
+
+  - ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      - template: build-and-publish.template.yml
+        parameters:
+          ENV: 'prelive'
+          YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules
+
+  - ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+      - template: build-and-publish.template.yml
+        parameters:
+          ENV: 'prod'
+          YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules

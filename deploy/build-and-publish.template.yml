@@ -1,0 +1,38 @@
+parameters:
+- name: ENV
+  type: string
+  default: "dev"
+
+- name: YARN_CACHE_FOLDER
+  type: string
+  default: $(Build.SourcesDirectory)/node_modules
+
+steps:
+  - task: Cache@2
+    inputs:
+      key: 'yarn | "$(Agent.OS)" | yarn.lock'
+      restoreKeys: |
+        yarn | "$(Agent.OS)"
+        yarn
+      path: ${{ parameters.YARN_CACHE_FOLDER }}
+      cacheHitVar: CACHE_RESTORED
+    displayName: Cache Yarn packages
+
+  - template: build.template.yml
+    parameters:
+      ENV: ${{ parameters.ENV }}
+      YARN_CACHE_FOLDER: $(Build.SourcesDirectory)/node_modules
+
+  - task: CopyFiles@2
+    inputs:
+      Contents: 'dist/**'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    displayName: 'Copy files to staging directory for env: ${{ parameters.ENV }}'
+
+  - task: PublishBuildArtifacts@1
+    condition: ne(variables['Build.Reason'], 'PullRequest')
+    displayName: 'Publish Artifact for env: ${{ parameters.ENV }}'
+    inputs:
+      PathtoPublish: $(Build.ArtifactStagingDirectory)
+      ArtifactName: 'build_${{ parameters.ENV }} '
+      publishLocation: 'Container'

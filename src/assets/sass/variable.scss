@@ -1,0 +1,51 @@
+$red: #f56c6c;
+$red-100: #e52117;
+$blue: #5a79ae;
+$blue-green: #6f929e;
+$green: #9bb923;
+$green-100: #afc74f;
+$green-400: #90b36f;
+$white: #ffffff;
+$black: #333333;
+$gray-100: #eff2f7;
+$gray-200: #f1f2f3;
+$gray-250: #f2f5f9;
+$gray-300: #f4f4f6;
+$gray-400: #e9eaed;
+$gray-500: #e5e6e9;
+$gray-600: #ced7e7;
+$gray-650: #cfd2d8;
+$gray-700: #c3c7ce;
+$gray-800: #979ea9;
+$gray-900: #6a7484;
+
+// Grid breakpoints
+$xs: 0;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+$xxl: 1400px;
+
+// Body
+//
+// Settings for the <body> element.
+$body-bg: $white;
+$body-color: $gray-900;
+
+// Sidebar
+//
+// Settings for the sidebar component
+$sidebar-z-index: 3;
+$sidebar-width: 261px;
+$sidebar-transition-duration: 700ms;
+
+// Header
+//
+// Settings for the header component
+$header-height: 140px;
+
+// Dashboard layout
+//
+// Settings for the dashboard layout
+$mask-z-index: 2; // must be lower than sidebar-z-index

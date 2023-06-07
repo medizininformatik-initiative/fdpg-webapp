@@ -1,0 +1,24 @@
+/* titillium-web-regular - regular */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 400;
+  src: local(''), url('@/assets/fonts/titillium-web-v14-latin-regular.woff2') format('woff2'),
+    url('@/assets/fonts/titillium-web-v14-latin-regular.woff') format('woff');
+}
+/* titillium-web-600 - semibold */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 600;
+  src: local(''), url('@/assets/fonts/titillium-web-v14-latin-600.woff2') format('woff2'),
+    url('@/assets/fonts/titillium-web-v14-latin-600.woff') format('woff');
+}
+/* titillium-web-700 - bold */
+@font-face {
+  font-family: 'Titillium Web';
+  font-style: normal;
+  font-weight: 700;
+  src: local(''), url('@/assets/fonts/titillium-web-v14-latin-700.woff2') format('woff2'),
+    url('@/assets/fonts/titillium-web-v14-latin-700.woff') format('woff');
+}

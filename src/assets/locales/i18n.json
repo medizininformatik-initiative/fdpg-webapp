@@ -1,0 +1,2678 @@
+{
+  "general": {
+    "noPermissionToViewPage": {
+      "de": "Du hast keine Berechtigung diese Seite zu sehen.",
+      "en": "You don't have permission to view this page"
+    },
+    "goToDashboard": {
+      "de": "Zum Dashboard",
+      "en": "Go to Dashboard"
+    },
+    "approved": {
+      "de": "Genehmigt",
+      "en": "Approved"
+    },
+    "requested": {
+      "de": "Beantragt",
+      "en": "Requested"
+    },
+    "current": {
+      "de": "Laufend",
+      "en": "Current"
+    },
+    "completed": {
+      "de": "Abgeschlossen",
+      "en": "Completed"
+    },
+    "rejected": {
+      "de": "Abgelehnt",
+      "en": "Rejected"
+    },
+    "pending": {
+      "de": "Ausstehend",
+      "en": "Pending"
+    },
+    "create": {
+      "de": "Erstellen",
+      "en": "Create"
+    },
+    "delete": {
+      "de": "Löschen",
+      "en": "Delete"
+    },
+    "cancel": {
+      "de": "Abbrechen",
+      "en": "Cancel"
+    },
+    "edit": {
+      "de": "Bearbeiten",
+      "en": "Edit"
+    },
+    "save": {
+      "de": "Speichern",
+      "en": "Save"
+    },
+    "proposal": {
+      "de": "Antrag",
+      "en": "Proposal"
+    },
+    "contactDetails": {
+      "de": "Kontaktdaten",
+      "en": "Contact Details"
+    },
+    "applicant": {
+      "de": "Antragsteller",
+      "en": "Applicant"
+    },
+    "applicantEmail": {
+      "de": "Kontakt",
+      "en": "Contact"
+    },
+    "requiredField": {
+      "de": "Pflichtfeld!",
+      "en": "Required field!"
+    },
+    "invalidField": {
+      "de": "Fehlerhafte Eingabe!",
+      "en": "Invalid field!"
+    },
+    "oneFieldRequired": {
+      "de": "Eines der beiden Felder muss befüllt werden",
+      "en": "One of the two fields is mandatory"
+    },
+    "maxCharLimit": {
+      "de": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
+      "en": "Exceeding the max character limit of {length}"
+    },
+    "archive": {
+      "de": "Archiv",
+      "en": "Archive"
+    },
+    "info": {
+      "de": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
+      "en": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt"
+    },
+    "submitted": {
+      "de": "Erfolgreich eingereicht",
+      "en": "Successfully submitted"
+    },
+    "savedAsDraft": {
+      "de": "Antrag erfolgreich gespeichert",
+      "en": "Application successfully saved"
+    },
+    "failedSubmit": {
+      "de": "Senden fehlgeschlagen",
+      "en": "Failed to submit"
+    },
+    "view": {
+      "de": "Ansehen",
+      "en": "View"
+    },
+    "genericError": {
+      "de": "Etwas ist schiefgelaufen",
+      "en": "Something went wrong"
+    },
+    "invalidMimetype": {
+      "de": "Das Dateiformat wird leider nicht unterstützt",
+      "en": "The file format is unfortunately not supported"
+    },
+    "locations": {
+      "de": "Standorte",
+      "en": "Locations"
+    },
+    "projectOverview": {
+      "de": "Projektüberblick",
+      "en": "Project Overview"
+    },
+    "titleAndName": {
+      "de": "Name",
+      "en": "Name"
+    },
+    "address": {
+      "de": "Adresse",
+      "en": "Address"
+    },
+    "fileName": {
+      "de": "Dateiname",
+      "en": "Filename"
+    },
+    "userProfile": {
+      "de": "Benutzerprofil",
+      "en": "User Profile"
+    },
+    "userProfilePersonalData": {
+      "de": "Persönliche Daten",
+      "en": "Personal Data"
+    },
+    "userProfileOrganizationData": {
+      "de": "Ihre Organisation",
+      "en": "Your Organization"
+    },
+    "changeOrganizationHint": {
+      "de": "Zum Ändern der Organisation benutzen Sie bitte die Kontaktfunktion",
+      "en": "To change the organization please use the contact function"
+    },
+    "salutation_FEMALE": {
+      "de": "Frau",
+      "en": "Ms"
+    },
+    "salutation_NEUTRAL": {
+      "de": "Neutrale Anrede",
+      "en": "Neutral Salutation"
+    },
+    "salutation_MALE": {
+      "de": "Herr",
+      "en": "Mr"
+    },
+    "salutation": {
+      "de": "Anrede",
+      "en": "Salutation"
+    },
+    "editProfile": {
+      "de": "Profil bearbeiten",
+      "en": "Edit Profile"
+    },
+    "resetPassword": {
+      "de": "Passwort zurücksetzen",
+      "en": "Reset Password"
+    },
+    "editProfileModalTitle": {
+      "de": "Profil bearbeiten",
+      "en": "Edit Profile"
+    },
+    "editProfileModalAction": {
+      "de": "Speichern",
+      "en": "Save"
+    },
+    "resetPasswordModalTitle": {
+      "de": "Möchten Sie wirklich Ihr Passwort zurücksetzen?",
+      "en": "Do you really want to reset your password?"
+    },
+    "resetPasswordModalDescription": {
+      "de": "Zum Zurücksetzen Ihres Passworts wird Ihnen eine Email an die hinterlegte Adresse gesendet. Nachfolgend haben Sie 5 Minuten Zeit auf den Link in der Email zu klicken, um anschließend ein neues Passwort zu setzen. Wenn Sie die Änderungsaufforderung ignorieren oder die Email nicht empfangen werden kann, bleibt ihr aktuelles Passwort erhalten.",
+      "en": "To reset your password, an email will be sent to the address you provided. You will then have 5 minutes to click on the link in the email and then set a new password. If you ignore the change request or the email cannot be received, your current password will be retained."
+    },
+    "resetPasswordModalAction": {
+      "de": "Zurücksetzen",
+      "en": "Reset"
+    },
+    "date": {
+      "de": "Datum",
+      "en": "Date"
+    },
+    "title": {
+      "de": "Titel",
+      "en": "Title"
+    },
+    "applicantId": {
+      "de": "Antragsteller-ID",
+      "en": "Applicant ID"
+    }
+  },
+  "sidebar": {
+    "dashboard": {
+      "de": "Dashboard",
+      "en": "Dashboard"
+    },
+    "contact": {
+      "de": "Kontakt",
+      "en": "Contact"
+    },
+    "privacyNotice": {
+      "de": "Datenschutz",
+      "en": "Privacy"
+    },
+    "terms": {
+      "de": "Nutzungsbedingungen",
+      "en": "TERMS"
+    }
+  },
+  "history": {
+    "PROPOSAL_CREATING": {
+      "de": "Antrag wurde erstellt",
+      "en": "Proposal has been created"
+    },
+    "PROPOSAL_FDPG_CHECK": {
+      "de": "Antrag wurde an FDPG gereicht",
+      "en": "Application was passed to FDPG"
+    },
+    "PROPOSAL_REWORK": {
+      "de": "Antrag wurde zur Überarbeitung an den Wissenschaftler gereicht",
+      "en": "Application was passed back for rework to the researcher"
+    },
+    "PROPOSAL_REJECT": {
+      "de": "Antrag wurde abgelehnt",
+      "en": "Application was rejected"
+    },
+    "PROPOSAL_LOCATION_CHECK": {
+      "de": "Antrag wurde an Standorte gereicht",
+      "en": "Application was handed to locations"
+    },
+    "PROPOSAL_CONTRACTING": {
+      "de": "Antrag wurde zum Vertragsschluss freigeschaltet",
+      "en": "Application has been released for contract conclusion"
+    },
+    "PROPOSAL_DATA_DELIVERY": {
+      "de": "Antrag wurde zum Datenempfang freigeschaltet",
+      "en": "Application has been enabled for data reception"
+    },
+    "PROPOSAL_DATA_CORRUPT": {
+      "de": "Daten wurden als fehlerhaft beanstandet",
+      "en": "Data were objected to as being incorrect"
+    },
+    "PROPOSAL_DATA_RESEARCH": {
+      "de": "Daten wurden übermittelt und die Forschung hat begonnen",
+      "en": "Data has been submitted and research has begun"
+    },
+    "PROPOSAL_FINISHED": {
+      "de": "Forschungsprojekt wurde abgeschlossen",
+      "en": "Research project was completed"
+    },
+    "PROPOSAL_READY_TO_ARCHIVE": {
+      "de": "Forschungsprojekt wurde zum Archivieren freigegeben",
+      "en": "Research project was released for archiving"
+    },
+    "PROPOSAL_ARCHIVED": {
+      "de": "Forschungsprojekt wurde archiviert",
+      "en": "Research project was archived"
+    },
+    "DIZ_VOTE_ACCEPT": {
+      "de": "Forschungsprojekt wurde vom DIZ weitergegeben",
+      "en": "Research project was forwarded by DIZ"
+    },
+    "DIZ_VOTE_DECLINE": {
+      "de": "Forschungsprojekt wurde vom DIZ abelehnt",
+      "en": "Research project was rejected by the DIZ"
+    },
+    "UAC_VOTE_ACCEPT": {
+      "de": "Forschungsprojekt wurde vom UAC genehmigt",
+      "en": "Research project was approved by the UAC"
+    },
+    "UAC_VOTE_CONDITIONAL_ACCEPT": {
+      "de": "Forschungsprojekt wurde vom UAC unter Auflagen genehmigt",
+      "en": "Research project approved by UAC under conditions"
+    },
+    "UAC_VOTE_DECLINE": {
+      "de": "Forschungsprojekt wurde vom UAC abgelehnt",
+      "en": "Research project was rejected by the UAC"
+    },
+    "UAC_CONDITION_ACCEPT": {
+      "de": "UAC Auflagen wurden angenommen",
+      "en": "UAC conditions were accepted"
+    },
+    "UAC_CONDITION_DECLINE": {
+      "de": "UAC Auflagen wurden abgelehnt",
+      "en": "UAC conditions were refused"
+    },
+    "CONTRACT_RESEARCHER_APPROVED": {
+      "de": "Wissenschaftler hat dem Vertrag zugestimmt",
+      "en": "Researcher has agreed to the contract"
+    },
+    "CONTRACT_RESEARCHER_REJECTED": {
+      "de": "Wissenschaftler hat den Vertrag abgelehnt",
+      "en": "Researcher has rejected the contract"
+    },
+    "CONTRACT_LOCATION_APPROVED": {
+      "de": "UAC hat dem Vertrag zugestimmt",
+      "en": "UAC has agreed to the contract"
+    },
+    "CONTRACT_LOCATION_REJECTED": {
+      "de": "UAC hat den Vertrag abgelehnt",
+      "en": "UAC has rejected the contract"
+    },
+    "CONTRACT_SYSTEM_REJECTED": {
+      "de": "Standort wurde durch das Antragsportal ausgeschlossen",
+      "en": "Location was excluded by the portal"
+    },
+    "PROPOSAL_LOCK_TRUE": {
+      "de": "Forschungsprojekt wurde vom FDPG gesperrt",
+      "en": "Research project was locked by FDPG"
+    },
+    "PROPOSAL_LOCK_FALSE": {
+      "de": "Forschungsprojekt wurde vom FDPG entsperrt",
+      "en": "Research project was unlocked by FDPG"
+    }
+  },
+  "header": {
+    "login": {
+      "de": "Anmelden",
+      "en": "Login"
+    },
+    "logout": {
+      "de": "Abmelden",
+      "en": "Logout"
+    },
+    "notLoggedInGreeting": {
+      "de": "Willkommen!",
+      "en": "Welcome!"
+    },
+    "searchForProposalsProjectsScientists": {
+      "de": "Suche nach Anträgen/Projekten/Antragsteller",
+      "en": "Search for proposals/projects/scientists"
+    },
+    "goToProfile": {
+      "de": "Profil",
+      "en": "Profile"
+    },
+    "english": {
+      "de": "EN",
+      "en": "EN"
+    },
+    "german": {
+      "de": "DE",
+      "en": "DE"
+    }
+  },
+  "dashboard": {
+    "researchRequestForDataDelivery": {
+      "de": "Forschungsantrag auf Datenlieferung",
+      "en": "Research request for data delivery"
+    },
+    "makeARequest": {
+      "de": "Antrag stellen",
+      "en": "Make a request"
+    },
+    "checkFeasibilityForDataDelivery": {
+      "de": "Machbarkeit für Datenlieferung prüfen",
+      "en": "Check feasibility for data delivery"
+    },
+    "checkFeasibility": {
+      "de": "Machbarkeit püfen",
+      "en": "Check feasibility"
+    },
+    "draft": {
+      "de": "Entwurf",
+      "en": "Draft"
+    },
+    "ongoing": {
+      "de": "Laufend",
+      "en": "Ongoing"
+    },
+    "completed": {
+      "de": "Abgeschlossen",
+      "en": "Completed"
+    },
+    "requested": {
+      "de": "Beantragt",
+      "en": "Requested"
+    },
+    "projectsAppliedFor": {
+      "de": "Beantragte Projekte",
+      "en": "Projects Applied For"
+    },
+    "xProposals": {
+      "de": "{x} Projektanträge",
+      "en": "{x} Proposals"
+    },
+    "projectOverview": {
+      "de": "Projektübersicht",
+      "en": "Project Overview"
+    },
+    "projects": {
+      "de": "{count} Projekte",
+      "en": "{count} Projects"
+    },
+    "inProcess": {
+      "de": "In Bearbeitung ({count})",
+      "en": "In Process ({count})"
+    },
+    "application": {
+      "de": "Antragstellung",
+      "en": "Application"
+    },
+    "projectAbbreviations": {
+      "de": "Projektkürzel",
+      "en": "Project Abbreviations"
+    },
+    "projectTitle": {
+      "de": "Projekttitel",
+      "en": "Project Title"
+    },
+    "dueDate": {
+      "de": "Fälligkeitsdatum",
+      "en": "Due Date"
+    },
+    "sortBy": {
+      "de": "Sortieren nach",
+      "en": "Sort by"
+    },
+    "pendingContracts": {
+      "de": "Ausstehende Verträge",
+      "en": "Pending contracts"
+    },
+    "xOutstandingProjectContracts": {
+      "de": "{x} ausstehende Projektverträge",
+      "en": "{x} outstanding project contracts"
+    },
+    "forTesting": {
+      "de": "Zur Prüfung",
+      "en": "For testing"
+    },
+    "showMore": {
+      "de": "Mehr anzeigen",
+      "en": "Show more"
+    },
+    "showLess": {
+      "de": "Weniger anzeigen",
+      "en": "Show less"
+    },
+    "showAll": {
+      "de": "Alle anzeigen",
+      "en": "Show all"
+    },
+    "uacVote": {
+      "de": "UAC votum",
+      "en": "UAC vote"
+    },
+    "xDaysLeft": {
+      "de": "Noch {x} Tage",
+      "en": "{x} days left"
+    },
+    "xDaysOverdue": {
+      "de": "{x} Tage überfällig",
+      "en": "{x} days overdue"
+    },
+    "applicationSubmittedXDaysAgo": {
+      "de": "Antragstellung vor {x} Tagen",
+      "en": "Application submitted {x} days ago"
+    },
+    "editedXDaysAgo": {
+      "de": "Bearbeitet vor {x} Tagen",
+      "en": "Edited {x} days ago"
+    },
+    "noRole": {
+      "de": "Es tut uns leid. Derzeit haben Sie keine zugewiesene Rolle und können das Portal noch nicht nutzen. Nach Ihrer Registrierung findet ein manueller Freischaltungsschritt statt. Sie werden informiert, wenn dieser erfolgt ist. Je nach Aufkommen kann dies 1-2 Tage dauern.",
+      "en": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days."
+    },
+    "xOngoingProjectContracts": {
+      "de": "{x} laufende Projektverträge",
+      "en": "{x} ongoing project contracts"
+    },
+    "xCompletedProjectContracts": {
+      "de": "{x} abgeschlossene Projektverträge",
+      "en": "{x} completed project contracts"
+    }
+  },
+  "proposal": {
+    "mIIUsageApplicationForm": {
+      "de": "Nutzungsantragsformular der MII und Studienprotokoll",
+      "en": "MII usage application form and study protocol"
+    },
+    "proposalId": {
+      "de": "Antrags-ID",
+      "en": "Application ID"
+    },
+    "submittedAt": {
+      "de": "Datum der Antragstellung",
+      "en": "Date of submit"
+    },
+    "projectAbbreviation": {
+      "de": "Projektkürzel",
+      "en": "Project abbreviation"
+    },
+    "projectAbbreviationInfo": {
+      "de": "Das Projektkürzel erleichtert die Zuordnung des Projekts bei der Kommunikation mit den verschiedenen Beteiligten. Es muss einzigartig sein und darf maximal 15 der folgenden Zeichen enthalten: Alphanumerische Zeichen, Sonderzeichen &/\\\\?.:#*+-_{'|'}{'@'}.",
+      "en": "The acronym is used for communication purposes. It has to be unique und no longer than 15 characters: alphanumeric, special characters &/\\\\?.:#*+-_{'|'}{'@'}."
+    },
+    "egWestStorm": {
+      "de": "z.B. Mein FDPG Projekt",
+      "en": "e.g. My FDPG Project"
+    },
+    "projectResponsible": {
+      "de": "Projektverantwortlich",
+      "en": "Responsible staff member"
+    },
+    "projectResponsibleInfo": {
+      "de": "Entspricht der Rolle Verantwortlicher Mitarbeiter in den Vertragsdokumenten, häufig Projektleitung",
+      "en": "Corresponds to the role responsible staff member in the contract documents, often project management"
+    },
+    "applicantIsProjectResponsible": {
+      "de": "Antragsteller ist projektverantwortlich",
+      "en": "Applicant is responsible for the project"
+    },
+    "projectUser": {
+      "de": "Nutzer",
+      "en": "User"
+    },
+    "projectUserInfo": {
+      "de": "Der Nutzer unterzeichnet den Nutzungsvertrag. Es kann eine Person oder eine Institution sein.",
+      "en": "The user signs the contract. It can be a person or an institution."
+    },
+    "projectUserType_APPLICANT_AS_PRIVATE_PERSON": {
+      "de": "Antragstellende Privatperson",
+      "en": "User corresponds to the applicant"
+    },
+    "projectUserType_ORGANIZATION_OF_PROJECT_RESPONSIBLE": {
+      "de": "Organisation der projektverantwortlichen Person",
+      "en": "Organisation of responsible scientist"
+    },
+    "applicant": {
+      "de": "Antragsteller",
+      "en": "Applicant"
+    },
+    "profileCompletionHint": {
+      "de": "Als Antragsteller müssen Sie ein vollständiges Profil besitzen um einen Antrag zu stellen. {link}",
+      "en": "As an applicant, you must have a complete profile to submit an application. {link}"
+    },
+    "profileCompletionHintLink": {
+      "de": "Sie können hier Ihr Profil einsehen und bearbeiten",
+      "en": "You can view and edit your profile here"
+    },
+    "participatingScientists": {
+      "de": "Beteiligte",
+      "en": "Participants"
+    },
+    "participatingScientistsInfo": {
+      "de": "Beteiligte Wissenschaftler sind alle, die zur Erreichung des Projektziels beitragen (z.B. Projektleiter, sonstige Mitarbeiter der antragstellenden Institution, (Projekt-)externe mitwirkende dritte Personen/Institutionen, externer Labordienstleister, selbständige Wissenschaftler), aber mindestens jene, die direkten Zugang zu Daten bzw. Biomaterial erhalten. Halten Sie die Liste gern kurz, besonders in Großprojekten ist es nicht erforderlich jeden einzelnen Beteiligten aufzuführen.",
+      "en": "Involved scientists are persons contributing to the project (e.g. PI and Co-PIs, employees of the proposing organization, external third parties and laboratories, independent scientists). You should include at least scientists with direct access to data and bio samples. You may keep the list short, e.g. in context of large research initiatives."
+    },
+    "removeParticipant": {
+      "de": "Wissenschaftler entfernen",
+      "en": "Remove Scientist"
+    },
+    "firstName": {
+      "de": "Vorname",
+      "en": "First name"
+    },
+    "pleaseEnterTheFirstName": {
+      "de": "Bitte geben Sie den Vornamen an",
+      "en": "Please enter the first name"
+    },
+    "researcherTitle": {
+      "de": "Titel",
+      "en": "Title"
+    },
+    "pleaseEnterTheResearcherTitle": {
+      "de": "Bitte geben Sie den Titel an",
+      "en": "Please enter the title"
+    },
+    "name": {
+      "de": "Name",
+      "en": "Name"
+    },
+    "pleaseEnterTheName": {
+      "de": "Bitte geben Sie den Nachnamen an",
+      "en": "Please enter the name"
+    },
+    "detailsOfTheInstitutionFacility": {
+      "de": "Angaben zur Institution/Einrichtung",
+      "en": "Details of the institution/facility"
+    },
+    "fullCorrectNameOfTheInstitutionFacilityJurPerson": {
+      "de": "Vollständige/korrekte Bezeichnung der Institution/Einrichtung/jur. Person",
+      "en": "Full/correct name of the institution/facility/jur. person"
+    },
+    "pleaseEnterTheFullCorrectNameOfTheInstitutionFacilityJurPerson": {
+      "de": "Bitte geben Sie die Bezeichnung ein",
+      "en": "Please enter the name"
+    },
+    "street": {
+      "de": "Straße",
+      "en": "Street"
+    },
+    "pleaseEnterTheStreet": {
+      "de": "Bitte geben Sie die Straße ein",
+      "en": "Please enter the street"
+    },
+    "houseNumber": {
+      "de": "Hausnummer",
+      "en": "House number"
+    },
+    "pleaseEnterTheHouseNumber": {
+      "de": "Bitte geben Sie die Hausnummer ein",
+      "en": "Please enter the house number"
+    },
+    "postalCode": {
+      "de": "Postleitzahl",
+      "en": "Postal code"
+    },
+    "pleaseEnterThePostalCode": {
+      "de": "Bitte geben Sie die Postleitzahl ein",
+      "en": "Please enter the postal code"
+    },
+    "location": {
+      "de": "Land",
+      "en": "Country"
+    },
+    "city": {
+      "de": "Stadt",
+      "en": "City"
+    },
+    "countryPlaceholder": {
+      "de": "Bitte geben Sie das Land an",
+      "en": "Please provide the country"
+    },
+    "cityPlaceholder": {
+      "de": "Bitte geben Sie die Stadt ein",
+      "en": "Please enter the city"
+    },
+    "involvedCategory": {
+      "de": "Beteiligtenkategorie",
+      "en": "Involved category"
+    },
+    "involvedCategoryInfo": {
+      "de": "Informationen zu den Beteiligtenkategorien entehmen Sie hier: https://forschen-fuer-gesundheit.de/menu_data.php",
+      "en": "Information about the participant categories could be found here: https://forschen-fuer-gesundheit.de/menu_data.php"
+    },
+    "addAnotherPerson": {
+      "de": "Weitere Person hinzufügen",
+      "en": "Add another person"
+    },
+    "personalDetails": {
+      "de": "Personenangaben",
+      "en": "Personal details"
+    },
+    "belongingOptional": {
+      "de": "Zugehörigkeit (Affiliation)",
+      "en": "Belonging (Optional)"
+    },
+    "pleaseEnterTheBelonging": {
+      "de": "Bitte geben Sie die Zugehörigkeit an",
+      "en": "Please enter the belonging"
+    },
+    "emailAddress": {
+      "de": "E-Mail Adresse",
+      "en": "E-Mail Address"
+    },
+    "pleaseEnterTheEmailAddress": {
+      "de": "Bitte geben Sie die E-Mail Adresse an",
+      "en": "Please enter the e-mail address"
+    },
+    "informationAboutTheUserProject": {
+      "de": "Angaben zum Nutzer-Projekt",
+      "en": "Information about the user project"
+    },
+    "generalProjectInformation": {
+      "de": "Allgemeine Projektangaben",
+      "en": "General project information"
+    },
+    "projectTitle": {
+      "de": "Projekttitel",
+      "en": "Project title"
+    },
+    "projectTitleInfo": {
+      "de": "Der Projekttitel (Langer Titel) dient der Identifikation des Projekts. Er wird außerdem im Projektregister gelistet. Patienten können in den Projekttiteln über Schlagworte interessante Inhalte finden. Im Projektregister wird den Projekttiteln ein geeigneter Kurztitel zugeordnet, der für die Präsentation auf der Webseite benötigt wird.",
+      "en": "The long project title serves for the identification of the project. Moreover it can be found by patiens while searching the project register. For the representation on the webpage the portal might assign an addition short title to each project."
+    },
+    "pleaseEnterTheProjectTitle": {
+      "de": "Bitte geben Sie den Projekttitel an",
+      "en": "Please enter the project title"
+    },
+    "desiredStartTime": {
+      "de": "Gewünschter Startzeitpunkt",
+      "en": "Desired start time"
+    },
+    "pleaseEnterTheStartTime": {
+      "de": "Bitte geben Sie den Startzeitpunkt an (TT/MM/JJJJ)",
+      "en": "Please enter the start time (DD/MM/YYYY)"
+    },
+    "projectDuration": {
+      "de": "Projektmonate",
+      "en": "Project duration in months"
+    },
+    "projectDurationInfo": {
+      "de": "Bitte geben Sie die Monatszahl der Projektlaufzeit und Ihren bevorzugten Starttermin (unverbindlich) ein. Die Projektdauer ist wichtig für die Vertrags- und Datenschutzfragen.",
+      "en": "Please enter the number of months of the project duration and your preferred start date (without obligation). The project duration is important for the contract and data protection issues."
+    },
+    "pleaseEnterTheNumberOfMonths": {
+      "de": "Bitte geben Sie die Anzahl der Monate an ein",
+      "en": "Please enter the number of months"
+    },
+    "projectFunding": {
+      "de": "Wer finanziert das Projekt?",
+      "en": "Who is financing the project?"
+    },
+    "pleaseEnterTheProjectFunding": {
+      "de": "Bitte geben sie die Finanzierung des Projektes an",
+      "en": "Please enter the funding of the project"
+    },
+    "fundingReferenceNumber": {
+      "de": "Förderkennzeichen",
+      "en": "Funding reference number"
+    },
+    "pleaseEnterTheFundingReferenceNumber": {
+      "de": "Bitte geben Sie das Förderkennzeichen an",
+      "en": "Please enter the funding reference number"
+    },
+    "feasibilityId": {
+      "de": "Machbarkeits-ID",
+      "en": "Feasibility ID"
+    },
+    "feasibility": {
+      "de": "Machbarkeit",
+      "en": "Feasibility"
+    },
+    "statementsAssessmentOfFeasibility": {
+      "de": "Aussagen/Abschätzung der Machbarkeit",
+      "en": "Statements/assessment of feasibility (optional)"
+    },
+    "statementsAssessmentOfFeasibilityInfo": {
+      "de": "Verweisen Sie auf bereits durchgeführte Machbarkeitsanfragen oder Fallzahlbetrachtungen.",
+      "en": "Please reference the feasiblity analysis results belonging to your proposed project."
+    },
+    "referToFeasibilityStudiesOrSimilarThatHaveAlreadyBeenCarriedOut": {
+      "de": "Verweisen Sie auf bereits durchgeführte Machbarkeitsuntersuchungen o.Ä.",
+      "en": "Refer to feasibility studies or similar that have already been carried out"
+    },
+    "assessmentOfFeasibilityDetails": {
+      "de": "Anmerkungen oder Verweis auf andere Studien",
+      "en": "Additional information or reference to other feasibility studies"
+    },
+    "pleaseEnterAssessmentOfFeasibilityDetails": {
+      "de": "Bitte geben Sie ergänzende Informationen zur Machbarkeitsuntersuchung an",
+      "en": "Please enter additional information about the feasibility studies that have been carried out"
+    },
+    "projectDetails": {
+      "de": "Projektdetails",
+      "en": "Projectdetails"
+    },
+    "simpleProjectDescription": {
+      "de": "Einfache Projektbeschreibung",
+      "en": "Simple project description"
+    },
+    "describeTheProject": {
+      "de": "Beschreiben Sie das Projekt",
+      "en": "Describe the project"
+    },
+    "info": {
+      "de": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
+      "en": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt"
+    },
+    "scientificBackground": {
+      "de": "Wissenschaftlicher Hintergrund",
+      "en": "Scientific background"
+    },
+    "publicationsOnTheSubject": {
+      "de": "Veröffentlichungen zum Thema",
+      "en": "Publications on the subject"
+    },
+    "hypothesisAndQuestionProjectGoals": {
+      "de": "Hypothese/Fragestellung (Projektziele)",
+      "en": "Hypothesis/question (project goals)"
+    },
+    "hypothesisAndQuestionProjectGoalsInfo": {
+      "de": "Z.B. gemäß oder aus dem Abstract",
+      "en": "E.g. from your abstract"
+    },
+    "indicationOrRepresentationOfAimsObjectives": {
+      "de": "Angabe oder Darstellung von Aims/Objectives",
+      "en": "Indication or representation of Aims/Objectives"
+    },
+    "egAccordingToOrFromAbstract": {
+      "de": "z.B. gemäß oder aus Abstract",
+      "en": "e.g. according to or from abstract"
+    },
+    "materialAndMethods": {
+      "de": "Material und Methoden",
+      "en": "Material and methods"
+    },
+    "describeTheMaterialsAndMethods": {
+      "de": "Beschreiben Sie die Materialien/Methoden",
+      "en": "Describe the materials/methods"
+    },
+    "ethicsVote": {
+      "de": "Ethikvotum",
+      "en": "Ethics vote"
+    },
+    "ethicVoteExistingLabel": {
+      "de": "Ethikvotum vorhanden / nicht benötigt",
+      "en": "Ethics vote existing / not required"
+    },
+    "present": {
+      "de": "vorhanden",
+      "en": "present"
+    },
+    "notRequired": {
+      "de": "Nichtzuständigkeitserklärung der Ethikkommission liegt bei",
+      "en": "declaration of non-responsibility from the ethics committee is attached"
+    },
+    "ethicsCommittee": {
+      "de": "Ethikkommission",
+      "en": "Ethics committee"
+    },
+    "ethicsVoteNumber": {
+      "de": "Ethikvotum Nummer",
+      "en": "Ethics vote number"
+    },
+    "voteFromDate": {
+      "de": "Votum vom Datum",
+      "en": "Vote from date"
+    },
+    "appendix": {
+      "de": "Anhang",
+      "en": "Appendix"
+    },
+    "appendixId": {
+      "de": "Anhangs-ID",
+      "en": "Appendix ID"
+    },
+    "pleaseAttachProofOfTheEthicsVoteToTheApplication": {
+      "de": "Bitte hängen Sie den Nachweis über das Ethikvotum dem Antrag an.",
+      "en": "Please attach proof of the ethics vote to the application"
+    },
+    "chooseAFile": {
+      "de": "Datei auswählen",
+      "en": "Choose a file"
+    },
+    "foundation": {
+      "de": "Begründung",
+      "en": "Foundation"
+    },
+    "projectResourcesAndRecontact": {
+      "de": "Projektressourcen* und Rekontaktierung",
+      "en": "Project resources* and recontact"
+    },
+    "areSufficientProfessionalAndFinancialResourcesAvailable": {
+      "de": "Stehen ausreichend professionelle und finanzielle Ressourcen zur Verfügung?",
+      "en": "Are sufficient professional and financial resources available"
+    },
+    "areSufficientProfessionalAndFinancialResourcesAvailableInfo": {
+      "de": "Stehen ausreichen professionelle und finanzielle Ressourcen für die Projektdurchführung zur Verfügung?",
+      "en": "Can you assure to have sufficient professional and financial ressources for the execution of the project?"
+    },
+    "yes": {
+      "de": "Ja",
+      "en": "Yes"
+    },
+    "no": {
+      "de": "Nein",
+      "en": "No"
+    },
+    "expenseAllowancesHint": {
+      "de": "Bitte beachten Sie, dass die Begleichung von Aufwandsentschädigungen für die Überlassung und Analysen von Patientendaten und Biomaterial spätestens bei Vertragsschluss über vorhandene Mittel zuzusichern ist",
+      "en": "Please note that the payment of expense allowances for the provision and analysis of patient data and biomaterial must be guaranteed at the latest when the contract is concluded using available funds."
+    },
+    "additionalDataCollection": {
+      "de": "Es ist während des Projektes eine Rekontaktierung der Patienten für zusätzliche Datenerhebungen durch die Datengeber vorgesehen.",
+      "en": "During the project, the patients will be contacted again for additional data collection by the data providers."
+    },
+    "propertyRights": {
+      "de": "Schutzrechte",
+      "en": "Property rights"
+    },
+    "intellectualPropertyRightCreationApplicationOptions": {
+      "de": "Schutzrechtsentstehungs/‐anmeldungs‐Optionen",
+      "en": "Intellectual property right creation/application options"
+    },
+    "intellectualPropertyRightCreationApplicationOptionsInfo": {
+      "de": "Bitte benennen Sie z.B. möglicherweise als Folge der Projektdurchführung entstehende Patente oder Markenanmeldungen.",
+      "en": "Please mention possible registrations of patents or trademarks."
+    },
+    "pleaseNameYourIntellectualPropertyRights": {
+      "de": "Bitte benennen Sie ihre Schutzrechte",
+      "en": "Please name your intellectual property rights"
+    },
+    "plannedPublications": {
+      "de": "Geplante Publikationen",
+      "en": "Planned publications"
+    },
+    "type": {
+      "de": "Typ",
+      "en": "Type"
+    },
+    "specifyTheTypeOfPublication": {
+      "de": "Geben Sie den Typ der Publikation an",
+      "en": "Specify the type of publication"
+    },
+    "description": {
+      "de": "Beschreibung",
+      "en": "Description"
+    },
+    "describeThePublication": {
+      "de": "Beschreiben Sie die Publikation",
+      "en": "Describe the publication"
+    },
+    "authors": {
+      "de": "Autoren",
+      "en": "Authors"
+    },
+    "pleaseListContributingAuthors": {
+      "de": "Bitte geben Sie beteiligten Autoren an",
+      "en": "Please list contributing authors"
+    },
+    "numberOfCoauthorsPerLocation": {
+      "de": "Anzahl der Co-Autoren je Standort",
+      "en": "Number of co-authors per location"
+    },
+    "pleaseEnterTheNumberOfCoAuthors": {
+      "de": "Bitte geben Sie die Anzahl der Co-Autoren an",
+      "en": "Please enter the number of co-authors"
+    },
+    "addressees": {
+      "de": "Adressaten",
+      "en": "Application to"
+    },
+    "addAnotherPublication": {
+      "de": "Weitere Publikation hinzufügen",
+      "en": "Add another publication"
+    },
+    "desiredLocations": {
+      "de": "Gewünschte Standorte",
+      "en": "Desired Locations"
+    },
+    "desiredLocationsInfo": {
+      "de": "Wenn sie mit anderen Standorten kooperieren oder Absprachen zum Projekt getroffen haben, können Sie hier die Standorte angeben, von denen Daten gewünscht werden.",
+      "en": "In case you planned your project execution with a collection of participating institutions, you can list the institutions here."
+    },
+    "pleaseSelectYourLocations": {
+      "de": "Bitte wählen Sie ihre Standorte",
+      "en": "Please select your locations"
+    },
+    "dataPrivacy": {
+      "de": "Datenschutzhinweise",
+      "en": "Privacy notices"
+    },
+    "typeOfUse_dataPrivacy": {
+      "de": "Datenschutzhinweise je Nutzungstyp",
+      "en": "Privacy notices per type of use"
+    },
+    "dataPrivacyExtra": {
+      "de": "Ergänzende Datenschutzhinweise",
+      "en": "Supplementary data privacy notice"
+    },
+    "dataPrivacyExtraPlaceholder": {
+      "de": "Bitte fügen Sie ergänzende Datenschutzhinweise hinzu",
+      "en": "Please add supplementary privacy notices"
+    },
+    "typeOfUse": {
+      "de": "Art der Nutzung",
+      "en": "Type of use"
+    },
+    "typeOfUse_DISTRIBUTED": {
+      "de": "Analysen finden verteilt statt",
+      "en": "Analyzes are distributed"
+    },
+    "typeOfUse_DISTRIBUTED_Info": {
+      "de": "Analysen finden verteilt statt",
+      "en": "Analyzes are distributed"
+    },
+    "typeOfUse_CENTRALIZED": {
+      "de": "Daten werden zentral zusammengeführt und analysiert",
+      "en": "Data is brought together and analyzed centrally"
+    },
+    "typeOfUse_CENTRALIZED_Info": {
+      "de": "Daten werden zentral zusammengeführt und analysiert",
+      "en": "Data is brought together and analyzed centrally"
+    },
+    "typeOfUse_BIOSAMPLE": {
+      "de": "Bioproben werden analysiert",
+      "en": "Bisamples are analyzed"
+    },
+    "typeOfUse_BIOSAMPLE_Info": {
+      "de": "Bioproben werden analysiert",
+      "en": "Bisamples are analyzed"
+    },
+    "informationOnRequestedBioSamples": {
+      "de": "Angaben zu beantragten Bioproben",
+      "en": "Information on requested biosamples"
+    },
+    "biosampleType": {
+      "de": "Art",
+      "en": "Kind"
+    },
+    "biosampleCount": {
+      "de": "Menge",
+      "en": "Amount"
+    },
+    "biosampleParameter": {
+      "de": "Zu bestimmende Parameter",
+      "en": "Parameters to be determined"
+    },
+    "biosampleLaboratoryResources": {
+      "de": "Laborressourcen",
+      "en": "Laboratory Resources"
+    },
+    "biosampleMaterialRequirements": {
+      "de": "Anforderungen an das Material",
+      "en": "Material requirements"
+    },
+    "addMoreBioSamples": {
+      "de": "Weitere Bioproben hinzufügen",
+      "en": "Add more biosamples"
+    },
+    "informationOnTheRequestedData": {
+      "de": "Angaben zu den beantragten Daten",
+      "en": "Information on the requested data"
+    },
+    "informationOnTheRequestedDataInfo": {
+      "de": "Bitte spezifizieren Sie so genau wie möglich, welche Daten und Entitäten Sie von den Standorten benötigen. Sie können dabei auf die Kerndatensatzspezifikation (https://simplifier.net/organization/koordinationsstellemii/~projects) zurückgreifen oder Ihre Daten in medizinischer Fachsprache beschreiben. Wenn möglich verwenden Sie beide Methoden.",
+      "en": "Please specify the requested data and entities in detail. You can make use of the FHIR-core (https://simplifier.net/organization/koordinationsstellemii/~projects) dataset or describe the data in clinical language. If possible try both."
+    },
+    "patientInfo": {
+      "de": "Angaben zur Patientenauswahl / Einschlusskriterien und Ausschlusskriterien",
+      "en": "Information on patient selection / inclusion criteria and exclusion criteria"
+    },
+    "pleaseEnterYourDetailsForPatientSelectionHere": {
+      "de": "Bitte machen Sie hier Ihre Angabe zur Patienenauswahl",
+      "en": "Please enter your details for patient selection here"
+    },
+    "informationOnDataSelection": {
+      "de": "Angaben zur Datenauswahl",
+      "en": "Information on data selection"
+    },
+    "pleaseEnterYourDataSelectionInformationHere": {
+      "de": "Bitte machen Sie hier Ihre Angabe zur Datenauswahl",
+      "en": "Please enter your data selection information here"
+    },
+    "attachmentsOptional": {
+      "de": "Anhänge (optional)",
+      "en": "Attachments (optional)"
+    },
+    "pleaseUploadAdditionalAttachmentsHere": {
+      "de": "Bitte laden Sie hier weitere Anhänge hoch.",
+      "en": "Please upload additional attachments here"
+    },
+    "saveDraft": {
+      "de": "Antrag speichern",
+      "en": "Save application"
+    },
+    "submitApplication": {
+      "de": "Antrag abschicken",
+      "en": "Submit application"
+    },
+    "thereIsAlreadyExistingProposalWithTheName": {
+      "de": "There is already existing proposal with the name",
+      "en": "There is already existing proposal with the name"
+    },
+    "participantsAreRequired": {
+      "de": "Die Angabe von Teilnehmern ist erforderlich",
+      "en": "It is required to provide participants"
+    },
+    "leaveAComment": {
+      "de": "Schreiben Sie einen Kommentar...",
+      "en": "Leave a Comment..."
+    },
+    "department": {
+      "de": "Fachbereich",
+      "en": "Department"
+    },
+    "selectASubjectArea": {
+      "de": "Wählen Sie einen Fachbereich aus",
+      "en": "Select a subject area"
+    },
+    "rejectApplication": {
+      "de": "Antrag ablehnen",
+      "en": "Reject application"
+    },
+    "toTheRequest": {
+      "de": "Zum Antrag",
+      "en": "To the request"
+    },
+    "requestRevision": {
+      "de": "Überarbeitung anfragen",
+      "en": "Request revision"
+    },
+    "draftContracts": {
+      "de": "Vertragsentwürfe",
+      "en": "Draft contracts"
+    },
+    "invitationPending": {
+      "de": "Einladung ausstehend",
+      "en": "Invitation pending"
+    },
+    "registrationPending": {
+      "de": "Registerung ausstehend",
+      "en": "Registration pending"
+    },
+    "alreadyRegistered": {
+      "de": "Bereits registriert",
+      "en": "Already registered"
+    },
+    "sendInvitation": {
+      "de": "Einladung senden",
+      "en": "Send invitation"
+    },
+    "resendInvitation": {
+      "de": "Einladung erneut senden",
+      "en": "Resend invitation"
+    },
+    "checkProjectForUniqueness": {
+      "de": "Projekt auf Einzigartigkeit prüfen",
+      "en": "Check project for uniqueness"
+    },
+    "checkAttachments": {
+      "de": "Anhänge prüfen ({count})",
+      "en": "Check attachments ({count})"
+    },
+    "checklistVerification": {
+      "de": "Checkliste Prüfung ({checkedCount}/{optionsCount})",
+      "en": "Checklist verification ({checkedCount}/{optionsCount})"
+    },
+    "checklistGenericError": {
+      "de": "Die Checkliste konnte nicht gespeichert werden",
+      "en": "It was not possible to save the checklist"
+    },
+    "isRegistrationLinkSentLabel": {
+      "de": "Ich habe einen Registrierungslink an den Antragsteller und alle beteiligten Wissenschaftler gesendet",
+      "en": "I have sent a registration link to the applicant and all participating scientists"
+    },
+    "isUniqueLabel": {
+      "de": "Ich habe den Projekttitel geprüft und bestätige die Einzigartigkeit des Projektantrages",
+      "en": "I have checked the project title and confirm the uniqueness of the project proposal"
+    },
+    "isAttachmentsCheckedLabel": {
+      "de": "Ich habe die Inhalte aller Anhänge geprüft und bestätige deren Vollständigkeit",
+      "en": "I have checked the contents of all attachments and confirm their completeness"
+    },
+    "isCheckedLabel": {
+      "de": "Ich habe den Projektantrag geprüft und habe zu überarbeitende Bereiche als Aufgabe für den Antragsteller markiert",
+      "en": "I have reviewed the project proposal and have marked areas to be revised as a task for the applicant"
+    },
+    "messagesToApplicants": {
+      "de": "Mitteilungen an Antragsteller",
+      "en": "Messages to applicant"
+    },
+    "messagesToLocations": {
+      "de": "Mitteilungen an Standorte",
+      "en": "Messages to locations"
+    },
+    "messagesToFdpg": {
+      "de": "Mitteilungen an FDPG",
+      "en": "Messages to FDPG"
+    },
+    "uniquenessGivenDescription": {
+      "de": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \\nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
+      "en": "Please look manually or on the basis of the project proposals if there are already similar projects. \\nConfirm the uniqueness of the project or request changes in the title or reject the project proposal with reasons."
+    },
+    "checkedAreas": {
+      "de": "Geprüfte Bereiche ({isDoneCount}/{fieldCount})",
+      "en": "Checked areas ({isDoneCount}/{fieldCount})"
+    },
+    "checkedAreasDescription": {
+      "de": "Bitte prüfen Sie den Antrag auf Inhalte und Vollständigkeit. Markieren Sie Bereiche als geprüft. Hinterlassen Sie dem Antragsteller Aufgaben und Fragen ggf. eine Überarbeitung an. Wer der Antrag ohne Beanstandung der Richtigkeit entspricht können Sie diesen an die Standorte weiterleiten",
+      "en": "Please review the application for content and completeness. Mark areas as reviewed. Leave tasks for the applicant and request revisions if necessary. If the application is found to be correct without objection you may forward it to the sites"
+    },
+    "numberOfRequestedInstitutions": {
+      "de": "Anzahl der Standorte",
+      "en": "Number of institutions"
+    },
+    "documents": {
+      "de": "Dokumente",
+      "en": "Documents"
+    },
+    "noAttachmentsYet": {
+      "de": "Der Antrag enthält noch keine weiteren Anhänge",
+      "en": "The proposal does not contain any further attachments yet"
+    },
+    "noContractDraftsYet": {
+      "de": "Der Antrag enthält noch keine Vertragsentwürfe",
+      "en": "The proposal does not contain any contract drafts yet"
+    },
+    "noContractsYet": {
+      "de": "Der Antrag enthält noch keine Verträge",
+      "en": "The proposal does not contain any contracts yet"
+    },
+    "noEthicVotesYet": {
+      "de": "Der Antrag enthält noch kein Anhang zum Ethikvotum",
+      "en": "The proposal does not contain any attached ethic vote yet"
+    },
+    "projectStatus": {
+      "de": "Projektstatus",
+      "en": "Project status"
+    },
+    "yourApplicationIsStillInTheDraftProcess": {
+      "de": "Ihr Antrag befindet sich noch im Entwurfsprozess",
+      "en": "Your application is still in the draft process"
+    },
+    "contracts": {
+      "de": "Verträge",
+      "en": "Contracts"
+    },
+    "todosInTheProject": {
+      "de": "Projekt-ToDo's",
+      "en": "ToDo's in the project"
+    },
+    "noOpenTasks": {
+      "de": "Keine offenen Aufgaben",
+      "en": "No open tasks"
+    },
+    "historyOfTheProject": {
+      "de": "Projekt-Historie",
+      "en": "History of the project"
+    },
+    "participatingScientistsDetailTitle": {
+      "de": "Beteiligte Wissenschaftler ({count})",
+      "en": "Participating Scientists ({count})"
+    },
+    "approvedWithTerms": {
+      "de": "Genehmigt mit Auflagen",
+      "en": "Approved with terms"
+    },
+    "archiveProjectModalTitle": {
+      "de": "Möchten Sie den Antrag wirklich zur Überarbeitung an den Antragsteller zurückschicken?",
+      "en": "Do you really want to send the application back to the applicant for revision?"
+    },
+    "archiveProjectModalDescription": {
+      "de": "Ihre erstellten Aufgaben werden zur Überarbeitung dem Antragsteller zugeteilt. Der Antrag kann erst nach nachdem er vom Antragsteller erneut eingereicht wurde, vom FDPG-Mitarbeiter an die Standorte weitergeleitet werden.",
+      "en": "Your created tasks will be assigned to the applicant for revision. The application can only be forwarded to the sites by the FDPG staff after it has been resubmitted by the applicant."
+    },
+    "requestRevisionModalTitle": {
+      "de": "Möchten Sie den Antrag wirklich zur Überarbeitung an den Antragsteller zurückschicken?",
+      "en": "Do you really want to send the application back to the applicant for revision?"
+    },
+    "requestRevisionModalDescription": {
+      "de": "Ihre erstellten Aufgaben werden zur Überarbeitung dem Antragsteller zugeteilt. Der Antrag kann erst nach nachdem er vom Antragsteller erneut eingereicht wurde, vom FDPG-Mitarbeiter an die Standorte weitergeleitet werden.",
+      "en": "Your created tasks will be assigned to the applicant for revision. The application can only be forwarded to the sites by the FDPG staff after it has been resubmitted by the applicant."
+    },
+    "rejectRequestModalTitle": {
+      "de": "Möchten Sie den Antrag wirklich ablehnen?",
+      "en": "Do you really want to reject the application?"
+    },
+    "rejectRequestModalDescription": {
+      "de": "Der Antrag wird dem Antragsteller als abgelehnt angezeigt. Dieser hat die Möglichkeit den Antrag zu archivieren oder als Entwurf neu zu erstellen. Stellen Sie sicher, dass Sie den Antragsteller eine Begründung über das Kommentarfeld hinterlassen bevor Sie den Antrag jetzt anlehnen. Der Vorgang kann nicht rückgängig gemacht werden.",
+      "en": "The application is displayed as rejected to the applicant. The requester has the option to archive the request or recreate it as a draft. Make sure you leave the requester a reason via the comment field before rejecting the request now. The process cannot be undone."
+    },
+    "toContractingModalTitle": {
+      "de": "Möchten Sie den Vertragsprozess wirklich einleiten?",
+      "en": "Do you really want to initiate contracting?"
+    },
+    "toContractingModalDescription": {
+      "de": "Indem Sie den Vertragsprozess einleiten, bitten Sie die Forschenden mit ihrer Unterschrift einen Vertrag mit ausgewählten Standorten einzugehen. Bitte stellen Sie sicher, dass die Auflagen der Standorte in den Vertrag aufgenommen wurden, die Forschenden alle Einschränkungen in Bezug auf die angefragten Daten und Bioproben kennen und der Vertrag mit der neusten Versionsnummer gekennzeichnet hochgeladen wird..",
+      "en": "By initiating contracting, you are asking the researcher to enter into a contract with selected sites with his or her signature. Please ensure that the sites' requirements are included in the contract, that the researchers are aware of any conditions on the data and biospecimens requested, and that the contract is uploaded labeled with the latest version number."
+    },
+    "toLocationCheckModalTitle": {
+      "de": "Möchten Sie den Antrag wirklich an alle ausgewählten Standorte weiterreichen?",
+      "en": "Do you really want to pass the application to all selected sites?"
+    },
+    "toLocationCheckModalDescription": {
+      "de": "Der Projektantrag wird an alle ausgewählten Standorte weitergeleitet. Der Antrag kann nicht mehr vom Antragsteller bearbeitet werden.",
+      "en": "The project application is forwarded to all selected sites. The application can no longer be processed by the applicant."
+    },
+    "toExpectDataDeliveryModalTitle": {
+      "de": "Möchten Sie den Vertrag wirklich schließen?",
+      "en": "Do you really want to conclude the contract?"
+    },
+    "toExpectDataDeliveryModalDescription": {
+      "de": "Indem Sie den Vertrag schließen, beginnt die laufende Phase des Projektes und der Vertrag aller Beteiligten gilt als geschlossen. Für Standorte die nicht in die Vertragsschließung aufgenommen wurden, gilt das Projekt als beendet. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "en": "By closing the contract, the current phase of the project begins and the contract of all parties is considered closed. For sites that are not included in the contract closure, the project is considered finished. This action cannot be undone."
+    },
+    "toReadyToArchiveModalTitle": {
+      "de": "Möchten Sie das Projekt wirklich beenden?",
+      "en": "Do you really want to finish the project?"
+    },
+    "toReadyToArchiveModalDescription": {
+      "de": "Das Projekt wird zum Archivieren freigegeben und als beendet erklärt.",
+      "en": "The project is released for archiving and declared finished."
+    },
+    "declineToReadyToArchiveModalTitle": {
+      "de": "Möchten sie wirklich den Projektabschluss verweigern?",
+      "en": "Do they really want to deny project completion?"
+    },
+    "declineToReadyToArchiveModalDescription": {
+      "de": "Der Wissenschaftler kann anschließend weitere Publikationen hinzufügen und den Projektabschluss erneut beantragen.",
+      "en": "The scientist can then add more publications and reapply for project completion."
+    },
+    "saveOperations": {
+      "de": "Vorgänge speichern",
+      "en": "Save operations"
+    },
+    "showUncheckedAreas": {
+      "de": "Ungeprüfte Bereiche anzeigen",
+      "en": "Show unchecked areas"
+    },
+    "markAreaAsChecked": {
+      "de": "Bereich als geprüft markieren",
+      "en": "Mark area as checked"
+    },
+    "areaWasChecked": {
+      "de": "Bereich wurde geprüft",
+      "en": "Area was checked"
+    },
+    "addTaskForApplicant": {
+      "de": "Aufgabe für Antragsteller hinzufügen",
+      "en": "Add task for applicant"
+    },
+    "approveDraft": {
+      "de": "Vertragsentwurf genehmigen",
+      "en": "Approve draft contract"
+    },
+    "proposalTask": {
+      "de": "Aufgabe vom Forschungsdatenportal",
+      "en": "TODO from the Research Data Portal"
+    },
+    "denyProposal": {
+      "de": "Antrag ablehnen",
+      "en": "Deny proposal"
+    },
+    "acceptProposal": {
+      "de": "Vertrag schließen",
+      "en": "Accept proposal"
+    },
+    "initiateContract": {
+      "de": "Vertrag einleiten",
+      "en": "Inititate contract"
+    },
+    "toLocationCheck": {
+      "de": "Antrag weiterleiten",
+      "en": "Forward application"
+    },
+    "archiveProject": {
+      "de": "Archivieren",
+      "en": "Archive Project"
+    },
+    "finishProject": {
+      "de": "Projekt abschließen",
+      "en": "Finish Project"
+    },
+    "finishProjectDecline": {
+      "de": "Projektabschluss ablehnen",
+      "en": "Decline to finish Project"
+    },
+    "toExpectDataDelivery": {
+      "de": "Datenlieferung anstoßen",
+      "en": "Initiate Data Delivery"
+    },
+    "messagesFromFdpg": {
+      "de": "Mitteilungen vom FDPG",
+      "en": "Messags from FDPG"
+    },
+    "thereAreNoSignedContracts": {
+      "de": "Es liegen keine unterzeichneten Verträge vor",
+      "en": "There are no signed contracts"
+    },
+    "rejectContractProposal": {
+      "de": "Möchten Sie den Vertragsvorschlag wirklich ablehnen?",
+      "en": "Do you really want to reject the contract proposal?"
+    },
+    "rejectContractProposalModalDescriptionResearcher": {
+      "de": "Indem Sie einen Vertragsvorschlag ablehnen wird der Projektantrag beendet. Diese Aktion kann nicht rückgängig gemacht werden und muss begründet werden.",
+      "en": "By rejecting a contract proposal, the project proposal is terminated. This action cannot be undone and must be justified."
+    },
+    "rejectRequest": {
+      "de": "Antrag ablehnen",
+      "en": "Reject request"
+    },
+    "acceptContractProposal": {
+      "de": "Möchten Sie den Vertragsvorschlag wirklich annehmen?",
+      "en": "Do you really want to accept the contract proposal"
+    },
+    "acceptContractProposalModalDescription": {
+      "de": "Um einen Vertrag zu schließen befolgen Sie bitte folgende Schritte. Die Schließung des Vertrages kann nicht rückgängig gemacht werden.",
+      "en": "To conclude a contract please follow the steps below. The conclusion of the contract can not be canceled."
+    },
+    "acceptContractDataVolumePlaceholder": {
+      "de": "z.B. 20000",
+      "en": "e.g. 20000"
+    },
+    "acceptContract": {
+      "de": "Vertragsvorschlag zustimmen",
+      "en": "Agree contract proposal"
+    },
+    "downloadContract": {
+      "de": "Vertrag herunterladen",
+      "en": "Download contract"
+    },
+    "downloadContractDescription": {
+      "de": "Bitte laden Sie die neueste Vertragsversion herunter und drucken Sie diese 2x aus",
+      "en": "Please download the latest contract version and print it out twice"
+    },
+    "yourConditionWillBeCheckedByFdpg": {
+      "de": "Hier können Sie Auflagen zu Ihrer Datenbereitstellung anfügen. Ihre Auflagen werden dann vom FDPG geprüft und ggf. mit in den Vertrag integriert. Wenn Ihre Auflage nicht berücksichtigt wird erhalten Sie bei Vertragsschluss automatisch eine Absage",
+      "en": "Your conditions will be checked by the FDPG and, if necessary, integrated into the contract. If your condition is not taken into account, you will automatically receive a rejection when the contract is concluded"
+    },
+    "addConditionsOptional": {
+      "de": "Auflagen hinzufügen (optional)",
+      "en": "Add conditions (optional)"
+    },
+    "specifyTheAmountOfData": {
+      "de": "Datenmenge angeben",
+      "en": "Specify Datavolume"
+    },
+    "asADataProviderYouMustSpecifyAQuantity": {
+      "de": "Bitte geben sie die Patienten-/Fallzahl an",
+      "en": "As a data provider you have to specify a quantity"
+    },
+    "dataVolume": {
+      "de": "Datenmenge (Anzahl Patienten/Fälle)",
+      "en": "Data volume"
+    },
+    "proposedDataVolume": {
+      "de": "Gelieferte Datenmenge",
+      "en": "Delivered data volume"
+    },
+    "pendingVotes": {
+      "de": "Antworten austehend ({count})",
+      "en": "Pending votes({count})"
+    },
+    "uacAcceptedLocations": {
+      "de": "Zugesagt ({count})",
+      "en": "Accepted ({count})"
+    },
+    "uacAcceptedUnderConditions": {
+      "de": "Zugesagt unter Auflagen ({count})",
+      "en": "Accepted under conditions ({count})"
+    },
+    "locationConditions": {
+      "de": "Standort-Auflagen ({count})",
+      "en": "Location Conditions ({count})"
+    },
+    "xLocations": {
+      "de": "{count} Standorte",
+      "en": "{count} Locations"
+    },
+    "xContractParticipants": {
+      "de": "{count} Vertragsmitglieder",
+      "en": "{count} Contract Members"
+    },
+    "conditionAccepted": {
+      "de": "Aufgenommen",
+      "en": "Incorporated"
+    },
+    "conditionPending": {
+      "de": "Austehend",
+      "en": "Pending"
+    },
+    "conditionRejected": {
+      "de": "Abgelehnt",
+      "en": "Rejected"
+    },
+    "uacRejected": {
+      "de": "Abgesagt ({count})",
+      "en": "Rejected ({count})"
+    },
+    "uacVotum": {
+      "de": "UAC-Votum",
+      "en": "UAC Voting"
+    },
+    "signedContracts": {
+      "de": "Vertragsabschlüsse",
+      "en": "Contracts"
+    },
+    "noLocationInCurrentState": {
+      "de": "Derzeit befindet sich kein Standort in diesem Status",
+      "en": "Currently there is no location in this state."
+    },
+    "contractSigned": {
+      "de": "Unterschrieben",
+      "en": "Signed"
+    },
+    "contractRejected": {
+      "de": "Abgelehnt",
+      "en": "Rejected"
+    },
+    "contractPending": {
+      "de": "Ausstehend",
+      "en": "Pending"
+    },
+    "sign": {
+      "de": "Vertragsprozess",
+      "en": "Sign"
+    },
+    "signContract": {
+      "de": "Vertrag unterschreiben",
+      "en": "Sign contract"
+    },
+    "youWillReceiveANotificationAsSoonAsYouCanUploadTheSignedContract": {
+      "de": "Sie erhalten eine Benachrichtigung sobald der Vertragsprozess angestoßen wird",
+      "en": "You will receive a notification as soon as you can upload the signed contract"
+    },
+    "sendContract": {
+      "de": "Vertrag abschließen",
+      "en": "Send contract"
+    },
+    "pleaseSendUsTheSignaturePage": {
+      "de": "Sie erhalten die Möglichkeit den Vertrag zu unterschreiben",
+      "en": "Please send one copy of the signature page of the contract to us by post"
+    },
+    "pleaseSignTheContractDescription": {
+      "de": "Unterschreiben Sie den Vertrag in 2-facher Ausführung",
+      "en": "Sign the contract in 2 copies"
+    },
+    "uploadSignitureTitle": {
+      "de": "Vertrag hochladen",
+      "en": "Upload Contract"
+    },
+    "uploadSignitureDescription": {
+      "de": "Laden Sie den Vertrag mit Ihrer Unterschrift versehen wieder hoch",
+      "en": "Upload the contract again with your signature attached"
+    },
+    "noContractDraftYet": {
+      "de": "Es ist noch keine Vertragsvorlage generiert",
+      "en": "There is no contract draft yet"
+    },
+    "numberOfParticipatingInstitutions": {
+      "de": "Anzahl der beteiligten Standorte",
+      "en": "Number of participating institutions"
+    },
+    "informationOnDesiredDataAmount": {
+      "de": "Informationen zur minimal benötigten Datenmenge (bezogen auf die Beobachtungsgruppe)",
+      "en": "Information on the minimum amount of data required"
+    },
+    "desiredDataAmountPlaceholder": {
+      "de": "z.B. 20000",
+      "en": "e.g. 20000"
+    },
+    "biosampleTypePlaceholder": {
+      "de": "Art der beantragten Bioprobe, z.B. EDTA-Plasma",
+      "en": "Type of the requested biosample, e.g. EDTA-plasma"
+    },
+    "biosampleCountPlaceholder": {
+      "de": "z.B. 65 μl",
+      "en": "e.g. 65 μl"
+    },
+    "biosampleParameterPlaceholder": {
+      "de": "z.B. Glutamat-Oxazelat-Transaminase",
+      "en": "e.g. Glutamate oxazelate transaminase"
+    },
+    "biosampleLaboratoryResourcesPlaceholder": {
+      "de": "z.B. vorhanden",
+      "en": "e.g. present"
+    },
+    "biosampleMaterialRequirementsPlaceholder": {
+      "de": "Anforderungen",
+      "en": "Requirements"
+    },
+    "biosampleTitleUnknown": {
+      "de": "Unbenannte Bioprobe",
+      "en": "Unnamed Biosample"
+    },
+    "publicationDescriptionUnknown": {
+      "de": "Unbenannte Publikation",
+      "en": "Unnamed Publication"
+    },
+    "researcherNameUnknown": {
+      "de": "Unbenannter Wissenschaftler",
+      "en": "Unnamed Researcher"
+    },
+    "ethicsCommitteePlaceholder": {
+      "de": "Ethikkommission xy",
+      "en": "Ethics Committee xy"
+    },
+    "ethicsVoteNumberPlaceholder": {
+      "de": "z.B. DE/EKBY08",
+      "en": "e.g. DE/EKBY08"
+    },
+    "ethicVoteFromDatePlaceholder": {
+      "de": "Datum",
+      "en": "Date"
+    },
+    "ethicVoteNotExistingReasonPlaceholder": {
+      "de": "Etikvotum nicht benötigt, weil ...",
+      "en": "Ethics vote not needed because..."
+    },
+    "attachmentsOnlyAfterSavingHint": {
+      "de": "Anhänge können nach dem ersten Speichern des Antrags hochgeladen werden.",
+      "en": "Attachments could be uploaded after initial saving of the proposal."
+    },
+    "uploadType_CONTRACT_CONDITION": {
+      "de": "Vertragsauflage",
+      "en": "Contractcondition"
+    },
+    "uploadType_CONTRACT_DRAFT": {
+      "de": "Vertragsentwurf",
+      "en": "Contractdraft"
+    },
+    "uploadType_ETHIC_VOTE": {
+      "de": "Ethikvotum",
+      "en": "Ethicvote"
+    },
+    "uploadType_GENERAL_APPENDIX": {
+      "de": "Allgemeiner Anhang",
+      "en": "General appendix"
+    },
+    "uploadType_LOCATION_CONTRACT": {
+      "de": "Standort-Vertrag",
+      "en": "Location Contract"
+    },
+    "uploadType_RESEARCHER_CONTRACT": {
+      "de": "Wissenschaftler-Vertrag",
+      "en": "Researcher Contract"
+    },
+    "uploadType_FEASIBILITY_QUERY": {
+      "de": "Machbarkeits-Anfrage",
+      "en": "Feasibility Query"
+    },
+    "uploadType_PROPOSAL_PDF": {
+      "de": "Druckversion",
+      "en": "Printversion"
+    },
+    "uploadType_Fallback": {
+      "de": "Anhang",
+      "en": "Appendix"
+    },
+    "viewTodoInProposal": {
+      "de": "Aufgabe im Antrag ansehen",
+      "en": "View Todo in Proposal"
+    },
+    "acceptContractDescriptionResearcher": {
+      "de": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet der die Teilnahme von {numberOfApprovedLocations} Standorten vorsieht. Stimmen Sie den Vertrag zu indem Sie diesen mit Ihrer Unterschrift versehen hochladen oder lehnen Sie den Vertragsvorschlag ab.",
+      "en": "The Research Data Portal has sent you a contract proposal that provides for the participation of {numberOfApprovedLocations} sites. Approve the contract by uploading it with your signature or reject the contract proposal."
+    },
+    "acceptContractDescriptionUac": {
+      "de": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet. Stimmen Sie den Vertrag zu, geben Sie die Patientenzahl an die Sie liefern können und geben Sie eventuelle Vertragsauflagen mit an. Sobald der Antragsteller den Vertrag unterschrieben hat, können Sie den Vertrag gegenzeichnen.",
+      "en": "The Research Data Portal has sent you a contract proposal. Agree to the contract, specify the number of patients you can deliver, and include any contract requirements. Once the applicant has signed the contract, you can countersign the contract."
+    },
+    "acceptContractDizTodoTitle": {
+      "de": "Antrag an UAC weiterleiten",
+      "en": "Forward proposal to UAC"
+    },
+    "acceptContractDizTodoDescription": {
+      "de": "Mit Ihrem OK bestätigen Sie, dass dieser Antrag in Ihrem lokalen UAC geprüft werden kann.",
+      "en": "With your OK you confirm that this request can be checked in your local UAC."
+    },
+    "acceptContractDizModalTitle": {
+      "de": "Forschungsantrag zustimmen",
+      "en": "Approve research proposal"
+    },
+    "acceptContractDizModalDescription": {
+      "de": "Hiermit bestätigen Sie, dass Sie den Forschungsantrag an Ihr lokales UAC weitergeben.",
+      "en": "With this step you confirm that you agree to forward the proposal to the UAC."
+    },
+    "acceptContractDizModalAction": {
+      "de": "Zusagen",
+      "en": "Agree"
+    },
+    "acceptContractDizDeclineModalTitle": {
+      "de": "Forschungsantrag ablehnen",
+      "en": "Decline research proposal"
+    },
+    "acceptContractDizDeclineModalDescription": {
+      "de": "Indem Sie einen Forschungsantrag ablehnen nehmen Sie nicht am Projekt teil. Diese Aktion kann nicht rückgängig gemacht werden und muss begründet werden.",
+      "en": "By rejecting a research proposal you do not participate in the project. This action cannot be undone and must be justified."
+    },
+    "acceptContractDizDeclineModalAction": {
+      "de": "Ablehen",
+      "en": "Decline"
+    },
+    "locationSingTodoTitle": {
+      "de": "Vertragsvorschlag zustimmen",
+      "en": "Agree contract proposal"
+    },
+    "locationSingTodoDescription": {
+      "de": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet der die Teilnahme Ihres Standorte vorsieht. Stimmen Sie dem Vertrag zu indem Sie diesen mit Ihrer Unterschrift versehen hochladen oder lehnen Sie den Vertragsvorschlag ab.",
+      "en": "The Research Data Portal has sent you a contract proposal that provides for the participation of your site. Agree to the contract by uploading it with your signature or reject the contract proposal."
+    },
+    "uacSignModalTitle": {
+      "de": "Möchten Sie den Vertragsvorschlag annehmen?",
+      "en": "Do you really want to accept the contract proposal"
+    },
+    "uacSignModalDescription": {
+      "de": "Hiermit stimmen Sie dem Datenutzungsantrag zu.",
+      "en": "To conclude a contract please follow the steps below. The conclusion of the contract can not be canceled."
+    },
+    "uacApprovalTodoTitle": {
+      "de": "UAC-Votum abgeben",
+      "en": "Agree research proposal"
+    },
+    "uacApprovalTodoDescription": {
+      "de": "Ihr lokales DIZ hat Ihnen einen externen Datennutzungsantrag weitergeleitet. Stimmen Sie dem Antrag zu, geben Sie die Patientenzahl an die Sie liefern können und geben Sie eventuelle Vertragsauflagen mit an. Sobald der Antragsteller den Vertrag unterschrieben hat, können Sie den Vertrag gegenzeichnen.",
+      "en": "The Research Data Portal has sent you a project proposal. Agree to the proposal, specify the number of patients you can deliver, and include any contract requirements. Once the applicant has signed the contract, you can countersign the contract."
+    },
+    "uacApprovalModalTitle": {
+      "de": "Möchten Sie den Forschungsantrag annehmen?",
+      "en": "Do you really want to accept the contract proposal"
+    },
+    "uacApprovalModalDescription": {
+      "de": "Hiermit stimmen Sie dem Datenutzungsantrag zu.",
+      "en": "To conclude a contract please follow the steps below. The conclusion of the contract can not be canceled."
+    },
+    "uacApprovalModalAgreeButton": {
+      "de": "UAC-Votum abgeben",
+      "en": "Agree contract proposal"
+    },
+    "uacApprovalDeclineModalTitle": {
+      "de": "Möchten Sie den Forschungsantrag wirklich ablehnen?",
+      "en": "Do you really want to reject the research proposal?"
+    },
+    "uacApprovalDeclineModalDescription": {
+      "de": "Indem Sie einen Forschungsantrag ablehnen nehmen Sie nicht am Projekt teil. Diese Aktion kann nicht rückgängig gemacht werden und muss begründet werden.",
+      "en": "By rejecting a research proposal you do not participate in the project. This action cannot be undone and must be justified."
+    },
+    "locationSignDeclineModalTitle": {
+      "de": "Möchten Sie den Vertragsvorschlag wirklich ablehnen?",
+      "en": "Do you really want to reject the contract proposal?"
+    },
+    "locationSignDeclineModalDescription": {
+      "de": "Indem Sie einen Vertragsvorschlag ablehnen nehmen Sie nicht am Projekt teil. Diese Aktion kann nicht rückgängig gemacht werden und muss begründet werden.",
+      "en": "By rejecting a contract proposal you do not participate in the project. This action cannot be undone and must be justified."
+    },
+    "commentVisibleForCount": {
+      "de": "Sichtbar für {count} Standorte",
+      "en": "Visible for {count} locations"
+    },
+    "commentVisibleForAll": {
+      "de": "Sichtbar für alle",
+      "en": "Visible for all"
+    },
+    "commentVisibleForThisLocation": {
+      "de": "Sichtbar für diesen Standort",
+      "en": "Visible for this location"
+    },
+    "commentVisibleForOneOtherLocation": {
+      "de": "Sichtbar für {location}",
+      "en": "Visible for {location}"
+    },
+    "commentVisibleForOneLocation": {
+      "de": "Sichtbar für einen Standort",
+      "en": "Visible for one location"
+    },
+    "commentVisibleForNoLocation": {
+      "de": "Sichtbar für keinen Standort",
+      "en": "Visible for no location"
+    },
+    "answerComment": {
+      "de": "Antworten",
+      "en": "Answer"
+    },
+    "markAsDone": {
+      "de": "Als erledigt markieren",
+      "en": "Mark as done"
+    },
+    "markAsOpen": {
+      "de": "Als offen markieren",
+      "en": "Mark as open"
+    },
+    "showDoneComments": {
+      "de": "Als erledigt markierte Fragen anzeigen",
+      "en": "Show questions marked as done"
+    },
+    "noFeasibilityQueriesSaved": {
+      "de": "Es konnten keine Machbarkeits-Anfragen gefunden werden",
+      "en": "No feasibility requests could be found"
+    },
+    "noFeasibilityQueriesWhenError": {
+      "de": "Es konnten keine Machbarkeits-Anfragen geladen werden",
+      "en": "No feasibility requests could be loaded"
+    },
+    "declineReasonPlaceholder": {
+      "de": "Z.B. Es können keine Daten geliefert werden, weil...",
+      "en": "E.g. No data can be delivered because..."
+    },
+    "declineReasonLabel": {
+      "de": "Ablehnungsgrund",
+      "en": "Reason for rejection"
+    },
+    "locationVoteExcludeReasonSectionTitle": {
+      "de": "Ablehnungsvermerk",
+      "en": "Rejection note"
+    },
+    "locationVoteExcludeReasonTitleForType": {
+      "de": "Typ",
+      "en": "Type"
+    },
+    "locationVoteExcludeReasonTitleForDate": {
+      "de": "Datum",
+      "en": "Date"
+    },
+    "locationVoteExcludeReasonTitleForReason": {
+      "de": "Begründung",
+      "en": "Reason for rejection"
+    },
+    "locationVoteExcludeReasonType_LOCATION_SIGN": {
+      "de": "Abgelehnt bei Vertragsabschluss",
+      "en": "Rejected at the conclusion of the contract"
+    },
+    "locationVoteExcludeReasonType_DIZ_APPROVE": {
+      "de": "Abgelehnt bei DIZ Überprüfung",
+      "en": "Rejected at DIZ review"
+    },
+    "locationVoteExcludeReasonType_UAC_APPROVE": {
+      "de": "Abgelehnt bei UAC Überprüfung",
+      "en": "Rejected at UAC review"
+    },
+    "contractRejectedByResearcherReasonTitle": {
+      "de": "Abgelehnt durch den Wissenschaftler",
+      "en": "Rejected by the Researcher"
+    },
+    "conditionApprovalDataVolume": {
+      "de": "{amount} Datensätze",
+      "en": "{amount} records"
+    },
+    "participantCategory_DATA_RECEIVER": {
+      "de": "Empfang von Daten",
+      "en": "Data receiver"
+    },
+    "participantCategory_BIOSAMPLE_RECEIVER": {
+      "de": "Empfang von Bioproben",
+      "en": "Bio sample recipient"
+    },
+    "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": {
+      "de": "Empfang von Daten und Bioproben",
+      "en": "Data and Biosample Recipients"
+    },
+    "participantCategory_PROJECT_LEADER": {
+      "de": "Projektleiter",
+      "en": "Project Manager"
+    },
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": {
+      "de": "Weiterer Projektleiter",
+      "en": "Another project leader"
+    },
+    "termsDialogTitle": {
+      "de": "Nutzungsordnung zustimmen",
+      "en": "Accept Terms and Conditions"
+    },
+    "lockProposal": {
+      "de": "Antrag sperren",
+      "en": "Lock proposal"
+    },
+    "lockModalDescription": {
+      "de": "Bitte beachten Sie, dass dadurch jede Antragsfunktion deaktiviert wird.\nDie Sperrung kann jederzeit rückgängig gemacht werden.",
+      "en": "Please note that this will disable any function of the proposal.\nThe lock can be reversed at any time."
+    },
+    "unlockProposal": {
+      "de": "Antrag entsperren",
+      "en": "Unlock proposal"
+    },
+    "unlockModalDescription": {
+      "de": "Bitte beachten Sie, dass dadurch alle Funktionen des Antrags reaktiviert werden.",
+      "en": "Please note that this will reactivate all functions of the proposal."
+    },
+    "lockModalTitle": {
+      "de": "Wollen Sie den Antrag wirklich sperren?",
+      "en": "Do you really want to lock the proposal?"
+    },
+    "unlockModalTitle": {
+      "de": "Wollen Sie den Antrag wirklich entsperren?",
+      "en": "Do you really want to unlock the proposal?"
+    },
+    "IS_LOCKED": {
+      "de": "Gesperrt",
+      "en": "Locked"
+    },
+    "publications": {
+      "de": "Publikationen",
+      "en": "Publications"
+    },
+    "addPublication": {
+      "de": "Publikation hinzufügen",
+      "en": "Add publication"
+    },
+    "noPublications": {
+      "de": "Keine Publikationen vorhanden",
+      "en": "No publications available"
+    },
+    "doi": {
+      "de": "Doi",
+      "en": "Doi"
+    },
+    "link": {
+      "de": "Link",
+      "en": "Link"
+    },
+    "publicationLinkPlaceholder": {
+      "de": "Bitte geben Sie einen Link an",
+      "en": "Please provide a link"
+    },
+    "publicationTitlePlaceholder": {
+      "de": "Bitte geben Sie den Titel an",
+      "en": "Please specify the title"
+    },
+    "publicationDoiPlaceholder": {
+      "de": "Bitte geben Sie die Kennung an",
+      "en": "Please specify the identifier"
+    },
+    "editPublication": {
+      "de": "Publikation bearbeiten",
+      "en": "Edit publication"
+    },
+    "deletePublication": {
+      "de": "Publikation löschen",
+      "en": "Delete publication"
+    },
+    "deletePublicationModalDescription": {
+      "de": "Wollen Sie die Publikation wirklich löschen?",
+      "en": "Do you really want to delete publication?"
+    },
+    "publicationLinkItemInTable": {
+      "de": "Zur Publikation mit Weiterleitung",
+      "en": "To the publication with forwarding"
+    },
+    "deleteProposalModalDescription": {
+      "de": "Wollen Sie den Antrag wirklich löschen?",
+      "en": "Do you really want to delete proposal?"
+    },
+    "deleteProposalModalTitle": {
+      "de": "Antrag löschen",
+      "en": "Delete proposal"
+    },
+    "reports": {
+      "de": "Zwischen- & Abschlussberichte",
+      "en": "Reports"
+    },
+    "addReport": {
+      "de": "Zwischenbericht hinzufügen",
+      "en": "Add report"
+    },
+    "noReport": {
+      "de": "Keine Berichte vorhanden",
+      "en": "No reports availabe"
+    },
+    "text": {
+      "de": "Text",
+      "en": "Text"
+    },
+    "album": {
+      "de": "Bilder",
+      "en": "Images"
+    },
+    "viewReport": {
+      "de": "Bericht anzeigen",
+      "en": "View Report"
+    },
+    "selectImage": {
+      "de": "Bild auswählen",
+      "en": "Select image"
+    },
+    "reportTitlePlaceholder": {
+      "de": "Bitte geben Sie den Titel an",
+      "en": "Please specify the title"
+    },
+    "reportContentPlaceholder": {
+      "de": "Bitte geben Sie beschreibenden Text an",
+      "en": "Please provide descriptive text"
+    },
+    "deleteReportModalDescription": {
+      "de": "Wollen Sie den bericht wirklich löschen?",
+      "en": "Do you really want to delete the report?"
+    },
+    "deleteReport": {
+      "de": "Bericht löschen",
+      "en": "Delete report"
+    },
+    "reportUploadPlaceholder": {
+      "de": "Dem Bericht ist noch kein Anhang beigefügt.",
+      "en": "The report doesn't have any attachment yet."
+    },
+    "editReport": {
+      "de": "Bericht bearbeiten",
+      "en": "Edit Report"
+    },
+    "selectionOfMiiLocation": {
+      "de": "Bekannte Organisation",
+      "en": "Known Organization"
+    },
+    "otherOrganization": {
+      "de": "Andere Organisation",
+      "en": "Other Organization"
+    },
+    "uploadType_REPORT_UPLOAD": {
+      "de": "Zwischen-/Abschlussbericht",
+      "en": "Reports"
+    },
+    "noPublicationIsPlanned": {
+      "de": "Augenblicklich ist keine Publikation in Planung",
+      "en": "Currently no publication is planned"
+    },
+    "publicationType_JOURNAL_ARTICLE": {
+      "de": "Journalartikel",
+      "en": "Journal article"
+    },
+    "publicationType_POSTER": {
+      "de": "Poster",
+      "en": "Poster"
+    },
+    "publicationType_CONFERENCE_ARTICLE": {
+      "de": "Sonstiges",
+      "en": "Other"
+    },
+    "publicationType_THESIS": {
+      "de": "Bericht",
+      "en": "Report"
+    },
+    "publicationType_REPORT": {
+      "de": "Wissenschaftliche Arbeit (Bachelor-, Master-, Doktorarbeit)",
+      "en": "Thesis"
+    },
+    "publicationType_OTHER": {
+      "de": "Konferenzbeitrag",
+      "en": "Conference article"
+    },
+    "uploadType_ETHIC_VOTE_DECLARATION_OF_NON_RESPONSIBILITY": {
+      "de": "EthicVote-Erklärung zur Nichtverantwortung",
+      "en": "EthicVote declaration of non responsibility"
+    },
+    "admitReputationOfAttachmentInformation": {
+      "de": "Jedem Datennutzungsantrag muss das Ethikvotum der für Sie zuständigen Ethikkommission beigelegt werden. Sollte kein Ethikvotum vonnöten sein, müssen Sie eine Nichtzuständigkeitserklärung der Ethikkommission beilegen. Bitte achten Sie darauf, dass der Ethikantrag, der dem Votum zugrundeliegt, das Vorhaben, das Sie im Datennutzungsantrag beschreiben vollständig umfasst. Fragen Sie bei der MII zusätzliche Datenelemente an oder haben Sie zusätzliche Fragestellungen, benötigen Sie ein Amendment der Ethikkommission zum Votum.",
+      "en": "Every proposal must be accompanied by the ethics vote of the ethics committee responsible for you. If no ethics vote is required, you must enclose a declaration of non-responsibility from the ethics committee. Please make sure that the ethics application on which the vote is based fully covers the project you describe in the proposal. If you request additional data elements from the MII or have additional questions, you will need an amendment from the Ethics Committee to supplement the vote."
+    },
+    "admitReputationOfAttachment": {
+      "de": "Das beigelegte Ethikvotum umfasst die im Nutzungsantrag beschriebene Verwendung der Daten und Bioproben vollständig.",
+      "en": "The attached ethics vote fully covers the use of the data and biospecimens described in the use research proposal."
+    },
+    "plannedPublicationDescriptionInfo": {
+      "de": "Bitte beschreiben Sie kurz den angedachten Inhalt der Publikation.",
+      "en": "Please briefly describe the intended content of the publication."
+    },
+    "plannedPublicationAuthorsInfo": {
+      "de": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
+      "en": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe."
+    }
+  },
+  "roles": {
+    "FdpgMember": {
+      "de": "FDPG Mitarbeiter",
+      "en": "FDPG Employee"
+    },
+    "Researcher": {
+      "de": "Wissenschaftler",
+      "en": "Researcher"
+    },
+    "DizMember": {
+      "de": "DIZ Mitarbeiter",
+      "en": "DIZ Employee"
+    },
+    "UacMember": {
+      "de": "UAC Mitarbeiter",
+      "en": "UAC Employee"
+    },
+    "Admin": {
+      "de": "Admin",
+      "en": "Admin"
+    },
+    "HEADER_FdpgMember": {
+      "de": "FDPG",
+      "en": "FDPG"
+    },
+    "HEADER_Researcher": {
+      "de": "Forschende",
+      "en": "Researcher"
+    },
+    "HEADER_DizMember": {
+      "de": "DIZ",
+      "en": "DIZ"
+    },
+    "HEADER_UacMember": {
+      "de": "UAC",
+      "en": "UAC"
+    },
+    "HEADER_Admin": {
+      "de": "Admin",
+      "en": "Admin"
+    }
+  },
+  "countries": {
+    "AD": {
+      "de": "Andorra",
+      "en": "Andorra"
+    },
+    "AT": {
+      "de": "Österreich",
+      "en": "Austria"
+    },
+    "AU": {
+      "de": "Australien",
+      "en": "Australia"
+    },
+    "BE": {
+      "de": "Belgien",
+      "en": "Belgium"
+    },
+    "BG": {
+      "de": "Bulgarien",
+      "en": "Bulgaria"
+    },
+    "BR": {
+      "de": "Brasilien",
+      "en": "Brasil"
+    },
+    "CA": {
+      "de": "Kanada",
+      "en": "Canada"
+    },
+    "CH": {
+      "de": "Schweiz",
+      "en": "Switzerland"
+    },
+    "CZ": {
+      "de": "Tschechische Republik",
+      "en": "Czech republic"
+    },
+    "DE": {
+      "de": "Deutschland",
+      "en": "Germany"
+    },
+    "DK": {
+      "de": "Dänemark",
+      "en": "Denmark"
+    },
+    "DZ": {
+      "de": "Algerien",
+      "en": "Algeria"
+    },
+    "EE": {
+      "de": "Estland",
+      "en": "Estonia"
+    },
+    "ES": {
+      "de": "Spanien",
+      "en": "Spain"
+    },
+    "FI": {
+      "de": "Finnland",
+      "en": "Finland"
+    },
+    "FR": {
+      "de": "Frankreich",
+      "en": "France"
+    },
+    "GB": {
+      "de": "Großbritannien",
+      "en": "United Kingdom"
+    },
+    "GR": {
+      "de": "Griechenland",
+      "en": "Greece"
+    },
+    "HR": {
+      "de": "Kroatien",
+      "en": "Croatia"
+    },
+    "HU": {
+      "de": "Ungarn",
+      "en": "Hungary"
+    },
+    "ID": {
+      "de": "Indonesien",
+      "en": "Indonesia"
+    },
+    "IE": {
+      "de": "Irland",
+      "en": "Ireland"
+    },
+    "IL": {
+      "de": "Israel",
+      "en": "Israel"
+    },
+    "IN": {
+      "de": "Indien",
+      "en": "India"
+    },
+    "IR": {
+      "de": "Iran",
+      "en": "Iran"
+    },
+    "IS": {
+      "de": "Island",
+      "en": "Iceland"
+    },
+    "IT": {
+      "de": "Italien",
+      "en": "Italy"
+    },
+    "JP": {
+      "de": "Japan",
+      "en": "Japan"
+    },
+    "KE": {
+      "de": "Kenia",
+      "en": "Kenya"
+    },
+    "LI": {
+      "de": "Liechtenstein",
+      "en": "Liechtenstein"
+    },
+    "LT": {
+      "de": "Litauen",
+      "en": "Lithuania"
+    },
+    "LU": {
+      "de": "Luxemburg",
+      "en": "Luxembourg"
+    },
+    "LV": {
+      "de": "Lettland",
+      "en": "Latvia"
+    },
+    "MT": {
+      "de": "Malta",
+      "en": "Malta"
+    },
+    "MX": {
+      "de": "Mexiko",
+      "en": "Mexico"
+    },
+    "NL": {
+      "de": "Niederlande",
+      "en": "Netherlands"
+    },
+    "NO": {
+      "de": "Norwegen",
+      "en": "Norway"
+    },
+    "NZ": {
+      "de": "Neuseeland",
+      "en": "New Zealand"
+    },
+    "PL": {
+      "de": "Polen",
+      "en": "Poland"
+    },
+    "PR": {
+      "de": "Puerto Rico",
+      "en": "Puerto Rico"
+    },
+    "PT": {
+      "de": "Portugal",
+      "en": "Portugal"
+    },
+    "RO": {
+      "de": "Rumänien",
+      "en": "Romania"
+    },
+    "RU": {
+      "de": "Russland",
+      "en": "Russia"
+    },
+    "SA": {
+      "de": "Saudi Arabien",
+      "en": "Saudi arabia"
+    },
+    "SE": {
+      "de": "Schweden",
+      "en": "Sweden"
+    },
+    "SI": {
+      "de": "Slowenien",
+      "en": "Slovenia"
+    },
+    "TN": {
+      "de": "Tunesien",
+      "en": "Tunisia"
+    },
+    "TW": {
+      "de": "Taiwan",
+      "en": "Taiwan"
+    },
+    "UA": {
+      "de": "Ukraine",
+      "en": "Ukraine"
+    },
+    "US": {
+      "de": "USA",
+      "en": "United States of America"
+    },
+    "ZA": {
+      "de": "Südafrika",
+      "en": "South Africa"
+    },
+    "ZM": {
+      "de": "Sambia",
+      "en": "Zambia"
+    }
+  },
+  "projectStatus": {
+    "DRAFT": {
+      "de": "Der Antrag befindet sich noch im Entwurfsprozess.",
+      "en": "The proposal is still in draft status"
+    },
+    "REJECTED": {
+      "de": "Der Antrag wurde abgelehnt.",
+      "en": "The proposal was rejected"
+    },
+    "ARCHIVED": {
+      "de": "Der Antrag ist archiviert.",
+      "en": "The proposal is archived"
+    },
+    "REWORK": {
+      "de": "Der Antrag ist zur Überarbeitung zurückgewiesen.",
+      "en": "The proposal is rejected for revision"
+    },
+    "FDPG_CHECK_FOR_RESEARCHER": {
+      "de": "Der Antrag wird nun bis zum {date} durch das Forschungsdatenportal geprüft.",
+      "en": "The proposal will now be reviewed by the Research Data Portal by {date}."
+    },
+    "FDPG_CHECK_FOR_FDPG": {
+      "de": "Sie müssen den Antrag bis zum {date} prüfen.",
+      "en": "You must review the proposal by {date}."
+    },
+    "LOCATION_CHECK": {
+      "de": "Der Antrag wird nun bis zum {date} von den Standorten bearbeitet.",
+      "en": "The proposal will now be processed by the locations by {date}."
+    },
+    "CONTRACTING": {
+      "de": "Der Vertrag für das Projekt befindet sich in der Abstimmung.",
+      "en": "The contract for the project is in the process of being reconciled."
+    },
+    "EXPECT_DATA_DELIVERY": {
+      "de": "Die Projektdaten/-ergebnisse werden für die Abholung vorbereitet.",
+      "en": "The project data/results are being prepared for collection."
+    },
+    "DATA_RESEARCH": {
+      "de": "Das Projekt befindet sich in der Analysephase.",
+      "en": "The project is in the analysis phase."
+    },
+    "DATA_CORRUPT": {
+      "de": "Die Projektdaten/-ergebnisse befinden sich in der Überprüfung.",
+      "en": "The project data/results are in review."
+    },
+    "FINISHED_PROJECT": {
+      "de": "Das Projekt ist abgeschlossen.",
+      "en": "The project is completed."
+    },
+    "READY_TO_ARCHIVE": {
+      "de": "Das Projekt kann archiviert werden.",
+      "en": "The project is ready to be archived."
+    },
+    "LOC_DIZ_CHECK": {
+      "de": "Der Projektvorschlag muss bis zum {date} von Ihrem DIZ geprüft werden.",
+      "en": "The project proposal must be reviewed by your DIZ by {date}."
+    },
+    "LOC_DIZ_APPROVED": {
+      "de": "Der Projektvorschlag muss bis zum {date} von Ihrem UAC geprüft werden.",
+      "en": "The project proposal needs to be reviewed by your UAC by {date}."
+    },
+    "LOC_UAC_APPROVED": {
+      "de": "Der Projektvorschlag wird bis zum {date} von anderen Standorten bearbeitet.",
+      "en": "The project proposal will be processed by other locations by {date}."
+    },
+    "LOC_WAITING_FOR_RESEARCHER_SIGN": {
+      "de": "Der Vertragsvorschlag wird vom Wissenschaftler geprüft.",
+      "en": "The contract proposal is reviewed by the scientist."
+    },
+    "LOC_SIGNED_CONTRACT": {
+      "de": "Der Projektvorschlag wird bis zum {date} von anderen Standorten bearbeitet.",
+      "en": "The project proposal will be processed by other locations by {date}."
+    },
+    "LOC_SIGNED_CONTRACT_AND_CONTRACTING_DONE_FOR_DIZ": {
+      "de": "Ihr Standort muss die Projektdaten/-ergebnisse bis zu {date} bereitestellen.",
+      "en": "Your location must provide the project data/results by {date}."
+    },
+    "LOC_SIGNED_CONTRACT_AND_CONTRACTING_DONE_FOR_UAC": {
+      "de": "Ihr Standort ist am Projekt beteiligt.",
+      "en": "Your location is participating in the project."
+    },
+    "LOC_REQUESTED_BUT_EXCLUDED": {
+      "de": "Ihr Standort ist nicht am Projekt beteiligt.",
+      "en": "Your location is not involved in the project."
+    },
+    "LOC_NOT_REQUESTED": {
+      "de": "Ihr Standort ist nicht am Projektvorschlag beteiligt.",
+      "en": "Your location is not involved in the project proposal."
+    },
+    "LOC_CONDITIONAL_APPROVAL_DECLINED": {
+      "de": "Ihre Vertragsauflagen wurden abgelehnt. Ihr Standort ist nicht mehr am Projektvorschlag beteiligt.",
+      "en": "Your contract requirements have been rejected. Your location is no longer involved in the project proposal."
+    },
+    "LOC_RESEARCHER_REJECTED_CONTRACT_FOR_DIZ": {
+      "de": "Der Wissenschaftler hat den Vertragsvorschlag abgelehnt.",
+      "en": "The scientist has rejected the contract proposal."
+    },
+    "LOC_RESEARCHER_REJECTED_CONTRACT_FOR_UAC": {
+      "de": "Das Projekt ist nicht zustande gekommen.",
+      "en": "The project has not come to fruition."
+    },
+    "LOC_RESEARCHER_ACCEPTED_CONTRACT": {
+      "de": "Ihr Standort muss den Vertrag bis zum {date} unterzeichnen.",
+      "en": "Your location must sign the contract by {date}."
+    },
+    "LOC_CONDITIONAL_APPROVAL_ACCEPTED": {
+      "de": "Die Vertragsauflagen wurden angenommen. Der Vertrag zum Projekt befindet sich in der Abstimmung.",
+      "en": "The contract requirements have been accepted. The contract for the project is in the process of being finalized."
+    },
+    "LOC_CONDITIONAL_APPROVAL_PENDING": {
+      "de": "Die Vertragsauflagen werden geprüft.",
+      "en": "The contract requirements are being reviewed."
+    },
+    "PROJECT_IS_LOCKED": {
+      "de": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt",
+      "en": "The Proposal is currently locked for editing"
+    }
+  },
+  "locationStatus": {
+    "DIZ_CHECK": {
+      "de": "DIZ Prüfung",
+      "en": "DIZ Check"
+    },
+    "DIZ_APPROVED": {
+      "de": "UAC Prüfung",
+      "en": "UAC Check"
+    },
+    "UAC_APPROVED": {
+      "de": "Vertragsvorbereitung",
+      "en": "Contract preparation"
+    },
+    "SIGNED_CONTRACT": {
+      "de": "Vertragschließung",
+      "en": "Contracting"
+    },
+    "SIGNED_CONTRACT_AND_CONTRACTING_DONE": {
+      "de": "Vertrag geschlossen",
+      "en": "Contracted"
+    },
+    "REQUESTED_BUT_EXCLUDED": {
+      "de": "Zusage abgelehnt",
+      "en": "Participation denied"
+    },
+    "NOT_REQUESTED": {
+      "de": "Nicht angefragt",
+      "en": "Not requested"
+    },
+    "CONDITIONAL_APPROVAL_DECLINED": {
+      "de": "Auflage abgelehnt",
+      "en": "Condition rejected"
+    },
+    "RESEARCHER_REJECTED_CONTRACT": {
+      "de": "Zusage abgelehnt",
+      "en": "Participation denied"
+    },
+    "RESEARCHER_ACCEPTED_CONTRACT": {
+      "de": "Vertrag unterzeichnen",
+      "en": "Sign contract"
+    },
+    "CONDITIONAL_APPROVAL_ACCEPTED": {
+      "de": "Vertragsvorbereitung",
+      "en": "Contract preparation"
+    },
+    "CONDITIONAL_APPROVAL_PENDING": {
+      "de": "Auflage ausstehend",
+      "en": "Condition pending"
+    }
+  },
+  "researcherStatus": {
+    "DRAFT": {
+      "de": "Antrag abschicken",
+      "en": "Submit proposal"
+    },
+    "RESEARCHER_REJECTED_CONTRACT": {
+      "de": "Vertrag abgelehnt",
+      "en": "Contract denied"
+    },
+    "REJECTED": {
+      "de": "Zusage abgelehnt",
+      "en": "Participation denied"
+    },
+    "ARCHIVED": {
+      "de": "Archiviert",
+      "en": "Archived"
+    },
+    "REWORK": {
+      "de": "Nachbesserung",
+      "en": "Rework"
+    },
+    "FDPG_CHECK": {
+      "de": "FDPG-Prüfung",
+      "en": "FDPG Check"
+    },
+    "LOCATION_CHECK": {
+      "de": "Standortprüfung",
+      "en": "Location Check"
+    },
+    "RESEARCHER_CONTRACTING": {
+      "de": "Vertrag unterschreiben",
+      "en": "Sing contracting"
+    },
+    "LOCATION_CONTRACTING": {
+      "de": "Vertragschließung",
+      "en": "Contracting"
+    },
+    "EXPECT_DATA_DELIVERY": {
+      "de": "Datenlieferung erwartet",
+      "en": "Expect datadelivery"
+    },
+    "DATA_RESEARCH": {
+      "de": "Publikationen hochladen",
+      "en": "Upload publications"
+    },
+    "DATA_CORRUPT": {
+      "de": "Datenprüfung",
+      "en": "Data being checked"
+    },
+    "FINISHED_PROJECT": {
+      "de": "Abschlussprüfung",
+      "en": "Final check"
+    },
+    "READY_TO_ARCHIVE": {
+      "de": "Archivieren",
+      "en": "Archivieren"
+    }
+  },
+  "departments": {
+    "1000": {
+      "de": "Pädiatrie",
+      "en": "Pediatrics"
+    },
+    "1100": {
+      "de": "Kinderkardiologie",
+      "en": "Pediatric Cardiology"
+    },
+    "1200": {
+      "de": "Neonatologie",
+      "en": "Neonatology"
+    },
+    "1300": {
+      "de": "Kinderchirurgie",
+      "en": "Pediatric surgery"
+    },
+    "1400": {
+      "de": "Lungen- und Bronchialheilkunde",
+      "en": "Pulmonary and bronchial medicine"
+    },
+    "1500": {
+      "de": "Allgemeine Chirurgie",
+      "en": "General surgery"
+    },
+    "1600": {
+      "de": "Unfallchirurgie",
+      "en": "Trauma surgery"
+    },
+    "1700": {
+      "de": "Neurochirurgie",
+      "en": "Neurosurgery"
+    },
+    "1800": {
+      "de": "Gefäßchirurgie",
+      "en": "Vascular surgery"
+    },
+    "1900": {
+      "de": "Plastische Chirurgie",
+      "en": "Plastic surgery"
+    },
+    "2000": {
+      "de": "Thoraxchirurgie",
+      "en": "Thoracic surgery"
+    },
+    "2100": {
+      "de": "Herzchirurgie",
+      "en": "Cardiac surgery"
+    },
+    "2200": {
+      "de": "Urologie",
+      "en": "Urology"
+    },
+    "2300": {
+      "de": "Orthopädie",
+      "en": "Orthopedics"
+    },
+    "2316": {
+      "de": "Orthopädie und Unfallchirurgie",
+      "en": "Orthopedics and trauma surgery"
+    },
+    "2400": {
+      "de": "Frauenheilkunde und Geburtshilfe",
+      "en": "Gynecology and obstetrics"
+    },
+    "2425": {
+      "de": "Frauenheilkunde",
+      "en": "Gynecology"
+    },
+    "2500": {
+      "de": "Geburtshilfe",
+      "en": "Obstetrics"
+    },
+    "2600": {
+      "de": "Hals-, Nasen-, Ohrenheilkunde",
+      "en": "Ear, nose and throat medicine"
+    },
+    "2700": {
+      "de": "Augenheilkunde",
+      "en": "Ophthalmology"
+    },
+    "2800": {
+      "de": "Neurologie",
+      "en": "Neurology"
+    },
+    "2900": {
+      "de": "Allgemeine Psychiatrie",
+      "en": "General psychiatry"
+    },
+    "3000": {
+      "de": "Kinder- und Jugendpsychiatrie",
+      "en": "Child and adolescent psychiatry"
+    },
+    "3100": {
+      "de": "Psychosomatik/Psychotherapie",
+      "en": "Psychosomatics/Psychotherapy"
+    },
+    "3200": {
+      "de": "Nuklearmedizin",
+      "en": "Nuclear medicine"
+    },
+    "3300": {
+      "de": "Strahlenheilkunde",
+      "en": "Radiation medicine"
+    },
+    "3400": {
+      "de": "Dermatologie",
+      "en": "Dermatology"
+    },
+    "3500": {
+      "de": "Zahn- und Kieferheilkunde, Mund- und Kieferchirurgie",
+      "en": "Dentistry, oral and maxillofacial surgery"
+    },
+    "3600": {
+      "de": "Intensivmedizin",
+      "en": "Intensive care medicine"
+    },
+    "3700": {
+      "de": "Sonstige Fachabteilung",
+      "en": "Other department"
+    },
+    "0100": {
+      "de": "Innere Medizin",
+      "en": "Internal medicine"
+    },
+    "0200": {
+      "de": "Geriatrie",
+      "en": "Geriatrics"
+    },
+    "0300": {
+      "de": "Kardiologie",
+      "en": "Cardiology"
+    },
+    "0400": {
+      "de": "Nephrologie",
+      "en": "Nephrology"
+    },
+    "0500": {
+      "de": "Hämatologie und internistische Onkologie",
+      "en": "Hematology and internal oncology"
+    },
+    "0600": {
+      "de": "Endokrinologie",
+      "en": "Endocrinology"
+    },
+    "0700": {
+      "de": "Gastroenterologie",
+      "en": "Gastroenterology"
+    },
+    "0800": {
+      "de": "Pneumologie",
+      "en": "Pneumology"
+    },
+    "0900": {
+      "de": "Rheumatologie",
+      "en": "Rheumatology"
+    }
+  }
+}

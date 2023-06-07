@@ -1,0 +1,357 @@
+/**
+  Override element plus component style
+*/
+
+//
+// Button
+//
+.el-button {
+  border: none;
+  color: $white;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  min-height: 52px;
+  padding: 12px 24px;
+  font-family: 'Titillium Web', serif;
+
+  &:focus-visible {
+    outline: $blue auto 1px;
+    outline-offset: 3px;
+  }
+  /*
+    button type override
+  */
+  &.el-button--primary {
+    background-color: $blue;
+
+    &:active:not(.is-disabled) {
+      background-color: darken($blue, 3%);
+      box-shadow: 0 0 5px 0 lighten($blue, 30%);
+    }
+
+    &.is-disabled {
+      background-color: $gray-700;
+    }
+
+    &.is-plain {
+      color: $blue;
+      border: 2px solid $blue;
+      background-color: $white;
+
+      &:active {
+        background-color: darken($white, 1%);
+        box-shadow: 0 0 5px 0 lighten($blue, 30%);
+      }
+    }
+  }
+
+  &.el-button--success {
+    background-color: $green;
+
+    &:active {
+      background-color: darken($green, 3%);
+      box-shadow: 0 0 5px 0 lighten($green, 30%);
+    }
+  }
+
+  &.el-button--danger {
+    background-color: $red-100;
+
+    &:active:not(.is-disabled) {
+      background-color: darken($red-100, 3%);
+      box-shadow: 0 0 5px 0 lighten($red-100, 30%);
+    }
+  }
+
+  &.el-button--text {
+    &:not(:disabled) {
+      color: $blue;
+    }
+
+    padding-left: 3px;
+    padding-right: 3px;
+    background-color: transparent;
+
+    &:active:not(.is-circle) {
+      opacity: 0.8;
+    }
+
+    &.is-circle {
+      padding: 12px;
+      min-width: 46px;
+      min-height: 46px;
+
+      &:active {
+        background-color: darken($white, 3%);
+      }
+    }
+  }
+
+  /*
+    button size override
+  */
+  &.el-button--large {
+    min-height: 40px;
+    font-size: 16px;
+  }
+
+  & + & {
+    margin-left: 20px;
+  }
+
+  [class*='el-icon-'] + span,
+  [class*='bi-'] + span,
+  [class*='fa'] + span {
+    margin-left: 12px;
+  }
+
+  i {
+    font-size: 18px;
+  }
+}
+
+//
+// Checkbox Group
+//
+.el-checkbox-group {
+  margin-bottom: -10px;
+}
+
+//
+// Radio Group
+//
+.el-radio-group {
+  margin-bottom: -10px;
+}
+
+//
+// Message Box
+//
+.el-message-box {
+  width: 100%;
+  max-width: 878px;
+  border-radius: 8px;
+  padding-bottom: 19px;
+  --el-messagebox-padding-primary: 19px;
+
+  .el-message-box__header {
+    padding-top: 39px;
+
+    .el-message-box__title {
+      color: $gray-900;
+      font-weight: 700;
+      font-size: 20px;
+    }
+  }
+
+  .el-message-box__content {
+    color: $black;
+    font-weight: 600;
+
+    .el-message-box__container {
+      .el-message-box__status {
+        display: none;
+      }
+
+      .el-message-box__message {
+        padding: 0;
+
+        p {
+          font-size: 16px;
+          font-weight: 400;
+        }
+      }
+    }
+  }
+
+  .el-message-box__btns {
+    padding: 32px 19px 0;
+
+    button {
+      &:first-child {
+        margin-right: 32px;
+      }
+    }
+  }
+}
+
+//
+// DropDown
+//
+.el-dropdown-menu {
+  position: relative;
+  overflow-x: hidden;
+}
+
+//
+//  Input
+//
+
+.el-input__wrapper {
+  width: 100%;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.el-input__inner {
+  box-shadow: none !important;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 44px;
+  background-color: $white;
+
+  & + .form-group {
+    margin-top: -20px;
+  }
+
+  &.form-group-mb-40 {
+    margin-bottom: 40px;
+  }
+
+  &.el-radio-group-mt-12 {
+    margin-top: 12px;
+  }
+
+  .el-radio-group-block {
+    display: block;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  .el-row {
+    &:last-child {
+      margin-bottom: -30px;
+    }
+
+    .el-col {
+      margin-bottom: 30px;
+    }
+  }
+
+  &.form-group--collapsed {
+    .el-card__body {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h5 {
+        font-size: 20px;
+        margin: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        padding-right: 2.5em;
+
+        &.invalid-form {
+          color: $red-100;
+        }
+      }
+    }
+
+    .form-group--collapsed__actions {
+      min-width: fit-content;
+    }
+  }
+}
+
+.fdpg-checkbox {
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 19px 16px 17px 18px;
+  background-color: $gray-100;
+  white-space: normal;
+
+  &.el-checkbox--small {
+    background-color: transparent;
+    padding: 4px 4px 3px 4px;
+    height: fit-content;
+    &.is-checked {
+      background-color: transparent;
+
+      .el-checkbox__input {
+        padding-top: 5px;
+        .el-checkbox__inner {
+          border-color: $green;
+          background-color: $green;
+
+          &::after {
+            border-color: $white;
+          }
+        }
+      }
+
+      .el-checkbox__label {
+        color: $black;
+      }
+    }
+
+    .el-checkbox__input {
+      padding-top: 5px;
+      &:focus-within {
+        outline: $blue auto 1px;
+        outline-offset: 3px;
+      }
+      .el-checkbox__inner {
+        background-color: $gray-400;
+        border-color: $gray-400;
+      }
+    }
+
+    .el-checkbox__label {
+      font-size: 16px !important;
+    }
+  }
+
+  &.is-checked {
+    background-color: $green;
+
+    .el-checkbox__input {
+      .el-checkbox__inner {
+        border-color: $gray-200;
+        background-color: $gray-200;
+
+        &::after {
+          border-color: $green;
+        }
+      }
+    }
+
+    .el-checkbox__label {
+      color: $white;
+    }
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  .el-checkbox__input {
+    .el-checkbox__inner {
+      width: 18px !important;
+      height: 18px !important;
+      margin-bottom: 4px;
+      color: $gray-900;
+      border-radius: 4px;
+      background-color: $gray-200;
+      border: 2px solid $gray-900;
+
+      &::after {
+        top: 0;
+        left: 4px;
+        width: 5px !important;
+        height: 10px !important;
+      }
+    }
+  }
+
+  .el-checkbox__label {
+    color: $black;
+    font-size: 18px;
+    line-height: 25px;
+  }
+}

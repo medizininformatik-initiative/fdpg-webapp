@@ -1,0 +1,33 @@
+parameters:
+- name: ENV
+  type: string
+  default: "dev"
+
+- name: YARN_CACHE_FOLDER
+  type: string
+  default: $(Build.SourcesDirectory)/node_modules
+
+steps:
+  - task: Cache@2
+    inputs:
+      key: 'yarn | "$(Agent.OS)" | yarn.lock'
+      restoreKeys: |
+        yarn | "$(Agent.OS)"
+        yarn
+      path: ${{ parameters.YARN_CACHE_FOLDER }}
+      cacheHitVar: CACHE_RESTORED
+    displayName: Cache Yarn packages
+
+  - script: |
+      yarn install
+    condition: ne(variables.CACHE_RESTORED, 'true')
+    displayName: Installing Modules
+
+  - script: |
+      if [ ${{ parameters.ENV }} = print ]; then
+        yarn run build:print --mode prod
+      else
+        yarn run build --mode ${{ parameters.ENV }}
+      fi
+    displayName: 'Yarn Build for env: ${{ parameters.ENV }}'
+
