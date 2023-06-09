@@ -235,7 +235,7 @@ const rules = ref<Record<string, any>>({
     },
     feasibility: {
       id: null,
-      details: requiredIfEmptyValidationFunc(feasibilityId),
+      details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
     },
     projectDetails: {
       simpleProjectDescription: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],

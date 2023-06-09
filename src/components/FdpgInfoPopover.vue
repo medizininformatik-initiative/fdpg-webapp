@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 
@@ -52,8 +52,7 @@ const visible = ref(false)
     line-height: 24px;
     border-radius: 18px;
     background-color: $blue;
-    right: -40px !important;
-    bottom: 8px !important;
+    transform: translateX(40px);
     word-break: break-word;
     text-align: left;
 

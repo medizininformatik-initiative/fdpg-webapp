@@ -4,9 +4,10 @@ import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import useDownload from '../use-download'
 import { ref } from 'vue'
+import type { MockedObject } from 'vitest'
 
 describe('UseDownload', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
 
   beforeEach(() => {
     vi.clearAllMocks()

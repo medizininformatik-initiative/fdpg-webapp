@@ -6,12 +6,13 @@ import { RouteName } from '@/types/route-name.enum'
 import { PanelQuery } from '@/types/sort-filter.types'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
+import type { MockedObject } from 'vitest'
 import { computed } from 'vue'
 import usePanels from '../use-panels'
 
 describe('UsePanels', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
-  let authStore: vi.MockedObject<ReturnType<typeof useAuthStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
+  let authStore: MockedObject<ReturnType<typeof useAuthStore>>
 
   beforeEach(() => {
     vi.clearAllMocks()

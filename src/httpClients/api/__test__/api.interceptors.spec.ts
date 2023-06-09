@@ -3,13 +3,13 @@ import { proposalCountMock } from '@/mocks/proposal-counts.mock'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
-import type { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios'
 import { AxiosError } from 'axios'
 import { setActivePinia } from 'pinia'
 import { requestInterceptor, responseInterceptor } from '../api.interceptors'
-
+import type { MockedObject } from 'vitest'
 describe('UsePanels', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
 
   beforeEach(() => {
     vi.clearAllMocks()

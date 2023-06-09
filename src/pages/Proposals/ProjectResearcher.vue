@@ -62,14 +62,12 @@
       </el-col>
     </el-row>
   </el-card>
-  <TaskViewer :object-id="researcher._id" />
 </template>
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IResearcher } from '@/types/proposal.types'
 import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'

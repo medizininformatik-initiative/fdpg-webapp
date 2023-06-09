@@ -1,5 +1,5 @@
 <template>
-  <el-container class="fdpg-proposal-details-page">
+  <el-container class="fdpg-proposal-details-page" v-if="proposalStore.currentProposal">
     <DetailTopBar :buttons="topBarButtons"></DetailTopBar>
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
@@ -49,7 +49,7 @@ import { useCommentStore } from '@/stores/comment/comment.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
-import type { ICommentDetail } from '@/types/comment.interface';
+import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { ProposalStatus } from '@/types/proposal.types'
@@ -104,6 +104,28 @@ const handleSignContract = (decision: boolean) => {
     isSignDialogOpen.value = true
   } else if (decision === false) {
     isDeclineContractDialogOpen.value = true
+  }
+}
+
+const handleFinishProjectWithModal = () => {
+  messageBoxStore.setMessageBoxInfo({
+    cancelButtonText: 'general.cancel',
+    cancelButtonClass: 'el-button--text',
+    showCancelButton: true,
+    title: 'proposal.researcherFinishProjectModalTitle',
+    message: 'proposal.researcherFinishProjectModalDescription',
+    confirmButtonText: 'general.confirm',
+    callback: (decision: 'confirm' | 'cancel' | 'close') =>
+      decision === 'confirm' ? changeStatus(ProposalStatus.FinishedProject) : undefined,
+  })
+}
+
+const hasDeclinedFinishProject = ref(false)
+const handleFinishProject = (decision: boolean) => {
+  if (decision === true) {
+    handleFinishProjectWithModal()
+  } else if (decision === false) {
+    hasDeclinedFinishProject.value = true
   }
 }
 
@@ -166,7 +188,7 @@ const quickInfo = computed<IQuickInfo[]>(() => [
   },
 ])
 
-const topBarButtons: IButtonConfig[] = [
+const topBarButtons = computed<IButtonConfig[]>(() => [
   {
     type: 'primary',
     label: 'proposal.toTheRequest',
@@ -178,12 +200,10 @@ const topBarButtons: IButtonConfig[] = [
     label: 'proposal.archiveProject',
     testId: 'button__archiveProposal',
     action: handleArchiveProjectClick,
-    isHidden: computed(
-      () => !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
-    ),
+    isHidden: !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
-]
+])
 
 const getCommentTodos = (comments: ICommentDetail[]): IProjectTodo[] => {
   return comments
@@ -227,8 +247,30 @@ const getContractSignTodo = (): IProjectTodo[] => {
   }
 }
 
+const getFinishProjectTodo = (hasDeclined: boolean): IProjectTodo[] => {
+  const isReadyToFinishProject = proposalStore.currentProposal?.status === ProposalStatus.DataResearch
+
+  if (isReadyToFinishProject && !hasDeclined) {
+    return [
+      {
+        title: t('proposal.researcherFinishProjectTodoTitle'),
+        description: t('proposal.researcherFinishProjectTodoDescription'),
+        action: (decision: boolean) => handleFinishProject(decision),
+        type: 'decision',
+        testId: 'todo__button__finishProject',
+      },
+    ]
+  } else {
+    return []
+  }
+}
+
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getContractSignTodo(), ...getCommentTodos(commentStore.comments)]
+  return [
+    ...getContractSignTodo(),
+    ...getFinishProjectTodo(hasDeclinedFinishProject.value),
+    ...getCommentTodos(commentStore.comments),
+  ]
 })
 
 const fetchProposal = async () => {

@@ -4,6 +4,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import useNotifications from '../use-notifications'
 import { ElNotification } from 'element-plus'
+import type { MockedObject } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -19,7 +20,7 @@ vi.mock('element-plus', () => ({
 }))
 
 describe('UseNotifications', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   beforeEach(() => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())

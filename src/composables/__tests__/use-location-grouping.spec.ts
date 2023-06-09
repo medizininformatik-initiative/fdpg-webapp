@@ -6,9 +6,10 @@ import useLocationGrouping from '../use-location-grouping'
 import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import { i18n } from '@/plugins/i18n'
 import { MiiLocation } from '@/types/location.enum'
+import type { MockedObject } from 'vitest'
 
 describe('UseLocationGrouping', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   const { t } = i18n.global
 
   beforeEach(() => {

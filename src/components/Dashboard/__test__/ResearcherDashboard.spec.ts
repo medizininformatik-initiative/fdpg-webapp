@@ -1,10 +1,11 @@
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { RouteName } from '@/types/route-name.enum'
 import { createTestingPinia } from '@pinia/testing'
-import type { VueWrapper } from '@vue/test-utils';
+import type { VueWrapper } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
 import ResearcherDashboard from '../ResearcherDashboard.vue'
 import FdpgSortSelect from '@/components/FdpgSortSelect.vue'
+import type { MockedObject } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -26,7 +27,7 @@ vi.mock('vue-router', () => ({
 
 describe('ResearcherDashboard.vue', () => {
   let wrapper: VueWrapper<any>
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
 
   beforeEach(() => {
     wrapper = shallowMount(ResearcherDashboard, {

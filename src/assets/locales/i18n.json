@@ -52,6 +52,10 @@
       "de": "Speichern",
       "en": "Save"
     },
+    "confirm": {
+      "de": "Bestätigen",
+      "en": "Confirm"
+    },
     "proposal": {
       "de": "Antrag",
       "en": "Proposal"
@@ -313,12 +317,12 @@
       "en": "Researcher has rejected the contract"
     },
     "CONTRACT_LOCATION_APPROVED": {
-      "de": "UAC hat dem Vertrag zugestimmt",
-      "en": "UAC has agreed to the contract"
+      "de": "DIZ hat dem Vertrag zugestimmt",
+      "en": "DIZ has agreed to the contract"
     },
     "CONTRACT_LOCATION_REJECTED": {
-      "de": "UAC hat den Vertrag abgelehnt",
-      "en": "UAC has rejected the contract"
+      "de": "DIZ hat den Vertrag abgelehnt",
+      "en": "DIZ has rejected the contract"
     },
     "CONTRACT_SYSTEM_REJECTED": {
       "de": "Standort wurde durch das Antragsportal ausgeschlossen",
@@ -967,12 +971,12 @@
       "en": "Privacy notices per type of use"
     },
     "dataPrivacyExtra": {
-      "de": "Ergänzende Datenschutzhinweise",
-      "en": "Supplementary data privacy notice"
+      "de": "Ergänzende Hinweise der Antragstellenden und Angaben zur gewünschten Pseudonymisierung der Datensätze",
+      "en": "Supplementary information from the applicants and information on the desired pseudonymisation of the data records"
     },
     "dataPrivacyExtraPlaceholder": {
-      "de": "Bitte fügen Sie ergänzende Datenschutzhinweise hinzu",
-      "en": "Please add supplementary privacy notices"
+      "de": "Bitte fügen Sie ergänzende Datenschutzhinweise hinzu. Für die Pseudonymisierung ist anzugeben: Sollten Datensätze ein und derselben PatientIn unabhängig von der behandelnden Einrichtung dasselbe Pseudonym bekommen? Sollen Datensätze eines Standorts immer als zusammengehörig erkennbar sein (pseudonyme Standortvariable benötigt)? Soll die Herkunftsstandorte der Datensätze namentlich erkennbar sein (namentliche Standortvariable benötigt)?",
+      "en": "Please add additional data protection information. For pseudonymisation, please specify: Should data records of one and the same patient be given the same pseudonym regardless of the treating institution? Should data records of a site always be recognisable as belonging together (pseudonymous site variable required)? Should the location of origin of the data records be recognisable by name (named location variable required)?"
     },
     "typeOfUse": {
       "de": "Art der Nutzung",
@@ -1239,12 +1243,12 @@
       "en": "Approved with terms"
     },
     "archiveProjectModalTitle": {
-      "de": "Möchten Sie den Antrag wirklich zur Überarbeitung an den Antragsteller zurückschicken?",
-      "en": "Do you really want to send the application back to the applicant for revision?"
+      "de": "Möchten Sie den Antrag wirklich archivieren?",
+      "en": "Do you really want to archive the application?"
     },
     "archiveProjectModalDescription": {
-      "de": "Ihre erstellten Aufgaben werden zur Überarbeitung dem Antragsteller zugeteilt. Der Antrag kann erst nach nachdem er vom Antragsteller erneut eingereicht wurde, vom FDPG-Mitarbeiter an die Standorte weitergeleitet werden.",
-      "en": "Your created tasks will be assigned to the applicant for revision. The application can only be forwarded to the sites by the FDPG staff after it has been resubmitted by the applicant."
+      "de": "Indem Sie den Antrag archivieren, beenden Sie dessen aktive Bearbeitung. Dieser Vorgang kann nicht Rückgängig gemacht werden.",
+      "en": "By archiving the request, you end its active processing. This operation cannot be undone."
     },
     "requestRevisionModalTitle": {
       "de": "Möchten Sie den Antrag wirklich zur Überarbeitung an den Antragsteller zurückschicken?",
@@ -1725,6 +1729,22 @@
     "locationSignDeclineModalDescription": {
       "de": "Indem Sie einen Vertragsvorschlag ablehnen nehmen Sie nicht am Projekt teil. Diese Aktion kann nicht rückgängig gemacht werden und muss begründet werden.",
       "en": "By rejecting a contract proposal you do not participate in the project. This action cannot be undone and must be justified."
+    },
+    "researcherFinishProjectTodoTitle": {
+      "de": "Projektabschluss beantragen",
+      "en": "Request project completion"
+    },
+    "researcherFinishProjectTodoDescription": {
+      "de": "Indem Sie den Projektabschluss beantragen, bestätigen Sie die Vollständigkeit der Publikationen sowie Zwischen- und Abschlussberichte.",
+      "en": "By requesting project completion, you confirm the integrity of the publications as well as interim and final reports."
+    },
+    "researcherFinishProjectModalTitle": {
+      "de": "Möchten Sie den Projektabschluss wirklich beantragen?",
+      "en": "Do you really want to apply for project completion?"
+    },
+    "researcherFinishProjectModalDescription": {
+      "de": "Indem Sie den Projektabschluss beantragen, bestätigen Sie die Vollständigkeit der Publikationen sowie Zwischen- und Abschlussberichte. Das Forschungsdatenportal wird anschließend eine Prüfung der Unterlagen durchführen und das Projekt zur Archivierung durch Sie freischalten.",
+      "en": "By requesting project completion, you confirm the integrity of the publications as well as interim and final reports. The Research Data Portal will then perform a review of the records and release the project for archiving by you."
     },
     "commentVisibleForCount": {
       "de": "Sichtbar für {count} Standorte",
@@ -2514,7 +2534,7 @@
     },
     "READY_TO_ARCHIVE": {
       "de": "Archivieren",
-      "en": "Archivieren"
+      "en": "Archive"
     }
   },
   "departments": {

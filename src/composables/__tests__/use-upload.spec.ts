@@ -1,14 +1,15 @@
 import { proposalCountMock } from '@/mocks/proposal-counts.mock'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { createTestingPinia } from '@pinia/testing'
-import { setActivePinia } from 'pinia'
-import useUpload from '../use-upload'
-import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
-import { ref } from 'vue'
 import { mockProposal } from '@/mocks/proposal.mock'
-import type { UploadRawFile, UploadFile } from 'element-plus'
-import { AxiosError } from 'axios'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { BadRequestError } from '@/types/bad-request-error.enum'
+import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
+import { createTestingPinia } from '@pinia/testing'
+import { AxiosError } from 'axios'
+import type { UploadFile, UploadRawFile } from 'element-plus'
+import { setActivePinia } from 'pinia'
+import type { MockedObject } from 'vitest'
+import { ref } from 'vue'
+import useUpload from '../use-upload'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -20,7 +21,7 @@ vi.mock('vue-i18n', () => ({
 }))
 
 describe('UseNotifications', () => {
-  let proposalStore: vi.MockedObject<ReturnType<typeof useProposalStore>>
+  let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   beforeEach(() => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
