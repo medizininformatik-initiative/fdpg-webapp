@@ -7,8 +7,8 @@ on:
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
   imageName: fdpg-webapp
-  isMain: ${{ github.ref == 'refs/heads/main' }}
-  isDev: ${{ github.ref == 'refs/heads/dev' }}
+  isMain: ${{github.ref == 'refs/heads/main'}}
+  isDev: ${{github.ref == 'refs/heads/dev'}}
   nodeVersion: "18.16.1"
   NODE_ENV: "dev"
 
@@ -40,7 +40,7 @@ jobs:
 
       - name: "Publish Code Coverage"
         uses: 5monkeys/cobertura-action@master
-        if: ${{github.event_name == 'pull_request' }}
+        if: ${{github.event_name == 'pull_request'}}
         with:
           path: '**/reports/coverage/cobertura-coverage.xml'
           minimum_coverage: 75
@@ -48,17 +48,17 @@ jobs:
           only_changed_files: true
 
       - name: "Yarn Build for env: ${{ env.NODE_ENV }}"
-        if: ${{ env.isDev == 'true' }}
+        if: ${{env.isDev == 'true'}}
         run: yarn run build --mode ${{ env.NODE_ENV }}
 
       - name: "Yarn Build for env: ${{ env.NODE_ENV }}"
-        if: ${{ env.NODE_ENV == 'print' }}
+        if: ${{env.NODE_ENV == 'print'}}
         run: yarn run build:print --mode prod
 
 
   build_dev:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ env.isMain == 'false' }}
+    if: ${{env.isMain == 'false'}}
     needs: verify
     with:
       nodeEnvironment: "dev"
@@ -67,7 +67,7 @@ jobs:
 
   build_prelive:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ env.isMain == 'true' }}
+    if: ${{env.isMain == 'true'}}
     needs: verify
     with:
       nodeEnvironment: "prelive"
@@ -76,7 +76,7 @@ jobs:
 
   build_main:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ env.isMain == 'true' }}
+    if: ${{env.isMain == 'true'}}
     needs: verify
     with:
       nodeEnvironment: "main"
