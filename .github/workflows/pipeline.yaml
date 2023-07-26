@@ -62,7 +62,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "dev"
-      nodeVersion: ${{ env.nodeVersion }}
+      nodeVersion: ${{env.nodeVersion}}
 
 
   build_prelive:
@@ -71,7 +71,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "prelive"
-      nodeVersion: ${{ env.nodeVersion }}
+      nodeVersion: ${{env.nodeVersion}}
 
 
   build_main:
@@ -80,4 +80,4 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "main"
-      nodeVersion: ${{ env.nodeVersion }}
+      nodeVersion: ${{env.nodeVersion}}
