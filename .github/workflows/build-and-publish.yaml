@@ -1,0 +1,74 @@
+on:
+  workflow_call:
+    inputs:
+      nodeEnvironment:
+        type: string
+        required: true
+        default: "dev"
+      nodeVersion:
+        type: string
+        required: true
+        default: "18.16.1"
+
+
+env:
+  containerRegistry: container-registry.cr.de-fra.ionos.com
+  imageName: fdpg-webapp
+
+jobs:
+  build_publish:
+    name: "Build and Publish"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{inputs.nodeVersion}}
+          cache: yarn
+
+      - name: "Installing Modules"
+        run: yarn install
+
+      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+        if: ${{ inputs.nodeEnvironment != 'print' }}
+        run: yarn run build --mode ${{ inputs.nodeEnvironment }}
+
+      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+        if: ${{ inputs.nodeEnvironment == 'print' }}
+        run: yarn run build:print --mode prod
+
+
+      - name: set npmVersionString variable
+        run: echo "npmVersionString=" $(node -p "require('./package.json').version") >> "$GITHUB_ENV"
+
+      - name: set pipeDate variable
+        run: echo "pipeDate=$(date +%Y%m%d)" >> "$GITHUB_ENV"
+
+      - name: set pipeTime variable
+        run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.containerRegistry }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.npmVersionString}}
+          build-args: |
+            BUILD_DATE=${{env.pipeDate}}
+            BUILD_TIME=${{env.pipeTime}}
+            SOURCE_BRANCH=${{github.ref}}
+
