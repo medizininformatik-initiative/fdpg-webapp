@@ -5,15 +5,13 @@ on:
         type: string
         required: true
         default: "dev"
-      nodeVersion:
-        type: string
-        required: true
-        default: "18.16.1"
 
 
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
   imageName: fdpg-webapp
+  nodeVersion: "18.16.1"
+
 
 jobs:
   build_publish:
@@ -25,7 +23,7 @@ jobs:
       - name: "Setup Node"
         uses: actions/setup-node@v3
         with:
-          node-version: ${{inputs.nodeVersion}}
+          node-version: ${{env.nodeVersion}}
           cache: yarn
 
       - name: "Installing Modules"

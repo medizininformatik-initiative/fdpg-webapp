@@ -9,7 +9,6 @@ env:
   imageName: fdpg-webapp
   isMain: ${{ github.ref == 'refs/heads/main' }}
   isDev: ${{ github.ref == 'refs/heads/dev' }}
-  nodeVersion: "18.16.1"
   NODE_ENV: "dev"
 
 
@@ -62,7 +61,6 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "dev"
-      nodeVersion: ${{env.nodeVersion}}
 
 
   build_prelive:
@@ -71,7 +69,6 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "prelive"
-      nodeVersion: ${{env.nodeVersion}}
 
 
   build_main:
@@ -80,4 +77,3 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "main"
-      nodeVersion: ${{env.nodeVersion}}
