@@ -51,7 +51,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "dev"
-      nodeVersion: "18.16.1"
+      nodeVersion: ${{env.nodeVersion}}
     secrets:
       DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
       DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
