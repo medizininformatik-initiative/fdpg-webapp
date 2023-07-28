@@ -50,6 +50,9 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "dev"
+    secrets:
+      DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
 
 
   build_prelive:
@@ -58,6 +61,9 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "prelive"
+    secrets:
+      DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
 
 
   build_main:
@@ -66,3 +72,6 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: "prod"
+    secrets:
+      DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}}
+      DOCKERHUB_TOKEN: ${{secrets.DOCKERHUB_TOKEN}}
