@@ -64,7 +64,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.npmVersionString}}
+          tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{inputs.nodeEnvironment}}-${{env.npmVersionString}}
           build-args: |
             BUILD_DATE=${{env.pipeDate}}
             BUILD_TIME=${{env.pipeTime}}
