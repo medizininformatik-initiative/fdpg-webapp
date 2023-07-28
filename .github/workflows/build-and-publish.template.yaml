@@ -47,7 +47,7 @@ jobs:
 
 
       - name: set npmVersionString variable
-        run: echo "npmVersionString=" $(node -p "require('./package.json').version") >> "$GITHUB_ENV"
+        run: echo "npmVersionString="$(node -p "require('./package.json').version") >> "$GITHUB_ENV"
 
       - name: set pipeDate variable
         run: echo "pipeDate=$(date +%Y%m%d)" >> "$GITHUB_ENV"
