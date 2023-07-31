@@ -1,0 +1,71 @@
+name: Pipeline
+
+on:
+  push:
+
+
+env:
+  isMain: ${{ github.ref == 'refs/heads/main' }}
+  isDev: ${{ github.ref == 'refs/heads/dev' }}
+
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{vars.NODE_VERSION}}
+          cache: yarn
+
+      - name: "Installing Modules"
+        run: yarn install
+
+      - name: "Unit Testing"
+        run: yarn test:unit
+
+      - name: "Publish Test Results"
+        uses: mikepenz/action-junit-report@v3
+        if: success() || failure()  # always run even if the previous step fails
+        with:
+          report_paths: '**/reports/junit.xml'
+          fail_on_failure: true
+
+      - name: "Publish Code Coverage"
+        uses: 5monkeys/cobertura-action@master
+        if: ${{github.event_name == 'pull_request' }}
+        with:
+          path: '**/reports/coverage/cobertura-coverage.xml'
+          minimum_coverage: 75
+          fail_below_threshold: false
+          only_changed_files: true
+
+
+  build_dev:
+    uses: ./.github/workflows/build-and-publish.template.yaml
+    if: ${{ github.ref != 'refs/heads/main' }}  # isMain == false
+    needs: verify
+    with:
+      nodeEnvironment: "dev"
+    secrets: inherit
+
+
+  build_prelive:
+    uses: ./.github/workflows/build-and-publish.template.yaml
+    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
+    needs: verify
+    with:
+      nodeEnvironment: "prelive"
+    secrets: inherit
+
+
+  build_main:
+    uses: ./.github/workflows/build-and-publish.template.yaml
+    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
+    needs: verify
+    with:
+      nodeEnvironment: "prod"
+    secrets: inherit
