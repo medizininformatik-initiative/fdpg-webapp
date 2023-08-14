@@ -1,20 +1,66 @@
 import type { Page} from '@playwright/test';
 import {test, expect} from '@playwright/test';
 
-test('create, submit and forward project', async ({page}) => {
-  const timestamp = Date.now();
-
+test('create, submit and forward a project', async ({page}) => {
+  const baseUrl: string = process.env.URL;
   const usernameResearcher: string = process.env.USERNAME_RESEARCHER;
   const usernameEmployee: string = process.env.USERNAME_EMPLOYEE;
   const passwordResearcher: string = process.env.PASSWORD_RESEARCHER;
   const passwordEmployee: string = process.env.PASSWORD_EMPLOYEE;
 
-  await goToDashboard(page);
-  await logIn(page, usernameResearcher, passwordResearcher);
+  const title = `Test-${Date.now()}`;
 
+  await goToDashboard(page, baseUrl);
+  await logIn(page, usernameResearcher, passwordResearcher);
+  await createAndSubmitProject(page, baseUrl, title);
+  await logOut(page);
+
+  await logIn(page, usernameEmployee, passwordEmployee);
+  await checkAndForwardProject(page, title);
+  await logOut(page);
+});
+
+async function goToDashboard(page: Page, baseUrl: string) {
+  await page.goto(baseUrl);
+  // await page.waitForURL('/');
+  await page.waitForNavigation();
+}
+
+async function saveProject(page: Page) {
+  await page.getByTestId('handleSaveDraft').click();
+  await checkForSuccessAlert(page);
+}
+
+async function checkForSuccessAlert(page: Page) {
+  await page.waitForSelector('div[role="alert"]');
+  await expect(page.getByRole('heading', {name: 'Success'})).toBeVisible();
+}
+
+async function uploadFile(page: Page, testId: string, filename: string) {
+  const fileChooserPromise = page.waitForEvent('filechooser');
+  await page.getByTestId(testId).click();
+  const fileChooser = await fileChooserPromise;
+  await fileChooser.setFiles(filename);
+}
+
+async function logIn(page: Page, username: string, password: string) {
+  await page.locator('#username').fill(username);
+  await page.locator('#password').fill(password);
+  await page.locator('#kc-login').click();
+  await page.waitForNavigation();
+  await page.waitForNavigation();
+}
+
+async function logOut(page: Page) {
+  await page.getByTestId('header.profileButton').click();
+  await page.locator('xpath=//*[@data-testid="header.profileButton"]/div/span[1]').click();
+  await page.waitForNavigation();
+  await page.waitForNavigation();
+}
+
+async function createAndSubmitProject(page: Page, baseUrl: string, title: string) {
   await page.getByTestId('dashboard.makeARequest').click();
 
-  const title = `Projekt-${timestamp}`;
   await page.getByTestId('proposalForm.projectAbbreviation').fill(title);
 
   await page.getByTestId('radio-option_DATA_RECEIVER__applicant').check();
@@ -23,7 +69,7 @@ test('create, submit and forward project', async ({page}) => {
 
   await page.getByTestId('radio-option_ORGANIZATION_OF_PROJECT_RESPONSIBLE').check();
 
-  await page.getByTestId('generalProjectInformationForm.projectTitle').fill(`Titel-${timestamp}`);
+  await page.getByTestId('generalProjectInformationForm.projectTitle').fill(title);
   await page.getByTestId('generalProjectInformationForm.desiredStartTime').getByRole('textbox').fill('31/12/2029');
   await page.getByTestId('generalProjectInformationForm.projectDuration').getByRole('spinbutton').fill('1');
   await page.getByTestId('generalProjectInformation.projectFunding').fill('Wird finanziert von Geldgeber x');
@@ -62,7 +108,7 @@ test('create, submit and forward project', async ({page}) => {
 
   await saveProject(page);
 
-  await goToDashboard(page);
+  await goToDashboard(page, baseUrl);
 
   // a project card with the title should be visible
   await expect(page.getByText(title)).toBeVisible();
@@ -78,7 +124,7 @@ test('create, submit and forward project', async ({page}) => {
 
   await saveProject(page);
 
-  await goToDashboard(page);
+  await goToDashboard(page, baseUrl);
 
   // a project card with the title should be visible
   await expect(page.getByText(title)).toBeVisible();
@@ -94,16 +140,13 @@ test('create, submit and forward project', async ({page}) => {
   // await page.getByTestId('checkbox__option_1').check();
   await page.getByTestId('button__confirm').click();
   await checkForSuccessAlert(page);
+}
 
-  await logOut(page);
-
-  await logIn(page, usernameEmployee, passwordEmployee);
-
+async function checkAndForwardProject(page: Page, title: string) {
   // a project card with the title should be visible
   await expect(page.getByText(title)).toBeVisible();
 
   await page.getByText(title).click();
-
 
   await page.getByTestId('button__toProposal').click();
 
@@ -117,8 +160,6 @@ test('create, submit and forward project', async ({page}) => {
 
   await page.getByTestId('button__projectDetails').click();
 
-
-
   await page.getByTestId('checkbox__isRegistrationLinkSent').click();
   await page.getByTestId('checkbox__isUnique').click();
   await page.getByTestId('checkbox__isAttachmentsChecked').click();
@@ -126,46 +167,4 @@ test('create, submit and forward project', async ({page}) => {
 
   await page.getByTestId('button__toLocationCheck').click();
   await page.getByTestId('button__confirm').click();
-
-});
-
-async function goToDashboard(page: Page) {
-  await page.goto('/');
-  // await page.waitForURL('/');
-  await page.waitForNavigation();
 }
-
-async function saveProject(page: Page) {
-  await page.getByTestId('handleSaveDraft').click();
-  await checkForSuccessAlert(page);
-}
-
-async function checkForSuccessAlert(page: Page) {
-  await page.waitForSelector('div[role="alert"]');
-  await expect(page.getByRole('heading', {name: 'Success'})).toBeVisible();
-}
-
-async function uploadFile(page: Page, testId: string, filename: string) {
-  const fileChooserPromise = page.waitForEvent('filechooser');
-  await page.getByTestId(testId).click();
-  const fileChooser = await fileChooserPromise;
-  await fileChooser.setFiles(filename);
-}
-
-async function logIn(page: Page, username: string, password: string) {
-  await page.locator('#username').fill(username);
-  await page.locator('#password').fill(password);
-  await page.locator('#kc-login').click();
-  await page.waitForNavigation();
-  await page.waitForNavigation();
-}
-
-async function logOut(page: Page) {
-  await page.getByTestId('header.profileButton').click();
-  await page.locator('xpath=//*[@data-testid="header.profileButton"]/div/span[1]').click();
-  await page.waitForNavigation();
-  await page.waitForNavigation();
-}
-
-
-
