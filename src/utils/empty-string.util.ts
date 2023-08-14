@@ -13,7 +13,11 @@ export const transformEmptyStringToUndefined = (value?: string | Date): string |
   return undefined
 }
 
-export const hasNoContent = (value: any & { _id: string; isDone: boolean }): boolean => {
+export const hasNoContent = (value?: { _id?: string; isDone?: boolean }): boolean => {
+  if (!value) {
+    return true
+  }
+
   const existingValues = Object.entries(value).filter((entry) => {
     return (
       entry[1] !== null /** if the value is not existing */ &&

@@ -27,7 +27,7 @@ import type { IDefinitionCardVirtual, IVirtualWrap } from '@/components/Shared/d
 import useNotifications from '@/composables/use-notifications'
 import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useUserStore } from '@/stores/user.store'
 import type { IOidc, IOidcProfile, IUserFromExternalOrganization, IUserFromMii } from '@/types/oidc.types'
 import { computed, ref } from 'vue'
@@ -66,7 +66,7 @@ const handleResetPassword = () => {
     title: 'general.resetPasswordModalTitle',
     message: 'general.resetPasswordModalDescription',
     confirmButtonText: 'general.resetPasswordModalAction',
-    callback: (decision: 'confirm' | 'cancel' | 'close') => (decision === 'confirm' ? resetPassword() : undefined),
+    callback: async(decision: DecisionType) => (decision === 'confirm' ? await resetPassword() : undefined),
   })
 }
 

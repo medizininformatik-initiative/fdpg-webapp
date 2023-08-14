@@ -39,7 +39,7 @@ import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import type { IReportFile, IUpload } from '@/types/proposal.types'
 import type { UploadType } from '@/types/upload.types'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps({
@@ -73,7 +73,7 @@ const props = defineProps({
 
 const emit = defineEmits(['remove'])
 
-const proposalId = computed(() => props.proposalId as string)
+const proposalId = computed(() => props.proposalId)
 const isCollapsed = ref<boolean>(true)
 
 const handleTogglePanel = () => {

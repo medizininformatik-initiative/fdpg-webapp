@@ -67,7 +67,7 @@ const userStore = useUserStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 interface ParticipantAction {
-  action: () => void
+  action: () => Promise<void>
   actionTitle: TranslationSchema
 }
 
@@ -85,6 +85,7 @@ type ParticipantPanelType = Record<PanelType, ParticipantInfo[]>
 let researcherIdentities = ref<Omit<IResearcherIdentity, 'username'>[]>([])
 const participantsCount = ref(0)
 const triggeredEmails = ref<string[]>([])
+
 const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
   return {
     action: () => createUser(identity),

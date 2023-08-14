@@ -17,7 +17,9 @@
         >
           <i18n-t :keypath="option.label" tag="div" class="checkbox-content" scope="parent">
             <template v-for="(slot, slotIdx) in option.slots" :key="optionIdx + 'slot_' + slotIdx" #[slot.name]>
-              <a v-if="slot.link" target="_blank" :href="slot.link">{{ i18n.t(slot.label) }}</a>
+              <a v-if="slot.link" target="_blank" rel="noopener" :href="sanitizeUrl(slot.link)">{{
+                i18n.t(slot.label)
+              }}</a>
 
               <span v-else>{{ i18n.t(slot.label) }}</span>
             </template>
@@ -55,6 +57,8 @@ import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgCheckbox from './FdpgCheckbox.vue'
 import FdpgDialog from './FdpgDialog.vue'
+import { sanitizeUrl } from '@braintree/sanitize-url'
+
 const emit = defineEmits(['update:modelValue', 'confirm'])
 
 const props = defineProps({

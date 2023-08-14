@@ -19,6 +19,7 @@ const mockUpdateFdpgChecklist = vi.fn()
 const mockMarkSectionAsDone = vi.fn()
 const mockSetSortField = vi.fn()
 const mockToggleSortDirection = vi.fn()
+const mockCreateProposalPublication = vi.fn()
 
 export const useProposalStore = vi.fn().mockImplementation(() => ({
   proposals: {},
@@ -48,4 +49,5 @@ export const useProposalStore = vi.fn().mockImplementation(() => ({
   markSectionAsDone: mockMarkSectionAsDone,
   setSortField: mockSetSortField,
   toggleSortDirection: mockToggleSortDirection,
+  createProposalPublication: mockCreateProposalPublication,
 }))

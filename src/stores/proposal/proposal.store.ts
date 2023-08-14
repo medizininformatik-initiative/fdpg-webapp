@@ -1,5 +1,5 @@
 import { ProposalService } from '@/services/proposal/proposal.service'
-import type { ISortAndOrderBy, PanelQuery} from '@/types/sort-filter.types';
+import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
 import type {
   IProposal,
@@ -22,6 +22,7 @@ import { getDateDiff } from '@/utils/date.util'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
+import type { MiiLocation } from '@/types/location.enum'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -122,8 +123,8 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.signContract(id, decision)
     },
 
-    async initContracting(id: string, file: File): Promise<void> {
-      await this.apiService.initContracting(id, file)
+    async initContracting(id: string, file: File, selectedLocations: MiiLocation[]): Promise<void> {
+      await this.apiService.initContracting(id, file, selectedLocations)
     },
 
     async uploadFile(id: string, file: File, type: DirectUpload): Promise<void> {
@@ -138,7 +139,7 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async removeUpload(id: string, uploadId: string): Promise<void> {
       await this.apiService.removeFile(id, uploadId)
-      if (this.currentProposal && this.currentProposal.uploads) {
+      if (this.currentProposal?.uploads) {
         const currentUploadIndex = this.currentProposal.uploads.findIndex((upload) => upload._id === uploadId)
         if (currentUploadIndex !== -1) {
           this.currentProposal.uploads.splice(currentUploadIndex, 1)
@@ -265,6 +266,9 @@ export const useProposalStore = defineStore('Proposal', {
       if (this.currentProposal?._id === proposalId) {
         this.currentProposal.reports = this.currentProposal?.reports.filter((report) => report._id !== reportId)
       }
+    },
+    async updateFdpgCheckNotes(proposalId: string, fdpgCheckNotes: string): Promise<void> {
+      await this.apiService.updateFdpgCheckNotes(proposalId, fdpgCheckNotes)
     },
   },
 

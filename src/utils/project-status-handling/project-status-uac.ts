@@ -1,5 +1,5 @@
 import type { IProjectStatus } from '@/types/project-status'
-import type { IProposal} from '@/types/proposal.types';
+import type { IProposal } from '@/types/proposal.types'
 import { LocationState, ProjectStatusType, ProposalStatus } from '@/types/proposal.types'
 import { getLocaleDateString } from '../date.util'
 
@@ -21,6 +21,13 @@ export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
   }
 
   switch (proposal.locationStatus) {
+    default:
+    case LocationState.NotRequested:
+      return {
+        type: ProjectStatusType.neutral,
+        description: 'projectStatus.LOC_NOT_REQUESTED',
+        descriptionI18nParameter: { date: getLocaleDateString(proposal.dueDateForStatus) },
+      }
     case LocationState.IsDizCheck:
       return {
         type: ProjectStatusType.info,
@@ -64,13 +71,7 @@ export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
         description: 'projectStatus.LOC_REQUESTED_BUT_EXCLUDED',
         descriptionI18nParameter: { date: getLocaleDateString(proposal.dueDateForStatus) },
       }
-    case LocationState.NotRequested:
-    default:
-      return {
-        type: ProjectStatusType.neutral,
-        description: 'projectStatus.LOC_NOT_REQUESTED',
-        descriptionI18nParameter: { date: getLocaleDateString(proposal.dueDateForStatus) },
-      }
+
     case LocationState.ConditionalApprovalDeclined:
       return {
         type: ProjectStatusType.neutral,

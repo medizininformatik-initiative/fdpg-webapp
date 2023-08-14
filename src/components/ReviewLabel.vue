@@ -3,7 +3,11 @@
     <component :is="headline" v-if="title">{{ $t(title) }}</component>
 
     <el-checkbox
-      v-if="authStore.singleKnownRole === Role.FdpgMember && sectionId"
+      v-if="
+        authStore.singleKnownRole === Role.FdpgMember &&
+        sectionId &&
+        proposalStore.currentProposal?.status !== ProposalStatus.Draft
+      "
       v-model="checkboxValue"
       v-loading="isCheckboxLoading"
       :disabled="isCheckboxLoading"
@@ -20,6 +24,7 @@ import useNotifications from '@/composables/use-notifications'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import { computed, ref } from 'vue'
 
 const authStore = useAuthStore()

@@ -22,7 +22,7 @@
         <el-table-column prop="doi" :label="$t('proposal.doi')" />
         <el-table-column prop="link" :label="$t('proposal.link')">
           <template #default="scope">
-            <el-link :href="scope.row.link" target="_blank" class="highligh-tabindex">{{
+            <el-link :href="sanitizeUrl(scope.row.link)" target="_blank" rel="noopener" class="highligh-tabindex">{{
               $t('proposal.publicationLinkItemInTable')
             }}</el-link>
           </template>
@@ -66,11 +66,13 @@
 
 <script setup lang="ts">
 import useNotifications from '@/composables/use-notifications'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IPublicationGet } from '@/types/proposal.types'
 import { getLocaleDateString } from '@/utils/date.util'
 import { computed, defineAsyncComponent, ref } from 'vue'
+import { sanitizeUrl } from '@braintree/sanitize-url'
+
 const PublicationDialog = defineAsyncComponent(() => import('./PublicationDialog.vue'))
 
 const messageBoxStore = useMessageBoxStore()
@@ -120,13 +122,13 @@ const handleDeletePublication = (event: Event, proposalId: string) => {
     title: 'proposal.deletePublication',
     message: 'proposal.deletePublicationModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? deletePublication(proposalId) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await deletePublication(proposalId) : undefined,
   })
 }
-const deletePublication = (publicationId) => {
+const deletePublication = async (publicationId: string) => {
   try {
-    proposalStore.deletePublication(proposalId.value, publicationId)
+    await proposalStore.deletePublication(proposalId.value, publicationId)
   } catch (error) {
     showErrorMessage()
   }

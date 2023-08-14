@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 import type { TranslationSchema } from '@/plugins/i18n'
+
+export type DecisionType = 'confirm' | 'cancel' | 'close'
 export interface IMessageBox {
   isOpen?: boolean
   cancelButtonText: TranslationSchema
@@ -8,7 +10,7 @@ export interface IMessageBox {
   title: TranslationSchema
   message: TranslationSchema
   confirmButtonText: TranslationSchema
-  callback: (decision: 'confirm' | 'cancel' | 'close') => void
+  callback: (decision: DecisionType) => Promise<void>
 }
 
 export const useMessageBoxStore = defineStore('MessageBox', {
@@ -20,17 +22,17 @@ export const useMessageBoxStore = defineStore('MessageBox', {
     title: 'general.title',
     message: 'general.title',
     confirmButtonText: 'general.save',
-    callback: () => {},
+    callback: async () => {},
   }),
 
   actions: {
-    async openMessageBox(): Promise<void> {
+    openMessageBox(): void {
       this.isOpen = true
     },
-    async closeMessageBox(): Promise<void> {
+    closeMessageBox(): void {
       this.isOpen = false
     },
-    async setMessageBoxInfo(messageBoxInfo: IMessageBox): Promise<void> {
+    setMessageBoxInfo(messageBoxInfo: IMessageBox): void {
       this.$patch({ ...messageBoxInfo })
       this.openMessageBox()
     },

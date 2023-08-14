@@ -1,8 +1,6 @@
 import { Department } from '@/types/department.enum'
 import { Countries, MiiLocation } from '@/types/location.enum'
-import type {
-  IProposal,
-  IProposalDetail} from '@/types/proposal.types';
+import type { IProposal, IProposalDetail } from '@/types/proposal.types'
 import {
   DeclineType,
   FdpgTaskType,
@@ -41,6 +39,7 @@ export const mockProposal: IProposal = {
       ],
     },
   ],
+  contractRejectedByResearcherReason: 'reason',
   applicant: {
     researcher: {
       _id: 'researcherId',
@@ -234,6 +233,7 @@ export const mockProposal: IProposal = {
       _id: 'typeOfUseId',
       isDone: false,
       usage: [ProposalTypeOfUse.Biosample],
+      dataPrivacyExtra: 'Data privacy extra',
     },
     informationOnRequestedBioSamples: {
       _id: 'informationOnRequestedBioSamplesId',
@@ -307,6 +307,13 @@ export const mockProposal: IProposal = {
       fileSize: 2644,
       type: UseCaseUpload.LocationContract,
       createdAt: '2022-08-30T12:01:47.152Z',
+    },
+    {
+      _id: 'UploadId8',
+      fileName: 'Vertragsvorlage2.pdf',
+      fileSize: 2648,
+      type: UseCaseUpload.ContractCondition,
+      createdAt: '2022-08-30T11:53:10.098Z',
     },
   ],
   history: [
@@ -393,7 +400,6 @@ export const mockProposal: IProposal = {
     MiiLocation.UMR,
     MiiLocation.UKD,
     MiiLocation.UKRUB,
-    MiiLocation.KC,
   ],
   signedContracts: [MiiLocation.MRI, MiiLocation.UKK],
   conditionalApprovals: [
@@ -407,6 +413,28 @@ export const mockProposal: IProposal = {
       createdAt: '2022-08-30T11:42:03.127Z',
       reviewedAt: '2022-08-30T11:45:46.528Z',
       signedAt: '2022-08-30T12:02:31.489Z',
+    },
+    {
+      location: MiiLocation.KC,
+      isAccepted: false,
+      isContractSigned: false,
+      dataAmount: 50,
+      uploadId: 'UploadId8',
+      _id: 'conditionalApprovalIdKC',
+      createdAt: '2022-08-30T11:42:03.127Z',
+      reviewedAt: undefined,
+      signedAt: undefined,
+    },
+    {
+      location: MiiLocation.Charité,
+      isAccepted: false,
+      isContractSigned: false,
+      dataAmount: 50,
+      uploadId: 'UploadId8',
+      _id: 'conditionalApprovalIdKC',
+      createdAt: '2022-08-30T11:42:03.127Z',
+      reviewedAt: undefined,
+      signedAt: undefined,
     },
   ],
   uacApprovals: [
@@ -423,6 +451,18 @@ export const mockProposal: IProposal = {
     {
       createdAt: '2022-08-30T11:40:24.995Z',
       location: MiiLocation.Charité,
+      reason: 'Some reason here',
+      type: DeclineType.UacApprove,
+    },
+    {
+      createdAt: '2022-08-30T11:40:24.995Z',
+      location: MiiLocation.KC,
+      reason: 'Some reason here',
+      type: DeclineType.UacApprove,
+    },
+    {
+      createdAt: '2022-08-30T11:40:24.995Z',
+      location: MiiLocation.UKT,
       reason: 'Some reason here',
       type: DeclineType.UacApprove,
     },

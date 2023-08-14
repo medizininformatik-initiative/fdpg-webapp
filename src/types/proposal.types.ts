@@ -64,7 +64,7 @@ export interface IResearcherIdentity extends IResearcher {
 export interface IInstitute extends WithIdAndIsDone {
   name?: string
   streetAddress?: string
-  houseNumber?: string | undefined
+  houseNumber?: string
   postalCode?: string
   city?: string
   country?: Countries
@@ -228,6 +228,7 @@ export enum ProjectHistoryType {
   UacVoteDecline = 'UAC_VOTE_DECLINE',
   UacConditionAccept = 'UAC_CONDITION_ACCEPT',
   UacConditionDecline = 'UAC_CONDITION_DECLINE',
+  FdpgApprovedLocationRemoved = 'FDPG_APPROVED_LOCATION_REMOVED',
   ContractResearcherApproved = 'CONTRACT_RESEARCHER_APPROVED',
   ContractResearcherRejected = 'CONTRACT_RESEARCHER_REJECTED',
   ContractUacApproved = 'CONTRACT_UAC_APPROVED',
@@ -409,7 +410,6 @@ export interface IProposal {
   fdpgChecklist?: IFdpgChecklist
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
-
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
@@ -426,6 +426,7 @@ export interface IProposal {
   totalPromisedDataAmount?: number
   totalContractedDataAmount?: number
   declineReasons: IDeclineReason[]
+  fdpgCheckNotes?: string
 }
 
 export enum FdpgTaskType {
@@ -493,7 +494,7 @@ export interface IProposalDetail {
 
 export interface IDeclineReason {
   type: DeclineType
-  reason: string
+  reason?: string
   location: MiiLocation
   createdAt: string
 }

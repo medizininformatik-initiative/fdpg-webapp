@@ -211,6 +211,10 @@
     "applicantId": {
       "de": "Antragsteller-ID",
       "en": "Applicant ID"
+    },
+    "additionalInformation": {
+      "de": "Zusätzliche Informationen",
+      "en": "Additional information"
     }
   },
   "sidebar": {
@@ -307,6 +311,10 @@
     "UAC_CONDITION_DECLINE": {
       "de": "UAC Auflagen wurden abgelehnt",
       "en": "UAC conditions were refused"
+    },
+    "FDPG_APPROVED_LOCATION_REMOVED": {
+      "de": "Standort wurde vom FDPG ausgeschlossen",
+      "en": "Location was excluded by FDPG"
     },
     "CONTRACT_RESEARCHER_APPROVED": {
       "de": "Wissenschaftler hat dem Vertrag zugestimmt",
@@ -667,8 +675,8 @@
       "en": "Personal details"
     },
     "belongingOptional": {
-      "de": "Zugehörigkeit (Affiliation)",
-      "en": "Belonging (Optional)"
+      "de": "Zugehörigkeit (Affiliation), z.B. Institut",
+      "en": "Belonging"
     },
     "pleaseEnterTheBelonging": {
       "de": "Bitte geben Sie die Zugehörigkeit an",
@@ -743,7 +751,7 @@
       "en": "Feasibility ID"
     },
     "feasibility": {
-      "de": "Machbarkeit",
+      "de": "Machbarkeit*",
       "en": "Feasibility"
     },
     "statementsAssessmentOfFeasibility": {
@@ -1830,6 +1838,10 @@
       "de": "Abgelehnt bei UAC Überprüfung",
       "en": "Rejected at UAC review"
     },
+    "locationVoteExcludeReasonType_FDPG_UNSELECTED": {
+      "de": "Abgelehnt durch FDPG",
+      "en": "Rejected by FDPG"
+    },
     "contractRejectedByResearcherReasonTitle": {
       "de": "Abgelehnt durch den Wissenschaftler",
       "en": "Rejected by the Researcher"
@@ -2057,6 +2069,14 @@
     "plannedPublicationAuthorsInfo": {
       "de": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
       "en": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe."
+    },
+    "fdpgCheckNotes": {
+      "de": "Prüfnotizen",
+      "en": "Check Notes"
+    },
+    "checkNotesPlaceHolder": {
+      "de": "Fügen Sie Ihre Notizen hinzu...",
+      "en": "Add your notes..."
     }
   },
   "roles": {
@@ -2099,6 +2119,18 @@
     "HEADER_Admin": {
       "de": "Admin",
       "en": "Admin"
+    },
+    "changeRoleModalText": {
+      "de": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
+      "en": "This role doesn't have right access. do you want to change role and try again to access?"
+    },
+    "changeRoleModalTitle": {
+      "de": "Falsche Rolle",
+      "en": "Wrong role"
+    },
+    "roleAccessDenied": {
+      "de": "Leider haben Sie keinen Zugang zu diesen Informationen.",
+      "en": "Unfortunately you don't have any access to this information."
     }
   },
   "countries": {

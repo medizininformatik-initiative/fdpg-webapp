@@ -52,7 +52,8 @@
     "resetPasswordModalAction": "Reset",
     "date": "Date",
     "title": "Title",
-    "applicantId": "Applicant ID"
+    "applicantId": "Applicant ID",
+    "additionalInformation": "Additional information"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -80,6 +81,7 @@
     "UAC_VOTE_DECLINE": "Research project was rejected by the UAC",
     "UAC_CONDITION_ACCEPT": "UAC conditions were accepted",
     "UAC_CONDITION_DECLINE": "UAC conditions were refused",
+    "FDPG_APPROVED_LOCATION_REMOVED": "Location was excluded by FDPG",
     "CONTRACT_RESEARCHER_APPROVED": "Researcher has agreed to the contract",
     "CONTRACT_RESEARCHER_REJECTED": "Researcher has rejected the contract",
     "CONTRACT_LOCATION_APPROVED": "DIZ has agreed to the contract",
@@ -174,7 +176,7 @@
     "involvedCategoryInfo": "Information about the participant categories could be found here: https://forschen-fuer-gesundheit.de/menu_data.php",
     "addAnotherPerson": "Add another person",
     "personalDetails": "Personal details",
-    "belongingOptional": "Belonging (Optional)",
+    "belongingOptional": "Belonging",
     "pleaseEnterTheBelonging": "Please enter the belonging",
     "emailAddress": "E-Mail Address",
     "pleaseEnterTheEmailAddress": "Please enter the e-mail address",
@@ -465,6 +467,7 @@
     "locationVoteExcludeReasonType_LOCATION_SIGN": "Rejected at the conclusion of the contract",
     "locationVoteExcludeReasonType_DIZ_APPROVE": "Rejected at DIZ review",
     "locationVoteExcludeReasonType_UAC_APPROVE": "Rejected at UAC review",
+    "locationVoteExcludeReasonType_FDPG_UNSELECTED": "Rejected by FDPG",
     "contractRejectedByResearcherReasonTitle": "Rejected by the Researcher",
     "conditionApprovalDataVolume": "{amount} records",
     "participantCategory_DATA_RECEIVER": "Data receiver",
@@ -521,7 +524,9 @@
     "admitReputationOfAttachmentInformation": "Every proposal must be accompanied by the ethics vote of the ethics committee responsible for you. If no ethics vote is required, you must enclose a declaration of non-responsibility from the ethics committee. Please make sure that the ethics application on which the vote is based fully covers the project you describe in the proposal. If you request additional data elements from the MII or have additional questions, you will need an amendment from the Ethics Committee to supplement the vote.",
     "admitReputationOfAttachment": "The attached ethics vote fully covers the use of the data and biospecimens described in the use research proposal.",
     "plannedPublicationDescriptionInfo": "Please briefly describe the intended content of the publication.",
-    "plannedPublicationAuthorsInfo": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe."
+    "plannedPublicationAuthorsInfo": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe.",
+    "fdpgCheckNotes": "Check Notes",
+    "checkNotesPlaceHolder": "Add your notes..."
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -533,7 +538,10 @@
     "HEADER_Researcher": "Researcher",
     "HEADER_DizMember": "DIZ",
     "HEADER_UacMember": "UAC",
-    "HEADER_Admin": "Admin"
+    "HEADER_Admin": "Admin",
+    "changeRoleModalText": "This role doesn't have right access. do you want to change role and try again to access?",
+    "changeRoleModalTitle": "Wrong role",
+    "roleAccessDenied": "Unfortunately you don't have any access to this information."
   },
   "countries": {
     "AD": "Andorra",

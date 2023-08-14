@@ -3,20 +3,33 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button v-if="proposalId" type="primary" size="large" @click="openDetails">
-          {{ $t('proposal.projectDetails') }}
-        </el-button>
+        <el-button
+          v-if="proposalId"
+          type="primary"
+          size="large"
+          @click="openDetails"
+        >{{ $t('proposal.projectDetails') }}</el-button>
       </div>
     </div>
 
-    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @valid–ate="onValidate">
+    <el-form
+      v-if="proposalForm"
+      ref="formRef"
+      :model="proposalForm"
+      :rules="rules"
+      @valid–ate="onValidate"
+    >
       <el-row class="abbreviation">
         <el-col :sm="18" :md="12" :lg="6">
           <FdpgFormItem prop="projectAbbreviation">
-            <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
+            <FdpgLabel
+              required
+              info="proposal.projectAbbreviationInfo"
+              html-for="proposal.projectAbbreviation"
+            />
             <FdpgInput
               v-model="proposalForm.projectAbbreviation"
-              data-testId="proposalForm.projectAbbreviation"
+              data-test-id="proposalForm.projectAbbreviation"
               placeholder="proposal.egWestStorm"
               :disabled="isReviewMode"
             />
@@ -25,20 +38,46 @@
       </el-row>
 
       <FdpgLabel size="large" html-for="proposal.applicant" />
-      <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
+      <ProjectApplicant
+        v-model="proposalForm.applicant"
+        :form-ref="formRef"
+        :review-mode="isReviewMode"
+      />
 
-      <FdpgLabel required size="large" html-for="proposal.projectResponsible" info="proposal.projectResponsibleInfo" />
+      <FdpgLabel
+        required
+        size="large"
+        html-for="proposal.projectResponsible"
+        info="proposal.projectResponsibleInfo"
+      />
       <ProjectResponsibility
         v-model="proposalForm.projectResponsible"
         :form-ref="formRef"
         :review-mode="isReviewMode"
       />
 
-      <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
-      <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
+      <FdpgLabel
+        required
+        size="large"
+        html-for="proposal.projectUser"
+        info="proposal.projectUserInfo"
+      />
+      <ProjectUser
+        v-model="proposalForm.projectUser"
+        :form-ref="formRef"
+        :review-mode="isReviewMode"
+      />
 
-      <FdpgLabel info="proposal.participatingScientistsInfo" size="large" html-for="proposal.participatingScientists" />
-      <ParticipatingScientists v-model="proposalForm.participants" :form-ref="formRef" :review-mode="isReviewMode" />
+      <FdpgLabel
+        info="proposal.participatingScientistsInfo"
+        size="large"
+        html-for="proposal.participatingScientists"
+      />
+      <ParticipatingScientists
+        v-model="proposalForm.participants"
+        :form-ref="formRef"
+        :review-mode="isReviewMode"
+      />
 
       <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
       <UserProjectInformation
@@ -60,16 +99,16 @@
       <FdpgLabel html-for="proposal.attachmentsOptional" size="large" />
       <p class="desc">
         {{
-          proposalId
-            ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
-            : $t('proposal.attachmentsOnlyAfterSavingHint')
+        proposalId
+        ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
+        : $t('proposal.attachmentsOnlyAfterSavingHint')
         }}
       </p>
 
       <FdpgUpload
         v-if="proposalId"
-        data-testId="general-appendix__upload"
-        accept=".pdf, .doc, .docx, .png"
+        data-test-id="general-appendix__upload"
+        :accept="SupportedMimetype"
         :file-list="uploadsForType"
         :is-loading="isAppendixLoading"
         :is-disabled="isReviewMode"
@@ -81,7 +120,7 @@
           class="upload-button"
           type="text"
           :disabled="isAppendixLoading || isReviewMode"
-          data-testId="general-appendix__upload__button"
+          data-test-id="general-appendix__upload__button"
         >
           {{ $t('proposal.chooseAFile') }}
           <template #icon>
@@ -102,12 +141,18 @@
       justify="end"
       class="action-wrapper"
     >
-      <el-button type="primary" plain data-testId="handleSaveDraft" @click="handleSaveDraft">
-        {{ $t('proposal.saveDraft') }}
-      </el-button>
-      <el-button :disabled="!isValidToSubmit" type="primary" data-testId="handleSubmit" @click="handleSubmit">
-        {{ $t('proposal.submitApplication') }}
-      </el-button>
+      <el-button
+        type="primary"
+        plain
+        data-test-id="handleSaveDraft"
+        @click="handleSaveDraft"
+      >{{ $t('proposal.saveDraft') }}</el-button>
+      <el-button
+        :disabled="!isValidToSubmit"
+        type="primary"
+        data-test-id="handleSubmit"
+        @click="handleSubmit"
+      >{{ $t('proposal.submitApplication') }}</el-button>
     </el-row>
   </el-container>
 
@@ -156,7 +201,7 @@ import { useRoute, useRouter } from 'vue-router'
 import ProjectApplicant from './ProjectApplicant.vue'
 import ProjectResponsibility from './ProjectResponsibility.vue'
 import ProjectUser from './ProjectUser.vue'
-
+import ESupportedMimetype from '@/types/supported-mimetype.enum'
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -196,7 +241,9 @@ const openDetails = () => {
 }
 
 const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
-
+const SupportedMimetype = computed(() => {
+  return Object.values(ESupportedMimetype)
+})
 const proposalStore = useProposalStore()
 const commentStore = useCommentStore()
 
@@ -306,7 +353,7 @@ const handleTermsConfirm = async () => {
   isTermsDialogOpen.value = false
   try {
     if (proposalId.value) {
-      await proposalStore.updateProposal(proposalId.value as string, {
+      await proposalStore.updateProposal(proposalId.value, {
         ...getFormValues(),
         status: ProposalStatus.FdpgCheck,
       })
@@ -315,7 +362,7 @@ const handleTermsConfirm = async () => {
     }
     showSuccessMessage(t('general.submitted'))
     router.push({ name: RouteName.Dashboard })
-  } catch (error: any & { message: string }) {
+  } catch (error: any) {
     showErrorMessage(error.message)
   }
 }
@@ -328,7 +375,7 @@ const handleSubmit = async () => {
   ) {
     return
   }
-  formRef.value?.validate(async (isValid: boolean, invalidFields?: ValidateFieldsError) => {
+  formRef.value?.validate((isValid: boolean, invalidFields?: ValidateFieldsError) => {
     if (!isValid && invalidFields) {
       raiseErrors(invalidFields)
       return
@@ -346,37 +393,41 @@ const handleSaveDraft = async () => {
     return
   }
   bypassDebounce.value = true
-  formRef.value?.validateField(
+
+  let invalidFields: ValidateFieldsError | undefined
+  await formRef.value?.validateField(
     ['projectAbbreviation'],
-    async (_isValid: boolean, invalidFields?: ValidateFieldsError) => {
-      if (invalidFields && Object.keys(invalidFields).length > 0) {
-        raiseErrors(invalidFields)
-        return
-      }
-
-      if (proposalId.value) {
-        try {
-          const saveResult = await proposalStore.updateProposal(proposalId.value as string, {
-            ...getFormValues(),
-          })
-          proposalStore.currentProposal = transformForm(saveResult) as IProposal
-          showSuccessMessage(t('general.savedAsDraft'))
-        } catch (error: any) {
-          showErrorMessage(error.message)
-        }
-      } else {
-        try {
-          const saveResult = await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.Draft })
-          proposalStore.currentProposal = transformForm(saveResult) as IProposal
-          showSuccessMessage(t('general.savedAsDraft'))
-        } catch (error: any) {
-          showErrorMessage(error.message)
-        }
-      }
-
-      setUpPage()
+    (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+      invalidFields = invalidFieldsResult
     },
   )
+
+  if (invalidFields && Object.keys(invalidFields).length > 0) {
+    raiseErrors(invalidFields)
+    return
+  }
+
+  if (proposalId.value) {
+    try {
+      const saveResult = await proposalStore.updateProposal(proposalId.value, {
+        ...getFormValues(),
+      })
+      proposalStore.currentProposal = transformForm(saveResult) as IProposal
+      showSuccessMessage(t('general.savedAsDraft'))
+    } catch (error: any) {
+      showErrorMessage(error.message)
+    }
+  } else {
+    try {
+      const saveResult = await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.Draft })
+      proposalStore.currentProposal = transformForm(saveResult) as IProposal
+      showSuccessMessage(t('general.savedAsDraft'))
+    } catch (error: any) {
+      showErrorMessage(error.message)
+    }
+  }
+
+  await setUpPage()
   bypassDebounce.value = false
 }
 
@@ -433,6 +484,8 @@ onMounted(async () => {
     await setUpPage()
   } catch (error) {
     console.log(error)
+    showErrorMessage()
+    router.push({ name: RouteName.Dashboard })
   }
 
   if (params.id) {
@@ -442,6 +495,7 @@ onMounted(async () => {
       await scrollToAnchor()
     } catch (error) {
       console.log(error)
+      showErrorMessage()
     }
   }
 })

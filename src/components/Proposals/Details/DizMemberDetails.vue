@@ -9,6 +9,7 @@
     <ProjectHistory />
 
     <div class="divider" />
+    <FdpgCheckNotes v-if="proposalStore.currentProposal?.fdpgCheckNotes" />
     <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION" />
   </el-container>
 
@@ -34,6 +35,7 @@
 <script setup lang="ts">
 import AppendixInfo from '@/components/AppendixInfo.vue'
 import DeclineDialog from '@/components/DeclineDialog.vue'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import DetailTopBar from '@/components/DetailTopBar.vue'
 import MessageCenter from '@/components/MessageCenter.vue'
 import ProjectPublications from '@/components/ProjectPublications.vue'
@@ -44,7 +46,7 @@ import QuickInfo from '@/components/QuickInfo.vue'
 import SignDialog from '@/components/SignDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
@@ -66,7 +68,13 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
-
+const currentProposalStatus = [
+  ProposalStatus.ExpectDataDelivery,
+  ProposalStatus.DataResearch,
+  ProposalStatus.DataCorrupt,
+  ProposalStatus.FinishedProject,
+  ProposalStatus.ReadyToArchive,
+]
 const router = useRouter()
 
 const layoutStore = useLayoutStore()
@@ -92,7 +100,7 @@ const isDeclineDialogOpen = ref(false)
 const handleDizDeclineConfirm = async (declineReason: string) => {
   await setDizApproval({ value: false, declineReason })
 }
-const handleDizApprovalAcceptDialog = () => {
+const handleDizApprovalAcceptDialog = async () => {
   messageBoxStore.setMessageBoxInfo({
     cancelButtonText: 'general.cancel',
     cancelButtonClass: 'el-button--text',
@@ -100,14 +108,14 @@ const handleDizApprovalAcceptDialog = () => {
     title: 'proposal.acceptContractDizModalTitle',
     message: 'proposal.acceptContractDizModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? setDizApproval({ value: true }) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await setDizApproval({ value: true }) : undefined,
   })
 }
 
-const handleDizApprovalTodo = (decision: boolean) => {
+const handleDizApprovalTodo = async (decision: boolean) => {
   if (decision === true) {
-    handleDizApprovalAcceptDialog()
+    await handleDizApprovalAcceptDialog()
   } else {
     isDeclineDialogOpen.value = true
   }
@@ -219,8 +227,7 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     showPublications.value =
-      data.status ===
-        ('EXPECT_DATA_DELIVERY' || 'DATA_RESEARCH' || 'DATA_CORRUPT' || 'FINISHED_PROJECT' || 'READY_TO_ARCHIVE') ||
+      (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
     const lastDashboard = layoutStore.lastDashboard

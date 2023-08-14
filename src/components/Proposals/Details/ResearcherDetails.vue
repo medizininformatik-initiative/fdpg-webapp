@@ -62,13 +62,14 @@ import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import AppendixInfo from '../../AppendixInfo.vue'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
+const currentProposalStatus = [ProposalStatus.ExpectDataDelivery, ProposalStatus.DataResearch, ProposalStatus.DataCorrupt, ProposalStatus.FinishedProject, ProposalStatus.ReadyToArchive]
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -115,8 +116,8 @@ const handleFinishProjectWithModal = () => {
     title: 'proposal.researcherFinishProjectModalTitle',
     message: 'proposal.researcherFinishProjectModalDescription',
     confirmButtonText: 'general.confirm',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.FinishedProject) : undefined,
+    callback: async(decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.FinishedProject) : undefined,
   })
 }
 
@@ -165,8 +166,8 @@ const handleArchiveProjectClick = () => {
     title: 'proposal.archiveProjectModalTitle',
     message: 'proposal.archiveProjectModalDescription',
     confirmButtonText: 'proposal.archiveProject',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.Archived) : undefined,
+    callback: async(decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Archived) : undefined,
   })
 }
 
@@ -277,8 +278,7 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     showPublicationsAndReports.value =
-      data.status ===
-        ('EXPECT_DATA_DELIVERY' || 'DATA_RESEARCH' || 'DATA_CORRUPT' || 'FINISHED_PROJECT' || 'READY_TO_ARCHIVE') ||
+      (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
     const lastDashboard = layoutStore.lastDashboard

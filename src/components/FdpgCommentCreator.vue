@@ -39,7 +39,7 @@
           </div>
           <div class="comment-card-actions">
             <div class="left">
-              <el-button type="text" size="large" @click="() => handleEditClick(index)">
+              <el-button type="text" size="large" class="edit-btn" @click="() => handleEditClick(index)">
                 {{ $t('general.edit') }}
               </el-button>
               <el-button type="text" size="large" class="delete-btn" @click="() => handleDeleteClick(comment._id)">
@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { CommentType, ICommentDetail } from '@/types/comment.interface'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { nextTick, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'

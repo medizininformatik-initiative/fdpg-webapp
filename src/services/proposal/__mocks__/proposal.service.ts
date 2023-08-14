@@ -27,6 +27,7 @@ export const mockCreateReport = vi.fn()
 export const mockUpdateReport = vi.fn()
 export const mockDeleteReport = vi.fn()
 export const mockUpdateFdpgChecklist = vi.fn()
+export const mockUpdateFdpgCheckNotes = vi.fn()
 export const ProposalService = vi.fn().mockImplementation(() => ({
   getAll: mockGetAll,
   create: mockCreate,
@@ -57,4 +58,5 @@ export const ProposalService = vi.fn().mockImplementation(() => ({
   updateReport: mockUpdateReport,
   deleteReport: mockDeleteReport,
   updateFdpgChecklist: mockUpdateFdpgChecklist,
+  updateFdpgCheckNotes: mockUpdateFdpgCheckNotes,
 }))

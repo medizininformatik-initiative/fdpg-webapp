@@ -100,6 +100,7 @@ const overview = computed(() => {
       projectAbbreviation: proposalData.value?.projectAbbreviation,
       proposalId: proposalData.value?._id,
       uploads: proposalData.value?.uploads,
+      fdpgCheckNotes: proposalData.value?.fdpgCheckNotes
     },
   } as IVirtualWrap<IOverview>
 })

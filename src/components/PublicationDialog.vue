@@ -54,21 +54,21 @@
   </FdpgDialog>
 </template>
 <script setup lang="ts">
-import { useVModel } from '@vueuse/core'
-import type { Ref, PropType } from 'vue'
-import { computed, ref } from 'vue'
-import FdpgFormItem from './FdpgFormItem.vue'
-import FdpgLabel from './FdpgLabel.vue'
-import FdpgInput from './FdpgInput.vue'
-import FdpgDialog from './FdpgDialog.vue'
-import { requiredValidationFunc, requiredIfEmptyValidationFunc } from '@/validations'
-import { ElForm } from 'element-plus'
-import type { IPublicationGet, IPublicationCreateAndUpdate } from '@/types/proposal.types'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
 import useNotifications from '@/composables/use-notifications'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
+import type { IPublicationCreateAndUpdate, IPublicationGet } from '@/types/proposal.types'
+import { requiredIfEmptyValidationFunc, requiredValidationFunc } from '@/validations'
+import { useVModel } from '@vueuse/core'
+import { ElForm, type FormInstance } from 'element-plus'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
+import FdpgDialog from './FdpgDialog.vue'
+import FdpgFormItem from './FdpgFormItem.vue'
+import FdpgInput from './FdpgInput.vue'
+import FdpgLabel from './FdpgLabel.vue'
 
 const { showErrorMessage } = useNotifications()
-const publicationFormRef: Ref<typeof ElForm | undefined> = ref<typeof ElForm>()
+const publicationFormRef = ref<FormInstance>()
 const emit = defineEmits(['update:modelValue', 'reset'])
 const props = defineProps({
   publication: {
@@ -100,28 +100,33 @@ const closeDialog = () => {
   emit('reset')
 }
 const createOrUpdatePublicationValues = ref<IPublicationCreateAndUpdate>()
-const createOrUpdatePublication = () => {
-  publicationFormRef.value?.validate((valid) => {
-    if (valid) {
-      createOrUpdatePublicationValues.value = {
-        title: publication.value.title,
-        doi: publication.value.doi,
-        link: publication.value.link,
-      }
-      try {
-        !publication.value._id
-          ? proposalStore.createProposalPublication(props.proposalId, createOrUpdatePublicationValues.value)
-          : proposalStore.updateProposalPublication(
-              props.proposalId,
-              publication.value._id,
-              createOrUpdatePublicationValues.value,
-            )
-      } catch (error) {
-        showErrorMessage()
-      }
-      closeDialog()
-    }
+const createOrUpdatePublication = async () => {
+  let isValid = false
+
+  await publicationFormRef.value?.validate((valid) => {
+    isValid = valid
+
   })
+
+  if (isValid) {
+    createOrUpdatePublicationValues.value = {
+      title: publication.value.title,
+      doi: publication.value.doi,
+      link: publication.value.link,
+    }
+    try {
+      !publication.value._id
+        ? await proposalStore.createProposalPublication(props.proposalId, createOrUpdatePublicationValues.value)
+        : await proposalStore.updateProposalPublication(
+          props.proposalId,
+          publication.value._id,
+          createOrUpdatePublicationValues.value,
+        )
+    } catch (error) {
+      showErrorMessage()
+    }
+    closeDialog()
+  }
 }
 </script>
 <style lang="scss" scoped>

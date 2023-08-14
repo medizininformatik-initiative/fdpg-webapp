@@ -13,10 +13,9 @@ import type {
   IPublication,
   IResourceAndRecontact,
   ITypeOfUse,
-  IUserProject} from '@/types/proposal.types';
-import {
-  ProposalTypeOfUse,
+  IUserProject,
 } from '@/types/proposal.types'
+import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.util'
 const NEW_ID = 'NEW_ID'
 
@@ -127,7 +126,13 @@ const transformPublications = (
 
   // If it's empty we don't need to create it in the api, but we like to have an empty version for the ui
   // But if noPublicationPlanned value is true we need to prevent publications.length as a truthy value to prevent showing it in review page
-  return transformToApi ? undefined : noPublicationPlanned ? [] : [mapPublication()]
+  if (transformToApi) {
+    return undefined
+  } else if (noPublicationPlanned) {
+    return []
+  } else {
+    return [mapPublication()]
+  }
 }
 
 const transformAddressees = (addressees?: DeepPartial<IAddressees>): DeepPartial<IAddressees> => {

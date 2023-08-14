@@ -84,7 +84,7 @@
 import type { IReportGet } from '@/types/proposal.types'
 import { computed, ref, defineAsyncComponent, onMounted } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { getLocaleDateString } from '@/utils/date.util'
 import ReportGallery from '@/components/ReportGallery.vue'
 import useNotifications from '@/composables/use-notifications'
@@ -146,8 +146,8 @@ const handleDeleteReport = (event: Event, proposalId: string) => {
     title: 'proposal.deleteReport',
     message: 'proposal.deleteReportModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? deleteReport(proposalId) : undefined,
+    callback: async(decision: DecisionType) =>
+      decision === 'confirm' ? await deleteReport(proposalId) : undefined,
   })
 }
 const deleteReport = async (reportId) => {

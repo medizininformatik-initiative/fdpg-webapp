@@ -160,8 +160,8 @@ import type { IEthicVote, IReportFile, IUpload } from '@/types/proposal.types'
 import { DirectUpload } from '@/types/upload.types'
 import { transformEthicVote } from '@/utils/form-transform/transform-user-project.util'
 import { useVModel } from '@vueuse/core'
-import type { PropType} from 'vue';
-import { computed, watch } from 'vue'
+import { computed, watch, type PropType } from 'vue'
+
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IEthicVote>,

@@ -121,7 +121,7 @@ export interface IDefinitionSectionObjectVirtual<Parent, Key extends keyof Paren
   mapping: DefinitionCardsVirtual<Parent, Key>[]
 }
 
-type ArrElement<ArrType extends any> = ArrType extends readonly (infer ElementType)[] ? ElementType : never
+type ArrElement<ArrType> = ArrType extends readonly (infer ElementType)[] ? ElementType : never
 
 export interface IDefinitionSectionArray<
   Parent,

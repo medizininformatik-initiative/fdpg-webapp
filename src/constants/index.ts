@@ -21,7 +21,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.KUM]: {
     city: 'München',
-    display: 'Klinikum der Universität München',
+    display: 'LMU Klinikum',
     definition: 'DIFUTURE',
     email: 'some.todo@af-universität.de',
   },
@@ -105,7 +105,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.UKM]: {
     city: 'Münster',
-    display: 'Universitätsklinikum Münster',
+    display: 'Westfälische Wilhelms-Universität Münster',
     definition: 'HiGHmed',
     email: 'some.todo@af-universität.de',
   },
@@ -119,7 +119,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.UKDD]: {
     city: 'Dresden',
-    display: 'Universitätsklinikum Carl Gustav Carus Dresden',
+    display: 'Technische Universität Dresden',
     definition: 'MIRACUM',
     email: 'some.todo@af-universität.de',
   },
@@ -168,7 +168,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.UMMD]: {
     city: 'Magdeburg',
-    display: 'Universitätsklinikum Magdeburg',
+    display: 'Universitätsmedizin Magdeburg',
     definition: 'MIRACUM',
     email: 'some.todo@af-universität.de',
   },
@@ -189,14 +189,14 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.KC]: {
     city: 'Chemnitz',
-    display: ' Klinikum Chemnitz gGmbH',
+    display: 'Klinikum Chemnitz gGmbH',
     definition: 'MIRACUM',
     email: 'some.todo@af-universität.de',
   },
 
   [MiiLocation.UKA]: {
     city: 'Aachen',
-    display: 'Uniklinik RWTH Aachen',
+    display: 'Universitätsklinikum Aachen',
     definition: 'SMITH',
     email: 'some.todo@af-universität.de',
   },

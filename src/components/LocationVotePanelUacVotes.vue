@@ -36,9 +36,8 @@
                           })
                         }}
                       </dd>
-
                       <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
-                      <dd>{{ props.row.declineReason.reason }}</dd>
+                      <dd>{{ props.row.declineReason?.reason || '-' }}</dd>
                     </dl>
 
                     <p v-else>--</p>
@@ -55,7 +54,7 @@
                   :min-width="column.minWidth"
                 />
               </template>
-              <el-table-column width="1"
+              <el-table-column width="1" v-if="table.tableId === TableId.Excluded"
                 ><span
                   class="rowsHiddenFocusable"
                   tabindex="0"
@@ -86,7 +85,6 @@
                 $t('proposal.locationConditions', { count: table.conditionalApprovals.length })
               }}
             </h3>
-
             <section
               v-for="(conditionalApproval, conditionIdx) in table.conditionalApprovals"
               :key="'conditional' + conditionIdx"
@@ -159,7 +157,7 @@ import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { MiiLocation } from '@/types/location.enum'
 import { ElTable } from 'element-plus'
-import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload} from '@/types/proposal.types';
+import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { UseCaseUpload } from '@/types/upload.types'
 import { ref, computed, nextTick, onMounted } from 'vue'
@@ -248,11 +246,15 @@ const mapTableData = (
 }
 
 const mapConditionalApproval = (conditionalApproval: IConditionalApproval): IConditionalPanel => {
-  const status: { text: TranslationSchema; style: StatusTagStyle } = conditionalApproval.isAccepted
-    ? { text: 'proposal.conditionAccepted', style: 'accepted' }
-    : conditionalApproval.reviewedAt
-    ? { text: 'proposal.conditionRejected', style: 'rejected' }
-    : { text: 'proposal.conditionPending', style: 'pending' }
+  let status: { text: TranslationSchema; style: StatusTagStyle }
+
+  if (conditionalApproval.isAccepted) {
+    status = { text: 'proposal.conditionAccepted', style: 'accepted' }
+  } else if (conditionalApproval.reviewedAt) {
+    status = { text: 'proposal.conditionRejected', style: 'rejected' }
+  } else {
+    status = { text: 'proposal.conditionPending', style: 'pending' }
+  }
 
   const upload = uploadsMap.value[conditionalApproval.uploadId]
 
@@ -289,13 +291,19 @@ const tables = computed<IPanelVoteConfig[]>(() => {
   }
 
   const approvedLocations: IPanelInputConfig<IUacApproval> = {
-    data: proposalStore.currentProposal?.uacApprovals ?? [],
+    data:
+      proposalStore.currentProposal?.uacApprovals.filter(
+        (location) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(location.location),
+      ) ?? [],
     title: 'proposal.uacAcceptedLocations',
     indicator: 'green',
   }
 
   const approvedWithCondition: IPanelInputConfig<IConditionalApproval> = {
-    data: proposalStore.currentProposal?.conditionalApprovals ?? [],
+    data:
+      proposalStore.currentProposal?.conditionalApprovals.filter(
+        (location) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(location.location),
+      ) ?? [],
     title: 'proposal.uacAcceptedUnderConditions',
     indicator: 'blue',
     isConditional: true,
@@ -304,8 +312,14 @@ const tables = computed<IPanelVoteConfig[]>(() => {
   const tablesWithDataAmount = [approvedLocations, approvedWithCondition].map(
     ({ data, title, indicator, isConditional }) => {
       const filteredData = isConditional
-        ? (data as IConditionalApproval[]).filter((condition) => condition.isAccepted === true)
-        : data
+        ? (data as IConditionalApproval[]).filter(
+            (condition) =>
+              condition.isAccepted === true &&
+              !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+          )
+        : (data as IUacApproval[]).filter(
+            (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
+          )
       return {
         title,
         tableId: TableId.WithDataAmount,
@@ -313,9 +327,12 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         indicator: `indicator--${indicator}`,
         content: filteredData.map(({ location, dataAmount }, index) => mapTableData(index, location, dataAmount)),
         conditionalApprovals: isConditional
-          ? proposalStore.currentProposal?.conditionalApprovals?.map((condition) =>
-              mapConditionalApproval(condition),
-            ) ?? []
+          ? proposalStore.currentProposal?.conditionalApprovals
+              ?.filter(
+                (condition) =>
+                  !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+              )
+              .map((condition) => mapConditionalApproval(condition)) ?? []
           : undefined,
       } as IPanelVoteConfig
     },
@@ -340,9 +357,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       return mapTableData(index, location, undefined, declineReason)
     }),
   }
-
   panels.push(rejectedTable)
-
   return panels
 })
 

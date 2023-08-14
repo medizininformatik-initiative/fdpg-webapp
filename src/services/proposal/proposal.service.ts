@@ -19,6 +19,7 @@ import type { DirectUpload } from '@/types/upload.types'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
+import type { MiiLocation } from '@/types/location.enum'
 
 export class ProposalService {
   private basePath = '/proposals'
@@ -108,9 +109,10 @@ export class ProposalService {
     return response.data
   }
 
-  async initContracting(id: string, file: File): Promise<IProposal> {
+  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<IProposal> {
     const formData = new FormData()
     formData.append('file', file as Blob)
+    formData.append('locations', JSON.stringify(locations))
 
     const response = await this.apiClient.put(`${this.basePath}/${id}/init-contracting`, formData, {
       headers: {
@@ -237,5 +239,9 @@ export class ProposalService {
   async getReportContent(proposalId: string, reportId: string): Promise<string> {
     const response = await this.apiClient.get(`${this.basePath}/${proposalId}/reports/${reportId}/content`)
     return response.data
+  }
+
+  async updateFdpgCheckNotes(id: string, fdpgCheckNotes: string): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/fdpgCheckNotes`, { value: fdpgCheckNotes })
   }
 }

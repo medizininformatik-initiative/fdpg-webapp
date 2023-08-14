@@ -9,6 +9,7 @@
     <ProjectHistory />
 
     <div class="divider" />
+    <FdpgCheckNotes v-if="proposalStore.currentProposal?.fdpgCheckNotes" />
     <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION" />
   </el-container>
 
@@ -33,6 +34,7 @@ import ProjectStatus from '@/components/ProjectStatus.vue'
 import ProjectTodos from '@/components/ProjectTodos.vue'
 import ProjectHistory from '@/components/Proposals/Details/ProjectHistory.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import UacAcceptProposalDialog from '@/components/UacAcceptProposalDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
@@ -57,6 +59,13 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const router = useRouter()
+const currentProposalStatus = [
+  ProposalStatus.ExpectDataDelivery,
+  ProposalStatus.DataResearch,
+  ProposalStatus.DataCorrupt,
+  ProposalStatus.FinishedProject,
+  ProposalStatus.ReadyToArchive,
+]
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -151,8 +160,7 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     showPublications.value =
-      data.status ===
-        ('EXPECT_DATA_DELIVERY' || 'DATA_RESEARCH' || 'DATA_CORRUPT' || 'FINISHED_PROJECT' || 'READY_TO_ARCHIVE') ||
+      (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
     const lastDashboard = layoutStore.lastDashboard
