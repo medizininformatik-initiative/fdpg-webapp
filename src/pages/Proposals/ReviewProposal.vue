@@ -3,7 +3,7 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" @click="openDetails">
+        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">
           {{ $t('proposal.projectDetails') }}
         </el-button>
       </div>
