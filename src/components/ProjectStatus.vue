@@ -6,18 +6,18 @@
     <div :class="`project-status ${projectStatus.type}`">
       <div class="steps">
         <div
-        v-for="step of 6"
-        :key="`step-${step}`"
-        class="step"
-        :class="{ active: step <= stepMap[proposalStatus ?? 'default'] }"
+          v-for="step of 6"
+          :key="`step-${step}`"
+          class="step"
+          :class="{ active: step <= stepMap[proposalStatus ?? 'default'] }"
         />
       </div>
       <div class="description">
         {{ $t(projectStatus.description, { ...projectStatus.descriptionI18nParameter }) }}
         <section
-        v-if="proposalStore.currentProposal?.contractRejectedByResearcherReason"
-        role="region"
-        class="declineReason"
+          v-if="proposalStore.currentProposal?.contractRejectedByResearcherReason"
+          role="region"
+          class="declineReason"
         >
           <p>{{ $t('proposal.contractRejectedByResearcherReasonTitle') }}:</p>
           <p>
@@ -34,9 +34,9 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import type { IProjectStatus } from '@/types/project-status'
-import type { IProposal} from '@/types/proposal.types';
+import type { IProposal } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 defineProps({
@@ -96,9 +96,8 @@ const currentProposal = computed(() => proposalStore.currentProposal)
 watch(
   currentProposal,
   async () => {
-
     if (proposalStore.currentProposal?._id) {
-        await setStatusForRole()
+      await setStatusForRole()
     }
   },
   { immediate: true },

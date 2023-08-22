@@ -29,13 +29,13 @@
       </template>
     </el-input>
     <el-space direction="horizontal" :size="12">
-      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown"></FdpgDropdown>
+      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown" data-testId="header.languageButton"></FdpgDropdown>
 
       <div v-if="authStore.singleKnownRole" class="profile-role">
         {{ $t(`roles.HEADER_${authStore.singleKnownRole}`) }}
       </div>
 
-      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown"></FdpgDropdown>
+      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown" data-testId="header.profileButton"></FdpgDropdown>
     </el-space>
   </el-header>
 </template>
