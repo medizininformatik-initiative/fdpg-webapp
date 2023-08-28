@@ -38,17 +38,12 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should move the focus to the panels row on entering a panel', async (testcase) => {
       const { handleFocus } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
       const eventMock = {
         target: {
           closest: vi.fn().mockImplementation(() => {
             return {
               isSameNode: vi.fn().mockReturnValue(testcase.value),
-              querySelector: vi.fn().mockImplementation(() => {
-                return {
-                  focus: focusMock,
-                } as any as HTMLElement
-              }),
+              querySelector: vi.fn().mockImplementation(() => {}),
             }
           }),
         },
@@ -60,7 +55,7 @@ describe('UseCardPanelAccessibility', () => {
 
       await handleFocus(eventMock as any as FocusEvent)
 
-      expect(focusMock).toBeCalledTimes(testcase.expectedCalls)
+      expect(keyboardNavigation.setFocus).toBeCalledTimes(testcase.expectedCalls)
       expect(eventMock.preventDefault).toBeCalledTimes(1)
     })
   })
@@ -80,8 +75,6 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should focus the next fdpg-card', (testcase) => {
       const { focusNextCard } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const eventMock = {
         target: {
           classList: ['fdpg-card'],
@@ -89,29 +82,16 @@ describe('UseCardPanelAccessibility', () => {
           closest: vi.fn().mockImplementation(() => {
             return {
               nextElementSibling: {
-                getElementsByClassName: vi.fn().mockImplementation(() => {
-                  return [
-                    {
-                      focus: focusMock,
-                    },
-                  ]
-                }),
+                getElementsByClassName: vi.fn().mockImplementation(() => [{}]),
               },
-              getElementsByClassName: vi.fn().mockImplementation(() => {
-                return [
-                  {
-                    focus: focusMock,
-                  },
-                ]
-              }),
+              getElementsByClassName: vi.fn().mockImplementation(() => [{}]),
             } as any as HTMLElement
           }),
         },
       }
 
       focusNextCard(eventMock as any as Event)
-
-      expect(focusMock).toBeCalledTimes(testcase.expectedCalls)
+      expect(keyboardNavigation.setFocus).toBeCalledTimes(testcase.expectedCalls)
     })
   })
 
@@ -146,8 +126,6 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should focus the previous fdpg-card', (testcase) => {
       const { focusPreviousCard } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const eventMock = {
         target: {
           classList: testcase.classListValue,
@@ -155,29 +133,13 @@ describe('UseCardPanelAccessibility', () => {
           closest: vi.fn().mockImplementation(() => {
             return {
               getElementsByClassName: vi.fn().mockImplementation(() => {
-                return [
-                  {
-                    focus: focusMock,
-                  },
-                ]
+                return [{}]
               }),
               lastElementChild: {
-                getElementsByClassName: vi.fn().mockImplementation(() => {
-                  return [
-                    {
-                      focus: focusMock,
-                    },
-                  ]
-                }),
+                getElementsByClassName: vi.fn().mockImplementation(() => [{}]),
               },
               previousElementSibling: {
-                getElementsByClassName: vi.fn().mockImplementation(() => {
-                  return [
-                    {
-                      focus: focusMock,
-                    },
-                  ]
-                }),
+                getElementsByClassName: vi.fn().mockImplementation(() => [{}]),
               },
             } as any as HTMLElement
           }),
@@ -185,8 +147,7 @@ describe('UseCardPanelAccessibility', () => {
       }
 
       focusPreviousCard(eventMock as any as Event)
-
-      expect(focusMock).toBeCalledTimes(testcase.expectedCalls)
+      expect(keyboardNavigation.setFocus).toBeCalledTimes(testcase.expectedCalls)
     })
   })
 
@@ -204,8 +165,6 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should focus the first card of a panel', async (testcase) => {
       const { handleCardRowSpace } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const targetMock = {
         getElementsByClassName: vi.fn().mockImplementation(() => {
           return testcase.columns
@@ -216,13 +175,7 @@ describe('UseCardPanelAccessibility', () => {
         target: {
           closest: vi.fn().mockImplementation(() => {
             return {
-              getElementsByClassName: vi.fn().mockImplementation(() => {
-                return [
-                  {
-                    focus: focusMock,
-                  },
-                ]
-              }),
+              getElementsByClassName: vi.fn().mockImplementation(() => [{}]),
             }
           }),
         },
@@ -231,9 +184,9 @@ describe('UseCardPanelAccessibility', () => {
       handleCardRowSpace(targetMock as any as HTMLElement, eventMock as any as Event)
 
       if (testcase.expectToBeCalled) {
-        expect(focusMock).toBeCalledTimes(1)
+        expect(keyboardNavigation.setFocus).toBeCalledTimes(1)
       } else {
-        expect(focusMock).toBeCalledTimes(0)
+        expect(keyboardNavigation.setFocus).toBeCalledTimes(0)
       }
     })
   })
@@ -252,20 +205,14 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should focus the cards parent row', async (testcase) => {
       const { handleCardRowEsc } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const targetMock = {
         classList: testcase.value,
-        closest: vi.fn().mockImplementation(() => {
-          return {
-            focus: focusMock,
-          }
-        }),
+        closest: vi.fn().mockImplementation(() => {}),
       }
 
       handleCardRowEsc(targetMock as any as HTMLElement)
 
-      expect(focusMock).toBeCalledTimes(testcase.expectedCalls)
+      expect(keyboardNavigation.setFocus).toBeCalledTimes(testcase.expectedCalls)
     })
   })
 
@@ -290,19 +237,13 @@ describe('UseCardPanelAccessibility', () => {
     test.each(testcases)('should focus the cards parent row', async (testcase) => {
       const { handleShiftTab } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const eventMock = {
         target: {
           classList: testcase.classListValue,
           closest: vi.fn().mockImplementation(() => {
             return {
               contains: vi.fn().mockImplementation(() => testcase.contains),
-              querySelector: vi.fn().mockImplementation(() => {
-                return {
-                  focus: focusMock,
-                }
-              }),
+              querySelector: vi.fn().mockImplementation(() => {}),
             }
           }),
         },
@@ -317,7 +258,7 @@ describe('UseCardPanelAccessibility', () => {
       handleShiftTab(eventMock as any as Event)
 
       if (testcase.isNativeFocusCalled) {
-        expect(focusMock).toBeCalledTimes(1)
+        expect(keyboardNavigation.setFocus).toBeCalledTimes(1)
       } else {
         expect(keyboardNavigation.focusPreviousElement).toBeCalledWith(eventMock, appMock)
       }
@@ -359,20 +300,14 @@ describe('UseCardPanelAccessibility', () => {
     it('should focus the closest card', () => {
       const { focusCard } = useCardPanelAccessibility()
 
-      const focusMock = vi.fn().mockImplementation(() => {})
-
       const eventMock = {
         target: {
-          closest: vi.fn().mockImplementation(() => {
-            return {
-              focus: focusMock,
-            }
-          }),
+          closest: vi.fn().mockImplementation(() => {}),
         },
       }
 
       focusCard(eventMock as any as Event)
-      expect(focusMock).toBeCalledTimes(1)
+      expect(keyboardNavigation.setFocus).toBeCalledTimes(1)
     })
   })
 

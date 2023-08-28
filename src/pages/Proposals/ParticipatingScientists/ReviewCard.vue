@@ -19,7 +19,7 @@
     <DefinitionCard v-else :card="card" :dto="dto"></DefinitionCard>
 
     <FdpgCommentCreator
-      v-if="authStore.singleKnownRole === Role.FdpgMember"
+      v-if="authStore.singleKnownRole === Role.FdpgMember && !isDraft"
       :object-id="dto[card.key]._id"
       :type="CommentType.PROPOSAL_TASK"
     />
@@ -60,6 +60,10 @@ defineProps({
     type: String,
     default: undefined,
   },
+  isDraft: {
+    type: Boolean,
+    required: true
+  }
 })
 
 const authStore = useAuthStore()

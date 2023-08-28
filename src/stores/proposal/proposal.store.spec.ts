@@ -2,7 +2,7 @@ import { mockProposalDetail, mockProposal, getMockProposal } from '@/mocks/propo
 import { ProposalService } from '@/services/proposal/proposal.service'
 import { createPinia, setActivePinia } from 'pinia'
 import { useProposalStore } from './proposal.store'
-import type { ISortAndOrderBy} from '@/types/sort-filter.types';
+import type { ISortAndOrderBy } from '@/types/sort-filter.types'
 import { PanelQuery, SortDirection } from '@/types/sort-filter.types'
 import { transformForm } from '@/utils/form-transform'
 import type {
@@ -14,16 +14,15 @@ import type {
   IUpload,
   IReportUpdate,
   IReportGet,
-  IFdpgChecklist} from '@/types/proposal.types';
-import {
-  ParticipantType,
-  ProposalStatus
+  IFdpgChecklist,
 } from '@/types/proposal.types'
+import { ParticipantType, ProposalStatus } from '@/types/proposal.types'
 import type { IDeclineUacApproval } from '@/types/uac-approval.types'
 import type { IDizApproval } from '@/types/diz-approval.types'
 import type { IDeclineContract } from '@/types/sign-contract.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { setImmediate } from 'timers'
+import type { MiiLocation } from '@/types/location.enum'
 
 vi.mock('@/services/proposal/proposal.service')
 
@@ -154,8 +153,8 @@ describe('Proposal Store', () => {
     proposalService.initContracting.mockResolvedValueOnce(mockProposal)
     const file = new File([new Blob(['1'], { type: 'image/png' })], 'test.png')
     const proposalId = 'proposalId'
-    await store.initContracting(proposalId, file)
-    expect(proposalService.initContracting).toHaveBeenCalledWith(proposalId, file)
+    await store.initContracting(proposalId, file, ['MRI', 'KC'] as MiiLocation[])
+    expect(proposalService.initContracting).toHaveBeenCalledWith(proposalId, file, ['MRI', 'KC'] as MiiLocation[])
   })
 
   it('should call the service to uploadFile', async () => {
@@ -521,5 +520,13 @@ describe('Proposal Store', () => {
     expect(store.filteredProposal).toEqual({ ARCHIVED: [mockProposalDetail] })
     store.search = ''
     expect(store.filteredProposal).toEqual(store.proposals)
+  })
+
+  it('should call the service to set diz approval', async () => {
+    const store = useProposalStore()
+    const text = 'text'
+    const proposalId = 'proposalId'
+    await store.updateFdpgCheckNotes(proposalId, text)
+    expect(proposalService.updateFdpgCheckNotes).toHaveBeenCalledWith(proposalId, text)
   })
 })

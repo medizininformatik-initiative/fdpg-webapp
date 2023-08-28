@@ -3,9 +3,7 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">
-          {{ $t('proposal.projectDetails') }}
-        </el-button>
+        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{ $t('proposal.projectDetails') }}</el-button>
       </div>
     </div>
 
@@ -22,8 +20,8 @@
               <span
                 v-for="(labelKey, labelKeyIdx) in section.arrayLabel"
                 :key="'h3' + sectionItemIdx + 'Key' + labelKeyIdx"
-                >{{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}
-              </span>
+                >{{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}</span
+              >
             </h3>
 
             <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
@@ -32,6 +30,7 @@
                 :dto="sectionItem"
                 :card="card"
                 headline="h4"
+                :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
               ></ReviewCard>
             </template>
           </section>
@@ -44,6 +43,7 @@
           :card="section.card"
           :headline="section.card.cardLabel === null ? 'h2' : 'h3'"
           :headline-overwrite="section.sectionLabel"
+          :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
         ></ReviewCard>
       </section>
 
@@ -58,12 +58,13 @@
             v-if="!shouldHideReviewCard(proposalData[section.key], card.hideIfOtherValueIsTruthy)"
             :dto="proposalData[section.key]"
             :card="card"
+            :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
           ></ReviewCard>
         </section>
       </template>
     </template>
 
-    <ReviewLabel html-for="" class="form-label-mt-4" title="proposal.appendix" headline="h2" />
+    <ReviewLabel html-for class="form-label-mt-4" title="proposal.appendix" headline="h2" />
     <DocumentList
       :documents="uploadsForType"
       :proposal-id="proposalId"
@@ -98,6 +99,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
 import { projectUserSection } from '@/constants/print-structure/project-user-section'
+import useNotifications from '@/composables/use-notifications'
+import { ProposalStatus } from '@/types/proposal.types'
 
 const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   applicantSection,
@@ -124,6 +127,8 @@ const { uploadsForType } = useUpload(proposalId, [
   UseCaseUpload.ProposalPDF,
 ])
 
+const { showErrorMessage } = useNotifications()
+
 const openDetails = () => {
   router.push({
     name: RouteName.ProposalDetails,
@@ -148,14 +153,17 @@ const fetchProposal = async () => {
       },
     ])
   } catch (error) {
+    showErrorMessage()
+    router.push({ name: RouteName.Dashboard })
     console.log(error)
   }
 }
 
 const fetchComments = async () => {
   try {
-    await commentStore.fetchAll({ proposalId: proposalId.value as string })
+    await commentStore.fetchAll({ proposalId: proposalId.value })
   } catch (error) {
+    showErrorMessage()
     console.log(error)
   }
 }
@@ -206,6 +214,8 @@ onMounted(async () => {
   }
 
   counter-reset: h2 h3 h4;
+@supports not (-moz-appearance:none) {
+
   h1 {
     counter-reset: h2;
   }
@@ -217,7 +227,22 @@ onMounted(async () => {
   h3 {
     counter-reset: h4;
   }
+}
 
+@supports (-moz-appearance:none) {
+
+  h1 {
+    counter-set: h2;
+  }
+
+  h2 {
+    counter-set: h3;
+  }
+
+  h3 {
+    counter-set: h4;
+  }
+}
   h2::before {
     counter-increment: h2;
     content: counter(h2) '. ';

@@ -5,19 +5,14 @@ import { ProposalService } from './proposal.service'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
-import type {
-  IFdpgChecklist,
-  IPublicationCreateAndUpdate,
-  IReportCreate,
-  IReportUpdate} from '@/types/proposal.types';
-import {
-  ProposalStatus,
-} from '@/types/proposal.types'
+import type { IFdpgChecklist, IPublicationCreateAndUpdate, IReportCreate, IReportUpdate } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import type { IDeclineUacApproval, IUacApproval } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IDeclineContract, ISignContract } from '@/types/sign-contract.types'
 import { DirectUpload } from '@/types/upload.types'
 import type { MockedObject } from 'vitest'
+import type { MiiLocation } from '@/types/location.enum'
 
 vi.mock('@/httpClients/api/api.client')
 
@@ -191,8 +186,10 @@ describe('ProposalService', () => {
     const proposalId = 'proposalId'
     const file = new File([new Blob(['1'], { type: 'image/png' })], 'test.png')
     const formData = new FormData()
+    const locations = ['MRI', 'KC'] as MiiLocation[]
     formData.append('file', file as Blob)
-    const response = await service.initContracting(proposalId, file)
+    formData.append('locations', JSON.stringify(locations))
+    const response = await service.initContracting(proposalId, file, locations)
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/init-contracting`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
@@ -409,5 +406,13 @@ describe('ProposalService', () => {
     const response = await service.getReportContent(proposalId, reportId)
     expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/${proposalId}/reports/${reportId}/content`)
     expect(response).toEqual(mockGetAllResponse.data)
+  })
+
+  it('should call the api client to set fdpg check notes in proposal', async () => {
+    apiClient.put.mockResolvedValueOnce(undefined)
+    const proposalId = 'proposalId'
+    const text = 'text'
+    await service.updateFdpgCheckNotes(proposalId, text)
+    expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/fdpgCheckNotes`, { value: text })
   })
 })

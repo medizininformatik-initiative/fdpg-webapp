@@ -180,7 +180,9 @@ const handleEdit = (value: number) => {
 
 const handleAddAnotherBiosample = async () => {
   informationOnRequestedBioSamplesForm.value?.biosamples.push(mapBiosample() as IBiosample)
-  biosampleSectionActiveKey.value = informationOnRequestedBioSamplesForm.value!.biosamples.length - 1
+  biosampleSectionActiveKey.value = informationOnRequestedBioSamplesForm.value
+    ? informationOnRequestedBioSamplesForm.value.biosamples.length - 1
+    : 0
 }
 
 const handleRemove = async (id: number) => {

@@ -12,9 +12,7 @@
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
     <div v-if="status === ProposalStatus.FdpgCheck" class="section">
-      <h3 info="general.info" size="large">
-        {{ $t('proposal.checkAttachments', { count: documents.length }) }}
-      </h3>
+      <h3 info="general.info" size="large">{{ $t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
         :documents="documents"
         :proposal-id="proposalId"
@@ -37,11 +35,20 @@
     <ProjectHistory />
 
     <div class="divider" />
+    <FdpgCheckNotes
+      v-if="status === ProposalStatus.FdpgCheck || proposalStore.currentProposal?.fdpgCheckNotes"
+    ></FdpgCheckNotes>
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER"></MessageCenter>
+    <MessageCenter
+      v-if="proposalStore.currentProposal?.status !== ProposalStatus.Draft"
+      :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION"
+    ></MessageCenter>
 
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER"> </MessageCenter>
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION"> </MessageCenter>
-
-    <InitiateContractDialog v-model="isInitiateContractDialogOpen" @initiate-contract="handleContractSignConfirm" />
+    <InitiateContractDialog
+      v-model="isInitiateContractDialogOpen"
+      :locations="uacLocations"
+      @initiate-contract="handleContractSignConfirm"
+    />
   </el-container>
 </template>
 
@@ -68,7 +75,7 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IFdpgChecklist} from '@/types/proposal.types';
+import type { IFdpgChecklist } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
@@ -84,7 +91,8 @@ import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import type { MiiLocation } from '@/types/location.enum'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -93,6 +101,13 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
 const showPublicationsAndReports = ref(false)
+const currentProposalStatus = [
+  ProposalStatus.ExpectDataDelivery,
+  ProposalStatus.DataResearch,
+  ProposalStatus.DataCorrupt,
+  ProposalStatus.FinishedProject,
+  ProposalStatus.ReadyToArchive,
+]
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -112,8 +127,8 @@ const openLockModal = () => {
       : 'proposal.lockModalDescription',
     confirmButtonText: proposalStore.currentProposal?.isLocked ? 'proposal.unlockProposal' : 'proposal.lockProposal',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeLockingState(!proposalStore.currentProposal?.isLocked) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeLockingState(!proposalStore.currentProposal?.isLocked) : undefined,
   })
 }
 
@@ -123,13 +138,13 @@ const handleToContractingClick = () => {
   isInitiateContractDialogOpen.value = true
 }
 
-const handleContractSignConfirm = async (file: UploadFile) => {
-  await initContracting(file?.raw)
+const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
+  await initContracting(file?.raw, selectedLocations)
 }
 
-const initContracting = async (file: File) => {
+const initContracting = async (file: File, selectedLocations: MiiLocation[]) => {
   try {
-    await proposalStore.initContracting(proposalId.value, file)
+    await proposalStore.initContracting(proposalId.value, file, selectedLocations)
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: layoutStore.lastDashboard })
   } catch (error: any) {
@@ -169,8 +184,8 @@ const handleArchiveProjectClick = () => {
     message: 'proposal.archiveProjectModalDescription',
     confirmButtonText: 'proposal.archiveProject',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.Archived) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Archived) : undefined,
   })
 }
 
@@ -181,8 +196,8 @@ const handleRequestRevisionClick = () => {
     message: 'proposal.requestRevisionModalDescription',
     confirmButtonText: 'proposal.requestRevision',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.Rework) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Rework) : undefined,
   })
 }
 
@@ -193,8 +208,8 @@ const handleRejectApplicationClick = () => {
     message: 'proposal.rejectRequestModalDescription',
     confirmButtonText: 'proposal.rejectApplication',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.Rejected) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Rejected) : undefined,
   })
 }
 
@@ -205,8 +220,8 @@ const handleToLocationCheckClick = () => {
     message: 'proposal.toLocationCheckModalDescription',
     confirmButtonText: 'proposal.toLocationCheck',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.LocationCheck) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
   })
 }
 
@@ -217,8 +232,8 @@ const handleToExpectDataDeliveryClick = () => {
     message: 'proposal.toExpectDataDeliveryModalDescription',
     confirmButtonText: 'proposal.toExpectDataDelivery',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.ExpectDataDelivery) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.ExpectDataDelivery) : undefined,
   })
 }
 
@@ -229,8 +244,8 @@ const handleFinishProjectClick = () => {
     message: 'proposal.toReadyToArchiveModalDescription',
     confirmButtonText: 'proposal.finishProject',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.ReadyToArchive) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToArchive) : undefined,
   })
 }
 
@@ -241,8 +256,8 @@ const handleFinishProjectDeclineClick = () => {
     message: 'proposal.declineToReadyToArchiveModalDescription',
     confirmButtonText: 'proposal.finishProjectDecline',
     cancelButtonText: 'general.cancel',
-    callback: (decision: 'confirm' | 'cancel' | 'close') =>
-      decision === 'confirm' ? changeStatus(ProposalStatus.DataResearch) : undefined,
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.DataResearch) : undefined,
   })
 }
 
@@ -295,10 +310,19 @@ const numberOfRequestedInstitutions = computed(() => proposalStore.currentPropos
 const owner = computed(() => proposalStore.currentProposal?.owner)
 const uacFullyApproved = computed(() => {
   const conditionAccepted =
-    proposalStore.currentProposal?.conditionalApprovals.filter((condition) => condition.isAccepted) ?? []
-  const uacApprovals = proposalStore.currentProposal?.uacApprovals ?? []
+    proposalStore.currentProposal?.conditionalApprovals.filter(
+      (condition) =>
+        condition.isAccepted &&
+        !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+    ) ?? []
+  const uacApprovals =
+    proposalStore.currentProposal?.uacApprovals.filter(
+      (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
+    ) ?? []
   return [...uacApprovals, ...conditionAccepted]
 })
+
+const uacLocations = computed(() => uacFullyApproved.value.map((a) => a.location))
 
 const quickInfo = computed<IQuickInfo[]>(() => [
   {
@@ -329,7 +353,9 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     label: proposalStore.currentProposal?.isLocked ? 'proposal.unlockProposal' : 'proposal.lockProposal',
     testId: 'button__lockOrUnlockProposal',
     action: openLockModal,
-    isHidden: authStore.singleKnownRole !== Role.FdpgMember,
+    isHidden:
+      authStore.singleKnownRole !== Role.FdpgMember ||
+      (authStore.singleKnownRole === Role.FdpgMember && proposalStore.currentProposal?.status === ProposalStatus.Draft),
   },
   {
     type: 'primary',
@@ -407,7 +433,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleFinishProjectClick,
     position: 'right',
     isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.FinishedProject,
+    isHidden: status.value !== ProposalStatus.DataResearch,
   },
   {
     type: 'secondary',
@@ -473,8 +499,7 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     showPublicationsAndReports.value =
-      data.status ===
-        ('EXPECT_DATA_DELIVERY' || 'DATA_RESEARCH' || 'DATA_CORRUPT' || 'FINISHED_PROJECT' || 'READY_TO_ARCHIVE') ||
+      (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
     const lastDashboard = layoutStore.lastDashboard

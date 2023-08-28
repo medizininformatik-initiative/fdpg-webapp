@@ -79,8 +79,15 @@ const proposalStore = useProposalStore()
 
 const uacFullyApproved = computed(() => {
   const conditionAccepted =
-    proposalStore.currentProposal?.conditionalApprovals.filter((condition) => condition.isAccepted) ?? []
-  const uacApprovals = proposalStore.currentProposal?.uacApprovals ?? []
+    proposalStore.currentProposal?.conditionalApprovals.filter(
+      (condition) =>
+        condition.isAccepted &&
+        !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+    ) ?? []
+  const uacApprovals =
+    proposalStore.currentProposal?.uacApprovals.filter(
+      (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
+    ) ?? []
 
   const approvals = [...uacApprovals, ...conditionAccepted]
 

@@ -52,7 +52,8 @@
     "resetPasswordModalAction": "Zurücksetzen",
     "date": "Datum",
     "title": "Titel",
-    "applicantId": "Antragsteller-ID"
+    "applicantId": "Antragsteller-ID",
+    "additionalInformation": "Zusätzliche Informationen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -80,6 +81,7 @@
     "UAC_VOTE_DECLINE": "Forschungsprojekt wurde vom UAC abgelehnt",
     "UAC_CONDITION_ACCEPT": "UAC Auflagen wurden angenommen",
     "UAC_CONDITION_DECLINE": "UAC Auflagen wurden abgelehnt",
+    "FDPG_APPROVED_LOCATION_REMOVED": "Standort wurde vom FDPG ausgeschlossen",
     "CONTRACT_RESEARCHER_APPROVED": "Wissenschaftler hat dem Vertrag zugestimmt",
     "CONTRACT_RESEARCHER_REJECTED": "Wissenschaftler hat den Vertrag abgelehnt",
     "CONTRACT_LOCATION_APPROVED": "DIZ hat dem Vertrag zugestimmt",
@@ -174,7 +176,7 @@
     "involvedCategoryInfo": "Informationen zu den Beteiligtenkategorien entehmen Sie hier: https://forschen-fuer-gesundheit.de/menu_data.php",
     "addAnotherPerson": "Weitere Person hinzufügen",
     "personalDetails": "Personenangaben",
-    "belongingOptional": "Zugehörigkeit (Affiliation)",
+    "belongingOptional": "Zugehörigkeit (Affiliation), z.B. Institut",
     "pleaseEnterTheBelonging": "Bitte geben Sie die Zugehörigkeit an",
     "emailAddress": "E-Mail Adresse",
     "pleaseEnterTheEmailAddress": "Bitte geben Sie die E-Mail Adresse an",
@@ -193,7 +195,7 @@
     "fundingReferenceNumber": "Förderkennzeichen",
     "pleaseEnterTheFundingReferenceNumber": "Bitte geben Sie das Förderkennzeichen an",
     "feasibilityId": "Machbarkeits-ID",
-    "feasibility": "Machbarkeit",
+    "feasibility": "Machbarkeit*",
     "statementsAssessmentOfFeasibility": "Aussagen/Abschätzung der Machbarkeit",
     "statementsAssessmentOfFeasibilityInfo": "Verweisen Sie auf bereits durchgeführte Machbarkeitsanfragen oder Fallzahlbetrachtungen.",
     "referToFeasibilityStudiesOrSimilarThatHaveAlreadyBeenCarriedOut": "Verweisen Sie auf bereits durchgeführte Machbarkeitsuntersuchungen o.Ä.",
@@ -465,6 +467,7 @@
     "locationVoteExcludeReasonType_LOCATION_SIGN": "Abgelehnt bei Vertragsabschluss",
     "locationVoteExcludeReasonType_DIZ_APPROVE": "Abgelehnt bei DIZ Überprüfung",
     "locationVoteExcludeReasonType_UAC_APPROVE": "Abgelehnt bei UAC Überprüfung",
+    "locationVoteExcludeReasonType_FDPG_UNSELECTED": "Abgelehnt durch FDPG",
     "contractRejectedByResearcherReasonTitle": "Abgelehnt durch den Wissenschaftler",
     "conditionApprovalDataVolume": "{amount} Datensätze",
     "participantCategory_DATA_RECEIVER": "Empfang von Daten",
@@ -521,7 +524,9 @@
     "admitReputationOfAttachmentInformation": "Jedem Datennutzungsantrag muss das Ethikvotum der für Sie zuständigen Ethikkommission beigelegt werden. Sollte kein Ethikvotum vonnöten sein, müssen Sie eine Nichtzuständigkeitserklärung der Ethikkommission beilegen. Bitte achten Sie darauf, dass der Ethikantrag, der dem Votum zugrundeliegt, das Vorhaben, das Sie im Datennutzungsantrag beschreiben vollständig umfasst. Fragen Sie bei der MII zusätzliche Datenelemente an oder haben Sie zusätzliche Fragestellungen, benötigen Sie ein Amendment der Ethikkommission zum Votum.",
     "admitReputationOfAttachment": "Das beigelegte Ethikvotum umfasst die im Nutzungsantrag beschriebene Verwendung der Daten und Bioproben vollständig.",
     "plannedPublicationDescriptionInfo": "Bitte beschreiben Sie kurz den angedachten Inhalt der Publikation.",
-    "plannedPublicationAuthorsInfo": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe."
+    "plannedPublicationAuthorsInfo": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
+    "fdpgCheckNotes": "Prüfnotizen",
+    "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu..."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -533,7 +538,10 @@
     "HEADER_Researcher": "Forschende",
     "HEADER_DizMember": "DIZ",
     "HEADER_UacMember": "UAC",
-    "HEADER_Admin": "Admin"
+    "HEADER_Admin": "Admin",
+    "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
+    "changeRoleModalTitle": "Falsche Rolle",
+    "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen."
   },
   "countries": {
     "AD": "Andorra",

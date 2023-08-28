@@ -34,9 +34,9 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import type { IProjectStatus } from '@/types/project-status'
-import type { IProposal} from '@/types/proposal.types';
+import type { IProposal } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 
 defineProps({

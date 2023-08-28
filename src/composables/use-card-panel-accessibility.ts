@@ -10,8 +10,8 @@ export default () => {
     const isElementOfSamePanel = targetPanel?.isSameNode(relatedTargetPanel)
 
     if (!isElementOfSamePanel) {
-      const targetPanelRow = targetPanel?.querySelector('.el-row') as HTMLElement
-      targetPanelRow?.focus()
+      const targetPanelRow = targetPanel?.querySelector('.el-row')
+      keyboardNavigation.setFocus(targetPanelRow)
     }
     event.preventDefault()
   }
@@ -21,10 +21,13 @@ export default () => {
     const classes = Array.from(target?.classList)
 
     if (classes?.includes('fdpg-card')) {
-      if (target?.isSameNode(getLastCard(event))) {
-        getFirstCard(event).focus()
+      const lastCard = getLastCard(event)
+      if (target?.isSameNode(<Node>lastCard)) {
+        const firstCard = getFirstCard(event)
+        keyboardNavigation.setFocus(firstCard)
       } else {
-        getNextCard(event).focus()
+        const nextCard = getNextCard(event)
+        keyboardNavigation.setFocus(nextCard)
       }
     }
   }
@@ -34,39 +37,42 @@ export default () => {
     const classes = Array.from(target?.classList)
 
     if (classes?.includes('fdpg-card')) {
-      if (target.isSameNode(getFirstCard(event))) {
-        getLastCard(event)?.focus()
+      const firstCard = getFirstCard(event)
+      if (target?.isSameNode(<Node>firstCard)) {
+        const lastCard = getLastCard(event)
+        keyboardNavigation.setFocus(lastCard)
       } else {
-        getPreviousCard(event)?.focus()
+        const previousCard = getPreviousCard(event)
+        keyboardNavigation.setFocus(previousCard)
       }
     }
   }
 
-  const getFirstCard = (event: Event): HTMLElement => {
+  const getFirstCard = (event: Event): Element | undefined => {
     const target = event.target as HTMLElement
     const currentRow = target?.closest('.el-row')
-    const firstCard = currentRow?.getElementsByClassName('fdpg-card')[0] as HTMLElement
+    const firstCard = currentRow?.getElementsByClassName('fdpg-card')[0]
     return firstCard
   }
 
-  const getLastCard = (event: Event): HTMLElement => {
+  const getLastCard = (event: Event): Element | undefined => {
     const target = event.target as HTMLElement
     const lastRow = target?.closest('.el-row')?.lastElementChild
-    const lastRowsCard = lastRow?.getElementsByClassName('fdpg-card')[0] as HTMLElement
+    const lastRowsCard = lastRow?.getElementsByClassName('fdpg-card')[0]
     return lastRowsCard
   }
 
-  const getNextCard = (event: Event): HTMLElement => {
+  const getNextCard = (event: Event): Element | undefined => {
     const target = event.target as HTMLElement
     const nextColumn = target?.closest('.el-col')?.nextElementSibling
-    const nextColumnsCard = nextColumn?.getElementsByClassName('fdpg-card')[0] as HTMLElement
+    const nextColumnsCard = nextColumn?.getElementsByClassName('fdpg-card')[0]
     return nextColumnsCard
   }
 
-  const getPreviousCard = (event: Event): HTMLElement => {
+  const getPreviousCard = (event: Event): Element | undefined => {
     const target = event.target as HTMLElement
     const previousColumn = target?.closest('.el-col')?.previousElementSibling
-    const previousColumnsCard = previousColumn?.getElementsByClassName('fdpg-card')[0] as HTMLElement
+    const previousColumnsCard = previousColumn?.getElementsByClassName('fdpg-card')[0]
     return previousColumnsCard
   }
 
@@ -74,7 +80,7 @@ export default () => {
     const cardsExist = target.getElementsByClassName('el-col').length > 0
     if (cardsExist) {
       const card = getFirstCard(event)
-      card?.focus()
+      keyboardNavigation.setFocus(card)
     }
   }
 
@@ -82,34 +88,34 @@ export default () => {
     const classes = Array.from(target.classList)
 
     if (classes.includes('fdpg-card')) {
-      const row = target?.closest('.el-row') as HTMLElement
-      row?.focus()
+      const row = target?.closest('.el-row')
+      keyboardNavigation.setFocus(row)
     }
   }
 
   const handleShiftTab = (event: Event): void => {
     const target = event.target as HTMLElement
     const classes = Array.from(target.classList)
-    const card = target.closest('.fdpg-card')
+    const card = target?.closest('.fdpg-card')
 
     const isCard = classes.includes('fdpg-card')
     const isChildOfCard = card?.contains(target)
 
     if (isChildOfCard || isCard) {
-      const panel = target.closest('.fdpg-card-panel') as HTMLElement
-      const panelRow = panel?.querySelector('.el-row') as HTMLElement
-      panelRow?.focus()
+      const panel = target?.closest('.fdpg-card-panel')
+      const panelRow = panel?.querySelector('.el-row')
+      keyboardNavigation.setFocus(panelRow)
     } else {
-      const app = document.getElementById('app') as HTMLElement
+      const app = document.getElementById('app')
       keyboardNavigation.focusPreviousElement(event, app)
     }
   }
 
   const handleTab = (event: Event): void => {
     const target = event.target as HTMLElement
-    const currentPanel = target.closest('.fdpg-card-panel') as HTMLElement
-    const panelRow = currentPanel?.querySelector('.el-row') as HTMLElement
-    const app = document.getElementById('app') as HTMLElement
+    const currentPanel = target?.closest('.fdpg-card-panel')
+    const panelRow = currentPanel?.querySelector('.el-row')
+    const app = document.getElementById('app')
 
     keyboardNavigation.focusNextElement(event, app, panelRow)
 
@@ -118,8 +124,8 @@ export default () => {
 
   const focusCard = (event: Event): void => {
     const target = event.target as HTMLElement
-    const card = target?.closest('.fdpg-card') as HTMLElement
-    card?.focus()
+    const card = target?.closest('.fdpg-card')
+    keyboardNavigation.setFocus(card)
   }
 
   const focusFirstActionItem = (event: Event): void => {
@@ -129,37 +135,37 @@ export default () => {
 
   const getFirstActionItem = (event: Event): HTMLElement => {
     const target = event.target as HTMLElement
-    const currentCard = target.closest('.fdpg-card')
-    const firstActionItem = currentCard?.querySelector('.actions')?.firstElementChild as HTMLElement
-    return firstActionItem
+    const currentCard = target?.closest('.fdpg-card')
+    const firstActionItem = currentCard?.querySelector('.actions')?.firstElementChild
+    return <HTMLElement>firstActionItem
   }
 
   const getLastActionItem = (event: Event): HTMLElement => {
     const target = event.target as HTMLElement
-    const lastActionItem = target.closest('.actions')?.lastElementChild as HTMLElement
-    return lastActionItem
+    const lastActionItem = target?.closest('.actions')?.lastElementChild
+    return <HTMLElement>lastActionItem
   }
 
   const focusPreviousButton = (event: Event): void => {
     const target = event.target as HTMLElement
-    const isFirstActionItem = target.isSameNode(getFirstActionItem(event))
+    const isFirstActionItem = target?.isSameNode(getFirstActionItem(event))
 
     if (isFirstActionItem) {
       keyboardNavigation.setFocus(getLastActionItem(event))
     } else {
-      const previousActionItem = target.previousElementSibling as HTMLElement
+      const previousActionItem = target?.previousElementSibling
       keyboardNavigation.setFocus(previousActionItem)
     }
   }
 
   const focusNextButton = (event: Event): void => {
     const target = event.target as HTMLElement
-    const isLastActionItem = target.isSameNode(getLastActionItem(event))
+    const isLastActionItem = target?.isSameNode(getLastActionItem(event))
 
     if (isLastActionItem) {
       keyboardNavigation.setFocus(getFirstActionItem(event))
     } else {
-      const nextActionItem = target.nextElementSibling as HTMLElement
+      const nextActionItem = target?.nextElementSibling
       keyboardNavigation.setFocus(nextActionItem)
     }
   }

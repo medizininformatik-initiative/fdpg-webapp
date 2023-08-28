@@ -12,6 +12,7 @@ export interface IOverview {
   projectAbbreviation: string
   proposalId: string
   uploads?: IUpload[]
+  fdpgCheckNotes?: string
 }
 
 const overviewProjectCard: IDefinitionCardVirtual<IVirtualWrap<IOverview>, 'content'> = {
@@ -38,6 +39,19 @@ const overviewProjectCard: IDefinitionCardVirtual<IVirtualWrap<IOverview>, 'cont
       label: 'general.applicantId',
       size: 12,
       definitions: [[{ key: 'ownerId' }]],
+    },
+  ],
+}
+
+const fdpgCheckNoteCard: IDefinitionCardVirtual<IVirtualWrap<IOverview>, 'content'> = {
+  kind: 'virtual',
+  key: 'content',
+  cardLabel: 'general.additionalInformation',
+  terms: [
+    {
+      label: 'proposal.fdpgCheckNotes',
+      size: 24,
+      definitions: [[{ key: 'fdpgCheckNotes' }]],
     },
   ],
 }
@@ -69,5 +83,5 @@ export const overviewSection: IDefinitionSectionObjectVirtual<IVirtualWrap<IOver
   sectionLabel: 'general.projectOverview',
   kind: 'object',
   key: 'content',
-  mapping: [overviewProjectCard, overviewAppendixCard],
+  mapping: [overviewProjectCard, fdpgCheckNoteCard, overviewAppendixCard],
 }

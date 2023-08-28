@@ -35,14 +35,14 @@
 
 <script setup lang="ts">
 import FdpgInput from '@/components/FdpgInput.vue'
-import type { IVisibilityMessage } from '@/composables/use-location-visibility';
+import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
 import { FdpgInputSize } from '@/types/component.types'
 import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import LocationSelect from './LocationSelect.vue'
 
@@ -107,7 +107,7 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
 const { visibility } = useLocationVisibility(visibilityMessage, props.type, false)
 
 onMounted(() => {
-  if (inputRef.value && inputRef.value.inputRef?.input) {
+  if (inputRef.value?.inputRef?.input) {
     inputRef.value.inputRef.input.focus()
   }
 

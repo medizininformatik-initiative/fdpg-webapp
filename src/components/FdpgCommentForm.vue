@@ -11,7 +11,7 @@
 
   <section role="region" class="action-row">
     <div class="comment-field-actions">
-      <el-button type="primary" :disabled="!comment || comment.trim().length < 2 || isDisabled" @click="handleSubmit">
+      <el-button type="primary" class="edit-button" :disabled="!comment || comment.trim().length < 2 || isDisabled" @click="handleSubmit">
         <template v-if="edit">
           {{ $t('general.save') }}
         </template>
@@ -19,7 +19,7 @@
           {{ $t('general.create') }}
         </template>
       </el-button>
-      <el-button type="primary" plain @click="handleCancel">{{ $t('general.cancel') }}</el-button>
+      <el-button type="primary" class="cancel-button" plain @click="handleCancel">{{ $t('general.cancel') }}</el-button>
     </div>
     <LocationSelect
       v-if="isMessageToLocation"
@@ -38,9 +38,9 @@ import LocationSelect from './LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { MiiLocation } from '@/types/location.enum'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
-import type { IVisibilityMessage } from '@/composables/use-location-visibility';
+import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
 
@@ -102,7 +102,7 @@ defineExpose({
 })
 
 const setInputFocus = () => {
-  if (inputRef.value && inputRef.value.inputRef) {
+  if (inputRef.value?.inputRef) {
     inputRef.value.inputRef.focus()
   }
 }

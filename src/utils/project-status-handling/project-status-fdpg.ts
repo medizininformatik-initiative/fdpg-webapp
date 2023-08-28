@@ -1,5 +1,5 @@
 import type { IProjectStatus } from '@/types/project-status'
-import type { IProposal} from '@/types/proposal.types';
+import type { IProposal } from '@/types/proposal.types'
 import { ProjectStatusType, ProposalStatus } from '@/types/proposal.types'
 import { getLocaleDateString } from '@/utils/date.util'
 
@@ -11,8 +11,8 @@ export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
     }
   }
   switch (proposal.status) {
-    case ProposalStatus.Draft:
     default:
+    case ProposalStatus.Draft:
       return {
         type: ProjectStatusType.neutral,
         description: 'projectStatus.DRAFT',

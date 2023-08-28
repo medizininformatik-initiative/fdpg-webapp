@@ -1,5 +1,4 @@
 export const getDateDiff = (date: string, subtractDays = 7) => {
-  // TODO: Check if everything works with timezones
   const prevDate = new Date(new Date(date).toDateString()).getTime()
   const currentDate = new Date(new Date().toDateString()).getTime()
   const diffTime = prevDate - currentDate

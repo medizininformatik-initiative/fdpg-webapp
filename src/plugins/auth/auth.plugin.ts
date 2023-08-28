@@ -1,8 +1,8 @@
-import { createOidcAuth, SignInType, LogLevel } from 'vue-oidc-client/vue3'
-import type { App } from 'vue'
 import { LocationUtil } from '@/utils/location.util'
-import type { Router } from 'vue-router'
 import { WebStorageStateStore } from 'oidc-client'
+import type { App } from 'vue'
+import { LogLevel, SignInType, createOidcAuth } from 'vue-oidc-client/vue3'
+import type { Router } from 'vue-router'
 import { addRoleGuard } from './role.guard'
 
 export const initAuthPlugin = async (router: Router) => {

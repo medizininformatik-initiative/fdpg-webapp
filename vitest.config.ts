@@ -11,6 +11,9 @@ export default mergeConfig(
       environment: 'jsdom',
       exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url)),
+      alias: {
+        '@/': new URL('./src/', import.meta.url).pathname,
+      },
       transformMode: {
         web: [/\.[jt]sx$/],
       },
@@ -33,9 +36,11 @@ export default mergeConfig(
           '**/*.spec.ts',
           '**/*.mock.ts',
           'src/main.ts',
+          'src/print-module/print.ts',
           'src/locales/**',
-          'src/router/routes.ts',
-          'src/router/index.ts',
+          '**/router/routes.ts',
+          '**/router/index.ts',
+          '**/build-lang-files.js',
           // Libs where we assume that they are tested by the maintainer
           'src/libs/**',
         ],

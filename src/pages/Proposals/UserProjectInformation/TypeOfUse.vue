@@ -57,10 +57,10 @@ import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useConfigStore } from '@/stores/config/config.store'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { ITypeOfUse} from '@/types/proposal.types';
+import type { ITypeOfUse } from '@/types/proposal.types'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
@@ -83,8 +83,10 @@ const props = defineProps({
 
 const options = Object.keys(ProposalTypeOfUse).map(function (option) {
   return {
-    value: ProposalTypeOfUse[option],
-    info: ('proposal.typeOfUse_' + ProposalTypeOfUse[option] + '_Info') as TranslationSchema,
+    value: ProposalTypeOfUse[option as keyof typeof ProposalTypeOfUse],
+    info: ('proposal.typeOfUse_' +
+      ProposalTypeOfUse[option as keyof typeof ProposalTypeOfUse] +
+      '_Info') as TranslationSchema,
   }
 })
 

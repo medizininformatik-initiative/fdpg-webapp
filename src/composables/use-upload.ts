@@ -1,12 +1,11 @@
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { BadRequestError } from '@/types/bad-request-error.enum'
 import type { IUpload } from '@/types/proposal.types'
-import type { UploadType } from '@/types/upload.types';
+import type { UploadType } from '@/types/upload.types'
 import { DirectUpload } from '@/types/upload.types'
-import type { AxiosError } from 'axios';
 import axios from 'axios'
 import type { UploadFile } from 'element-plus'
-import type { Ref} from 'vue';
+import type { Ref } from 'vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -22,9 +21,9 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
 
   const handleUploadError = (error: any) => {
     let message: string | undefined
-    if (axios.isAxiosError(error) && (error as AxiosError<any, any>).response?.data?.errors) {
-      const isWrongMimetype = (error as AxiosError<any, any>).response?.data.errors.find(
-        (apiError) => apiError.code === BadRequestError.UploadMimetypeNotSupported,
+    if (axios.isAxiosError(error) && error.response?.data?.errors) {
+      const isWrongMimetype = error.response?.data.errors.find(
+        (apiError: { code: string }) => apiError.code === BadRequestError.UploadMimetypeNotSupported,
       )
       if (isWrongMimetype) {
         message = t('general.invalidMimetype')

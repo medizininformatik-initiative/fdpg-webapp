@@ -1,4 +1,4 @@
-import type { IMessageBox} from './messageBox.store';
+import type { IMessageBox } from './messageBox.store'
 import { useMessageBoxStore } from './messageBox.store'
 import { createPinia, setActivePinia } from 'pinia'
 
@@ -24,18 +24,18 @@ describe('MessageBox Store', () => {
     })
   })
 
-  it('should set message box', async () => {
+  it('should set message box', () => {
     const store = useMessageBoxStore()
     store.isOpen = false
     vi.spyOn(store, 'openMessageBox').mockImplementation()
-    await store.setMessageBoxInfo({
+    store.setMessageBoxInfo({
       cancelButtonText: 'proposal.no',
       cancelButtonClass: 'string',
       showCancelButton: true,
       title: 'proposal.no',
       message: 'proposal.no',
       confirmButtonText: 'proposal.no',
-      callback: () => {},
+      callback: async () => {},
     } as IMessageBox)
     expect(store.openMessageBox).toBeCalledTimes(1)
   })

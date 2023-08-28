@@ -125,22 +125,36 @@ export const transformProjectResponsible = (
   transformToApi?: boolean,
 ): DeepPartial<IProjectResponsible> => {
   const applicantIsProjectResponsible = projectResponsible?.projectResponsibility?.applicantIsProjectResponsible
+  let researcher: Partial<IResearcher> | undefined
+  let institute: Partial<IInstitute> | undefined
+  let participantCategory: Partial<IParticipantCategory> | undefined
+
+  if (transformToApi && applicantIsProjectResponsible) {
+    // Both true
+    researcher = undefined
+    institute = undefined
+    participantCategory = undefined
+  } else {
+    if (applicantIsProjectResponsible) {
+      // transformToApi: false, applicantIsProjectResponsible: true
+      researcher = transformParticipantResearcher()
+      institute = transformParticipantInstitute()
+      participantCategory = transformParticipantCategory()
+    } else {
+      // Both false || transformToApi: true, applicantIsProjectResponsible: false
+      researcher = transformParticipantResearcher(projectResponsible?.researcher)
+      institute = transformParticipantInstitute(projectResponsible?.institute)
+      participantCategory = transformParticipantCategory(projectResponsible?.participantCategory)
+    }
+  }
+
+  const projectResponsibility = transFormProjectResponsibility(projectResponsible?.projectResponsibility)
+
   return {
-    researcher:
-      transformToApi && applicantIsProjectResponsible
-        ? undefined
-        : transformParticipantResearcher(applicantIsProjectResponsible ? undefined : projectResponsible?.researcher),
-    institute:
-      transformToApi && applicantIsProjectResponsible
-        ? undefined
-        : transformParticipantInstitute(applicantIsProjectResponsible ? undefined : projectResponsible?.institute),
-    participantCategory:
-      transformToApi && applicantIsProjectResponsible
-        ? undefined
-        : transformParticipantCategory(
-            applicantIsProjectResponsible ? undefined : projectResponsible?.participantCategory,
-          ),
-    projectResponsibility: transFormProjectResponsibility(projectResponsible?.projectResponsibility),
+    researcher,
+    institute,
+    participantCategory,
+    projectResponsibility,
   }
 }
 

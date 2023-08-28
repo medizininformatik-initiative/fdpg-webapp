@@ -4,9 +4,9 @@
 
 <script setup lang="ts">
 import type { TranslationSchema } from '@/plugins/i18n'
-import type { IProposalDetail} from '@/types/proposal.types';
+import type { IProposalDetail } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import PanelTodoStatus from './PanelTodoStatus.vue'
 
@@ -25,8 +25,8 @@ interface IResearcherState {
 
 const status = computed<IResearcherState>(() => {
   switch (props.proposal.status) {
-    case ProposalStatus.Draft:
     default:
+    case ProposalStatus.Draft:
       return {
         message: 'researcherStatus.DRAFT',
         icon: 'fa-solid fa-paper-plane',

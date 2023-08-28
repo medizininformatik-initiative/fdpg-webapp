@@ -90,14 +90,14 @@
 <script setup lang="ts">
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { useMessageBoxStore } from '@/stores/messageBox.store'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { CardType } from '@/types/component.types'
 import { Role } from '@/types/oidc.types'
-import type { IProposalDetail} from '@/types/proposal.types';
+import type { IProposalDetail } from '@/types/proposal.types'
 import { FdpgTaskType, ProposalStatus } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { getDateDiff } from '@/utils/date.util'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -155,8 +155,8 @@ const notifications = computed(() => {
 
 const actionsRef = ref()
 
-const openDetails = (e) => {
-  if (actionsRef.value && actionsRef.value.contains(e.target)) {
+const openDetails = (e: Event) => {
+  if (actionsRef.value?.contains(e.target)) {
     return
   }
   router.push({
@@ -173,7 +173,7 @@ const handleDeleteProposalModal = () => {
     title: 'proposal.deleteProposalModalTitle',
     message: 'proposal.deleteProposalModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: (decision: 'confirm' | 'cancel' | 'close') => (decision === 'confirm' ? deleteProposal() : undefined),
+    callback: async(decision: DecisionType) => (decision === 'confirm' ? deleteProposal() : undefined),
   })
 }
 

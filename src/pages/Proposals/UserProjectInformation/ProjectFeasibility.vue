@@ -51,7 +51,7 @@ import type { TranslationSchema } from '@/plugins/i18n'
 import { useFeasibilityStore } from '@/stores/feasibility.store'
 import type { IFeasibility } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 
 const props = defineProps({
@@ -87,7 +87,6 @@ onMounted(async () => {
       await feasibilityStore.getAll()
       noDataText.value = 'proposal.noFeasibilityQueriesSaved'
     } catch (error) {
-      console.log('TODO: Failed to fetch feasibility queries')
       noDataText.value = 'proposal.noFeasibilityQueriesWhenError'
     }
     isLoading.value = false
