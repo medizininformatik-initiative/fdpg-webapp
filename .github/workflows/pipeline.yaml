@@ -69,6 +69,13 @@ jobs:
       nodeEnvironment: "prelive-ionos"
     secrets: inherit
 
+  build_dev_ionos:
+    uses: ./.github/workflows/build-and-publish.template.yaml
+    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
+    needs: verify
+    with:
+      nodeEnvironment: "dev-ionos"
+    secrets: inherit
 
   build_main:
     uses: ./.github/workflows/build-and-publish.template.yaml
