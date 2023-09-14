@@ -16,6 +16,8 @@ vi.mock('vue-i18n', () => ({
 }))
 
 vi.mock('vue-router', () => ({
+  createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
+  createWebHistory: vi.fn(),
   useRouter: vi.fn(() => ({
     push: vi.fn(),
   })),

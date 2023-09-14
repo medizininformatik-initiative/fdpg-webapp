@@ -18,6 +18,5 @@ export interface IUpdateUser {
   title?: string
   firstName: string
   lastName: string
-  email: string
   affiliation: string
 }

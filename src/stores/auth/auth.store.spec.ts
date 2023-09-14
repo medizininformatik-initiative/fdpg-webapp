@@ -1,9 +1,9 @@
-import type { App } from 'vue';
+import type { App } from 'vue'
 import { createApp } from 'vue'
 import { setActivePinia, createPinia } from 'pinia'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { OidcAuth } from 'vue-oidc-client/vue3'
-import type { IFdpgOidcProfile} from '@/types/oidc.types';
+import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import { Role } from '@/types/oidc.types'
 
 describe('Auth Store', () => {
@@ -117,28 +117,10 @@ describe('Auth Store', () => {
       expect(store.roles).toEqual([Role.DizMember])
     })
 
-    it('should have single role value getter', () => {
+    it('should change singleKnownRole', () => {
       const store = useAuthStore()
-      mockOidc.user.profile = { realm_access: { roles: [Role.FdpgMember] } }
-      expect(store.singleKnownRole).toEqual(Role.FdpgMember)
-    })
-    it('should have single role value getter uacMember', () => {
-      const store = useAuthStore()
-
-      mockOidc.user.profile = { realm_access: { roles: [Role.UacMember] } }
-      expect(store.singleKnownRole).toEqual(Role.UacMember)
-    })
-
-    it('should have single role value getter dizMember', () => {
-      const store = useAuthStore()
-      mockOidc.user.profile = { realm_access: { roles: [Role.DizMember] } }
+      store.setSelectedRole(Role.DizMember)
       expect(store.singleKnownRole).toEqual(Role.DizMember)
-    })
-
-    it('should have single role value getter Researcher', () => {
-      const store = useAuthStore()
-      mockOidc.user.profile = { realm_access: { roles: [Role.Researcher] } }
-      expect(store.singleKnownRole).toEqual(Role.Researcher)
     })
 
     it('should check token value getter', () => {

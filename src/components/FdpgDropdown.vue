@@ -5,7 +5,8 @@
       <span v-if="button.kind === 'icon'" class="icon" :class="button.iconClass" aria-hidden="true" />
       <template v-if="button.isTranslatable">{{ $t(button.label) }}</template>
       <template v-else>{{ button.label }}</template>
-
+      <slot>
+      </slot>
       <span
         v-if="showDropdownIcon"
         class="caret-icon fa fa-caret-down"

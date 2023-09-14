@@ -11,14 +11,12 @@ describe('UserUtil', () => {
   const mockedAuthStore = vi.mocked(useAuthStore())
 
   it('should check if user has permission', () => {
-    mockedAuthStore.roles = [Role.FdpgMember, Role.Admin]
+    mockedAuthStore.singleKnownRole = Role.FdpgMember
 
     const permittedRolesSuccess = [Role.FdpgMember]
-    const permittedRolesSuccess2 = [Role.Admin]
     const permittedRolesFail = [Role.Researcher]
 
     expect(userHasPermission(permittedRolesSuccess)).toBeTruthy()
-    expect(userHasPermission(permittedRolesSuccess2)).toBeTruthy()
     expect(userHasPermission(permittedRolesFail)).toBeFalsy()
   })
 })

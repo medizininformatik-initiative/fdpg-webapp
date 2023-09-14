@@ -53,6 +53,9 @@ describe('UsePanels', () => {
     const authStore = useAuthStore()
     ;(authStore.isLoggedIn as any) = true
     const axiosError = new AxiosError()
+    axiosError.request = {
+      responseURL: '',
+    }
     axiosError.response = {
       data: 's',
       status: 401,

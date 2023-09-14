@@ -35,17 +35,10 @@ const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 
-const userRole: ComputedRef<Role | undefined> = computed(() => {
-  if (authStore.roles.length === 1) {
-    return authStore.roles[0]
-  } else if (authStore.roles.length > 1) {
-    return Role.Researcher
-  }
-  return undefined
-})
+
 
 const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
-  return userRole.value ? mainMenuMap[userRole.value] : []
+  return authStore.singleKnownRole ? mainMenuMap[authStore.singleKnownRole] : []
 })
 
 interface Menu {

@@ -3,7 +3,7 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{ $t('proposal.projectDetails') }}</el-button>
+        <el-button type="primary" size="large" @click="openDetails">{{ $t('proposal.projectDetails') }}</el-button>
       </div>
     </div>
 
@@ -223,7 +223,7 @@ onMounted(async () => {
   h2 {
     counter-reset: h3;
   }
-
+  
   h3 {
     counter-reset: h4;
   }
@@ -238,7 +238,7 @@ onMounted(async () => {
   h2 {
     counter-set: h3;
   }
-
+  
   h3 {
     counter-set: h4;
   }
@@ -247,7 +247,7 @@ onMounted(async () => {
     counter-increment: h2;
     content: counter(h2) '. ';
   }
-
+  
   h3::before {
     counter-increment: h3;
     content: counter(h2) '.' counter(h3) '. ';

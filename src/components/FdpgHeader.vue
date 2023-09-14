@@ -29,13 +29,9 @@
       </template>
     </el-input>
     <el-space direction="horizontal" :size="12">
-      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown" data-testId="header.languageButton"></FdpgDropdown>
-
-      <div v-if="authStore.singleKnownRole" class="profile-role">
-        {{ $t(`roles.HEADER_${authStore.singleKnownRole}`) }}
-      </div>
-
-      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown" data-testId="header.profileButton"></FdpgDropdown>
+      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown"></FdpgDropdown>
+      <FdpgHeaderRole />
+      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown"></FdpgDropdown>
     </el-space>
   </el-header>
 </template>
@@ -51,6 +47,7 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
+import FdpgHeaderRole from './FdpgHeaderRole.vue'
 
 const { locale } = useI18n()
 
@@ -229,22 +226,6 @@ const goToProfile = () => {
         width: 44px;
         height: 44px;
         line-height: 44px;
-      }
-
-      .profile-role {
-        overflow: hidden;
-        background: $blue;
-        color: $white;
-        margin-right: 5px;
-        border-radius: 30px;
-        padding: 0 1rem;
-        width: auto;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.2rem;
-        font-weight: bold;
       }
     }
   }

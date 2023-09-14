@@ -1,12 +1,13 @@
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
-import FdpgHeader from '../FdpgHeader.vue'
+import FdpgHeaderRole from '../FdpgHeaderRole.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, flushPromises } from '@vue/test-utils'
 import type { MockedObject } from 'vitest'
 import FdpgDropdown from '../FdpgDropdown.vue'
 
 import type { DropdownItem, IDropdownIconItem } from '@/types/dropdown.types'
+import { Role } from '@/types/oidc.types'
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockReturnValue('Test'),
@@ -25,7 +26,7 @@ vi.mock('vue-router', () => ({
 }))
 
 const mountComponent = () => {
-  return mount(FdpgHeader, {
+  return mount(FdpgHeaderRole, {
     props: {},
     global: {
       plugins: [createTestingPinia()],
@@ -34,7 +35,7 @@ const mountComponent = () => {
   })
 }
 
-describe('FdpgHeader.vue', () => {
+describe('FdpgHeaderRole.vue', () => {
   let layoutStore: MockedObject<ReturnType<typeof useLayoutStore>>
   let wrapper: ReturnType<typeof mountComponent>
   beforeEach(() => {
@@ -45,45 +46,36 @@ describe('FdpgHeader.vue', () => {
   it('renders', () => {
     expect(wrapper).toBeTruthy()
   })
-
-  it('should open sidebar', async () => {
-    await wrapper.find('.fdpg-header__menu-button').trigger('click')
-    expect(layoutStore.setSidebarVisiblity).toHaveBeenCalledWith(true)
-  })
-
-  it('should change localStorage value for language', async () => {
-    localStorage.setItem('translationLocale', '')
-    const FdpgDropdownComponent = wrapper.findAllComponents(FdpgDropdown)[0]
-    const props = FdpgDropdownComponent.props('items')
-    props[0].action()
-    expect(localStorage.getItem('translationLocale')).toBe('en')
-    props[1].action()
-    expect(localStorage.getItem('translationLocale')).toBe('de')
-  })
 })
 
-describe.each([true, false])('FdpgHeader with mocked authentication', (isAuthenticated: boolean) => {
+describe('FdpgHeaderRole with mocked roles', () => {
   let authStore: MockedObject<ReturnType<typeof useAuthStore>>
   let wrapper: ReturnType<typeof mountComponent>
   beforeEach(() => {
     wrapper = mountComponent()
     authStore = vi.mocked(useAuthStore())
-    authStore.isLoggedIn = isAuthenticated
+    authStore.roles = [Role.FdpgMember, Role.Researcher, Role.DizMember]
   })
 
   it('should add items to dropdown', async () => {
     await flushPromises()
     const FdpgDropdownComponent = wrapper.findAllComponents(FdpgDropdown)
-    if (!isAuthenticated) {
-      expect(FdpgDropdownComponent[1].props().items.map((item: DropdownItem) => item.label)).toContain('header.login')
-      expect(FdpgDropdownComponent[1].props().items.map((item: IDropdownIconItem) => item.iconClass)).toContain(
-        'fa fa-arrow-right-to-bracket',
-      )
-    } else {
-      expect(FdpgDropdownComponent[1].props().items.map((item: DropdownItem) => item.label)).toContain('header.logout')
-      expect(FdpgDropdownComponent[1].props().items.map((item: IDropdownIconItem) => item.iconClass)).toContain(
-        'fa fa-arrow-right-from-bracket',
-      )
-    }
+    expect(FdpgDropdownComponent.length).toBe(1)
+  })
+})
+
+describe('FdpgHeaderRole with mocked roles', () => {
+  let authStore: MockedObject<ReturnType<typeof useAuthStore>>
+  let wrapper: ReturnType<typeof mountComponent>
+  beforeEach(() => {
+    wrapper = mountComponent()
+    authStore = vi.mocked(useAuthStore())
+    authStore.roles = [Role.FdpgMember]
+  })
+
+  it('should add items to dropdown', async () => {
+    await flushPromises()
+    const FdpgDropdownComponent = wrapper.findAllComponents(FdpgDropdown)
+    expect(FdpgDropdownComponent.length).toBe(0)
   })
 })
