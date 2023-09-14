@@ -29,7 +29,7 @@
             />
             <FdpgInput
               v-model="proposalForm.projectAbbreviation"
-              data-test-id="proposalForm.projectAbbreviation"
+              data-testId="proposalForm.projectAbbreviation"
               placeholder="proposal.egWestStorm"
               :disabled="isReviewMode"
             />

@@ -351,7 +351,7 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
   {
     type: proposalStore.currentProposal?.isLocked ? 'success' : 'danger',
     label: proposalStore.currentProposal?.isLocked ? 'proposal.unlockProposal' : 'proposal.lockProposal',
-    testId: 'button__lockProposal',
+    testId: 'button__lockOrUnlockProposal',
     action: openLockModal,
     isHidden:
       authStore.singleKnownRole !== Role.FdpgMember ||

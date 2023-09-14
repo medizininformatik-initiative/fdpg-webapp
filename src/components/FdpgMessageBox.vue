@@ -12,10 +12,11 @@
           type="text"
           :class="messageBoxStore.cancelButtonClass"
           @click="handleCallback('cancel')"
+          data-testid="button__cancel"
         >
           {{ cancelButtonText }}
         </el-button>
-        <el-button type="primary" @click="handleCallback('confirm')">
+        <el-button type="primary" @click="handleCallback('confirm')" data-testid="button__confirm">
           {{ confirmButtonText }}
         </el-button>
       </span>
