@@ -29,9 +29,9 @@
       </template>
     </el-input>
     <el-space direction="horizontal" :size="12">
-      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown"></FdpgDropdown>
+      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown" data-testId="header.languageButton"></FdpgDropdown>
       <FdpgHeaderRole />
-      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown"></FdpgDropdown>
+      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown" data-testId="header.profileButton"></FdpgDropdown>></FdpgDropdown>
     </el-space>
   </el-header>
 </template>
