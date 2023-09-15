@@ -1,13 +1,19 @@
-import type { IFdpgOidcProfile} from '@/types/oidc.types';
-import { Role } from '@/types/oidc.types'
+import type { IFdpgOidcProfile } from '@/types/oidc.types'
+import type { Role } from '@/types/oidc.types'
 import { defineStore } from 'pinia'
 export interface IAuthState {
   updatedProfile?: IFdpgOidcProfile
+  singleKnownRole?: Role
+  isChangeRoleDialogOpen: boolean
+  redirectToDetailPageProposalId?: string
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): IAuthState => ({
     updatedProfile: undefined,
+    singleKnownRole: localStorage.getItem('currentRole') as Role,
+    isChangeRoleDialogOpen: false,
+    redirectToDetailPageProposalId: undefined,
   }),
 
   actions: {
@@ -22,6 +28,19 @@ export const useAuthStore = defineStore('auth', {
 
     setProfileUpdate(profile: IFdpgOidcProfile) {
       this.updatedProfile = profile
+    },
+
+    setSelectedRole(role: Role) {
+      this.singleKnownRole = role
+      localStorage.setItem('currentRole', role)
+    },
+    openChangeRoleDialog(id: string) {
+      this.redirectToDetailPageProposalId = id
+      this.isChangeRoleDialogOpen = true
+    },
+
+    closeChangeRoleDialog() {
+      this.isChangeRoleDialogOpen = false
     },
 
     async loadProfile() {
@@ -49,25 +68,7 @@ export const useAuthStore = defineStore('auth', {
   getters: {
     profile: (state) => state.updatedProfile || state.$oidc?.user?.profile,
     roles: (state): Role[] => state.$oidc?.user?.profile.realm_access?.roles ?? [],
-    singleKnownRole(): Role | undefined {
-      if (this.roles.includes(Role.FdpgMember)) {
-        return Role.FdpgMember
-      }
-      if (this.roles.includes(Role.UacMember)) {
-        return Role.UacMember
-      }
-      if (this.roles.includes(Role.DizMember)) {
-        return Role.DizMember
-      }
-      if (this.roles.includes(Role.Researcher)) {
-        return Role.Researcher
-      }
-
-      return undefined
-    },
-
     isLoggedIn: (state): boolean => state.$oidc?.isAuthenticated ?? false,
-
     token(state): string {
       return this.isLoggedIn ? state.$oidc?.accessToken ?? '' : ''
     },

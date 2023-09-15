@@ -15,6 +15,7 @@ vi.mock('@/stores/auth/auth.store', () => {
         },
       },
       setProfileUpdate: vi.fn(),
+      setSelectedRole: vi.fn(),
     }),
   }
 })

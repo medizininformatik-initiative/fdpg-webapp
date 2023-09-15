@@ -1,48 +1,9 @@
-import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'
 import { RouteName } from '@/types/route-name.enum'
 import type { RouteRecordRaw } from 'vue-router'
 import { createRouter, createWebHistory } from 'vue-router'
 
-const getDetailComponentForRole = () => {
-  const authStore = useAuthStore()
-  switch (authStore.singleKnownRole) {
-    case Role.Researcher:
-      return import('@/components/Proposals/Details/ResearcherDetails.vue')
-
-    case Role.FdpgMember:
-      return import('@/components/Proposals/Details/FdpgMemberDetails.vue')
-
-    case Role.DizMember:
-      return import('@/components/Proposals/Details/DizMemberDetails.vue')
-
-    case Role.UacMember:
-      return import('@/components/Proposals/Details/UacMemberDetails.vue')
-  }
-}
-
-const getDashboardComponentForRole = () => {
-  const authStore = useAuthStore()
-
-  switch (authStore.singleKnownRole) {
-    case Role.Researcher:
-      return import('@/components/Dashboard/ResearcherDashboard.vue')
-
-    case Role.FdpgMember:
-      return import('@/components/Dashboard/FdpgMemberDashboard.vue')
-
-    case Role.DizMember:
-    case Role.UacMember:
-      return import('@/components/Dashboard/LocationDashboard.vue')
-
-    case Role.Admin:
-      return import('@/components/Dashboard/AdminDashboard.vue')
-
-    default:
-      return import('@/components/Dashboard/NoRoleDashboard.vue')
-  }
-}
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -62,7 +23,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/',
         name: RouteName.Dashboard,
-        component: () => getDashboardComponentForRole(),
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
@@ -71,7 +32,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/pending',
         name: RouteName.Pending,
-        component: () => getDashboardComponentForRole(),
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
@@ -81,7 +42,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/current',
         name: RouteName.Ongoing,
-        component: () => getDashboardComponentForRole(),
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
@@ -91,7 +52,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/completed',
         name: RouteName.Completed,
-        component: () => getDashboardComponentForRole(),
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
@@ -129,7 +90,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '/proposals/:id/details',
         name: RouteName.ProposalDetails,
-        component: () => getDetailComponentForRole(),
+        component: () => import('@/components/Proposals/Details/DetailComponent.vue'),
         props: true,
         meta: {
           roles: [Role.Researcher, Role.FdpgMember, Role.DizMember, Role.UacMember],

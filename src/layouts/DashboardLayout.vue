@@ -12,6 +12,7 @@
         @click="setSidebarVisiblity(false)"
       />
       <FdpgMessageBox />
+      <RoleDialog />
     </el-container>
   </el-container>
 </template>
@@ -20,6 +21,7 @@
 import FdpgHeader from '@/components/FdpgHeader.vue'
 import FdpgSidebar from '@/components/FdpgSidebar.vue'
 import FdpgMessageBox from '@/components/FdpgMessageBox.vue'
+import RoleDialog from '@/components/RoleDialog.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'

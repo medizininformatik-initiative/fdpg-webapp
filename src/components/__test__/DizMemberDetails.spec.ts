@@ -29,6 +29,8 @@ vi.mock('@/plugins/i18n', () => ({
 vi.mock('vue-router', () => {
   const pushMock = vi.fn()
   return {
+    createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
+    createWebHistory: vi.fn(),
     useRoute: vi.fn().mockReturnValue({ query: { anchor: 'anchorId' }, params: { id: 'proposalId' } }),
     useRouter: vi.fn(() => ({
       push: pushMock,

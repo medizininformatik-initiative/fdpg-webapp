@@ -68,19 +68,6 @@
             </FdpgFormItem>
           </el-col>
         </el-row>
-
-        <el-row :gutter="20">
-          <el-col :sm="24">
-            <FdpgFormItem prop="email">
-              <FdpgLabel required html-for="proposal.emailAddress" />
-              <FdpgInput
-                v-model.trim="profileForm.email"
-                data-testId="profileForm.email"
-                placeholder="proposal.pleaseEnterTheEmailAddress"
-              />
-            </FdpgFormItem>
-          </el-col>
-        </el-row>
       </el-form>
     </div>
 
@@ -108,7 +95,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useUserStore } from '@/stores/user.store'
 import { Salutation } from '@/types/salutation.enum'
 import type { IUpdateUser } from '@/types/user.types'
-import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
+import { maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
 import { ElForm } from 'element-plus'
 
@@ -139,7 +126,6 @@ const profileForm = reactive<IUpdateUser>({
   title: '',
   firstName: '',
   lastName: '',
-  email: '',
   affiliation: '',
 })
 
@@ -147,7 +133,6 @@ const rules = reactive<Record<string, any>>({
   title: [maxLengthValidationFunc(100)],
   firstName: [requiredValidationFunc('string'), maxLengthValidationFunc(100)],
   lastName: [requiredValidationFunc('string'), maxLengthValidationFunc(100)],
-  email: [requiredValidationFunc('string'), emailValidationFunc(), maxLengthValidationFunc(250)],
   affiliation: [requiredValidationFunc('string'), maxLengthValidationFunc(250)],
 })
 
@@ -168,7 +153,6 @@ watch(
         profileForm.firstName = authStore.profile.given_name
         profileForm.lastName = authStore.profile.family_name
         profileForm.affiliation = authStore.profile.affiliation
-        profileForm.email = authStore.profile.email
       }
 
       // To disable the button, we need to trigger the validation.

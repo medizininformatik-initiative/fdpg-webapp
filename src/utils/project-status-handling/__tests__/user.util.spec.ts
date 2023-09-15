@@ -10,37 +10,37 @@ describe('userHasPermission util', () => {
     {
       permittedRoles: [Role.FdpgMember],
       expected: true,
-      authStoreRoles: [Role.FdpgMember],
+      authStoreRoles: Role.FdpgMember,
     },
     {
       permittedRoles: [Role.FdpgMember],
       expected: false,
-      authStoreRoles: [Role.DizMember],
+      authStoreRoles: Role.DizMember,
     },
     {
       permittedRoles: [Role.FdpgMember, Role.DizMember],
       expected: true,
-      authStoreRoles: [Role.FdpgMember],
+      authStoreRoles: Role.FdpgMember,
     },
     {
       permittedRoles: [Role.FdpgMember, Role.DizMember],
       expected: true,
-      authStoreRoles: [Role.DizMember],
+      authStoreRoles: Role.DizMember,
     },
     {
       permittedRoles: [Role.FdpgMember, Role.DizMember],
       expected: false,
-      authStoreRoles: [Role.Researcher],
+      authStoreRoles: Role.Researcher,
     },
     {
       permittedRoles: [Role.FdpgMember, Role.DizMember],
       expected: false,
-      authStoreRoles: [Role.Researcher, Role.Admin],
+      authStoreRoles: Role.Researcher,
     },
   ]
 
   test.each(testCases)('when give permission as expected', (testCase) => {
-    mockedAuthStore.roles = testCase.authStoreRoles
+    mockedAuthStore.singleKnownRole = testCase.authStoreRoles
     expect(userHasPermission(testCase.permittedRoles)).toBe(testCase.expected)
   })
 })

@@ -1,7 +1,7 @@
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { CardType } from '@/types/component.types'
 import { mount } from '@vue/test-utils'
-import PanelLocationVote  from './PanelLocationVote.vue'
+import PanelLocationVote from './PanelLocationVote.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mockProposalDetail } from '@/mocks/proposal.mock'
 
@@ -15,6 +15,8 @@ vi.mock('vue-i18n', () => ({
 }))
 
 vi.mock('vue-router', () => ({
+  createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
+  createWebHistory: vi.fn(),
   useRouter: vi.fn(() => ({
     push: vi.fn(),
   })),

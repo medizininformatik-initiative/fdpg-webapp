@@ -10,6 +10,8 @@ import useNotifications from '@/composables/use-notifications'
 import { ProposalStatus, type IProposal } from '@/types/proposal.types'
 
 vi.mock('vue-router', () => ({
+  createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
+  createWebHistory: vi.fn(),
   useRoute: vi.fn().mockReturnValue({ params: { id: 'proposalId' } }),
   useRouter: vi.fn(() => ({
     push: vi.fn(),
