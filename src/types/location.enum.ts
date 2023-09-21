@@ -35,6 +35,7 @@ export enum MiiLocation {
   UKD = 'UKD',
   UKRUB = 'UKRUB',
   KC = 'KC',
+  CTK = 'CTK',
   VirtualAll = 'VIRTUAL_ALL',
 }
 
