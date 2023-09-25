@@ -36,6 +36,9 @@ jobs:
         if: ${{ inputs.nodeEnvironment == 'print' }}
         run: yarn run build:print --mode prod
 
+      - name: set buildNumberOfDate variable
+        # Github does not support resetting counters => buildNumberOfDate will never be reset to 1, always increasing
+        run: echo "buildNumberOfDate=${{github.run_number}}" >> "$GITHUB_ENV"
 
       - name: set npmVersionString variable
         run: echo "npmVersionString="$(node -p "require('./package.json').version") >> "$GITHUB_ENV"
@@ -45,6 +48,9 @@ jobs:
 
       - name: set pipeTime variable
         run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
+
+      - name: set imageTag variable
+        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -64,7 +70,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{inputs.nodeEnvironment}}-${{env.npmVersionString}}
+          tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.imageTag}}
           build-args: |
             BUILD_DATE=${{env.pipeDate}}
             BUILD_TIME=${{env.pipeTime}}

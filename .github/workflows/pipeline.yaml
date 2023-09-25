@@ -46,12 +46,11 @@ jobs:
 
   build_dev:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref != 'refs/heads/main' }}  # isMain == false
+    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == false
     needs: verify
     with:
       nodeEnvironment: "dev"
     secrets: inherit
-
 
   build_prelive:
     uses: ./.github/workflows/build-and-publish.template.yaml
