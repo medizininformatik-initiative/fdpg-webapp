@@ -49,9 +49,8 @@ describe('UsePanels', () => {
     expect(result).toEqual(response)
   })
 
-  it('should log out in 401 error', async () => {
+  it('should log out on 401 error', async () => {
     const authStore = useAuthStore()
-    ;(authStore.isLoggedIn as any) = true
     const axiosError = new AxiosError()
     axiosError.request = {
       responseURL: '',
