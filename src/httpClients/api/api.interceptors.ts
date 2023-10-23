@@ -19,12 +19,14 @@ const requestInterceptor = {
   onRejected: (error: AxiosError) => Promise.reject(error),
 }
 
+let isHandling401 = false
 const responseInterceptor = {
   onFullfilled: (response: AxiosResponse<any, any>) => response,
   onRejected: async (error: AxiosError) => {
     const auth = useAuthStore()
 
-    if (error.response?.status === 401 && auth.isLoggedIn) {
+    if (error.response?.status === 401 && !isHandling401) {
+      isHandling401 = true
       auth.logOut()
     }
 
