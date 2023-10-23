@@ -194,6 +194,13 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
     email: 'some.todo@af-universität.de',
   },
 
+  [MiiLocation.CTK]: {
+    city: 'Cottbus',
+    display: 'Thiem Research GmbH',
+    definition: 'HiGHmed',
+    email: 'some.todo@af-universität.de',
+  },
+
   [MiiLocation.UKA]: {
     city: 'Aachen',
     display: 'Universitätsklinikum Aachen',
