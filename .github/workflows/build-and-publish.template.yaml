@@ -5,7 +5,10 @@ on:
         type: string
         required: true
         default: "dev"
-
+      pushImages:
+        type: boolean
+        required: true
+        default: false
 
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
@@ -30,11 +33,12 @@ jobs:
 
       - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
         if: ${{ inputs.nodeEnvironment != 'print' }}
-        run: yarn run build --mode ${{ inputs.nodeEnvironment }}
+        run: yarn run build --mode ${{ inputs.nodeEnvironment }} && echo "DOCKERFILE=Dockerfile" >> "$GITHUB_ENV"
 
+      # if env = print, build the print-module Dockerimage instead
       - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
         if: ${{ inputs.nodeEnvironment == 'print' }}
-        run: yarn run build:print --mode prod
+        run: yarn run build:print --mode prod && echo "DOCKERFILE=print.Dockerfile" >> "$GITHUB_ENV"
 
       - name: set buildNumberOfDate variable
         # Github does not support resetting counters => buildNumberOfDate will never be reset to 1, always increasing
@@ -69,7 +73,8 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          push: true
+          file: ${{env.DOCKERFILE}}
+          push: ${{ inputs.pushImages }}
           tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.imageTag}}
           build-args: |
             BUILD_DATE=${{env.pipeDate}}
