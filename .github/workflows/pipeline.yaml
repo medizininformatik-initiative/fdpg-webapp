@@ -43,43 +43,34 @@ jobs:
           fail_below_threshold: false
           only_changed_files: true
 
+  build_print:
+    uses: ./.github/workflows/build-and-publish.template.yaml
+    needs: verify
+    with:
+      nodeEnvironment: "print"
+      pushImages: ${{ github.ref == 'refs/heads/main' }}
+    secrets: inherit
 
   build_dev:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == false
     needs: verify
     with:
       nodeEnvironment: "dev"
+      pushImages: ${{ github.ref == 'refs/heads/main' }}
     secrets: inherit
 
   build_prelive:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
     needs: verify
     with:
       nodeEnvironment: "prelive"
-    secrets: inherit
-
-  build_prelive_ionos:
-    uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
-    needs: verify
-    with:
-      nodeEnvironment: "prelive-ionos"
-    secrets: inherit
-
-  build_dev_ionos:
-    uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
-    needs: verify
-    with:
-      nodeEnvironment: "dev-ionos"
+      pushImages: ${{ github.ref == 'refs/heads/main' }}
     secrets: inherit
 
   build_main:
     uses: ./.github/workflows/build-and-publish.template.yaml
-    if: ${{ github.ref == 'refs/heads/main' }}  # isMain == true
     needs: verify
     with:
       nodeEnvironment: "prod"
+      pushImages: ${{ github.ref == 'refs/heads/main' }}
     secrets: inherit
