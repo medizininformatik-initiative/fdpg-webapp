@@ -142,6 +142,16 @@ describe('ResearcherDetails', () => {
         expect(showSuccessMessage).toHaveBeenCalledWith('general.submitted')
         expect(router.push).toHaveBeenCalledWith({ name: RouteName.Dashboard })
       })
+
+      it('exports the proposal', async () => {
+        proposalStore.currentProposal!.status = ProposalStatus.Draft
+        const detailTopBar = wrapper.findComponent({ name: 'DetailTopBar' })
+        const buttonProps = detailTopBar.props('buttons') as IButtonConfig[]
+        const openButton = buttonProps.find((button) => button.label === 'proposal.exportPdfProposal')
+        await openButton?.action()
+
+        expect(proposalStore.getProposalFile).toHaveBeenCalledWith('proposalId')
+      })
     })
   })
 })

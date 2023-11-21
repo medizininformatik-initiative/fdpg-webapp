@@ -261,6 +261,10 @@ const handleFinishProjectDeclineClick = () => {
   })
 }
 
+const handleExportProposalPdfClick = () => {
+  proposalStore.getProposalFile(proposalId.value)
+}
+
 const getIsUniqueTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
   if (proposalStatus === ProposalStatus.FdpgCheck) {
     return [
@@ -348,6 +352,13 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 ])
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
+  {
+    type: 'secondary',
+    label: 'proposal.exportPdfProposal',
+    testId: 'button__exportPdf',
+    action: () => handleExportProposalPdfClick(),
+    isHidden: !(status.value === ProposalStatus.Draft || status.value === ProposalStatus.FdpgCheck),
+  },
   {
     type: proposalStore.currentProposal?.isLocked ? 'success' : 'danger',
     label: proposalStore.currentProposal?.isLocked ? 'proposal.unlockProposal' : 'proposal.lockProposal',

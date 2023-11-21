@@ -270,6 +270,25 @@ export const useProposalStore = defineStore('Proposal', {
     async updateFdpgCheckNotes(proposalId: string, fdpgCheckNotes: string): Promise<void> {
       await this.apiService.updateFdpgCheckNotes(proposalId, fdpgCheckNotes)
     },
+    async getProposalFile(id: string): Promise<void> {
+      await this.apiService
+        .getProposalFile(id)
+        .then((response) => {
+          const link = document.createElement('a')
+          link.href = window.URL.createObjectURL(new Blob([response], { type: 'application/pdf' }))
+          link.setAttribute(
+            'download',
+            this.currentProposal && this.currentProposal.projectAbbreviation
+              ? this.currentProposal.projectAbbreviation
+              : 'proposalExport.pdf',
+          )
+          document.body.appendChild(link)
+          link.click()
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+        })
+    },
   },
 
   getters: {
