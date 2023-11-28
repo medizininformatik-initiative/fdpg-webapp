@@ -63,6 +63,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import AppendixInfo from '../../AppendixInfo.vue'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import useDraftDownload from '@/composables/use-draft-download'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
@@ -103,8 +104,12 @@ const openProposal = (anchor?: string) => {
   }
 }
 
-const handleExportProposalPdfClick = () => {
-  proposalStore.getProposalFile(proposalId.value)
+const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
+
+const handleExportProposalPdfClick = async () => {
+  if (proposalId.value && !isDownloadLoading.value) {
+    await downloadFile()
+  }
 }
 
 const isSignDialogOpen = ref(false)
@@ -205,7 +210,12 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
-    isHidden: !(status.value === ProposalStatus.Draft || status.value === ProposalStatus.FdpgCheck),
+    isLoading: isDownloadLoading.value,
+    isHidden: !(
+      status.value === ProposalStatus.Draft ||
+      status.value === ProposalStatus.FdpgCheck ||
+      status.value === ProposalStatus.Rework
+    ),
   },
   {
     type: 'primary',

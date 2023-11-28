@@ -1111,8 +1111,8 @@
       "en": "To the request"
     },
     "exportPdfProposal": {
-      "de": "PDF-Export",
-      "en": "Export PDF"
+      "de": "Entwurf drucken",
+      "en": "Export draft"
     },
     "requestRevision": {
       "de": "Überarbeitung anfragen",

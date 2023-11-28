@@ -6,5 +6,6 @@ export interface IButtonConfig {
   action: () => void
   isHidden?: boolean
   isDisabled?: boolean
+  isLoading?: boolean
   testId?: string
 }

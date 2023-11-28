@@ -533,7 +533,7 @@ describe('Proposal Store', () => {
   it('should call the service to generate and download pdf proposal', async () => {
     const store = useProposalStore()
     const proposalId = 'proposalId'
-    await store.getProposalFile(proposalId)
-    expect(proposalService.getProposalFile).toHaveBeenCalledWith(proposalId)
+    await store.getProposalPdfFile(proposalId)
+    expect(proposalService.getProposalPdfFile).toHaveBeenCalledWith(proposalId)
   })
 })

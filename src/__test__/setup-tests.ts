@@ -10,6 +10,8 @@ Object.defineProperty(URL, 'revokeObjectURL', {
   value: () => {},
 })
 
+global.URL.createObjectURL = vitest.fn()
+
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),

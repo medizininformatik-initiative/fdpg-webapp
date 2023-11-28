@@ -419,8 +419,8 @@ describe('ProposalService', () => {
   it('should call the api client to set fdpg check notes in proposal', async () => {
     apiClient.get.mockResolvedValueOnce(mockGetAllResponse)
     const proposalId = 'proposalId'
-    const response = await service.getProposalFile(proposalId)
-    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/${proposalId}/proposalFile`, {
+    const response = await service.getProposalPdfFile(proposalId)
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/${proposalId}/proposalPdfFile`, {
       responseType: 'arraybuffer',
     })
     expect(response).toEqual(mockGetAllResponse.data)

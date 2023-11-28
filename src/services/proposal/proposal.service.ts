@@ -245,8 +245,8 @@ export class ProposalService {
     await this.apiClient.put(`${this.basePath}/${id}/fdpgCheckNotes`, { value: fdpgCheckNotes })
   }
 
-  async getProposalFile(id: string): Promise<Blob> {
-    const response = await this.apiClient.get(`${this.basePath}/${id}/proposalFile`, {
+  async getProposalPdfFile(id: string): Promise<Blob> {
+    const response = await this.apiClient.get(`${this.basePath}/${id}/proposalPdfFile`, {
       responseType: 'arraybuffer',
     })
     return response.data

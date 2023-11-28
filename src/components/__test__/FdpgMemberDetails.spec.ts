@@ -135,7 +135,7 @@ describe('FdpgMemberDetails', () => {
         const openButton = buttonProps.find((button) => button.label === 'proposal.exportPdfProposal')
         await openButton?.action()
 
-        expect(proposalStore.getProposalFile).toHaveBeenCalledWith('proposalId')
+        expect(proposalStore.getProposalPdfFile).toHaveBeenCalledWith('proposalId')
       })
       it('opens the proposal', () => {
         const router = useRouter()

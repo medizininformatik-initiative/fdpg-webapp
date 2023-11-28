@@ -150,7 +150,7 @@ describe('ResearcherDetails', () => {
         const openButton = buttonProps.find((button) => button.label === 'proposal.exportPdfProposal')
         await openButton?.action()
 
-        expect(proposalStore.getProposalFile).toHaveBeenCalledWith('proposalId')
+        expect(proposalStore.getProposalPdfFile).toHaveBeenCalledWith('proposalId')
       })
     })
   })
