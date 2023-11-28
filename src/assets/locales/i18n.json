@@ -1110,6 +1110,10 @@
       "de": "Zum Antrag",
       "en": "To the request"
     },
+    "exportPdfProposal": {
+      "de": "Entwurf drucken",
+      "en": "Export draft"
+    },
     "requestRevision": {
       "de": "Überarbeitung anfragen",
       "en": "Request revision"

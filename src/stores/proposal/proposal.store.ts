@@ -270,6 +270,9 @@ export const useProposalStore = defineStore('Proposal', {
     async updateFdpgCheckNotes(proposalId: string, fdpgCheckNotes: string): Promise<void> {
       await this.apiService.updateFdpgCheckNotes(proposalId, fdpgCheckNotes)
     },
+    async getProposalPdfFile(id: string): Promise<Blob> {
+      return await this.apiService.getProposalPdfFile(id)
+    },
   },
 
   getters: {

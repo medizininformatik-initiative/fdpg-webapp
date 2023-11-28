@@ -127,6 +127,16 @@ describe('FdpgMemberDetails', () => {
     })
 
     describe('Handling of top bar buttons', () => {
+      it('exports the proposal', async () => {
+        proposalStore.currentProposal!.status = ProposalStatus.FdpgCheck
+
+        const detailTopBar = wrapper.findComponent({ name: 'DetailTopBar' })
+        const buttonProps = detailTopBar.props('buttons') as IButtonConfig[]
+        const openButton = buttonProps.find((button) => button.label === 'proposal.exportPdfProposal')
+        await openButton?.action()
+
+        expect(proposalStore.getProposalPdfFile).toHaveBeenCalledWith('proposalId')
+      })
       it('opens the proposal', () => {
         const router = useRouter()
         const detailTopBar = wrapper.findComponent({ name: 'DetailTopBar' })

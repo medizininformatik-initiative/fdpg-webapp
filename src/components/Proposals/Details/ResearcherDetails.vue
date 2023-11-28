@@ -63,13 +63,20 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import AppendixInfo from '../../AppendixInfo.vue'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import useDraftDownload from '@/composables/use-draft-download'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
-const currentProposalStatus = [ProposalStatus.ExpectDataDelivery, ProposalStatus.DataResearch, ProposalStatus.DataCorrupt, ProposalStatus.FinishedProject, ProposalStatus.ReadyToArchive]
+const currentProposalStatus = [
+  ProposalStatus.ExpectDataDelivery,
+  ProposalStatus.DataResearch,
+  ProposalStatus.DataCorrupt,
+  ProposalStatus.FinishedProject,
+  ProposalStatus.ReadyToArchive,
+]
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -97,6 +104,14 @@ const openProposal = (anchor?: string) => {
   }
 }
 
+const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
+
+const handleExportProposalPdfClick = async () => {
+  if (proposalId.value && !isDownloadLoading.value) {
+    await downloadFile()
+  }
+}
+
 const isSignDialogOpen = ref(false)
 const isDeclineContractDialogOpen = ref(false)
 const showPublicationsAndReports = ref(false)
@@ -116,7 +131,7 @@ const handleFinishProjectWithModal = () => {
     title: 'proposal.researcherFinishProjectModalTitle',
     message: 'proposal.researcherFinishProjectModalDescription',
     confirmButtonText: 'general.confirm',
-    callback: async(decision: DecisionType) =>
+    callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.FinishedProject) : undefined,
   })
 }
@@ -166,7 +181,7 @@ const handleArchiveProjectClick = () => {
     title: 'proposal.archiveProjectModalTitle',
     message: 'proposal.archiveProjectModalDescription',
     confirmButtonText: 'proposal.archiveProject',
-    callback: async(decision: DecisionType) =>
+    callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.Archived) : undefined,
   })
 }
@@ -190,6 +205,18 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 ])
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
+  {
+    type: 'secondary',
+    label: 'proposal.exportPdfProposal',
+    testId: 'button__exportPdf',
+    action: () => handleExportProposalPdfClick(),
+    isLoading: isDownloadLoading.value,
+    isHidden: !(
+      status.value === ProposalStatus.Draft ||
+      status.value === ProposalStatus.FdpgCheck ||
+      status.value === ProposalStatus.Rework
+    ),
+  },
   {
     type: 'primary',
     label: 'proposal.toTheRequest',

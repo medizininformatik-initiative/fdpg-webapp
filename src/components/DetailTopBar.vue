@@ -22,6 +22,7 @@
           :plain="button.type === 'secondary'"
           :data-testId="button.testId"
           :type="button.type"
+          v-loading="button.isLoading"
           @click="button.action"
         >
           {{ $t(button.label) }}

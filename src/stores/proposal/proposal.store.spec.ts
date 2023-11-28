@@ -529,4 +529,11 @@ describe('Proposal Store', () => {
     await store.updateFdpgCheckNotes(proposalId, text)
     expect(proposalService.updateFdpgCheckNotes).toHaveBeenCalledWith(proposalId, text)
   })
+
+  it('should call the service to generate and download pdf proposal', async () => {
+    const store = useProposalStore()
+    const proposalId = 'proposalId'
+    await store.getProposalPdfFile(proposalId)
+    expect(proposalService.getProposalPdfFile).toHaveBeenCalledWith(proposalId)
+  })
 })

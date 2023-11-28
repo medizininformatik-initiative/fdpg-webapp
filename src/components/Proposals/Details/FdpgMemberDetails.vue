@@ -68,6 +68,7 @@ import ProjectPublications from '@/components/ProjectPublications.vue'
 import ProjectReports from '@/components/ProjectReports.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
+import useDraftDownload from '@/composables/use-draft-download'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
@@ -261,6 +262,14 @@ const handleFinishProjectDeclineClick = () => {
   })
 }
 
+const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
+
+const handleExportProposalPdfClick = async () => {
+  if (proposalId.value && !isDownloadLoading.value) {
+    await downloadFile()
+  }
+}
+
 const getIsUniqueTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
   if (proposalStatus === ProposalStatus.FdpgCheck) {
     return [
@@ -348,6 +357,18 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 ])
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
+  {
+    type: 'secondary',
+    label: 'proposal.exportPdfProposal',
+    testId: 'button__exportPdf',
+    action: () => handleExportProposalPdfClick(),
+    isLoading: isDownloadLoading.value,
+    isHidden: !(
+      status.value === ProposalStatus.Draft ||
+      status.value === ProposalStatus.FdpgCheck ||
+      status.value === ProposalStatus.Rework
+    ),
+  },
   {
     type: proposalStore.currentProposal?.isLocked ? 'success' : 'danger',
     label: proposalStore.currentProposal?.isLocked ? 'proposal.unlockProposal' : 'proposal.lockProposal',
