@@ -22,6 +22,7 @@
     "invalidField": "Invalid field!",
     "oneFieldRequired": "One of the two fields is mandatory",
     "maxCharLimit": "Exceeding the max character limit of {length}",
+    "startDateInPast": "The start time must be in the future",
     "archive": "Archive",
     "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
     "submitted": "Successfully submitted",

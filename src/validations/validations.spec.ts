@@ -9,6 +9,7 @@ import {
   requiredUploadFunc,
   requiredValidationFunc,
   specialCharactersValidationFunc,
+  startDateInPastValidationFunc,
 } from '.'
 import { ref } from 'vue'
 import { setImmediate } from 'timers'
@@ -183,7 +184,6 @@ describe('Validations', () => {
   describe('projectAbbreviationValidationFunc', () => {
     const proposalId = ref('proposalId')
     const bypassDebounce = ref(true)
-    const mockedProposalStore = vi.mocked(useProposalStore())
 
     it('should return the validation config', () => {
       const result = projectAbbreviationValidationFunc(proposalId, bypassDebounce)
@@ -259,6 +259,36 @@ describe('Validations', () => {
       })
 
       result.validator({}, '', callback)
+      expect(callbackResult).toBeUndefined()
+    })
+  })
+
+  describe('startDateInPastValidationFunc', () => {
+    it('should return the validation config', () => {
+      const result = startDateInPastValidationFunc()
+      expect(result.trigger).toEqual(['blur', 'change'])
+    })
+    it('should return error message if date is in the past', () => {
+      const value = '2022-09-29T22:00:00.000Z'
+      const result = startDateInPastValidationFunc()
+      let callbackResult
+      const callback = vi.fn().mockImplementation((error) => {
+        callbackResult = error
+      })
+
+      result.validator({}, value, callback)
+      expect(callbackResult).toEqual(new Error('general.startDateInPast'))
+    })
+
+    it('should call the callback if the value is valid', () => {
+      const value = new Date().toString()
+      const result = startDateInPastValidationFunc()
+      let callbackResult
+      const callback = vi.fn().mockImplementation((error) => {
+        callbackResult = error
+      })
+
+      result.validator({}, value, callback)
       expect(callbackResult).toBeUndefined()
     })
   })

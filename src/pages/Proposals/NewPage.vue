@@ -3,30 +3,17 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button
-          v-if="proposalId"
-          type="primary"
-          size="large"
-          @click="openDetails"
-        >{{ $t('proposal.projectDetails') }}</el-button>
+        <el-button v-if="proposalId" type="primary" size="large" @click="openDetails">{{
+          $t('proposal.projectDetails')
+        }}</el-button>
       </div>
     </div>
 
-    <el-form
-      v-if="proposalForm"
-      ref="formRef"
-      :model="proposalForm"
-      :rules="rules"
-      @valid–ate="onValidate"
-    >
+    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @valid–ate="onValidate">
       <el-row class="abbreviation">
         <el-col :sm="18" :md="12" :lg="6">
           <FdpgFormItem prop="projectAbbreviation">
-            <FdpgLabel
-              required
-              info="proposal.projectAbbreviationInfo"
-              html-for="proposal.projectAbbreviation"
-            />
+            <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
             <FdpgInput
               v-model="proposalForm.projectAbbreviation"
               data-testId="proposalForm.projectAbbreviation"
@@ -38,46 +25,20 @@
       </el-row>
 
       <FdpgLabel size="large" html-for="proposal.applicant" />
-      <ProjectApplicant
-        v-model="proposalForm.applicant"
-        :form-ref="formRef"
-        :review-mode="isReviewMode"
-      />
+      <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
 
-      <FdpgLabel
-        required
-        size="large"
-        html-for="proposal.projectResponsible"
-        info="proposal.projectResponsibleInfo"
-      />
+      <FdpgLabel required size="large" html-for="proposal.projectResponsible" info="proposal.projectResponsibleInfo" />
       <ProjectResponsibility
         v-model="proposalForm.projectResponsible"
         :form-ref="formRef"
         :review-mode="isReviewMode"
       />
 
-      <FdpgLabel
-        required
-        size="large"
-        html-for="proposal.projectUser"
-        info="proposal.projectUserInfo"
-      />
-      <ProjectUser
-        v-model="proposalForm.projectUser"
-        :form-ref="formRef"
-        :review-mode="isReviewMode"
-      />
+      <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
+      <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
 
-      <FdpgLabel
-        info="proposal.participatingScientistsInfo"
-        size="large"
-        html-for="proposal.participatingScientists"
-      />
-      <ParticipatingScientists
-        v-model="proposalForm.participants"
-        :form-ref="formRef"
-        :review-mode="isReviewMode"
-      />
+      <FdpgLabel info="proposal.participatingScientistsInfo" size="large" html-for="proposal.participatingScientists" />
+      <ParticipatingScientists v-model="proposalForm.participants" :form-ref="formRef" :review-mode="isReviewMode" />
 
       <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
       <UserProjectInformation
@@ -99,9 +60,9 @@
       <FdpgLabel html-for="proposal.attachmentsOptional" size="large" />
       <p class="desc">
         {{
-        proposalId
-        ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
-        : $t('proposal.attachmentsOnlyAfterSavingHint')
+          proposalId
+            ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
+            : $t('proposal.attachmentsOnlyAfterSavingHint')
         }}
       </p>
 
@@ -141,18 +102,12 @@
       justify="end"
       class="action-wrapper"
     >
-      <el-button
-        type="primary"
-        plain
-        data-test-id="handleSaveDraft"
-        @click="handleSaveDraft"
-      >{{ $t('proposal.saveDraft') }}</el-button>
-      <el-button
-        :disabled="!isValidToSubmit"
-        type="primary"
-        data-test-id="handleSubmit"
-        @click="handleSubmit"
-      >{{ $t('proposal.submitApplication') }}</el-button>
+      <el-button type="primary" plain data-test-id="handleSaveDraft" @click="handleSaveDraft">{{
+        $t('proposal.saveDraft')
+      }}</el-button>
+      <el-button :disabled="!isValidToSubmit" type="primary" data-test-id="handleSubmit" @click="handleSubmit">{{
+        $t('proposal.submitApplication')
+      }}</el-button>
     </el-row>
   </el-container>
 
@@ -191,6 +146,7 @@ import {
   requiredUploadFunc,
   requiredValidationFunc,
   specialCharactersValidationFunc,
+  startDateInPastValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
 import { ElForm, type FormInstance, type FormItemProp } from 'element-plus'
@@ -275,7 +231,7 @@ const rules = ref<Record<string, any>>({
   userProject: {
     generalProjectInformation: {
       projectTitle: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-      desiredStartTime: requiredValidationFunc(),
+      desiredStartTime: [requiredValidationFunc(), startDateInPastValidationFunc()],
       projectDuration: [requiredValidationFunc('number'), numberValidationFunc()],
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
@@ -496,6 +452,22 @@ onMounted(async () => {
     } catch (error) {
       console.log(error)
       showErrorMessage()
+    }
+  }
+
+  const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
+  if (params.id && isDateDefined) {
+    let invalidFields: ValidateFieldsError | undefined
+    await formRef.value?.validateField(
+      ['userProject.generalProjectInformation.desiredStartTime'],
+      (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+        invalidFields = invalidFieldsResult
+      },
+    )
+
+    if (invalidFields && Object.keys(invalidFields).length > 0) {
+      raiseErrors(invalidFields)
+      return
     }
   }
 })

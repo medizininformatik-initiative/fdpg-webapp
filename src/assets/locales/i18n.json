@@ -88,6 +88,10 @@
       "de": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
       "en": "Exceeding the max character limit of {length}"
     },
+    "startDateInPast": {
+      "de": "Der Startzeitpunkt muss in der Zukunft liegen",
+      "en": "The start time must be in the future"
+    },
     "archive": {
       "de": "Archiv",
       "en": "Archive"
