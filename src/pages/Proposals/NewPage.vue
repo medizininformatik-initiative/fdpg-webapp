@@ -456,7 +456,10 @@ onMounted(async () => {
   }
 
   const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
-  if (params.id && isDateDefined) {
+  const isEditable =
+    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+    proposalStore.currentProposal?.status === ProposalStatus.Rework
+  if (params.id && isDateDefined && isEditable) {
     let invalidFields: ValidateFieldsError | undefined
     await formRef.value?.validateField(
       ['userProject.generalProjectInformation.desiredStartTime'],
