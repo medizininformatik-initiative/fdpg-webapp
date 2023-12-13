@@ -22,6 +22,7 @@
     "invalidField": "Fehlerhafte Eingabe!",
     "oneFieldRequired": "Eines der beiden Felder muss befüllt werden",
     "maxCharLimit": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
+    "startDateInPast":  "Der Startzeitpunkt muss in der Zukunft liegen",
     "archive": "Archiv",
     "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
     "submitted": "Erfolgreich eingereicht",

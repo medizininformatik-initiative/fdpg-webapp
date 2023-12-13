@@ -121,3 +121,19 @@ export const requiredUploadFunc = (uploads: Ref<IUpload[] | undefined>) => {
     trigger: ['blur', 'change'],
   }
 }
+
+export const startDateInPastValidationFunc = () => {
+  return {
+    validator: (_rule, value: string, callback) => {
+      const selectedDate = new Date(value)
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      if (selectedDate < today) {
+        callback(new Error(t('general.startDateInPast')))
+      } else {
+        callback()
+      }
+    },
+    trigger: ['blur', 'change'],
+  }
+}
