@@ -214,6 +214,11 @@ const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = {
       size: 24,
       definitions: [[{ key: 'usage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
     },
+    {
+      label: 'proposal.dataPrivacyExtra',
+      size: 24,
+      definitions: [[{ key: 'dataPrivacyExtra', kind: 'content' }]],
+    },
   ],
 }
 
