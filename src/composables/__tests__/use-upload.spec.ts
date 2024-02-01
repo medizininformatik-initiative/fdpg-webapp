@@ -65,6 +65,17 @@ describe('UseNotifications', () => {
     expect(proposalStore.removeUpload).toBeCalled()
   })
 
+  it('should handle removing all files', async () => {
+    const proposalId = ref<string>(proposalStore.currentProposal?._id || '0')
+
+    const { handleRemoveAllOfType, uploadsForType } = useUpload(proposalId, [DirectUpload.EthicVote])
+
+    const ids = uploadsForType.value.map((upload) => upload._id)
+
+    await handleRemoveAllOfType()
+    expect(proposalStore.removeUploads).toBeCalledWith(proposalId.value, ids)
+  })
+
   it('should check the error handling in upload file function with mimetype error', async () => {
     const proposalId = ref<string>(proposalStore.currentProposal?._id || '0')
     const mockFile = vi.mocked({

@@ -66,10 +66,31 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
     isAppendixLoading.value = false
   }
 
+  const handleRemoveFiles = async (ids: string[]): Promise<void> => {
+    isAppendixLoading.value = true
+
+    try {
+      await proposalStore.removeUploads(proposalId.value, ids)
+    } catch (error: any) {
+      if (errorCb) {
+        errorCb()
+      }
+    }
+
+    isAppendixLoading.value = false
+  }
+
+  const handleRemoveAllOfType = async (): Promise<void> => {
+    const ids = uploadsForType.value.map((upload) => upload._id)
+    await handleRemoveFiles(ids)
+  }
+
   return {
     uploadsForType,
     handleUploadFile,
     handleRemoveFile,
+    handleRemoveFiles,
+    handleRemoveAllOfType,
     isAppendixLoading,
   }
 }

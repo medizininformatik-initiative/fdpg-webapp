@@ -147,6 +147,31 @@ export const useProposalStore = defineStore('Proposal', {
       }
     },
 
+    async removeUploads(id: string, uploadIds: string[]): Promise<void> {
+      const successFullRemovalIds: string[] = []
+      let failCount = 0
+
+      for (const uploadId of uploadIds) {
+        try {
+          await this.apiService.removeFile(id, uploadId)
+          successFullRemovalIds.push(uploadId)
+        } catch (error) {
+          console.log(error)
+          failCount++
+        }
+      }
+
+      if (this.currentProposal?.uploads && this.currentProposal?._id === id) {
+        this.currentProposal.uploads = this.currentProposal.uploads.filter(
+          (upload) => !successFullRemovalIds.includes(upload._id),
+        )
+      }
+
+      if (failCount > 0) {
+        throw new Error(`Failed to remove ${failCount} uploads`)
+      }
+    },
+
     async getDownloadUrl(id: string, uploadId: string): Promise<string> {
       return this.apiService.getDownloadUrl(id, uploadId)
     },

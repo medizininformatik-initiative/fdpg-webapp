@@ -23,6 +23,7 @@ import type { IDeclineContract } from '@/types/sign-contract.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { setImmediate } from 'timers'
 import type { MiiLocation } from '@/types/location.enum'
+import { NoErrorThrownError, getError } from '@/__test__/get-error'
 
 vi.mock('@/services/proposal/proposal.service')
 
@@ -192,6 +193,43 @@ describe('Proposal Store', () => {
     uploads = uploads.filter((upload) => upload._id !== uploadId)
     expect(proposalService.removeFile).toHaveBeenCalledWith(proposalId, uploadId)
     expect(store.currentProposal.uploads).toEqual(uploads)
+  })
+
+  it('should call the service multiple times to remove uploads', async () => {
+    const store = useProposalStore()
+    store.currentProposal = getMockProposal()
+    const uploadId1 = 'UploadId1'
+    const uploadId2 = 'UploadId2'
+    const proposalId = '630dd9e8c8a548d21ef4c356'
+
+    const lengthBefore = mockProposal.uploads?.length || 0
+
+    await store.removeUploads(proposalId, [uploadId1, uploadId2])
+    expect(proposalService.removeFile).toHaveBeenCalledWith(proposalId, uploadId1)
+    expect(proposalService.removeFile).toHaveBeenCalledWith(proposalId, uploadId2)
+    expect(store.currentProposal.uploads?.length).toEqual(lengthBefore - 2)
+  })
+
+  it('should call the service multiple times to remove uploads - with fails', async () => {
+    const store = useProposalStore()
+    store.currentProposal = getMockProposal()
+    const uploadId1 = 'UploadId1'
+    const uploadId2 = 'UploadId2'
+    const proposalId = '630dd9e8c8a548d21ef4c356'
+
+    const lengthBefore = mockProposal.uploads?.length || 0
+
+    proposalService.removeFile.mockRejectedValueOnce('error')
+
+    const call = store.removeUploads(proposalId, [uploadId1, uploadId2])
+    const error = await getError(async () => await call)
+
+    expect(error).toBeDefined()
+    expect(error).not.toBeInstanceOf(NoErrorThrownError)
+
+    expect(proposalService.removeFile).toHaveBeenCalledWith(proposalId, uploadId1)
+    expect(proposalService.removeFile).toHaveBeenCalledWith(proposalId, uploadId2)
+    expect(store.currentProposal.uploads?.length).toEqual(lengthBefore - 1)
   })
 
   it('should call the service to getDownloadUrl', async () => {

@@ -15,6 +15,7 @@ import { PublicationType } from '@/types/publication-type.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 
 export const mockProposal: IProposal = {
+  _id: '630dd9e8c8a548d21ef4c356',
   projectAbbreviation: 'ShortCut',
   publications: [
     { title: 'ShortCut', doi: 'ShortCut', link: 'ShortCut', createdAt: '', updatedAt: '', _id: 'publicationId' },
@@ -362,7 +363,6 @@ export const mockProposal: IProposal = {
   contractAcceptedByResearcher: true,
   contractRejectedByResearcher: false,
   researcherSignedAt: '2022-08-30T11:55:44.538Z',
-  _id: '630dd9e8c8a548d21ef4c356',
   openDizChecks: [],
   dizApprovedLocations: [],
   uacApprovedLocations: [],
