@@ -10,6 +10,7 @@ const mockSetDizApproval = vi.fn()
 const mockSignContract = vi.fn()
 const mockUploadFile = vi.fn()
 const mockRemoveUpload = vi.fn()
+const mockRemoveUploads = vi.fn()
 const mockGetDownloadUrl = vi.fn()
 const mockGetResearcherInfo = vi.fn()
 const mockDeleteProposal = vi.fn()
@@ -40,6 +41,7 @@ export const useProposalStore = vi.fn().mockImplementation(() => ({
   signContract: mockSignContract,
   uploadFile: mockUploadFile,
   removeUpload: mockRemoveUpload,
+  removeUploads: mockRemoveUploads,
   getDownloadUrl: mockGetDownloadUrl,
   getResearcherInfo: mockGetResearcherInfo,
   deleteProposal: mockDeleteProposal,

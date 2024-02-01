@@ -36,6 +36,7 @@ vi.mock('@/composables/use-upload', async () => {
 
   const handleUploadFile = vi.fn()
   const handleRemoveFile = vi.fn()
+  const handleRemoveAllOfType = vi.fn()
 
   return {
     __esModule: true,
@@ -46,6 +47,7 @@ vi.mock('@/composables/use-upload', async () => {
         },
         handleUploadFile,
         handleRemoveFile,
+        handleRemoveAllOfType,
         isAppendixLoading: false,
       }
     }),
@@ -76,6 +78,7 @@ describe('EthicVote.vue', () => {
     wrapper = mountComponent()
     proposalStore = vi.mocked(useProposalStore())
     proposalStore.currentProposal = mockProposal
+    vi.clearAllMocks()
   })
 
   it('renders', () => {
@@ -121,7 +124,7 @@ describe('EthicVote.vue', () => {
     it('should remove ethic vote uploads', async () => {
       const labelNotRequired = 'proposal.notRequired'
       await findAndClickRadioByLabel(labelNotRequired)
-      expect(mockedUseUpload.handleRemoveFile).toHaveBeenCalledWith('ethicVoteId')
+      expect(mockedUseUpload.handleRemoveAllOfType).toHaveBeenCalledTimes(1)
     })
 
     it('should have uploads on the FdpgUpload component', async () => {
@@ -140,7 +143,7 @@ describe('EthicVote.vue', () => {
       await findAndClickRadioByLabel(labelNotRequired)
       await findAndClickRadioByLabel(labelPresent)
 
-      expect(mockedUseUpload.handleRemoveFile).toHaveBeenCalledWith('nonResponsibilityId')
+      expect(mockedUseUpload.handleRemoveAllOfType).toHaveBeenCalledTimes(2)
     })
   })
 })

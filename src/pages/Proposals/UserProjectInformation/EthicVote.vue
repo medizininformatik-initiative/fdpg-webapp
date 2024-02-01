@@ -182,7 +182,7 @@ const ethicVoteForm = useVModel(props, 'modelValue', emit)
 
 const { showErrorMessage } = useNotifications()
 
-const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } = useUpload(
+const { uploadsForType, handleUploadFile, handleRemoveFile, handleRemoveAllOfType, isAppendixLoading } = useUpload(
   proposalId,
   [DirectUpload.EthicVote],
   showErrorMessage,
@@ -193,20 +193,16 @@ const secondUploadLoading = secondUpload.isAppendixLoading
 const secondUploadFiles = secondUpload.uploadsForType
 watch(
   () => ethicVoteForm.value.isExisting,
-  (isExisting) => {
+  async (isExisting) => {
     ethicVoteForm.value = transformEthicVote({
       _id: ethicVoteForm.value._id,
       isDone: ethicVoteForm.value.isDone,
       isExisting,
     }) as IEthicVote
     if (isExisting) {
-      secondUploadFiles.value.forEach((upload: IUpload | IReportFile) => {
-        secondUpload.handleRemoveFile(upload._id)
-      })
+      await secondUpload.handleRemoveAllOfType()
     } else {
-      uploadsForType.value.forEach((upload: IUpload | IReportFile) => {
-        handleRemoveFile(upload._id)
-      })
+      await handleRemoveAllOfType()
     }
   },
 )
