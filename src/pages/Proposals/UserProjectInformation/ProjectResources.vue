@@ -50,6 +50,8 @@
       </el-radio-group>
     </FdpgFormItem>
   </el-card>
+
+  <TaskViewer :object-id="resourceAndRecontactForm._id" />
 </template>
 
 <script setup lang="ts">

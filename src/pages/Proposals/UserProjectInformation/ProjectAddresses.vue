@@ -14,6 +14,8 @@
       />
     </FdpgFormItem>
   </el-card>
+
+  <TaskViewer :object-id="addresseesForm._id" />
 </template>
 
 <script setup lang="ts">
