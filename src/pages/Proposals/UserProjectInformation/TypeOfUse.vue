@@ -47,6 +47,8 @@
       </FdpgFormItem>
     </div>
   </el-card>
+
+  <TaskViewer :object-id="typeOfUseForm._id" />
 </template>
 
 <script setup lang="ts">
