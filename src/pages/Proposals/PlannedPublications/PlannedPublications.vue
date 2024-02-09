@@ -97,6 +97,7 @@
     <i class="el-icon-plus" aria-hidden="true" />
     <span class="add-text">{{ $t('proposal.addAnotherPublication') }}</span>
   </el-button>
+  <TaskViewer :object-id="plannedPublicationForm._id" />
 </template>
 
 <script setup lang="ts">
