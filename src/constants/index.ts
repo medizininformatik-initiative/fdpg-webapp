@@ -105,7 +105,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.UKM]: {
     city: 'Münster',
-    display: 'Westfälische Wilhelms-Universität Münster',
+    display: 'Universität Münster',
     definition: 'HiGHmed',
     email: 'some.todo@af-universität.de',
   },
