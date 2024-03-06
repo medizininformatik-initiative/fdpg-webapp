@@ -51,7 +51,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
     city: 'Homburg',
     display: 'Universität des Saarlandes / Universitätsklinikum des Saarlandes',
     definition: 'DIFUTURE',
-    email: 'holger.stenzhorn@uks.eu',
+    email: 'some.todo@af-universität.de',
   },
 
   [MiiLocation.UKAU]: {
