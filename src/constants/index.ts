@@ -49,7 +49,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
 
   [MiiLocation.UKS]: {
     city: 'Homburg',
-    display: 'Universitätsklinikum des Saarlandes',
+    display: 'Universität des Saarlandes / Universitätsklinikum des Saarlandes',
     definition: 'DIFUTURE',
     email: 'some.todo@af-universität.de',
   },
@@ -279,7 +279,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   },
 }
 
-export const INACTIVE_LOCATIONS = [MiiLocation.UKS, MiiLocation.UMR, MiiLocation.UKD, MiiLocation.UKRUB]
+export const INACTIVE_LOCATIONS = [MiiLocation.UMR, MiiLocation.UKD, MiiLocation.UKRUB]
 export const SORTED_ACTIVE_LOCATION_OPTIONS = Object.entries(MII_LOCATIONS)
   .filter(([key]) => key !== MiiLocation.VirtualAll && !INACTIVE_LOCATIONS.includes(key as MiiLocation))
   .sort(([_aKey, aValue], [_bKey, bValue]) => aValue.city.localeCompare(bValue.city))
