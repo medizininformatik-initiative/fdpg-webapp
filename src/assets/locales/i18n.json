@@ -614,6 +614,10 @@
       "de": "Angaben zur Institution/Einrichtung",
       "en": "Details of the institution/facility"
     },
+    "revert": {
+      "de": "Zurücksetzen",
+      "en": "Revert"
+    },
     "fullCorrectNameOfTheInstitutionFacilityJurPerson": {
       "de": "Vollständige/korrekte Bezeichnung der Institution/Einrichtung/jur. Person",
       "en": "Full/correct name of the institution/facility/jur. person"

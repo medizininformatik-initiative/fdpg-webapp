@@ -47,7 +47,10 @@
 
               <template v-for="(column, columnIdx) in tableColumns" :key="'column' + columnIdx">
                 <el-table-column
-                  v-if="column.prop !== 'dataAmount' || !table.hideDataVolume"
+                  v-if="
+                    (column.prop !== 'dataAmount' || !table.hideDataVolume) &&
+                    (column.prop !== 'revert' || !table.hideRevert)
+                  "
                   :prop="column.prop"
                   :label="$t(column.label)"
                   :width="column.width"
@@ -163,6 +166,7 @@ import { UseCaseUpload } from '@/types/upload.types'
 import { ref, computed, nextTick, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
+import FdpgCheckbox from './FdpgCheckbox.vue'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -181,6 +185,7 @@ interface IPanelVoteConfig {
   content: ITableData[]
   indicator: string
   conditionalApprovals?: IConditionalPanel[]
+  hideRevert: boolean
 }
 
 enum TableId {
@@ -194,6 +199,7 @@ interface ITableData {
   city: string
   dataAmount?: number
   declineReason?: IDeclineReason
+  revert?: boolean
 }
 
 type StatusTagStyle = 'pending' | 'accepted' | 'rejected'
@@ -213,6 +219,7 @@ const tableColumns: IColumnOption[] = [
   { prop: 'fullName', label: 'proposal.detailsOfTheInstitutionFacility', width: 450 },
   { prop: 'city', label: 'proposal.city' },
   { prop: 'dataAmount', label: 'proposal.dataVolume' },
+  { prop: 'revert', label: 'proposal.revert', width: 150, minWidth: 50 },
 ]
 const { showErrorMessage } = useNotifications()
 
@@ -235,6 +242,7 @@ const mapTableData = (
   location: MiiLocation,
   dataAmount?: number,
   declineReason?: IDeclineReason,
+  revert?: HTMLElement,
 ): ITableData => {
   return {
     rowId,
@@ -242,6 +250,7 @@ const mapTableData = (
     city: MII_LOCATIONS[location].city,
     dataAmount,
     declineReason,
+    revert: FdpgCheckbox,
   }
 }
 
@@ -283,6 +292,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       tableId: TableId.Pending,
       title: pendingLocations.title,
       hideDataVolume: true,
+      hideRevert: true,
       indicator: `indicator--${pendingLocations.indicator}`,
       content: pendingLocations.data.map((location, index) => mapTableData(index, location)),
     }
@@ -311,6 +321,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
 
   const tablesWithDataAmount = [approvedLocations, approvedWithCondition].map(
     ({ data, title, indicator, isConditional }) => {
+      console.log(data)
       const filteredData = isConditional
         ? (data as IConditionalApproval[]).filter(
             (condition) =>
@@ -324,6 +335,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         title,
         tableId: TableId.WithDataAmount,
         hideDataVolume: false,
+        hideRevert: false,
         indicator: `indicator--${indicator}`,
         content: filteredData.map(({ location, dataAmount }, index) => mapTableData(index, location, dataAmount)),
         conditionalApprovals: isConditional
@@ -349,6 +361,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
     title: excludedLocations.title,
     tableId: TableId.Excluded,
     hideDataVolume: true,
+    hideRevert: false,
     indicator: `indicator--${excludedLocations.indicator}`,
     content: excludedLocations.data.map((location, index) => {
       const declineReason = proposalStore.currentProposal?.declineReasons.find(
