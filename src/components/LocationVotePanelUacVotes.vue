@@ -47,15 +47,24 @@
 
               <template v-for="(column, columnIdx) in tableColumns" :key="'column' + columnIdx">
                 <el-table-column
-                  v-if="
-                    (column.prop !== 'dataAmount' || !table.hideDataVolume) &&
-                    (column.prop !== 'revert' || !table.hideRevert)
-                  "
+                  v-if="(column.prop !== 'dataAmount' || !table.hideDataVolume) && column.prop !== 'revert'"
                   :prop="column.prop"
                   :label="$t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
                 />
+                <el-table-column
+                  v-if="column.prop === 'revert' && !table.hideRevert"
+                  :label="$t(column.label)"
+                  :width="column.width"
+                  :min-width="column.minWidth"
+                >
+                  <template #default="props">
+                    <el-button class="conditionalApproval.pending">
+                      {{ $t('proposal.revert') }}
+                    </el-button>
+                  </template>
+                </el-table-column>
               </template>
               <el-table-column width="1" v-if="table.tableId === TableId.Excluded"
                 ><span
@@ -166,7 +175,6 @@ import { UseCaseUpload } from '@/types/upload.types'
 import { ref, computed, nextTick, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import FdpgCheckbox from './FdpgCheckbox.vue'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -219,7 +227,7 @@ const tableColumns: IColumnOption[] = [
   { prop: 'fullName', label: 'proposal.detailsOfTheInstitutionFacility', width: 450 },
   { prop: 'city', label: 'proposal.city' },
   { prop: 'dataAmount', label: 'proposal.dataVolume' },
-  { prop: 'revert', label: 'proposal.revert', width: 150, minWidth: 50 },
+  { prop: 'revert', label: 'proposal.revert', width: 200, minWidth: 50 },
 ]
 const { showErrorMessage } = useNotifications()
 
@@ -242,7 +250,6 @@ const mapTableData = (
   location: MiiLocation,
   dataAmount?: number,
   declineReason?: IDeclineReason,
-  revert?: HTMLElement,
 ): ITableData => {
   return {
     rowId,
@@ -250,7 +257,6 @@ const mapTableData = (
     city: MII_LOCATIONS[location].city,
     dataAmount,
     declineReason,
-    revert: FdpgCheckbox,
   }
 }
 
@@ -321,7 +327,6 @@ const tables = computed<IPanelVoteConfig[]>(() => {
 
   const tablesWithDataAmount = [approvedLocations, approvedWithCondition].map(
     ({ data, title, indicator, isConditional }) => {
-      console.log(data)
       const filteredData = isConditional
         ? (data as IConditionalApproval[]).filter(
             (condition) =>
