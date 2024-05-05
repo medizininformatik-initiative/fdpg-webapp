@@ -528,7 +528,10 @@
     "plannedPublicationDescriptionInfo": "Please briefly describe the intended content of the publication.",
     "plannedPublicationAuthorsInfo": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Check Notes",
-    "checkNotesPlaceHolder": "Add your notes..."
+    "checkNotesPlaceHolder": "Add your notes...",
+    "revertLocationModalTitle": "Do you really want to revert the location vote?",
+    "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
+    "revertLocationVote": "Revert location vote"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

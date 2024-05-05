@@ -529,7 +529,10 @@
     "plannedPublicationDescriptionInfo": "Bitte beschreiben Sie kurz den angedachten Inhalt der Publikation.",
     "plannedPublicationAuthorsInfo": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Prüfnotizen",
-    "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu..."
+    "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu...",
+    "revertLocationModalTitle": "Möchten Sie den Antrag wirklich zurückweisen?",
+    "revertLocationModalDescription": "Indem Sie den Antrag zurückweisen, wird der Antragsteller benachrichtigt und kann den Antrag erneut einreichen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "revertVote": "Antrag zurückweisen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

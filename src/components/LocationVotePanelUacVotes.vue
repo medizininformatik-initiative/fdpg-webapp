@@ -60,7 +60,7 @@
                   :min-width="column.minWidth"
                 >
                   <template #default="props">
-                    <el-button class="conditionalApproval.pending">
+                    <el-button class="conditionalApproval.pending" @click="handleRevertLocation(props.row.fullName)">
                       {{ $t('proposal.revert') }}
                     </el-button>
                   </template>
@@ -175,6 +175,9 @@ import { UseCaseUpload } from '@/types/upload.types'
 import { ref, computed, nextTick, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -229,7 +232,7 @@ const tableColumns: IColumnOption[] = [
   { prop: 'dataAmount', label: 'proposal.dataVolume' },
   { prop: 'revert', label: 'proposal.revert', width: 200, minWidth: 50 },
 ]
-const { showErrorMessage } = useNotifications()
+const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const { uploadsForType: contractConditions } = useUpload(proposalId, [UseCaseUpload.ContractCondition])
 const uploadsMap = computed<Record<string, IUpload>>(() => {
@@ -407,6 +410,32 @@ const triggerRowClick = async (event: Event) => {
   const currentRow = tbody?.querySelectorAll('tr')[rowIndex]
   const currentRowsFocusable = currentRow?.getElementsByClassName('rowsHiddenFocusable')[0] as HTMLElement
   currentRowsFocusable?.focus()
+}
+
+const messageBoxStore = useMessageBoxStore()
+const { t } = useI18n()
+const router = useRouter()
+
+const revertLocationVote = async (location: MiiLocation) => {
+  try {
+    await proposalStore.revertLocationVote(location)
+    showSuccessMessage(t('general.submitted'))
+  } catch (error: any) {
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
+
+const handleRevertLocation = (location: MiiLocation) => {
+  messageBoxStore.setMessageBoxInfo({
+    cancelButtonText: t('general.cancel'),
+    cancelButtonClass: 'el-button--text',
+    showCancelButton: true,
+    title: 'proposal.revertLocationModalTitle',
+    message: 'proposal.revertLocationModalDescription',
+    confirmButtonText: 'proposal.revertVote',
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await revertLocationVote(location) : undefined,
+  })
 }
 
 onMounted(() => {
