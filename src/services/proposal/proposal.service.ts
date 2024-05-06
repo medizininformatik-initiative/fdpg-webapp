@@ -252,7 +252,7 @@ export class ProposalService {
     return response.data
   }
 
-  async revertLocationVote(location: MiiLocation): Promise<void> {
-    await this.apiClient.put(`${this.basePath}/revert-location-vote`, { location })
+  async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/revertLocationVote`, { location })
   }
 }
