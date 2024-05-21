@@ -90,7 +90,7 @@
     "CONTRACT_SYSTEM_REJECTED": "Standort wurde durch das Antragsportal ausgeschlossen",
     "PROPOSAL_LOCK_TRUE": "Forschungsprojekt wurde vom FDPG gesperrt",
     "PROPOSAL_LOCK_FALSE": "Forschungsprojekt wurde vom FDPG entsperrt",
-    "FDPG_REVERTED_LOCATION_VOTE": "Votum vom Standort {location} wurde vom FDPG zurückgesetzt"
+    "FDPG_LOCATION_VOTE_REVERTED": "Votum vom Standort {location} wurde vom FDPG zurückgesetzt"
   },
   "header": {
     "login": "Anmelden",

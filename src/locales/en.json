@@ -90,7 +90,7 @@
     "CONTRACT_SYSTEM_REJECTED": "Location was excluded by the portal",
     "PROPOSAL_LOCK_TRUE": "Research project was locked by FDPG",
     "PROPOSAL_LOCK_FALSE": "Research project was unlocked by FDPG",
-    "FDPG_REVERTED_LOCATION_VOTE": "Vote from location {location} was reset by FDPG"
+    "FDPG_LOCATION_VOTE_REVERTED": "Vote from location {location} was reset by FDPG"
   },
   "header": {
     "login": "Login",

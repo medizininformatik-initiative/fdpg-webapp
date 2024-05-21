@@ -234,7 +234,7 @@ export enum ProjectHistoryType {
   ContractUacApproved = 'CONTRACT_UAC_APPROVED',
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
-  FdpgRevertedLocationVote = 'FDPG_REVERTED_LOCATION_VOTE',
+  FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
 }
 
 export enum UploadFileType {

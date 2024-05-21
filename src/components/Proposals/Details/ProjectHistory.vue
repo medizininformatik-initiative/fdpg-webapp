@@ -26,7 +26,7 @@ const historyList = computed(() => {
   return projectHistory.value.length > 0
     ? projectHistory.value.map((item) => {
         const translationParameter: Record<string, string> = {}
-        if (item.type === ProjectHistoryType.FdpgRevertedLocationVote && item.location) {
+        if (item.type === ProjectHistoryType.FdpgLocationVoteReverted && item.location) {
           translationParameter['location'] = item.location
         }
         return {

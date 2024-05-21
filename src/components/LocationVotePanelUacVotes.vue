@@ -60,7 +60,11 @@
                   :min-width="column.minWidth"
                 >
                   <template #default="props">
-                    <el-button class="conditionalApproval.pending" @click="handleRevertLocation(props.row.location)">
+                    <el-button
+                      class="conditionalApproval.pending"
+                      :data-testId="'button__revert__' + props.row.location"
+                      @click="handleRevertLocation(props.row.location)"
+                    >
                       {{ $t('proposal.revert') }}
                     </el-button>
                   </template>
