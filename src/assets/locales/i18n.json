@@ -347,6 +347,10 @@
     "PROPOSAL_LOCK_FALSE": {
       "de": "Forschungsprojekt wurde vom FDPG entsperrt",
       "en": "Research project was unlocked by FDPG"
+    },
+    "FDPG_LOCATION_VOTE_REVERTED": {
+      "de": "Votum vom Standort {location} wurde vom FDPG zurückgesetzt",
+      "en": "Vote from location {location} was reset by FDPG"
     }
   },
   "header": {
@@ -2089,6 +2093,18 @@
     "checkNotesPlaceHolder": {
       "de": "Fügen Sie Ihre Notizen hinzu...",
       "en": "Add your notes..."
+    },
+    "revertLocationModalTitle": {
+      "de": "Möchten Sie den Antrag wirklich zurückweisen?",
+      "en": "Do you really want to revert the location vote?"
+    },
+    "revertLocationModalDescription": {
+      "de": "Indem Sie den Antrag zurückweisen, wird der Antragsteller benachrichtigt und kann den Antrag erneut einreichen. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "en": "By reverting the location vote, the location will be able to vote again."
+    },
+    "revertVote": {
+      "de": "Antrag zurückweisen",
+      "en": "Revert vote"
     }
   },
   "roles": {
