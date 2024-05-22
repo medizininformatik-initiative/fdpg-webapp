@@ -89,7 +89,8 @@
     "CONTRACT_LOCATION_REJECTED": "DIZ has rejected the contract",
     "CONTRACT_SYSTEM_REJECTED": "Location was excluded by the portal",
     "PROPOSAL_LOCK_TRUE": "Research project was locked by FDPG",
-    "PROPOSAL_LOCK_FALSE": "Research project was unlocked by FDPG"
+    "PROPOSAL_LOCK_FALSE": "Research project was unlocked by FDPG",
+    "FDPG_LOCATION_VOTE_REVERTED": "Vote from location {location} was reset by FDPG"
   },
   "header": {
     "login": "Login",
@@ -369,6 +370,7 @@
     "specifyTheAmountOfData": "Specify Datavolume",
     "asADataProviderYouMustSpecifyAQuantity": "As a data provider you have to specify a quantity",
     "dataVolume": "Data volume",
+    "revert": "Revert",
     "proposedDataVolume": "Delivered data volume",
     "pendingVotes": "Pending votes({count})",
     "uacAcceptedLocations": "Accepted ({count})",
@@ -528,7 +530,10 @@
     "plannedPublicationDescriptionInfo": "Please briefly describe the intended content of the publication.",
     "plannedPublicationAuthorsInfo": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Check Notes",
-    "checkNotesPlaceHolder": "Add your notes..."
+    "checkNotesPlaceHolder": "Add your notes...",
+    "revertLocationModalTitle": "Do you really want to revert the location vote?",
+    "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
+    "revertVote": "Revert vote"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

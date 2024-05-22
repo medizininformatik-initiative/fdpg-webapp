@@ -22,7 +22,7 @@
     "invalidField": "Fehlerhafte Eingabe!",
     "oneFieldRequired": "Eines der beiden Felder muss befüllt werden",
     "maxCharLimit": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
-    "startDateInPast":  "Der Startzeitpunkt muss in der Zukunft liegen",
+    "startDateInPast": "Der Startzeitpunkt muss in der Zukunft liegen",
     "archive": "Archiv",
     "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
     "submitted": "Erfolgreich eingereicht",
@@ -89,7 +89,8 @@
     "CONTRACT_LOCATION_REJECTED": "DIZ hat den Vertrag abgelehnt",
     "CONTRACT_SYSTEM_REJECTED": "Standort wurde durch das Antragsportal ausgeschlossen",
     "PROPOSAL_LOCK_TRUE": "Forschungsprojekt wurde vom FDPG gesperrt",
-    "PROPOSAL_LOCK_FALSE": "Forschungsprojekt wurde vom FDPG entsperrt"
+    "PROPOSAL_LOCK_FALSE": "Forschungsprojekt wurde vom FDPG entsperrt",
+    "FDPG_LOCATION_VOTE_REVERTED": "Votum vom Standort {location} wurde vom FDPG zurückgesetzt"
   },
   "header": {
     "login": "Anmelden",
@@ -369,6 +370,7 @@
     "specifyTheAmountOfData": "Datenmenge angeben",
     "asADataProviderYouMustSpecifyAQuantity": "Bitte geben sie die Patienten-/Fallzahl an",
     "dataVolume": "Datenmenge (Anzahl Patienten/Fälle)",
+    "revert": "Zurücksetzen",
     "proposedDataVolume": "Gelieferte Datenmenge",
     "pendingVotes": "Antworten austehend ({count})",
     "uacAcceptedLocations": "Zugesagt ({count})",
@@ -528,7 +530,10 @@
     "plannedPublicationDescriptionInfo": "Bitte beschreiben Sie kurz den angedachten Inhalt der Publikation.",
     "plannedPublicationAuthorsInfo": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Prüfnotizen",
-    "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu..."
+    "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu...",
+    "revertLocationModalTitle": "Möchten Sie den Antrag wirklich zurückweisen?",
+    "revertLocationModalDescription": "Indem Sie den Antrag zurückweisen, wird der Antragsteller benachrichtigt und kann den Antrag erneut einreichen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "revertVote": "Antrag zurückweisen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

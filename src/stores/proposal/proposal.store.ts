@@ -298,6 +298,11 @@ export const useProposalStore = defineStore('Proposal', {
     async getProposalPdfFile(id: string): Promise<Blob> {
       return await this.apiService.getProposalPdfFile(id)
     },
+
+    async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
+      await this.apiService.revertLocationVote(id, location)
+      await this.setCurrentProposal(id)
+    },
   },
 
   getters: {

@@ -234,6 +234,7 @@ export enum ProjectHistoryType {
   ContractUacApproved = 'CONTRACT_UAC_APPROVED',
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
+  FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
 }
 
 export enum UploadFileType {
@@ -272,6 +273,7 @@ export interface IProposalHistory {
   createdAt: string
   type: ProjectHistoryType
   proposalVersion: { minor: number; major: number }
+  location?: MiiLocation
 }
 interface IPublicationBase {
   title: string

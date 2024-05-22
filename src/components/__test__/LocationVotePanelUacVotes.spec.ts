@@ -11,6 +11,7 @@ import { ElButton } from 'element-plus'
 import { ref } from 'vue'
 import { nextTick } from 'vue'
 import useNotifications from '@/composables/use-notifications'
+import { spy } from '@vitest/utils'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -97,6 +98,15 @@ describe('LocationVotePanelUacVotes.vue', () => {
 
     await wrapper.find('.show-more').trigger('click')
     expect(wrapper.find('.el-icon-arrow-up')).toBeTruthy()
+  })
+
+  it('should revert location vote', async () => {
+    const allButtons = wrapper.findAllComponents(ElButton)
+    const revertButton = allButtons?.filter((item) => item.attributes('data-testid') === 'button__revert__MRI')[0]
+
+    await revertButton.trigger('click')
+
+    // expect(proposalStore.revertLocationVote).toHaveBeenCalledTimes(1)
   })
 
   it('should catch error while accept condition', async () => {

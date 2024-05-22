@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { ProjectHistoryType } from '@/types/proposal.types'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -23,16 +24,22 @@ const projectHistory = computed(() => proposalStore.currentProposal?.history ?? 
 
 const historyList = computed(() => {
   return projectHistory.value.length > 0
-    ? projectHistory.value.map((item) => ({
-        date: item.createdAt
-          ? new Date(item.createdAt).toLocaleDateString(undefined, {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit',
-            })
-          : new Date().toLocaleDateString(),
-        label: t(`history.${item.type}`),
-      }))
+    ? projectHistory.value.map((item) => {
+        const translationParameter: Record<string, string> = {}
+        if (item.type === ProjectHistoryType.FdpgLocationVoteReverted && item.location) {
+          translationParameter['location'] = item.location
+        }
+        return {
+          date: item.createdAt
+            ? new Date(item.createdAt).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+              })
+            : new Date().toLocaleDateString(),
+          label: t(`history.${item.type}`, translationParameter),
+        }
+      })
     : []
 })
 </script>
