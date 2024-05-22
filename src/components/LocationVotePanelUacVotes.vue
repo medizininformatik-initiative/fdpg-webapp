@@ -64,11 +64,10 @@
                     #default="props"
                   >
                     <el-button
-                      class="conditionalApproval.pending"
                       :data-testId="'button__revert__' + props.row.location"
                       @click="handleRevertLocation(props.row.location)"
                     >
-                      {{ $t('proposal.revert') }}
+                      <el-icon class="bi-arrow-counterclockwise"></el-icon>
                     </el-button>
                   </template>
                 </el-table-column>
@@ -239,7 +238,7 @@ const tableColumns: IColumnOption[] = [
   { prop: 'fullName', label: 'proposal.detailsOfTheInstitutionFacility', width: 450 },
   { prop: 'city', label: 'proposal.city' },
   { prop: 'dataAmount', label: 'proposal.dataVolume' },
-  { prop: 'revert', label: 'proposal.revert', width: 200, minWidth: 50 },
+  { prop: 'revert', label: 'proposal.revert', minWidth: 50 },
 ]
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
