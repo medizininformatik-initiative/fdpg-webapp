@@ -370,6 +370,7 @@
     "specifyTheAmountOfData": "Specify Datavolume",
     "asADataProviderYouMustSpecifyAQuantity": "As a data provider you have to specify a quantity",
     "dataVolume": "Data volume",
+    "revert": "Revert",
     "proposedDataVolume": "Delivered data volume",
     "pendingVotes": "Pending votes({count})",
     "uacAcceptedLocations": "Accepted ({count})",
@@ -532,7 +533,6 @@
     "checkNotesPlaceHolder": "Add your notes...",
     "revertLocationModalTitle": "Do you really want to revert the location vote?",
     "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
-    "revertLocationVote": "Revert location vote",
     "revertVote": "Revert vote"
   },
   "roles": {
