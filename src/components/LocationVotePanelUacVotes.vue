@@ -59,7 +59,10 @@
                   :width="column.width"
                   :min-width="column.minWidth"
                 >
-                  <template #default="props">
+                  <template
+                    v-if="proposalStore.currentProposal?.status === ProposalStatus.LocationCheck"
+                    #default="props"
+                  >
                     <el-button
                       class="conditionalApproval.pending"
                       :data-testId="'button__revert__' + props.row.location"
@@ -350,7 +353,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         title,
         tableId: TableId.WithDataAmount,
         hideDataVolume: false,
-        hideRevert: false,
+        hideRevert: proposalStore.currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
         indicator: `indicator--${indicator}`,
         content: filteredData.map(({ location, dataAmount }, index) => mapTableData(index, location, dataAmount)),
         conditionalApprovals: isConditional
@@ -376,7 +379,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
     title: excludedLocations.title,
     tableId: TableId.Excluded,
     hideDataVolume: true,
-    hideRevert: false,
+    hideRevert: proposalStore.currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
     indicator: `indicator--${excludedLocations.indicator}`,
     content: excludedLocations.data.map((location, index) => {
       const declineReason = proposalStore.currentProposal?.declineReasons.find(
