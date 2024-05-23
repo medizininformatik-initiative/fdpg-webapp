@@ -531,9 +531,9 @@
     "plannedPublicationAuthorsInfo": "Bitte benennen Sie unverbindlich alle bereits geplanten Autoren und Koautoren nach dem Muster: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Prüfnotizen",
     "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu...",
-    "revertLocationModalTitle": "Möchten Sie das UAC-Votum wirklich zurückweisen?",
-    "revertLocationModalDescription": "Indem Sie das UAC-Votum zurückweisen, wird der sendende Standort benachrichtigt und kann das UAC-Votum erneut einreichen.",
-    "revertVote": "Zurückweisen"
+    "revertLocationModalTitle": "Möchten Sie das Votum wirklich zurücksetzen?",
+    "revertLocationModalDescription": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
+    "revertVote": "Zurücksetzen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

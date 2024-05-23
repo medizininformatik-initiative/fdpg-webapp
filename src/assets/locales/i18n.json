@@ -2095,15 +2095,15 @@
       "en": "Add your notes..."
     },
     "revertLocationModalTitle": {
-      "de": "Möchten Sie das UAC-Votum wirklich zurückweisen?",
+      "de": "Möchten Sie das Votum wirklich zurücksetzen?",
       "en": "Do you really want to revert the location vote?"
     },
     "revertLocationModalDescription": {
-      "de": "Indem Sie das UAC-Votum zurückweisen, wird der sendende Standort benachrichtigt und kann das UAC-Votum erneut einreichen.",
+      "de": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
       "en": "By reverting the location vote, the location will be able to vote again."
     },
     "revertVote": {
-      "de": "Zurückweisen",
+      "de": "Zurücksetzen",
       "en": "Revert vote"
     }
   },
