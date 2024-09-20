@@ -1,7 +1,10 @@
 import { createTestingPinia } from '@pinia/testing'
-import { VueWrapper, mount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import type { VueWrapper } from '@vue/test-utils'
 import DeclineDialog from '../DeclineDialog.vue'
-
+import FdpgInput from '../FdpgInput.vue'
+import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
+import { ElButton } from 'element-plus'
 describe('DeclineDialog.vue', () => {
   let wrapper: VueWrapper
 
@@ -9,9 +12,7 @@ describe('DeclineDialog.vue', () => {
     wrapper = mount(DeclineDialog, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: {
-          teleport: true,
-        },
+        stubs: [],
       },
       props: {
         modelValue: true,
@@ -27,22 +28,27 @@ describe('DeclineDialog.vue', () => {
     return buttons.filter((button) => button.text() === text)[0]
   }
 
+  const findComponentByText = (text: string, component: FindAllComponentsSelector): VueWrapper<any> => {
+    const buttons = wrapper.findAllComponents(component)
+    return buttons.filter((button) => button.text() === text)[0]
+  }
+
   it('renders', () => {
     expect(wrapper).toBeTruthy()
   })
 
   it('should call the closeDialog method', async () => {
-    const fdpgInput = wrapper.findComponent({ name: 'FdpgInput' })
+    const fdpgInput = wrapper.findComponent(FdpgInput)
     await fdpgInput.vm.$emit('update:modelValue', 'test')
 
-    const confirmButton = getButtonByText('proposal.rejectRequest')
+    const confirmButton = findComponentByText('proposal.rejectRequest', ElButton)
     await confirmButton.trigger('click')
 
     expect(wrapper.emitted().confirm).toEqual([['test']])
   })
 
   it('should call the closeDialog method', async () => {
-    const closeButton = getButtonByText('general.cancel')
+    const closeButton = findComponentByText('general.cancel', ElButton)
     await closeButton.trigger('click')
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual(false)
   })
