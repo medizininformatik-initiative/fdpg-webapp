@@ -34,8 +34,8 @@ steps:
 
   - task: NodeTool@0
     inputs:
-      versionSpec: '18.x'
-    displayName: 'Install Node.js v18'
+      versionSpec: '20.x'
+    displayName: 'Install Node.js v20'
 
   - template: unit-test.template.yml
     parameters:
