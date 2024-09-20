@@ -271,6 +271,21 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
     email: 'some.todo@af-universität.de',
   },
 
+
+  [MiiLocation.UKOWL]: {
+    display: 'Universitätsklinikum OWL',
+    definition: 'HiGHmed',
+    city: 'Bielefeld',
+    email: ''
+  },
+
+  [MiiLocation.UOL]: {
+    display: 'Carl von Ossietzky Universität Oldenburg',
+    definition: 'HiGHmed',
+    city: 'Oldenburg',
+    email: ''
+  },
+
   [MiiLocation.VirtualAll]: {
     city: 'Alle Standorte',
     display: 'Alle Standorte',
