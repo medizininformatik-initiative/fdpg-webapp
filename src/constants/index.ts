@@ -13,8 +13,9 @@ interface IMiiLocationInfo {
 
 export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   [MiiLocation.MRI]: {
+    // Actual new identifier: 'TUM'
     city: 'München',
-    display: 'Klinikum rechts der Isar',
+    display: 'Klinikum der Technischen Universität München',
     definition: 'DIFUTURE',
     email: 'some.todo@af-universität.de',
   },
@@ -195,8 +196,9 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   },
 
   [MiiLocation.CTK]: {
+    // Actual new identifier: 'MUL-CT'
     city: 'Cottbus',
-    display: 'Thiem Research GmbH',
+    display: 'Medizinische Universität Lausitz - Carl Thiem',
     definition: 'HiGHmed',
     email: 'some.todo@af-universität.de',
   },
@@ -294,7 +296,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   },
 }
 
-export const INACTIVE_LOCATIONS = [MiiLocation.UMR, MiiLocation.UKD, MiiLocation.UKRUB]
+export const INACTIVE_LOCATIONS = [MiiLocation.UKD, MiiLocation.UKRUB]
 export const SORTED_ACTIVE_LOCATION_OPTIONS = Object.entries(MII_LOCATIONS)
   .filter(([key]) => key !== MiiLocation.VirtualAll && !INACTIVE_LOCATIONS.includes(key as MiiLocation))
   .sort(([_aKey, aValue], [_bKey, bValue]) => aValue.city.localeCompare(bValue.city))
