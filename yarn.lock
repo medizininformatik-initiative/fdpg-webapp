@@ -204,10 +204,10 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.5.2.tgz#310fe90cb5a8dee9698833171b98e7835404293d"
   integrity sha512-hRILoInAx8GNT5IMkrtIt9blOdrqHOnPBH+k70aWUAqPZPgopb9G5EQJFpaBx/S8zp2fC+mPW349Bziuk1o28Q==
 
-"@headlessui/vue@^1.7.22":
-  version "1.7.22"
-  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.22.tgz#8d55a3a670c3d48beb660b7c47a7a8ff76caacfe"
-  integrity sha512-Hoffjoolq1rY+LOfJ+B/OvkhuBXXBFgd8oBlN+l1TApma2dB0En0ucFZrwQtb33SmcCqd32EQd0y07oziXWNYg==
+"@headlessui/vue@^1.7.23":
+  version "1.7.23"
+  resolved "https://registry.yarnpkg.com/@headlessui/vue/-/vue-1.7.23.tgz#7fe19dbeca35de9e6270c82c78c4864e6a6f7391"
+  integrity sha512-JzdCNqurrtuu0YW6QaDtR2PIYCKPUWq28csDyMvN4zmGccmE7lz40Is6hc3LA4HFeCI7sekZ/PQMTNmn9I/4Wg==
   dependencies:
     "@tanstack/vue-virtual" "^3.0.0-beta.60"
 
@@ -430,10 +430,10 @@
     estree-walker "^2.0.2"
     picomatch "^2.3.1"
 
-"@rushstack/eslint-patch@^1.10.3":
-  version "1.10.3"
-  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.3.tgz#391d528054f758f81e53210f1a1eebcf1a8b1d20"
-  integrity sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==
+"@rushstack/eslint-patch@^1.10.4":
+  version "1.10.4"
+  resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.4.tgz#427d5549943a9c6fce808e39ea64dbe60d4047f1"
+  integrity sha512-WJgX9nzTqknM393q1QJDJmoW28kUfEnybeTfVNcNAPnIx210RXm2DiXiHzfNPJNIUUb1tJnz/l4QGtJ30PgWmA==
 
 "@tanstack/virtual-core@3.5.0":
   version "3.5.0"
@@ -1103,10 +1103,10 @@ available-typed-arrays@^1.0.5:
   resolved "https://registry.yarnpkg.com/available-typed-arrays/-/available-typed-arrays-1.0.5.tgz#92f95616501069d07d10edb2fc37d3e1c65123b7"
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
-axios@^1.7.2:
-  version "1.7.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.2.tgz#b625db8a7051fbea61c35a3cbb3a1daa7b9c7621"
-  integrity sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==
+axios@^1.7.8:
+  version "1.7.8"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.7.8.tgz#1997b1496b394c21953e68c14aaa51b7b5de3d6e"
+  integrity sha512-Uu0wb7KNqK2t5K+YQyVCLM76prD5sRFjKHbJYCP1J7JFGEQ6nN7HWn9+04LAeiJ3ji54lgS/gZCH1oxyrf1SPw==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.0"
