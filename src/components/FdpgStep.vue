@@ -28,7 +28,8 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '../assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
+@use 'sass:color';
 
 .el-step {
   color: $body-color;

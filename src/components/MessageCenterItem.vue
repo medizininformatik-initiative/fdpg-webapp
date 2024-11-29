@@ -113,6 +113,7 @@ const couldAnswer = computed(() => {
 
 <style lang="scss" scoped>
 @use 'src/assets/sass/variable' as *;
+@use 'sass:color';
 
 .message {
   border: 1px solid $gray-700;
@@ -123,7 +124,7 @@ const couldAnswer = computed(() => {
   width: 100%;
 
   &.answer-mode {
-    background: lighten($blue, 40%);
+    background: color.adjust($blue, $lightness: 40%);
   }
 
   &.message-answer {
