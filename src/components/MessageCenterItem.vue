@@ -50,7 +50,7 @@ import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, IAnswerDetail, ICommentDetail } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -112,7 +112,7 @@ const couldAnswer = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .message {
   border: 1px solid $gray-700;

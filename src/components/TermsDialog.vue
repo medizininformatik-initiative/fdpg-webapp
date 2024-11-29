@@ -35,7 +35,10 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="configStore.termsAndConditions[platform] == undefined || checkList.length < configStore.termsAndConditions[platform]!.terms.length"
+          :disabled="
+            configStore.termsAndConditions[platform] == undefined ||
+            checkList.length < configStore.termsAndConditions[platform]!.terms.length
+          "
           data-testid="button__confirm"
           @click="confirm"
         >
@@ -113,7 +116,7 @@ const checkList = ref([])
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .terms-dialog {
   .terms-checklist {

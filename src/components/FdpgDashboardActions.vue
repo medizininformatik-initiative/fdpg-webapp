@@ -32,7 +32,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .fdpg-dashboard-page-action-wrapper {
   margin-bottom: 10px;

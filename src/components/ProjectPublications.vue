@@ -146,7 +146,7 @@ const resetForm = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 .publications {
   .table-border {
     border-radius: 3px;

@@ -45,7 +45,7 @@ const historyList = computed(() => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .project-history {
   .project-history__item {

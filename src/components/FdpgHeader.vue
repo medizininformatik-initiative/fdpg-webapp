@@ -29,9 +29,19 @@
       </template>
     </el-input>
     <el-space direction="horizontal" :size="12">
-      <FdpgDropdown :button="languageButton" :show-dropdown-icon="true" :items="languageDropdown" data-testId="header.languageButton"></FdpgDropdown>
+      <FdpgDropdown
+        :button="languageButton"
+        :show-dropdown-icon="true"
+        :items="languageDropdown"
+        data-testId="header.languageButton"
+      ></FdpgDropdown>
       <FdpgHeaderRole />
-      <FdpgDropdown :button="profileButton" :show-dropdown-icon="true" :items="profileDropdown" data-testId="header.profileButton"></FdpgDropdown>
+      <FdpgDropdown
+        :button="profileButton"
+        :show-dropdown-icon="true"
+        :items="profileDropdown"
+        data-testId="header.profileButton"
+      ></FdpgDropdown>
     </el-space>
   </el-header>
 </template>
@@ -149,7 +159,7 @@ const goToProfile = () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .fdpg-header {
   display: flex;

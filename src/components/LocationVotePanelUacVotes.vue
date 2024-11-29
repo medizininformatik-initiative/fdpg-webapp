@@ -244,10 +244,13 @@ const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const { uploadsForType: contractConditions } = useUpload(proposalId, [UseCaseUpload.ContractCondition])
 const uploadsMap = computed<Record<string, IUpload>>(() => {
-  return contractConditions.value.reduce((acc, upload) => {
-    acc[upload._id] = upload
-    return acc
-  }, {} as Record<string, IUpload>)
+  return contractConditions.value.reduce(
+    (acc, upload) => {
+      acc[upload._id] = upload
+      return acc
+    },
+    {} as Record<string, IUpload>,
+  )
 })
 const { downloadFile } = useDownload(proposalId, showErrorMessage)
 const handleDownload = async (id: string) => {
@@ -356,12 +359,12 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         indicator: `indicator--${indicator}`,
         content: filteredData.map(({ location, dataAmount }, index) => mapTableData(index, location, dataAmount)),
         conditionalApprovals: isConditional
-          ? proposalStore.currentProposal?.conditionalApprovals
+          ? (proposalStore.currentProposal?.conditionalApprovals
               ?.filter(
                 (condition) =>
                   !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
               )
-              .map((condition) => mapConditionalApproval(condition)) ?? []
+              .map((condition) => mapConditionalApproval(condition)) ?? [])
           : undefined,
       } as IPanelVoteConfig
     },
@@ -453,7 +456,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .uac-votes {
   h3 {

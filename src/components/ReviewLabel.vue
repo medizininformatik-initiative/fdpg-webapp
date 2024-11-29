@@ -84,7 +84,7 @@ const checkboxValue = computed({
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .review-label {
   width: 100%;

@@ -14,7 +14,7 @@
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import type { ICommentDetail } from '@/types/comment.interface';
+import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
 import { computed } from 'vue'
@@ -56,7 +56,7 @@ const tasks = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 .task-viewer {
   display: flex;
   justify-content: space-between;

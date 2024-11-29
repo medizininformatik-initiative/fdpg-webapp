@@ -46,7 +46,7 @@ const setIsOpen = (newValue: boolean) => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 .fdpg-dialog {
   position: fixed;
   top: 0;

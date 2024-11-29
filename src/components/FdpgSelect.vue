@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useVModel } from '@vueuse/core'
@@ -90,7 +90,7 @@ const selected = computed({
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .fdpg-select {
   width: 100% !important;

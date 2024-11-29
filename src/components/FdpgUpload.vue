@@ -113,7 +113,7 @@ const handleRemove = (id: string) => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .fdpg-upload-wrapper {
   display: flex;

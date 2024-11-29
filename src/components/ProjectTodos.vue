@@ -38,7 +38,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .todos {
   &.todos--empty {

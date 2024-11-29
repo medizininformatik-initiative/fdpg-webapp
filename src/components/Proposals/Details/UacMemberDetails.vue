@@ -188,7 +188,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use 'src/assets/sass/variable' as *;
 
 .uac-proposal-details-page {
   flex-direction: column;
