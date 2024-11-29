@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @valid–ate="onValidate">
+    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
       <el-row class="abbreviation">
         <el-col :sm="18" :md="12" :lg="6">
           <FdpgFormItem prop="projectAbbreviation">
