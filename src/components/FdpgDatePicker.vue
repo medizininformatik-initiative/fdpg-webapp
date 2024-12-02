@@ -29,7 +29,7 @@ const disabledDate = (time: Date) => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-date-picker {
   width: 100% !important;

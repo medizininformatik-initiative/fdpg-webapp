@@ -1,26 +1,27 @@
 <template>
-  <FdpgDialog v-model="dialogOpen" :title="$t('roles.changeRoleModalTitle')" class="reports--modal" @close="closeDialog">
-      <div>
-        <p>{{ $t('roles.changeRoleModalText') }}</p>
-      </div>
-      <el-tag
-        v-for="item in auth.roles"
-        :key="item"
-        type=""
-        class="tag--margin"
-        :effect="item === selectedRole ? 'dark' : 'light'"
-        @click="selectedRole = item"
-        >
-        {{ $t(`roles.${item}`) }}
-      </el-tag>
-      <template #footer>
-        <span>
-          <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
-          <el-button
-          type="primary"
-          data-testid="button__confirmNewRole"
-          @click="saveNewRole"
-          >
+  <FdpgDialog
+    v-model="dialogOpen"
+    :title="$t('roles.changeRoleModalTitle')"
+    class="reports--modal"
+    @close="closeDialog"
+  >
+    <div>
+      <p>{{ $t('roles.changeRoleModalText') }}</p>
+    </div>
+    <el-tag
+      v-for="item in auth.roles"
+      :key="item"
+      type=""
+      class="tag--margin"
+      :effect="item === selectedRole ? 'dark' : 'light'"
+      @click="selectedRole = item"
+    >
+      {{ $t(`roles.${item}`) }}
+    </el-tag>
+    <template #footer>
+      <span>
+        <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button type="primary" data-testid="button__confirmNewRole" @click="saveNewRole">
           {{ $t('general.editProfileModalAction') }}
         </el-button>
       </span>
@@ -40,19 +41,19 @@ const auth = useAuthStore()
 const dialogOpen = computed(() => auth.isChangeRoleDialogOpen)
 const closeDialog = () => {
   auth.closeChangeRoleDialog()
-  router.push({name: RouteName.ProposalDetails, params: {id: auth.redirectToDetailPageProposalId}})
+  router.push({ name: RouteName.ProposalDetails, params: { id: auth.redirectToDetailPageProposalId } })
 }
 
-const selectedRole = ref<Role| undefined>(auth.singleKnownRole)
+const selectedRole = ref<Role | undefined>(auth.singleKnownRole)
 const saveNewRole = () => {
-  if(selectedRole.value) {
+  if (selectedRole.value) {
     auth.setSelectedRole(selectedRole.value)
   }
   closeDialog()
 }
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .el-tag--dark {
   background: $blue;
   color: $white;
@@ -66,7 +67,7 @@ const saveNewRole = () => {
   cursor: pointer;
 }
 .tag--margin {
-  margin: 10px
+  margin: 10px;
 }
 dt {
   font-weight: bold;

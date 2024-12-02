@@ -25,7 +25,7 @@ import RoleDialog from '@/components/RoleDialog.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'
-import type { ComputedRef} from 'vue';
+import type { ComputedRef } from 'vue'
 import { computed, onMounted, onUnmounted } from 'vue'
 
 const layoutStore = useLayoutStore()
@@ -62,7 +62,7 @@ const setSidebarVisiblity = (isVisible: boolean) => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-dashboard-layout {
   & > .el-container {

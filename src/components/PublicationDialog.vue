@@ -105,7 +105,6 @@ const createOrUpdatePublication = async () => {
 
   await publicationFormRef.value?.validate((valid) => {
     isValid = valid
-
   })
 
   if (isValid) {
@@ -118,10 +117,10 @@ const createOrUpdatePublication = async () => {
       !publication.value._id
         ? await proposalStore.createProposalPublication(props.proposalId, createOrUpdatePublicationValues.value)
         : await proposalStore.updateProposalPublication(
-          props.proposalId,
-          publication.value._id,
-          createOrUpdatePublicationValues.value,
-        )
+            props.proposalId,
+            publication.value._id,
+            createOrUpdatePublicationValues.value,
+          )
     } catch (error) {
       showErrorMessage()
     }
@@ -130,7 +129,7 @@ const createOrUpdatePublication = async () => {
 }
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .form-element {
   margin-bottom: 0;

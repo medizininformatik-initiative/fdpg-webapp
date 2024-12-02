@@ -179,7 +179,7 @@ const createOrUpdateReport = async () => {
 }
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .disable-button {
   cursor: not-allowed;

@@ -111,7 +111,7 @@ onBeforeMount(async () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .header-row {
   display: flex;

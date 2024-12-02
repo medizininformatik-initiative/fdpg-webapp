@@ -142,7 +142,7 @@ const acceptContract = () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .no-contract-hint {
   color: $red-100;
 }

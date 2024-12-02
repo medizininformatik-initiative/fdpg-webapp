@@ -120,7 +120,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .answer-creator {
   box-sizing: border-box;

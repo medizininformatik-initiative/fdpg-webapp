@@ -111,7 +111,7 @@ onMounted(async () => {
 })
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .data-privacy-wrapper {
   margin-top: 20px;

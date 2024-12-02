@@ -64,7 +64,7 @@ defineEmits(['sort-change', 'sort-order-change'])
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-sort-select {
   border: 1px solid $gray-700;

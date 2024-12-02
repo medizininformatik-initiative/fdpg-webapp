@@ -64,7 +64,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { PanelType } from '@/types/proposal.types'
 import { SortDirection } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 
 const props = defineProps({
@@ -160,7 +160,7 @@ const proposals = computed(() => proposalStore.filteredProposal[props.panel.quer
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-card-panel {
   margin-bottom: 30px;

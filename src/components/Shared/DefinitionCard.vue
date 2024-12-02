@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import type { DefinitionCards, DefinitionCardsVirtual } from '@/components/Shared/definition-card.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DefinitionCardItem from './DefinitionCardItem.vue'
@@ -70,7 +70,7 @@ const isPrint = route.matched.some((route) => route.name === 'PrintLayout')
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 [role='term'] {
   font-weight: bold;
   color: $gray-900;

@@ -25,7 +25,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .quick-info-row {
   row-gap: 2rem;
 }

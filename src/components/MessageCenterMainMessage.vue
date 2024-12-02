@@ -31,7 +31,7 @@
 import useNotifications from '@/composables/use-notifications'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { ref } from 'vue'
 import MessageCenterAnswerCreator from './MessageCenterAnswerCreator.vue'
 import MessageCenterItem from './MessageCenterItem.vue'
@@ -86,7 +86,7 @@ const handleAnswerDone = async (commentId: string, answerId: string, value: bool
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .main-message-wrapper {
   display: flex;

@@ -109,7 +109,7 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .project-status {
   display: flex;
   border-radius: 4px;

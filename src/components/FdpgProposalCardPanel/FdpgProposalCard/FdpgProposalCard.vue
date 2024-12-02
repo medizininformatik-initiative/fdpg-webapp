@@ -142,12 +142,15 @@ const notificationIcon = {
 }
 const notifications = computed(() => {
   if (authStore.singleKnownRole === Role.FdpgMember) {
-    return props.proposal.openFdpgTasks.reduce((acc, task) => {
-      if (task.type === FdpgTaskType.Comment || task.type === FdpgTaskType.ConditionApproval) {
-        acc[task.type] = (acc[task.type] ?? 0) + 1
-      }
-      return acc
-    }, {} as Record<FdpgTaskType, number>)
+    return props.proposal.openFdpgTasks.reduce(
+      (acc, task) => {
+        if (task.type === FdpgTaskType.Comment || task.type === FdpgTaskType.ConditionApproval) {
+          acc[task.type] = (acc[task.type] ?? 0) + 1
+        }
+        return acc
+      },
+      {} as Record<FdpgTaskType, number>,
+    )
   } else {
     return undefined
   }
@@ -173,7 +176,7 @@ const handleDeleteProposalModal = () => {
     title: 'proposal.deleteProposalModalTitle',
     message: 'proposal.deleteProposalModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: async(decision: DecisionType) => (decision === 'confirm' ? deleteProposal() : undefined),
+    callback: async (decision: DecisionType) => (decision === 'confirm' ? deleteProposal() : undefined),
   })
 }
 
@@ -190,7 +193,7 @@ const deleteProposal = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-card {
   border-radius: 4px;

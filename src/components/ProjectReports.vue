@@ -146,8 +146,7 @@ const handleDeleteReport = (event: Event, proposalId: string) => {
     title: 'proposal.deleteReport',
     message: 'proposal.deleteReportModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: async(decision: DecisionType) =>
-      decision === 'confirm' ? await deleteReport(proposalId) : undefined,
+    callback: async (decision: DecisionType) => (decision === 'confirm' ? await deleteReport(proposalId) : undefined),
   })
 }
 const deleteReport = async (reportId) => {
@@ -170,7 +169,7 @@ const resetForm = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .reports--container {
   .reports--table--border {
     border-radius: 3px;

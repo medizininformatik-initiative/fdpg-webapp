@@ -147,7 +147,7 @@ const setTextareaFocus = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .fdpg-comment-creator {
   margin-bottom: 4em;

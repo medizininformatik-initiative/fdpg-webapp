@@ -103,7 +103,7 @@ const progressItems = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 .location-vote-progress {
   padding: 20px;
   border-radius: 10px;

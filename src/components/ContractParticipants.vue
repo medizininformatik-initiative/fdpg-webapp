@@ -153,7 +153,7 @@ const toggleFullView = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .contract-participants {
   border: 1px solid $gray-700;

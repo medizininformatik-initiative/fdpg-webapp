@@ -5,8 +5,7 @@
       <span v-if="button.kind === 'icon'" class="icon" :class="button.iconClass" aria-hidden="true" />
       <template v-if="button.isTranslatable">{{ $t(button.label) }}</template>
       <template v-else>{{ button.label }}</template>
-      <slot>
-      </slot>
+      <slot> </slot>
       <span
         v-if="showDropdownIcon"
         class="caret-icon fa fa-caret-down"
@@ -56,7 +55,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .menu {
   display: inline-block;

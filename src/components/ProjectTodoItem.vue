@@ -36,7 +36,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { ref } from 'vue'
 
 defineProps({
@@ -55,7 +55,7 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .todo-item {
   border-radius: 3px;

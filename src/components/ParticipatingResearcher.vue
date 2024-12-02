@@ -183,7 +183,7 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@import '@/assets/sass/variable';
 
 .participants {
   border-radius: 4px;
