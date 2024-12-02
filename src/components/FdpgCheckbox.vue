@@ -1,6 +1,6 @@
 <template>
   <div class="fdpg-checkbox-wrapper" :class="{ 'fdpg-checkbox__info--visible': info }">
-    <el-checkbox class="fdpg-checkbox" :label="value" :size="size" :data-testId="'checkbox__' + value">
+    <el-checkbox class="fdpg-checkbox" :label="value" :size="size" :data-testId="'checkbox__' + value" :value="value">
       <template v-if="label">
         {{ $t(label) }}
       </template>

@@ -110,6 +110,8 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 @use '@/assets/sass/variable' as *;
+@use 'sass:color';
+
 .project-status {
   display: flex;
   border-radius: 4px;
@@ -131,7 +133,7 @@ onBeforeUnmount(() => {
 
   &.success {
     color: $green;
-    background-color: lighten($green, 50%);
+    background-color: color.adjust($green, $lightness: 50%);
 
     .steps {
       .step {
@@ -144,7 +146,7 @@ onBeforeUnmount(() => {
 
   &.warning {
     color: $red-100;
-    background-color: lighten($red-100, 47%);
+    background-color: color.adjust($red-100, $lightness: 47%);
 
     .steps {
       .step {

@@ -457,6 +457,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
+@use 'sass:color';
 
 .uac-votes {
   h3 {
@@ -612,17 +613,17 @@ onMounted(() => {
         height: 24px;
 
         &.pending {
-          background-color: lighten($gray-900, 50%);
+          background-color: color.adjust($gray-900, $lightness: 50%);
           border-color: $gray-900;
         }
 
         &.accepted {
-          background-color: lighten($green, 50%);
+          background-color: color.adjust($green, $lightness: 50%);
           border-color: $green;
         }
 
         &.rejected {
-          background-color: lighten($red-100, 40%);
+          background-color: color.adjust($red-100, $lightness: 40%);
           border-color: $red-100;
           color: $black;
         }
