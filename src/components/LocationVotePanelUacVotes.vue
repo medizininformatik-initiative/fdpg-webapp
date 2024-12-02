@@ -456,7 +456,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .uac-votes {
   h3 {

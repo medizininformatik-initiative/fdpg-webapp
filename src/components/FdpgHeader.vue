@@ -1,6 +1,6 @@
 <template>
   <el-header class="fdpg-header">
-    <el-button circle type="text" class="fdpg-header__menu-button" @click="openSidebar">
+    <el-button circle text class="fdpg-header__menu-button" @click="openSidebar">
       <i class="fa fa-bars" aria-hidden="true"></i>
     </el-button>
     <el-breadcrumb
@@ -159,7 +159,7 @@ const goToProfile = () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-header {
   display: flex;

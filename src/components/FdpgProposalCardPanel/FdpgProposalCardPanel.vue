@@ -8,7 +8,7 @@
       <div class="action-wrapper">
         <el-button
           v-if="proposals.length > displayCount"
-          type="text"
+          text
           class="alert-btn"
           @click="handleShowAllClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
@@ -16,7 +16,7 @@
         >
         <el-button
           v-if="proposals.length > displayCount"
-          type="text"
+          text
           class="alert-btn"
           @click="handleShowMoreClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
@@ -24,7 +24,7 @@
         >
         <el-button
           v-if="displayCount > defaultLength"
-          type="text"
+          text
           class="alert-btn"
           @click="handleShowLessClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
@@ -160,7 +160,7 @@ const proposals = computed(() => proposalStore.filteredProposal[props.panel.quer
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-card-panel {
   margin-bottom: 30px;

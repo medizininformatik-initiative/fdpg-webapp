@@ -9,7 +9,7 @@
       <span>
         <el-button
           v-if="messageBoxStore.showCancelButton"
-          type="text"
+          text
           :class="messageBoxStore.cancelButtonClass"
           @click="handleCallback('cancel')"
           data-testid="button__cancel"

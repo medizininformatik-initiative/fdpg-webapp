@@ -41,7 +41,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-checkbox-wrapper {
   display: inline-block;

@@ -73,7 +73,7 @@ const applicant = useVModel(props, 'modelValue', emit)
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .profile-completion-hint {
   color: $blue;

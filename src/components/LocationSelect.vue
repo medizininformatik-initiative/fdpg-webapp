@@ -110,7 +110,7 @@ const handleDropDownChange = (value: boolean) => {
 </style>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .location-select {
   position: relative;

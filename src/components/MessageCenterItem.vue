@@ -29,15 +29,10 @@
     <div class="message-content">{{ message.content }}</div>
 
     <section v-if="couldAnswer || authStore.singleKnownRole === Role.FdpgMember" role="region">
-      <el-button v-if="couldAnswer" type="text" :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
+      <el-button v-if="couldAnswer" textled="isAnswerMode" @click="toggleAnswerMode(true)">
         {{ $t('proposal.answerComment') }}
       </el-button>
-      <el-button
-        v-if="authStore.singleKnownRole === Role.FdpgMember"
-        type="text"
-        :disabled="isAnswerMode"
-        @click="markAsDone"
-      >
+      <el-button v-if="authStore.singleKnownRole === Role.FdpgMember" text :disabled="isAnswerMode" @click="markAsDone">
         {{ message.isDone ? $t('proposal.markAsOpen') : $t('proposal.markAsDone') }}
       </el-button>
     </section>
@@ -112,7 +107,7 @@ const couldAnswer = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .message {
   border: 1px solid $gray-700;

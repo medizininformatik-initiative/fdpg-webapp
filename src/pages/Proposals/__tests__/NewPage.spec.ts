@@ -395,7 +395,7 @@ describe('UserProjectInformation.vue', () => {
         await formComponent.vm.$emit('validate', '', false);
         await wrapper.vm.$nextTick(); // Wait for state updates
         const button = getButtonByText('proposal.submitApplication');
-        expect(button.attributes('ariadisabled')).toBe('true');
+        expect(button.attributes('aria-disabled')).toBe('true');
       });
 
     })

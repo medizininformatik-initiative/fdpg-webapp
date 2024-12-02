@@ -193,7 +193,7 @@ const deleteProposal = () => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-card {
   border-radius: 4px;

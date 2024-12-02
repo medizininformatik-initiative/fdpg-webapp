@@ -49,7 +49,7 @@
           >
             <el-button
               class="upload-button"
-              type="text"
+              text
               :class="{ 'disable-button': !!(uploadedFiles?.length + filesToBeUploaded?.length > 2) }"
             >
               {{ $t('proposal.chooseAFile') }}
@@ -63,7 +63,7 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button :disabled="isSaveButtonDisabled" type="primary" @click="createOrUpdateReport">
           {{ $t('general.save') }}
         </el-button>
@@ -179,7 +179,7 @@ const createOrUpdateReport = async () => {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .disable-button {
   cursor: not-allowed;

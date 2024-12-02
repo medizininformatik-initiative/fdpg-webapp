@@ -86,7 +86,7 @@ const handleAnswerDone = async (commentId: string, answerId: string, value: bool
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .main-message-wrapper {
   display: flex;

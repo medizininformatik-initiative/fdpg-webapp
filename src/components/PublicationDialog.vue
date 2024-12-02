@@ -45,7 +45,7 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button type="primary" @click="createOrUpdatePublication">
           {{ $t('general.save') }}
         </el-button>
@@ -129,7 +129,7 @@ const createOrUpdatePublication = async () => {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .form-element {
   margin-bottom: 0;

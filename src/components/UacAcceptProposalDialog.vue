@@ -28,7 +28,7 @@
             :is-disabled="false"
             @change="handleChangeFileList"
           >
-            <el-button v-if="!conditionFile" class="upload-button" type="text">
+            <el-button v-if="!conditionFile" class="upload-button" text>
               {{ $t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
@@ -66,7 +66,7 @@
 
     <template #footer>
       <span>
-        <el-button type="text" data-testId="button__closeApprovalDialog" @click="closeDialog">
+        <el-button text data-testId="button__closeApprovalDialog" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
         <el-button

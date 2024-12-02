@@ -154,7 +154,7 @@ watch([props], () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-table {
   width: 100%;

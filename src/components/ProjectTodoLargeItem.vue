@@ -53,7 +53,7 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .check-proposal-card {
   border-radius: 3px;

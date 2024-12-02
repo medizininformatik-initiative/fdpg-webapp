@@ -46,7 +46,9 @@ const setIsOpen = (newValue: boolean) => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
+@use 'sass:color';
+
 .fdpg-dialog {
   position: fixed;
   top: 0;
@@ -97,7 +99,7 @@ const setIsOpen = (newValue: boolean) => {
       padding: 0px 15px 0px;
     }
     button:focus {
-      box-shadow: 0 0 15px 0 lighten($blue, 30%);
+      box-shadow: 0 0 15px 0 color.adjust($blue, $lightness: 30%);
     }
   }
 

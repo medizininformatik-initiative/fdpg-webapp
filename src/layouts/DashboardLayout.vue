@@ -62,7 +62,7 @@ const setSidebarVisiblity = (isVisible: boolean) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-dashboard-layout {
   & > .el-container {

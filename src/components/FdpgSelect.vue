@@ -90,7 +90,7 @@ const selected = computed({
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-select {
   width: 100% !important;

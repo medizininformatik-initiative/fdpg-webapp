@@ -24,7 +24,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-info-popover__ref {
   font-size: 19px;

@@ -55,7 +55,7 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .menu {
   display: inline-block;

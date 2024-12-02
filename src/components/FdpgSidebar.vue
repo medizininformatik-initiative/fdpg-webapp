@@ -152,7 +152,7 @@ const secondaryMenu: SidebarMenu[] = [
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 @mixin sidebar-block {
   width: $sidebar-width !important;

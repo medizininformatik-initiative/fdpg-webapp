@@ -37,7 +37,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-radio-wrapper {
   display: inline-block;

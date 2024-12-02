@@ -15,7 +15,7 @@
         <i class="fa fa-check" aria-hidden="true" />
       </el-option>
     </el-select>
-    <el-button round type="text" class="sort-order-btn" @click="$emit('sort-order-change')">
+    <el-button round text class="sort-order-btn" @click="$emit('sort-order-change')">
       <i class="bi" :class="sortOrder === SortDirection.ASC ? 'bi-arrow-up' : 'bi-arrow-down'" aria-hidden="true" />
     </el-button>
   </div>
@@ -64,7 +64,7 @@ defineEmits(['sort-change', 'sort-order-change'])
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-sort-select {
   border: 1px solid $gray-700;

@@ -73,7 +73,7 @@
 
     <template #footer>
       <span>
-        <el-button type="text" data-testId="button__closeEditProfile" @click="closeDialog">
+        <el-button text data-testId="button__closeEditProfile" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
         <el-button

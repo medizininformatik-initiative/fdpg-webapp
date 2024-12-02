@@ -98,7 +98,7 @@ const handleRowClick = ({ id }) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-member-dashboard-page {
   .header {

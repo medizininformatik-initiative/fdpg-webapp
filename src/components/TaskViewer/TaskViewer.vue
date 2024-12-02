@@ -56,7 +56,7 @@ const tasks = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 .task-viewer {
   display: flex;
   justify-content: space-between;

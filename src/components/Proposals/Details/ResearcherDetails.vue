@@ -343,7 +343,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-proposal-details-page {
   flex-direction: column;

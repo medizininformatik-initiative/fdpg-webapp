@@ -79,7 +79,7 @@
       >
         <el-button
           class="upload-button"
-          type="text"
+          text
           :disabled="isAppendixLoading || isReviewMode"
           data-test-id="general-appendix__upload__button"
         >
@@ -477,7 +477,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-new-proposal-page {
   counter-reset: large-label;

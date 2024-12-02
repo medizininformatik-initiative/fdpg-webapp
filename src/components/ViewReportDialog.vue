@@ -21,7 +21,7 @@
     </dl>
     <template #footer>
       <span>
-        <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
       </span>
     </template>
   </FdpgDialog>
@@ -71,7 +71,7 @@ const closeDialog = () => {
 }
 </script>
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 dt {
   font-weight: bold;

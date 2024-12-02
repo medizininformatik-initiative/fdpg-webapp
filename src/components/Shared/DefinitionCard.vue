@@ -35,7 +35,7 @@
       <el-button
         v-for="(action, actionIdx) in card.actions"
         :key="'action' + actionIdx"
-        type="text"
+        text
         size="large"
         :disabled="action.disabled?.value"
         @click="action.onClick"
@@ -70,7 +70,7 @@ const isPrint = route.matched.some((route) => route.name === 'PrintLayout')
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 [role='term'] {
   font-weight: bold;
   color: $gray-900;

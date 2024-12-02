@@ -40,7 +40,7 @@ const roleDropdownItems = computed<DropdownItem[]>(() =>
 )
 </script>
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .profile-role {
   overflow: hidden;

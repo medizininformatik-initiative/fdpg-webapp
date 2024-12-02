@@ -35,7 +35,7 @@
               <el-button
                 v-if="action && actionTitle && participantPanels[index]"
                 v-loading="isEmailSendingInProgress"
-                type="text"
+                text
                 :disabled="isDisabled || isEmailSendingInProgress || proposalStore.currentProposal?.isLocked"
                 @click="action"
               >
@@ -183,7 +183,7 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .participants {
   border-radius: 4px;

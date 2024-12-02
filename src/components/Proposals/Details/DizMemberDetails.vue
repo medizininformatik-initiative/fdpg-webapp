@@ -255,7 +255,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .diz-proposal-details-page {
   flex-direction: column;
