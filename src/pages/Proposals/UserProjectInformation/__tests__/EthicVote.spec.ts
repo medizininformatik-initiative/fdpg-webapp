@@ -92,10 +92,12 @@ describe('EthicVote.vue', () => {
 
   it('should have uploads on the FdpgUpload component', () => {
     const fdpgUpload = getUploadComponentByTestId('ethicVoteForm__upload')
-
-    expect(fdpgUpload.props('fileList').value[0]).toContain({
+    expect(fdpgUpload.props('fileList').value[0]).toEqual({
       fileName: 'ethicVote.pdf',
-      _id: 'ethicVoteId',
+      fileSize: 123,
+      type: 'ETHIC_VOTE',
+      createdAt: '',
+      _id: 'ethicVoteId'
     })
   })
 
@@ -131,9 +133,12 @@ describe('EthicVote.vue', () => {
       const labelNotRequired = 'proposal.notRequired'
       await findAndClickRadioByLabel(labelNotRequired)
       const fdpgUpload = getUploadComponentByTestId('ethicVoteForm__upload__notRequired')
-      expect(fdpgUpload.props('fileList').value[0]).toContain({
+      expect(fdpgUpload.props('fileList').value[0]).toEqual({
         fileName: 'nonResponsibility.pdf',
-        _id: 'nonResponsibilityId',
+        fileSize: 123,
+        type: 'ETHIC_VOTE_DECLARATION_OF_NON_RESPONSIBILITY',
+        createdAt: '',
+        _id: 'nonResponsibilityId'
       })
     })
 

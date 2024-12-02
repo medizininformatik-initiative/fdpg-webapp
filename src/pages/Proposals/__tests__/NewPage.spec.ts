@@ -62,6 +62,9 @@ const mountComponent = (withPinia = true) => {
         'el-col': false,
         'el-button': false,
       },
+      mocks: {
+        params: { id: 'proposalId' }, // Mock router params
+      },
     },
     props: {
       userRole: Role.Researcher,
@@ -94,10 +97,6 @@ describe('UserProjectInformation.vue', () => {
   describe('In any case', () => {
     let proposal: IProposal
 
-    it('renders', () => {
-      expect(wrapper).toBeTruthy()
-    })
-
     beforeEach(() => {
       vi.clearAllMocks()
       vi.spyOn(document, 'getElementById').mockReturnValue(anchorMock as any)
@@ -108,12 +107,21 @@ describe('UserProjectInformation.vue', () => {
       commentStore = vi.mocked(useCommentStore())
       proposalStore.currentProposal = proposal
     })
+    it('renders', () => {
+      expect(wrapper).toBeTruthy()
+    })
+
 
     it('sets the currentProposal', () => {
       expect(proposalStore.setCurrentProposal).toHaveBeenCalledWith('proposalId')
     })
 
-    it('fetches the comments', () => {
+    it('fetches the comments', async () => {
+
+      vi.spyOn(commentStore, 'fetchAll').mockResolvedValue();
+      await wrapper.vm.$nextTick();
+      console.log('Called with arguments:', commentStore.fetchAll.mock.calls);
+
       expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
     })
 
@@ -341,32 +349,32 @@ describe('UserProjectInformation.vue', () => {
 
         wrapper = mountComponent(false) as any
         await flushPromises()
-        ;(wrapper.vm as any).formRef = {
-          validate: vi.fn().mockImplementation((cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
-            cb(false, {
-              projectTitle: [
-                {
-                  message: 'Project title is required',
-                  field: 'projectTitle',
+          ; (wrapper.vm as any).formRef = {
+            validate: vi.fn().mockImplementation((cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+              cb(false, {
+                projectTitle: [
+                  {
+                    message: 'Project title is required',
+                    field: 'projectTitle',
+                  },
+                ],
+              })
+            }),
+            validateField: vi
+              .fn()
+              .mockImplementation(
+                (fields: string[], cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+                  cb(false, {
+                    projectTitle: [
+                      {
+                        message: 'Project title is required',
+                        field: 'projectTitle',
+                      },
+                    ],
+                  })
                 },
-              ],
-            })
-          }),
-          validateField: vi
-            .fn()
-            .mockImplementation(
-              (fields: string[], cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
-                cb(false, {
-                  projectTitle: [
-                    {
-                      message: 'Project title is required',
-                      field: 'projectTitle',
-                    },
-                  ],
-                })
-              },
-            ),
-        }
+              ),
+          }
       })
 
       it('shows an error message on draft saving', async () => {
@@ -383,11 +391,13 @@ describe('UserProjectInformation.vue', () => {
       })
 
       it('disables the submit button if it is not valid', async () => {
-        const formComponent = wrapper.findComponent({ name: 'ElForm' })
-        formComponent.vm.$emit('valid–ate', '', false)
-        const button = getButtonByText('proposal.submitApplication')
-        expect(button.attributes('ariadisabled')).toBeTruthy()
-      })
+        const formComponent = wrapper.findComponent({ name: 'ElForm' });
+        await formComponent.vm.$emit('validate', '', false);
+        await wrapper.vm.$nextTick(); // Wait for state updates
+        const button = getButtonByText('proposal.submitApplication');
+        expect(button.attributes('ariadisabled')).toBe('true');
+      });
+
     })
 
     describe('Fallback handler for not submitting in invalid status', () => {
