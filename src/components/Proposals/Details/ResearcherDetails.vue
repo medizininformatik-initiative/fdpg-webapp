@@ -206,7 +206,6 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
-    type: 'secondary',
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),

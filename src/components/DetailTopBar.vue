@@ -19,7 +19,7 @@
       <template v-for="(button, idx) in buttons" :key="'button' + idx">
         <el-button
           v-if="!button.isHidden"
-          :plain="button.type === 'secondary'"
+          :plain="!button.type"
           :data-testId="button.testId"
           :type="button.type"
           v-loading="button.isLoading"

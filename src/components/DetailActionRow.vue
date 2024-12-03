@@ -4,7 +4,7 @@
       <el-button
         v-for="(button, idx) in clusteredButtons.left"
         :key="'button' + idx"
-        :plain="button.type === 'secondary'"
+        :plain="!button.type"
         :disabled="button.isDisabled"
         type="primary"
         @click="button.action"
@@ -16,7 +16,7 @@
       <el-button
         v-for="(button, idx) in clusteredButtons.right"
         :key="'button' + idx"
-        :plain="button.type === 'secondary'"
+        :plain="!button.type"
         :disabled="button.isDisabled"
         :data-testId="button.testId"
         type="primary"
@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 
 const props = defineProps({
