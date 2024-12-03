@@ -29,7 +29,7 @@
     <div class="message-content">{{ message.content }}</div>
 
     <section v-if="couldAnswer || authStore.singleKnownRole === Role.FdpgMember" role="region">
-      <el-button v-if="couldAnswer" link led="isAnswerMode" @click="toggleAnswerMode(true)">
+      <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
         {{ $t('proposal.answerComment') }}
       </el-button>
       <el-button v-if="authStore.singleKnownRole === Role.FdpgMember" link :disabled="isAnswerMode" @click="markAsDone">
