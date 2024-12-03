@@ -28,7 +28,7 @@
         :is-disabled="false"
         @change="handleUploadFile"
       >
-        <el-button v-if="!contractDraft" class="upload-button" text>
+        <el-button v-if="!contractDraft" class="upload-button" link>
           {{ $t('proposal.chooseAFile') }}
           <template #icon>
             <el-icon class="bi-paperclip"></el-icon>
@@ -50,7 +50,7 @@
     </div>
     <template #footer>
       <span>
-        <el-button text data-testId="button__closeInitiateContractDialog" @click="closeDialog">
+        <el-button link data-testId="button__closeInitiateContractDialog" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
         <el-button

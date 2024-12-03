@@ -35,7 +35,7 @@
       <el-button
         v-for="(action, actionIdx) in card.actions"
         :key="'action' + actionIdx"
-        text
+        link
         size="large"
         :disabled="action.disabled?.value"
         @click="action.onClick"

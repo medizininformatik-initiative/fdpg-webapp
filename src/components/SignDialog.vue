@@ -13,7 +13,7 @@
         <FdpgStep step-icon-color="blue" :title="$t('proposal.downloadContract')">
           <p>{{ $t('proposal.downloadContractDescription') }}</p>
           <div class="el-contracts-list">
-            <el-button v-if="contractDraft" text class="contract-download" @click="downloadContractDraft">
+            <el-button v-if="contractDraft" link class="contract-download" @click="downloadContractDraft">
               {{ contractDraft?.fileName }}
             </el-button>
             <span v-else class="no-contract-hint">{{ $t('proposal.noContractDraftYet') }}</span>
@@ -40,7 +40,7 @@
             :is-disabled="!contractDraft"
             @change="handleChangeFileList"
           >
-            <el-button v-if="!contractFile" class="upload-button" text>
+            <el-button v-if="!contractFile" class="upload-button" link>
               {{ $t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
@@ -60,7 +60,7 @@
     </div>
     <template #footer>
       <span>
-        <el-button text data-testId="button__closeSignDialog" @click="closeDialog">
+        <el-button link data-testId="button__closeSignDialog" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
         <el-button

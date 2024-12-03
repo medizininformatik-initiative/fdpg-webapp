@@ -2,7 +2,7 @@
   <div class="section publications">
     <div class="table-title">
       <h2>{{ $t('proposal.publications') }} {{ `(${publications?.length})` }}</h2>
-      <el-button v-if="accessForMaintenance" text :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
+      <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
         {{ $t('proposal.addPublication') }}
       </el-button>
     </div>

@@ -49,7 +49,7 @@
           >
             <el-button
               class="upload-button"
-              text
+              link
               :class="{ 'disable-button': !!(uploadedFiles?.length + filesToBeUploaded?.length > 2) }"
             >
               {{ $t('proposal.chooseAFile') }}
@@ -63,7 +63,7 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button :disabled="isSaveButtonDisabled" type="primary" @click="createOrUpdateReport">
           {{ $t('general.save') }}
         </el-button>

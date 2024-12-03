@@ -21,7 +21,7 @@
     </dl>
     <template #footer>
       <span>
-        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
       </span>
     </template>
   </FdpgDialog>

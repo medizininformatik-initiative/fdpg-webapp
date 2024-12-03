@@ -39,10 +39,10 @@
           </div>
           <div class="comment-card-actions">
             <div class="left">
-              <el-button text size="large" class="edit-btn" @click="() => handleEditClick(index)">
+              <el-button link size="large" class="edit-btn" @click="() => handleEditClick(index)">
                 {{ $t('general.edit') }}
               </el-button>
-              <el-button text class="delete-btn" @click="() => handleDeleteClick(comment._id)">
+              <el-button link class="delete-btn" @click="() => handleDeleteClick(comment._id)">
                 {{ $t('general.delete') }}
               </el-button>
             </div>

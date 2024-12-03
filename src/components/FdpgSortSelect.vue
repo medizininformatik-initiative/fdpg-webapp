@@ -15,7 +15,7 @@
         <i class="fa fa-check" aria-hidden="true" />
       </el-option>
     </el-select>
-    <el-button round text class="sort-order-btn" @click="$emit('sort-order-change')">
+    <el-button round link class="sort-order-btn" @click="$emit('sort-order-change')">
       <i class="bi" :class="sortOrder === SortDirection.ASC ? 'bi-arrow-up' : 'bi-arrow-down'" aria-hidden="true" />
     </el-button>
   </div>

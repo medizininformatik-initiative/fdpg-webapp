@@ -8,7 +8,7 @@
       <div class="action-wrapper">
         <el-button
           v-if="proposals.length > displayCount"
-          text
+          link
           class="alert-btn"
           @click="handleShowAllClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
@@ -16,7 +16,7 @@
         >
         <el-button
           v-if="proposals.length > displayCount"
-          text
+          link
           class="alert-btn"
           @click="handleShowMoreClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
@@ -24,7 +24,7 @@
         >
         <el-button
           v-if="displayCount > defaultLength"
-          text
+          link
           class="alert-btn"
           @click="handleShowLessClick"
           @keydown.self.tab.shift="handleShiftTab($event)"

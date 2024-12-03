@@ -76,7 +76,7 @@
               <el-button
                 class="upload-button"
                 data-testId="ethicVoteForm__upload__button"
-                text
+                link
                 :disabled="isAppendixLoading || reviewMode || ethicVoteForm.isDone"
               >
                 {{ $t('proposal.chooseAFile') }}
@@ -127,7 +127,7 @@
             <el-button
               class="upload-button"
               data-testId="ethicVoteForm__upload__notRequired__button"
-              text
+              link
               :disabled="secondUploadLoading || reviewMode || ethicVoteForm.isDone"
             >
               {{ $t('proposal.chooseAFile') }}

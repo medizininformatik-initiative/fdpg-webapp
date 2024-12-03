@@ -79,7 +79,7 @@
       >
         <el-button
           class="upload-button"
-          text
+          link
           :disabled="isAppendixLoading || isReviewMode"
           data-test-id="general-appendix__upload__button"
         >

@@ -30,7 +30,7 @@
     >
       <el-button
         v-if="!reviewMode && !plannedPublicationForm.isDone"
-        text
+        link
         class="card-remove-button scrollAnker"
         :data-testId="'handleRemovePublication__' + index"
         @click="handleRemove(index)"
@@ -90,7 +90,7 @@
   <el-button
     v-show="!reviewMode && !plannedPublicationForm.isDone && !plannedPublicationForm.noPublicationPlanned"
     data-testId="handleAddAnotherPublication"
-    text
+    link
     class="add-more-button add-more-button--publication"
     @click="handleAddAnotherPublication"
   >

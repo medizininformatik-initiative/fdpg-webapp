@@ -4,10 +4,10 @@
       {{ title }}
     </h5>
     <div class="form-group--collapsed__actions">
-      <el-button v-if="!reviewMode" text data-testId="handleRemoveBiosample" @click="handleRemove(index)">
+      <el-button v-if="!reviewMode" link data-testId="handleRemoveBiosample" @click="handleRemove(index)">
         {{ $t('general.delete') }}
       </el-button>
-      <el-button text data-testId="handleEditBiosample" @click="handleEdit(index)">
+      <el-button link data-testId="handleEditBiosample" @click="handleEdit(index)">
         {{ reviewMode ? $t('general.view') : $t('general.edit') }}
       </el-button>
     </div>

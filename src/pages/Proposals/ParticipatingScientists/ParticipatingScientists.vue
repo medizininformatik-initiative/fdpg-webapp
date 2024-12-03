@@ -12,7 +12,7 @@
     <!-- v-show instead of v-for is needed for the validation props -->
     <div v-show="index === activePanelKey" class="form-group-wrapper">
       <el-button
-        text
+        link
         :disabled="reviewMode || participant.isDone"
         :data-testId="'removeParticipant__' + index"
         class="card-remove-button"
@@ -55,7 +55,7 @@
 
   <el-button
     v-if="!reviewMode"
-    text
+    link
     class="add-more-button add-more-button--another-person"
     data-testId="handleAddAnotherPerson"
     @click="handleAddAnotherPerson"

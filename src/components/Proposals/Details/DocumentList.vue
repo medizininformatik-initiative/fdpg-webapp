@@ -14,7 +14,7 @@
             <p class="upload-file__size">{{ $t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
           </div>
           <div class="upload-button-row">
-            <el-button text class="file-button" :disabled="isLoading">
+            <el-button link class="file-button" :disabled="isLoading">
               <i class="bi bi-download" aria-hidden="true" />
             </el-button>
             <el-button v-if="!isDisabled" class="file-button" :disabled="isLoading" @click.stop="handleRemove(_id)">
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <el-button v-if="documents.length > 2" text @click="handleTogglePanel()">
+    <el-button v-if="documents.length > 2" link @click="handleTogglePanel()">
       {{ isCollapsed ? $t('dashboard.showMore') : $t('dashboard.showLess') }}
     </el-button>
   </template>

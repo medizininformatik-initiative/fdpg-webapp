@@ -35,7 +35,7 @@
               <el-button
                 v-if="action && actionTitle && participantPanels[index]"
                 v-loading="isEmailSendingInProgress"
-                text
+                link
                 :disabled="isDisabled || isEmailSendingInProgress || proposalStore.currentProposal?.isLocked"
                 @click="action"
               >

@@ -4,10 +4,10 @@
       {{ title }}
     </h6>
     <div class="form-group-wrapper--collapsed__actions">
-      <el-button v-if="!reviewMode" text @click="handleRemoveParticipant(index)">
+      <el-button v-if="!reviewMode" link @click="handleRemoveParticipant(index)">
         {{ $t('general.delete') }}
       </el-button>
-      <el-button text @click="handleEditParticipant(index)">
+      <el-button link @click="handleEditParticipant(index)">
         {{ reviewMode ? $t('general.view') : $t('general.edit') }}
       </el-button>
     </div>

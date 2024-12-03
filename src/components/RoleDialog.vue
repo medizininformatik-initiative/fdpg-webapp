@@ -20,7 +20,7 @@
     </el-tag>
     <template #footer>
       <span>
-        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button type="primary" data-testid="button__confirmNewRole" @click="saveNewRole">
           {{ $t('general.editProfileModalAction') }}
         </el-button>

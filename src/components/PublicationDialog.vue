@@ -45,7 +45,7 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button text @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button type="primary" @click="createOrUpdatePublication">
           {{ $t('general.save') }}
         </el-button>
