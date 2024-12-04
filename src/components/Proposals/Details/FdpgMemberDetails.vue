@@ -358,7 +358,6 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
-    type: 'secondary',
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
@@ -396,7 +395,6 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
 
 const actionButtons = computed<IDetailActionRow[]>(() => [
   {
-    type: 'secondary',
     label: 'proposal.rejectApplication',
     testId: 'button__rejectProposal',
     action: handleRejectApplicationClick,
@@ -410,7 +408,6 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     ),
   },
   {
-    type: 'secondary',
     label: 'proposal.requestRevision',
     testId: 'button__requestRevision',
     action: handleRequestRevisionClick,
@@ -457,7 +454,6 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     isHidden: status.value !== ProposalStatus.DataResearch,
   },
   {
-    type: 'secondary',
     label: 'proposal.finishProjectDecline',
     testId: 'button__finishProjectDecline',
     action: handleFinishProjectDeclineClick,
@@ -548,7 +544,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-member-details-page {
   flex-direction: column;

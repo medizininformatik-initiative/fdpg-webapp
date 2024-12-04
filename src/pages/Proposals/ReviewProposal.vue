@@ -3,7 +3,9 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{ $t('proposal.projectDetails') }}</el-button>
+        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{
+          $t('proposal.projectDetails')
+        }}</el-button>
       </div>
     </div>
 
@@ -11,10 +13,7 @@
       <h2 v-if="!(section.kind === 'single' && section.card.cardLabel === null)">{{ $t(section.sectionLabel) }}</h2>
 
       <template v-if="section.kind === 'array' && proposalData">
-        <div
-          v-for="(sectionItem, sectionItemIdx) in (proposalData[section.key] as any[])"
-          :key="'item' + sectionItemIdx"
-        >
+        <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
           <section role="region" class="print-region">
             <h3>
               <span
@@ -214,35 +213,33 @@ onMounted(async () => {
   }
 
   counter-reset: h2 h3 h4;
-@supports not (-moz-appearance:none) {
+  @supports not (-moz-appearance: none) {
+    h1 {
+      counter-reset: h2;
+    }
 
-  h1 {
-    counter-reset: h2;
+    h2 {
+      counter-reset: h3;
+    }
+
+    h3 {
+      counter-reset: h4;
+    }
   }
 
-  h2 {
-    counter-reset: h3;
-  }
+  @supports (-moz-appearance: none) {
+    h1 {
+      counter-set: h2;
+    }
 
-  h3 {
-    counter-reset: h4;
-  }
-}
+    h2 {
+      counter-set: h3;
+    }
 
-@supports (-moz-appearance:none) {
-
-  h1 {
-    counter-set: h2;
+    h3 {
+      counter-set: h4;
+    }
   }
-
-  h2 {
-    counter-set: h3;
-  }
-
-  h3 {
-    counter-set: h4;
-  }
-}
   h2::before {
     counter-increment: h2;
     content: counter(h2) '. ';

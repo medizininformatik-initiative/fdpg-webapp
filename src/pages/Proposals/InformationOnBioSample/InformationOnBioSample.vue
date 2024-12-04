@@ -103,7 +103,7 @@
   </template>
   <el-button
     v-if="!reviewMode && !informationOnRequestedBioSamplesForm?.isDone"
-    type="text"
+    link
     class="add-more-button add-more-button--biosample"
     data-testId="handleAddAnotherBiosample"
     @click="handleAddAnotherBiosample"

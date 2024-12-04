@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @valid–ate="onValidate">
+    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
       <el-row class="abbreviation">
         <el-col :sm="18" :md="12" :lg="6">
           <FdpgFormItem prop="projectAbbreviation">
@@ -79,7 +79,7 @@
       >
         <el-button
           class="upload-button"
-          type="text"
+          link
           :disabled="isAppendixLoading || isReviewMode"
           data-test-id="general-appendix__upload__button"
         >
@@ -198,7 +198,7 @@ const openDetails = () => {
 
 const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
 const SupportedMimetype = computed(() => {
-  return Object.values(ESupportedMimetype)
+  return Object.values(ESupportedMimetype).join(',')
 })
 const proposalStore = useProposalStore()
 const commentStore = useCommentStore()
@@ -477,7 +477,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-new-proposal-page {
   counter-reset: large-label;

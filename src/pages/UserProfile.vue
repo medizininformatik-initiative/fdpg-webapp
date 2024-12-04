@@ -66,7 +66,7 @@ const handleResetPassword = () => {
     title: 'general.resetPasswordModalTitle',
     message: 'general.resetPasswordModalDescription',
     confirmButtonText: 'general.resetPasswordModalAction',
-    callback: async(decision: DecisionType) => (decision === 'confirm' ? await resetPassword() : undefined),
+    callback: async (decision: DecisionType) => (decision === 'confirm' ? await resetPassword() : undefined),
   })
 }
 
@@ -171,7 +171,7 @@ const externalOrganizationCard: IDefinitionCardVirtual<IOidcProfile & IUserFromE
 }
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .title {
   font-size: 32px;

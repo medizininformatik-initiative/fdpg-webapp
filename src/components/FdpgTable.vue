@@ -66,7 +66,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { SortDirection } from '@/types/sort-filter.types'
 import useTableAccessibility from '@/composables/use-table-accessibility'
 import { ElTable } from 'element-plus'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import FdpgTableDueDateRow from './FdpgTableDueDateRow.vue'
@@ -154,7 +154,7 @@ watch([props], () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-table {
   width: 100%;

@@ -35,7 +35,7 @@
       <el-button
         v-for="(action, actionIdx) in card.actions"
         :key="'action' + actionIdx"
-        type="text"
+        link
         size="large"
         :disabled="action.disabled?.value"
         @click="action.onClick"
@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import type { DefinitionCards, DefinitionCardsVirtual } from '@/components/Shared/definition-card.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import DefinitionCardItem from './DefinitionCardItem.vue'
@@ -70,7 +70,7 @@ const isPrint = route.matched.some((route) => route.name === 'PrintLayout')
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 [role='term'] {
   font-weight: bold;
   color: $gray-900;

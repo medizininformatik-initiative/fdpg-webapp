@@ -25,7 +25,7 @@
 import useNotifications from '@/composables/use-notifications'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { ICommentDetail } from '@/types/comment.interface'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -66,7 +66,7 @@ const toggleIsDone = async () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 .task {
   background: $blue;
   color: white;

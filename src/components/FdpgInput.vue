@@ -50,7 +50,7 @@ const handleBlur = (e) => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-input {
   &.el-input--small {

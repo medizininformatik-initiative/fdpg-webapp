@@ -30,12 +30,15 @@
 
     <template #footer>
       <span>
-        <el-button type="text" data-testId="button__closeSignDialog" @click="closeDialog">
+        <el-button link data-testId="button__closeSignDialog" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
-          :disabled="configStore.termsAndConditions[platform] == undefined || checkList.length < configStore.termsAndConditions[platform]!.terms.length"
+          :disabled="
+            configStore.termsAndConditions[platform] == undefined ||
+            checkList.length < configStore.termsAndConditions[platform]!.terms.length
+          "
           data-testid="button__confirm"
           @click="confirm"
         >
@@ -113,7 +116,7 @@ const checkList = ref([])
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .terms-dialog {
   .terms-checklist {

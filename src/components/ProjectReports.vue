@@ -2,12 +2,7 @@
   <div class="section reports--container">
     <div class="reports--table--title">
       <h2>{{ $t('proposal.reports') }} {{ `(${reports?.length})` }}</h2>
-      <el-button
-        v-if="accessForMaintenance"
-        type="text"
-        :disabled="isDisabled"
-        @click="isCreateOrEditModalVisible = true"
-      >
+      <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
         {{ $t('proposal.addReport') }}
       </el-button>
     </div>
@@ -146,8 +141,7 @@ const handleDeleteReport = (event: Event, proposalId: string) => {
     title: 'proposal.deleteReport',
     message: 'proposal.deleteReportModalDescription',
     confirmButtonText: 'proposal.acceptContractDizModalAction',
-    callback: async(decision: DecisionType) =>
-      decision === 'confirm' ? await deleteReport(proposalId) : undefined,
+    callback: async (decision: DecisionType) => (decision === 'confirm' ? await deleteReport(proposalId) : undefined),
   })
 }
 const deleteReport = async (reportId) => {
@@ -170,7 +164,7 @@ const resetForm = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 .reports--container {
   .reports--table--border {
     border-radius: 3px;

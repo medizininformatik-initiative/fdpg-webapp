@@ -45,7 +45,7 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button type="text" @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button type="primary" @click="createOrUpdatePublication">
           {{ $t('general.save') }}
         </el-button>
@@ -105,7 +105,6 @@ const createOrUpdatePublication = async () => {
 
   await publicationFormRef.value?.validate((valid) => {
     isValid = valid
-
   })
 
   if (isValid) {
@@ -118,10 +117,10 @@ const createOrUpdatePublication = async () => {
       !publication.value._id
         ? await proposalStore.createProposalPublication(props.proposalId, createOrUpdatePublicationValues.value)
         : await proposalStore.updateProposalPublication(
-          props.proposalId,
-          publication.value._id,
-          createOrUpdatePublicationValues.value,
-        )
+            props.proposalId,
+            publication.value._id,
+            createOrUpdatePublicationValues.value,
+          )
     } catch (error) {
       showErrorMessage()
     }
@@ -130,7 +129,7 @@ const createOrUpdatePublication = async () => {
 }
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .form-element {
   margin-bottom: 0;

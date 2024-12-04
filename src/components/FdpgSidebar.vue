@@ -35,8 +35,6 @@ const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 
-
-
 const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
   return authStore.singleKnownRole ? mainMenuMap[authStore.singleKnownRole] : []
 })
@@ -154,7 +152,7 @@ const secondaryMenu: SidebarMenu[] = [
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 @mixin sidebar-block {
   width: $sidebar-width !important;

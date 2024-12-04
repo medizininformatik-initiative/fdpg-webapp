@@ -1,6 +1,6 @@
 <template>
   <div class="fdpg-radio-wrapper" :class="{ 'fdpg-radio__info--visible': info }">
-    <el-radio class="fdpg-radio" :label="value" :data-testId="'radio-option_' + value + testIdExtension">
+    <el-radio class="fdpg-radio" :label="value" :data-testId="'radio-option_' + value + testIdExtension" :value="value">
       <template v-if="label">
         {{ $t(label) }}
       </template>
@@ -37,7 +37,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-radio-wrapper {
   display: inline-block;

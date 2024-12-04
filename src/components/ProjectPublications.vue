@@ -2,12 +2,7 @@
   <div class="section publications">
     <div class="table-title">
       <h2>{{ $t('proposal.publications') }} {{ `(${publications?.length})` }}</h2>
-      <el-button
-        v-if="accessForMaintenance"
-        type="text"
-        :disabled="isDisabled"
-        @click="isCreateOrEditModalVisible = true"
-      >
+      <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
         {{ $t('proposal.addPublication') }}
       </el-button>
     </div>
@@ -146,7 +141,7 @@ const resetForm = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 .publications {
   .table-border {
     border-radius: 3px;

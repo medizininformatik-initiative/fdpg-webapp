@@ -7,7 +7,7 @@
 <script setup lang="ts"></script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-form-item {
   margin-bottom: 0;

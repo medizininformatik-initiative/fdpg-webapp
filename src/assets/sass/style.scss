@@ -1,6 +1,6 @@
 /*
   Theme style
 */
-@import 'variable';
-@import 'base';
-@import 'override';
+@use 'variable' as *;
+@use 'base';
+@use 'override';

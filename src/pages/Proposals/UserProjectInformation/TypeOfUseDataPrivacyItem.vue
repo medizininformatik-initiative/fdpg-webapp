@@ -2,7 +2,7 @@
   <dt>{{ headline }}</dt>
   <dd ref="expandableText" class="privacy-text" :class="{ expanded: isExpanded }">{{ text }}</dd>
   <div class="button-row">
-    <el-button v-if="isExpandingNeeded" type="text" @click="toggleExpand">
+    <el-button v-if="isExpandingNeeded" link @click="toggleExpand">
       {{ $t(isExpanded ? 'dashboard.showLess' : 'dashboard.showMore') }}
     </el-button>
   </div>
@@ -48,7 +48,7 @@ onBeforeUnmount(() => {
 })
 </script>
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 dt::after {
   content: ':';

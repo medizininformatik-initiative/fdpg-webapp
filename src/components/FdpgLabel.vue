@@ -45,7 +45,7 @@ defineProps({
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-label {
   width: 100%;

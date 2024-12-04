@@ -16,7 +16,7 @@
           >
             <img :src="item.downloadUrl" :alt="item.fileName" width="200" />
             <div class="upload-button-row">
-              <el-button type="text" class="file-button" :disabled="isLoading">
+              <el-button link class="file-button" :disabled="isLoading">
                 <i class="bi bi-download" aria-hidden="true" />
               </el-button>
               <el-button
@@ -124,7 +124,7 @@ const handleRemove = (id: string | number) => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .upload-list {
   display: flex;

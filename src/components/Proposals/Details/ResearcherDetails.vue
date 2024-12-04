@@ -206,7 +206,6 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
-    type: 'secondary',
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
@@ -343,7 +342,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-proposal-details-page {
   flex-direction: column;

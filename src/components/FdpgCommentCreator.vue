@@ -39,10 +39,10 @@
           </div>
           <div class="comment-card-actions">
             <div class="left">
-              <el-button type="text" size="large" class="edit-btn" @click="() => handleEditClick(index)">
+              <el-button link size="large" class="edit-btn" @click="() => handleEditClick(index)">
                 {{ $t('general.edit') }}
               </el-button>
-              <el-button type="text" size="large" class="delete-btn" @click="() => handleDeleteClick(comment._id)">
+              <el-button link class="delete-btn" @click="() => handleDeleteClick(comment._id)">
                 {{ $t('general.delete') }}
               </el-button>
             </div>
@@ -147,7 +147,7 @@ const setTextareaFocus = () => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
 
 .fdpg-comment-creator {
   margin-bottom: 4em;

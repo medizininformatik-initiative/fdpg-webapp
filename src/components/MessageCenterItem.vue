@@ -29,15 +29,10 @@
     <div class="message-content">{{ message.content }}</div>
 
     <section v-if="couldAnswer || authStore.singleKnownRole === Role.FdpgMember" role="region">
-      <el-button v-if="couldAnswer" type="text" :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
+      <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
         {{ $t('proposal.answerComment') }}
       </el-button>
-      <el-button
-        v-if="authStore.singleKnownRole === Role.FdpgMember"
-        type="text"
-        :disabled="isAnswerMode"
-        @click="markAsDone"
-      >
+      <el-button v-if="authStore.singleKnownRole === Role.FdpgMember" link :disabled="isAnswerMode" @click="markAsDone">
         {{ message.isDone ? $t('proposal.markAsOpen') : $t('proposal.markAsDone') }}
       </el-button>
     </section>
@@ -50,7 +45,7 @@ import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, IAnswerDetail, ICommentDetail } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -112,7 +107,8 @@ const couldAnswer = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import 'src/assets/sass/variable';
+@use '@/assets/sass/variable' as *;
+@use 'sass:color';
 
 .message {
   border: 1px solid $gray-700;
@@ -123,7 +119,7 @@ const couldAnswer = computed(() => {
   width: 100%;
 
   &.answer-mode {
-    background: lighten($blue, 40%);
+    background: color.adjust($blue, $lightness: 40%);
   }
 
   &.message-answer {
