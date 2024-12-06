@@ -1,4 +1,4 @@
-import type { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios'
 import axios from 'axios'
 import { requestInterceptor, responseInterceptor } from './api.interceptors'
 
@@ -12,9 +12,9 @@ export class ApiClient {
     this.baseUrl = import.meta.env.VITE_API_SERVER || ''
 
     try {
-      this.timeout = parseInt(import.meta.env.VITE_API_TIMEOUT_SECONDS ?? '10000')
+      this.timeout = parseInt(import.meta.env.VITE_API_TIMEOUT_SECONDS ?? '30000')
     } catch {
-      this.timeout = 10_000
+      this.timeout = 30_000
     }
 
     this.client = axios.create({
