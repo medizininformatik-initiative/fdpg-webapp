@@ -47,6 +47,7 @@
     <InitiateContractDialog
       v-model="isInitiateContractDialogOpen"
       :locations="uacLocations"
+      :isSubmitting="isSubmitting"
       @initiate-contract="handleContractSignConfirm"
     />
   </el-container>
@@ -81,7 +82,7 @@ import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
-import type { UploadFile } from 'element-plus'
+import type { UploadFile, UploadRawFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -114,6 +115,7 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
+const isSubmitting = ref(false)
 
 const openReviewPage = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
@@ -140,10 +142,17 @@ const handleToContractingClick = () => {
 }
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
+  isSubmitting.value = true
   await initContracting(file?.raw, selectedLocations)
+  isSubmitting.value = false
 }
 
-const initContracting = async (file: File, selectedLocations: MiiLocation[]) => {
+const initContracting = async (file?: File, selectedLocations: MiiLocation[]) => {
+  if (!file) {
+    showErrorMessage(t('general.failedSubmit'))
+    return
+  }
+
   try {
     await proposalStore.initContracting(proposalId.value, file, selectedLocations)
     showSuccessMessage(t('general.submitted'))

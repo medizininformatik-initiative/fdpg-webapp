@@ -25,7 +25,7 @@
         :hide-file-list="true"
         :file-list="uploadsForType"
         :is-loading="false"
-        :is-disabled="false"
+        :is-disabled="isSubmitting"
         @change="handleUploadFile"
       >
         <el-button v-if="!contractDraft" class="upload-button" link>
@@ -55,7 +55,7 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="!contractDraft || !selectedLocations?.length"
+          :disabled="!contractDraft || !selectedLocations?.length || isSubmitting"
           data-testid="button__initiateContract"
           @click="initiateContract"
         >
@@ -89,6 +89,10 @@ const props = defineProps({
   },
   locations: {
     type: Array as PropType<MiiLocation[]>,
+    required: true,
+  },
+  isSubmitting: {
+    type: Boolean,
     required: true,
   },
 })
