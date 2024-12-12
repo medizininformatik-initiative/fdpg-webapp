@@ -212,10 +212,6 @@
       "de": "Titel",
       "en": "Title"
     },
-    "applicantId": {
-      "de": "Antragsteller-ID",
-      "en": "Applicant ID"
-    },
     "additionalInformation": {
       "de": "Zusätzliche Informationen",
       "en": "Additional information"
@@ -865,10 +861,6 @@
     "appendix": {
       "de": "Anhang",
       "en": "Appendix"
-    },
-    "appendixId": {
-      "de": "Anhangs-ID",
-      "en": "Appendix ID"
     },
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": {
       "de": "Bitte hängen Sie den Nachweis über das Ethikvotum dem Antrag an.",

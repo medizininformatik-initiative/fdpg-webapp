@@ -53,7 +53,6 @@
     "resetPasswordModalAction": "Zurücksetzen",
     "date": "Datum",
     "title": "Titel",
-    "applicantId": "Antragsteller-ID",
     "additionalInformation": "Zusätzliche Informationen"
   },
   "sidebar": {
@@ -224,7 +223,6 @@
     "ethicsVoteNumber": "Ethikvotum Nummer",
     "voteFromDate": "Votum vom Datum",
     "appendix": "Anhang",
-    "appendixId": "Anhangs-ID",
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Bitte hängen Sie den Nachweis über das Ethikvotum dem Antrag an.",
     "chooseAFile": "Datei auswählen",
     "foundation": "Begründung",
