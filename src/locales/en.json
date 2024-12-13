@@ -53,7 +53,6 @@
     "resetPasswordModalAction": "Reset",
     "date": "Date",
     "title": "Title",
-    "applicantId": "Applicant ID",
     "additionalInformation": "Additional information"
   },
   "sidebar": {
@@ -224,7 +223,6 @@
     "ethicsVoteNumber": "Ethics vote number",
     "voteFromDate": "Vote from date",
     "appendix": "Appendix",
-    "appendixId": "Appendix ID",
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Please attach proof of the ethics vote to the application",
     "chooseAFile": "Choose a file",
     "foundation": "Foundation",

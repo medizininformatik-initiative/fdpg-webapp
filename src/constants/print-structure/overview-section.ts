@@ -35,11 +35,6 @@ const overviewProjectCard: IDefinitionCardVirtual<IVirtualWrap<IOverview>, 'cont
       size: 12,
       definitions: [[{ key: 'proposalId' }]],
     },
-    {
-      label: 'general.applicantId',
-      size: 12,
-      definitions: [[{ key: 'ownerId' }]],
-    },
   ],
 }
 
@@ -70,11 +65,6 @@ const overviewAppendixCard: IDefinitionCardArrayVirtual<IVirtualWrap<IOverview>,
       label: 'general.fileName',
       size: 24,
       definitions: [[{ key: 'fileName' }]],
-    },
-    {
-      label: 'proposal.appendixId',
-      size: 24,
-      definitions: [[{ key: '_id' }]],
     },
   ],
 }
