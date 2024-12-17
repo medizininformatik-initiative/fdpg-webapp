@@ -497,8 +497,12 @@ const waitForValidation = async () => {
 
   if (formRef.value) {
     const formRules = rules.value
-
     const allFields = formRef.value.fields
+
+    if (!allFields) {
+      allFieldsValid.value = false
+      return
+    }
 
     const requiredFields = allFields.filter((field) => {
       const appliedRules = {
@@ -506,7 +510,7 @@ const waitForValidation = async () => {
         formRules: getFormRuleArrayFromPath(formRules, field.prop as string),
       }
 
-      return [...appliedRules.componentRules, ...appliedRules.formRules].filter((rule) => rule.required).length > 0
+      return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
     })
 
     await Promise.all(
@@ -514,15 +518,14 @@ const waitForValidation = async () => {
         (field) =>
           new Promise<void>((resolve) => {
             if (field.validateState !== 'validating') {
-              resolve() // Resolve immediately if not validating
+              resolve()
             } else {
-              // Watch the field's validateState
               const unwatch = watch(
                 () => field.validateState,
                 (newState) => {
                   if (newState === 'success' || newState === 'error') {
-                    unwatch() // Stop watching once resolved
-                    resolve() // Resolve the promise
+                    unwatch()
+                    resolve()
                   }
                 },
               )
