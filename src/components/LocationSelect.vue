@@ -1,15 +1,6 @@
 <template>
-  <section ref="select" class="location-select">
-    <div
-      class="content"
-      role="button"
-      tabindex="0"
-      :class="{ 'no-pointer': openState }"
-      @click.stop="toggle"
-      @keydown.enter="toggle()"
-    >
-      {{ placeholder }}
-    </div>
+  <section ref="select" class="el-autocomplete location-select">
+    <div class="el-input el-input-group el-input-group--append"></div>
     <el-select
       v-model="selection"
       placeholder=" "
@@ -28,6 +19,17 @@
         />
       </el-option-group>
     </el-select>
+
+    <div
+      class="content el-input-group__append"
+      role="button"
+      tabindex="0"
+      :class="{ 'no-pointer': openState }"
+      @click.stop="toggle"
+      @keydown.enter="toggle()"
+    >
+      {{ placeholder }}
+    </div>
   </section>
 </template>
 
@@ -115,34 +117,40 @@ const handleDropDownChange = (value: boolean) => {
 .location-select {
   position: relative;
   display: flex;
+  height: fit-content;
   justify-content: flex-end;
 
   .el-input__inner {
     height: auto;
   }
 
-  :deep(.el-input__suffix) {
-    display: none;
-  }
-
   :deep(.el-select) {
     pointer-events: none;
+
+    .el-select__suffix {
+      display: none;
+    }
+
     .el-input__wrapper {
       box-shadow: none !important;
       border: none !important;
     }
+
+    .el-tag > i {
+      display: none;
+    }
   }
 
-  :deep(.el-select__tags > span) {
+  :deep(.el-select__tags > i) {
     display: none;
   }
 
   .content {
-    position: absolute;
-    z-index: 2;
-    transform: translate(0, 0.2rem);
-    line-height: 47px;
+    width: 200px;
     border-radius: 5px;
+
+    overflow-wrap: break-word;
+    text-wrap: auto;
 
     padding: 0 1rem;
     background: $gray-900;
