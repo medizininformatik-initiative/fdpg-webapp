@@ -81,25 +81,17 @@ const selection = computed({
 
     let result: MiiLocation[] = []
 
-    console.log({ values, wasOldVirtualAll, isVirtualAll })
-
     if (wasOldVirtualAll && values.length === 0) {
-      console.log('1')
       result = []
     } else if (wasOldVirtualAll) {
-      console.log('2')
       result = selectionValues.filter((optionVal) => !values.includes(optionVal))
     } else if (isVirtualAll || values.length === selectionValues.length - 1) {
-      console.log('3')
       result = [MiiLocation.VirtualAll]
     } else {
-      console.log('4')
       result = values
     }
 
     vModel.value = result
-
-    console.log({ result, v: vModel.value })
   },
 })
 

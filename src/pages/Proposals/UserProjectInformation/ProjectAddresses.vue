@@ -3,15 +3,6 @@
   <el-card class="form-group">
     <FdpgFormItem prop="userProject.addressees.desiredLocations">
       <FdpgLabel info="proposal.desiredLocationsInfo" html-for="proposal.desiredLocations" />
-      <FdpgSelect
-        v-model="addresseesForm.desiredLocations"
-        data-testId="addresseesForm.desiredLocations"
-        test-id-extension="__addresseesForm.desiredLocations"
-        multiple
-        placeholder="proposal.pleaseSelectYourLocations"
-        :options="locationOptions"
-        :disabled="reviewMode || addresseesForm.isDone"
-      />
       <LocationSelect
         v-model="addresseesForm.desiredLocations"
         :disabled="reviewMode || addresseesForm.isDone"
@@ -20,6 +11,7 @@
         :minimumSelection="minimumSelection"
         allOptionLabel="proposal.virtualAllLocations"
         style="width: 100%"
+        :closable="false"
       />
     </FdpgFormItem>
   </el-card>
@@ -51,14 +43,6 @@ const props = defineProps({
 })
 
 const minimumSelection: MiiLocation[] = [] // [MiiLocation.VirtualAll]
-
-const locationOptions = [
-  {
-    label: MII_LOCATIONS.VIRTUAL_ALL.display,
-    value: MiiLocation.VirtualAll,
-  },
-  ...SORTED_ACTIVE_LOCATION_OPTIONS,
-]
 
 const emit = defineEmits(['update:modelValue'])
 
