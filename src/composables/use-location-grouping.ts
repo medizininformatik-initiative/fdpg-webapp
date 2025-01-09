@@ -1,5 +1,5 @@
 import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
-import type { TranslationSchema} from '@/plugins/i18n';
+import type { TranslationSchema } from '@/plugins/i18n'
 import { i18n } from '@/plugins/i18n'
 import { MiiLocation } from '@/types/location.enum'
 
@@ -15,7 +15,7 @@ interface Option {
 
 const { t } = i18n.global
 
-export default (allGroupLabel?: TranslationSchema, allOptionLabel?: TranslationSchema) => {
+export default (allGroupLabel?: TranslationSchema, allOptionLabel?: string) => {
   const virtualAllOption = {
     label: t(allOptionLabel || 'proposal.commentVisibleForAll'),
     value: MiiLocation.VirtualAll,

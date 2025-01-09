@@ -215,6 +215,10 @@
     "additionalInformation": {
       "de": "Zusätzliche Informationen",
       "en": "Additional information"
+    },
+    "selectAll": {
+      "de": "Alle auswählen",
+      "en": "Select all"
     }
   },
   "sidebar": {
@@ -2097,6 +2101,10 @@
     "revertVote": {
       "de": "Zurücksetzen",
       "en": "Revert vote"
+    },
+    "virtualAllLocations": {
+      "de": "Alle Standorte",
+      "en": "All Locations"
     }
   },
   "roles": {

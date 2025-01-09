@@ -53,7 +53,8 @@
     "resetPasswordModalAction": "Zurücksetzen",
     "date": "Datum",
     "title": "Titel",
-    "additionalInformation": "Zusätzliche Informationen"
+    "additionalInformation": "Zusätzliche Informationen",
+    "selectAll": "Alle auswählen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -531,7 +532,8 @@
     "checkNotesPlaceHolder": "Fügen Sie Ihre Notizen hinzu...",
     "revertLocationModalTitle": "Möchten Sie das Votum wirklich zurücksetzen?",
     "revertLocationModalDescription": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
-    "revertVote": "Zurücksetzen"
+    "revertVote": "Zurücksetzen",
+    "virtualAllLocations": "Alle Standorte"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
