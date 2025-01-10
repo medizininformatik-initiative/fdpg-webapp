@@ -11,6 +11,7 @@ import useNotifications from '@/composables/use-notifications'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/types/route-name.enum'
 import type { ValidateFieldsError } from 'async-validator'
+import FdpgFormItem from '@/components/FdpgFormItem.vue'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
@@ -74,6 +75,8 @@ const mountComponent = (withPinia = true) => {
         'el-row': false,
         'el-col': false,
         'el-button': false,
+        'el-card': false,
+        'el-form-item': false,
       },
       mocks: {
         params: { id: 'proposalId' }, // Mock router params
@@ -89,6 +92,8 @@ type VmType = {
   handleSaveDraft: () => Promise<void>
   handleSubmit: () => Promise<void>
   isTermsDialogOpen: boolean
+  allFieldsValid: boolean
+  isValidToSubmit: boolean
 }
 
 describe('UserProjectInformation.vue', () => {
@@ -120,6 +125,7 @@ describe('UserProjectInformation.vue', () => {
       commentStore = vi.mocked(useCommentStore())
       proposalStore.currentProposal = proposal
     })
+
     it('renders', () => {
       expect(wrapper).toBeTruthy()
     })
@@ -386,6 +392,32 @@ describe('UserProjectInformation.vue', () => {
               },
             ),
         }
+        ;(wrapper.vm as any).formRef = {
+          validate: vi.fn().mockImplementation((cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+            cb(false, {
+              projectTitle: [
+                {
+                  message: 'Project title is required',
+                  field: 'projectTitle',
+                },
+              ],
+            })
+          }),
+          validateField: vi
+            .fn()
+            .mockImplementation(
+              (fields: string[], cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+                cb(false, {
+                  projectTitle: [
+                    {
+                      message: 'Project title is required',
+                      field: 'projectTitle',
+                    },
+                  ],
+                })
+              },
+            ),
+        }
       })
 
       it('shows an error message on draft saving', async () => {
@@ -396,17 +428,36 @@ describe('UserProjectInformation.vue', () => {
       })
 
       it('shows an error message on submit', async () => {
+        wrapper.vm.isValidToSubmit = true
+        await wrapper.vm.$nextTick()
+
         const button = getButtonByText('proposal.submitApplication')
+        expect(button.attributes('disabled')).toBeUndefined()
         button.trigger('click')
         expect(showErrorMessage).toHaveBeenCalledTimes(1)
       })
 
       it('disables the submit button if it is not valid', async () => {
+        wrapper.vm.allFieldsValid = false
+        await wrapper.vm.$nextTick()
+
         const formComponent = wrapper.findComponent({ name: 'ElForm' })
         await formComponent.vm.$emit('validate', '', false)
         await wrapper.vm.$nextTick() // Wait for state updates
         const button = getButtonByText('proposal.submitApplication')
         expect(button.attributes('aria-disabled')).toBe('true')
+      })
+
+      it('disables the submit button if theres no id set', async () => {
+        const formComponent = wrapper.findComponent({ name: 'ElForm' })
+        await formComponent.vm.$emit('validate', '', false)
+        await wrapper.vm.$nextTick() // Wait for state updates
+
+        wrapper.vm.allFieldsValid = true
+        await wrapper.vm.$nextTick()
+
+        const button = getButtonByText('proposal.submitApplication')
+        expect(button.attributes('aria-disabled')).toBe(proposalId ? 'false' : 'true')
       })
     })
 
