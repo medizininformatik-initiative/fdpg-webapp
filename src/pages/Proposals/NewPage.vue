@@ -210,6 +210,7 @@ const fileList = ref([])
 const bypassDebounce = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
+const allFieldsValid = ref<boolean>(false)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
@@ -387,8 +388,8 @@ const handleSaveDraft = async () => {
   bypassDebounce.value = false
 }
 
-const onValidate = (_field: FormItemProp, isValid: boolean) => {
-  isValidToSubmit.value = isValid
+const onValidate = async () => {
+  await waitForValidation()
 }
 
 const authStore = useAuthStore()
@@ -409,8 +410,14 @@ const setUpPage = async () => {
     },
   ])
 
+  const isEditable =
+    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+    proposalStore.currentProposal?.status === ProposalStatus.Rework
+  if (proposalForm.value._id && isEditable) {
+    formRef.value?.validate(() => {})
+  }
+
   await nextTick()
-  isValidToSubmit.value = true
 }
 
 const scrollToAnchor = async () => {
@@ -473,7 +480,98 @@ onMounted(async () => {
       return
     }
   }
+
+  watch(() => proposalForm.value, waitForValidation, { deep: true })
+  await waitForValidation()
+
+  watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
+  setValidationStatus()
 })
+
+const setValidationStatus = () => {
+  isValidToSubmit.value = allFieldsValid.value && !!proposalId.value
+}
+
+const waitForValidation = async () => {
+  await nextTick()
+
+  if (formRef.value) {
+    const formRules = rules.value
+    const allFields = formRef.value.fields
+
+    if (!allFields) {
+      allFieldsValid.value = false
+      return
+    }
+
+    const requiredFields = allFields.filter((field) => {
+      const appliedRules = {
+        componentRules: getRulesArray(field.rules),
+        formRules: getFormRuleArrayFromPath(formRules, field.prop as string),
+      }
+
+      return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
+    })
+
+    await Promise.all(
+      allFields.map(
+        (field) =>
+          new Promise<void>((resolve) => {
+            if (field.validateState !== 'validating') {
+              resolve()
+            } else {
+              const unwatch = watch(
+                () => field.validateState,
+                (newState) => {
+                  if (newState === 'success' || newState === 'error') {
+                    unwatch()
+                    resolve()
+                  }
+                },
+              )
+            }
+          }),
+      ),
+    )
+
+    allFieldsValid.value =
+      requiredFields.every((field) => field.validateState === 'success') &&
+      allFields.every((field) => field.validateState !== 'error')
+  }
+}
+
+const getRulesArray = (rules: any): any[] => {
+  if (!rules) return []
+  return Array.isArray(rules) ? rules.map((rule) => rule) : [rules]
+}
+
+const getFormRuleArrayFromPath = (obj: Record<string, any>, path?: string) => {
+  if (!obj || !path) return []
+
+  // Split the path into keys
+  const keys = path.split('.')
+
+  let current = obj
+
+  for (const key of keys) {
+    if (current[key] === undefined) {
+      // Path not fully matched
+      return []
+    }
+    current = current[key]
+  }
+
+  // If the final value is an array, return it
+  if (Array.isArray(current)) {
+    return current
+  }
+
+  if (!current) {
+    return []
+  }
+
+  return [current]
+}
 </script>
 
 <style lang="scss">
