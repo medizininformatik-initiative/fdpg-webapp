@@ -1,7 +1,7 @@
 import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
-import { i18n } from '@/plugins/i18n'
 import { MiiLocation } from '@/types/location.enum'
+import { useI18n } from 'vue-i18n'
 
 interface GroupOption {
   label?: string
@@ -13,7 +13,7 @@ interface Option {
   value: string
 }
 
-const { t } = i18n.global
+const { t } = useI18n()
 
 export default (allGroupLabel?: TranslationSchema, allOptionLabel?: string) => {
   const virtualAllOption = {

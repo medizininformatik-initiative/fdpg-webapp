@@ -4,13 +4,18 @@ import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import useLocationGrouping from '../use-location-grouping'
 import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
-import { i18n } from '@/plugins/i18n'
 import { MiiLocation } from '@/types/location.enum'
 import type { MockedObject } from 'vitest'
 
+vi.mock('vue-i18n', () => ({
+  createI18n: vi.fn(),
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockImplementation((key: string) => key),
+  })),
+}))
+
 describe('UseLocationGrouping', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
-  const { t } = i18n.global
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -27,13 +32,13 @@ describe('UseLocationGrouping', () => {
         label: undefined,
         options: [
           {
-            label: t('proposal.commentVisibleForAll'),
+            label: 'proposal.commentVisibleForAll',
             value: MiiLocation.VirtualAll,
           },
         ],
       },
       {
-        label: t('general.locations'),
+        label: 'general.locations',
         options: SORTED_ACTIVE_LOCATION_OPTIONS,
       },
     ])

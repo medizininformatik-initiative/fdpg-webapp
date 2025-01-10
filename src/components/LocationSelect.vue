@@ -3,7 +3,6 @@
     <el-select
       v-model="selection"
       :placeholder="$t(placeholder)"
-      :disabled="disabled"
       popper-class="location-dropdown"
       :multiple="true"
       @visible-change="handleDropDownChange"
@@ -17,6 +16,7 @@
           :key="item.value"
           :label="item.label"
           :value="item.value"
+          :disabled="disabled"
           :data-testId="'option__' + item.value + testIdExtension"
           :class="vModel.includes(MiiLocation.VirtualAll) ? 'selected' : ''"
         />
@@ -31,7 +31,6 @@ import { MiiLocation } from '@/types/location.enum'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
-import type { TranslationSchema } from '@/plugins/i18n'
 
 const props = defineProps({
   modelValue: {

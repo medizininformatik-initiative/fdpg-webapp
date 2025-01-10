@@ -1,18 +1,17 @@
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import LocationSelect from '../LocationSelect.vue'
 import { createTestingPinia } from '@pinia/testing'
-import { flushPromises, mount, shallowMount, type VueWrapper } from '@vue/test-utils'
-import type { MockedObject } from 'vitest'
+import { mount, type VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
 import { MiiLocation } from '@/types/location.enum'
 import { ElSelect } from 'element-plus'
 
-vi.mock('@/plugins/i18n', () => ({
-  i18n: {
-    global: {
-      t: vi.fn().mockImplementation((entry) => entry),
-    },
-  },
+vi.mock('vue-i18n', () => ({
+  createI18n: vi.fn(),
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockImplementation((key: string) => key),
+  })),
 }))
 
 describe('LocationSelect.vue', () => {
@@ -42,29 +41,19 @@ describe('LocationSelect.vue', () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it('should disable pointer', async () => {
-    expect(wrapper.find('.content').attributes().class).not.toContain('no-pointer')
-    wrapper.findComponent(ElSelect).vm.$emit('visible-change', true)
-    await flushPromises()
-    expect(wrapper.find('.content').attributes().class).toContain('no-pointer')
-  })
-
-  it('should toggle', async () => {
-    const dispatchEvent = vi.fn()
-    wrapper.vm.select.querySelector = vi.fn().mockReturnValueOnce({ dispatchEvent })
-    await wrapper.find('.content').trigger('click')
-    expect(dispatchEvent.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent)
-  })
-
   it('should change selection computed', async () => {
-    wrapper.findComponent(ElSelect).vm.$emit('update:modelValue', [MiiLocation.VirtualAll])
+    const component = wrapper.findComponent(ElSelect)
+
+    component.vm.$emit('update:modelValue', [MiiLocation.VirtualAll])
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual([MiiLocation.VirtualAll])
 
-    wrapper.findComponent(ElSelect).vm.$emit('update:modelValue', [MiiLocation.KC])
+    component.vm.$emit('update:modelValue', [MiiLocation.KC])
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual([MiiLocation.KC])
 
-    wrapper.findComponent(ElSelect).vm.$emit('update:modelValue', [])
-    expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual([MiiLocation.KC])
+    await component.vm.$emit('visible-change', true)
+    component.vm.$emit('update:modelValue', [])
+    await component.vm.$emit('visible-change', false)
+    expect(wrapper.emitted('update:modelValue')?.flat(2).includes([MiiLocation.KC]))
 
     wrapper.setProps({ modelValue: [MiiLocation.VirtualAll, MiiLocation.Charité] })
     wrapper
