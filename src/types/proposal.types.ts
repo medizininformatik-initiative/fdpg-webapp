@@ -125,7 +125,6 @@ export interface IEthicVote extends WithIdAndIsDone {
   ethicsCommittee: string
   ethicsVoteNumber: string
   voteFromDate: string
-  admitReputationOfAttachment: boolean
 }
 
 export interface IResourceAndRecontact extends WithIdAndIsDone {
