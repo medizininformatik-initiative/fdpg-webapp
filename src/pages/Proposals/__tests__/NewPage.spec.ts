@@ -29,6 +29,19 @@ vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockImplementation((key: string) => key),
   })),
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
+}))
+
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
 }))
 
 vi.mock('vue-router', () => {
@@ -111,16 +124,14 @@ describe('UserProjectInformation.vue', () => {
       expect(wrapper).toBeTruthy()
     })
 
-
     it('sets the currentProposal', () => {
       expect(proposalStore.setCurrentProposal).toHaveBeenCalledWith('proposalId')
     })
 
     it('fetches the comments', async () => {
-
-      vi.spyOn(commentStore, 'fetchAll').mockResolvedValue();
-      await wrapper.vm.$nextTick();
-      console.log('Called with arguments:', commentStore.fetchAll.mock.calls);
+      vi.spyOn(commentStore, 'fetchAll').mockResolvedValue()
+      await wrapper.vm.$nextTick()
+      console.log('Called with arguments:', commentStore.fetchAll.mock.calls)
 
       expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
     })
@@ -349,32 +360,32 @@ describe('UserProjectInformation.vue', () => {
 
         wrapper = mountComponent(false) as any
         await flushPromises()
-          ; (wrapper.vm as any).formRef = {
-            validate: vi.fn().mockImplementation((cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
-              cb(false, {
-                projectTitle: [
-                  {
-                    message: 'Project title is required',
-                    field: 'projectTitle',
-                  },
-                ],
-              })
-            }),
-            validateField: vi
-              .fn()
-              .mockImplementation(
-                (fields: string[], cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
-                  cb(false, {
-                    projectTitle: [
-                      {
-                        message: 'Project title is required',
-                        field: 'projectTitle',
-                      },
-                    ],
-                  })
+        ;(wrapper.vm as any).formRef = {
+          validate: vi.fn().mockImplementation((cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+            cb(false, {
+              projectTitle: [
+                {
+                  message: 'Project title is required',
+                  field: 'projectTitle',
                 },
-              ),
-          }
+              ],
+            })
+          }),
+          validateField: vi
+            .fn()
+            .mockImplementation(
+              (fields: string[], cb: (isValid: boolean, invalidField: ValidateFieldsError) => void) => {
+                cb(false, {
+                  projectTitle: [
+                    {
+                      message: 'Project title is required',
+                      field: 'projectTitle',
+                    },
+                  ],
+                })
+              },
+            ),
+        }
       })
 
       it('shows an error message on draft saving', async () => {
@@ -391,13 +402,12 @@ describe('UserProjectInformation.vue', () => {
       })
 
       it('disables the submit button if it is not valid', async () => {
-        const formComponent = wrapper.findComponent({ name: 'ElForm' });
-        await formComponent.vm.$emit('validate', '', false);
-        await wrapper.vm.$nextTick(); // Wait for state updates
-        const button = getButtonByText('proposal.submitApplication');
-        expect(button.attributes('aria-disabled')).toBe('true');
-      });
-
+        const formComponent = wrapper.findComponent({ name: 'ElForm' })
+        await formComponent.vm.$emit('validate', '', false)
+        await wrapper.vm.$nextTick() // Wait for state updates
+        const button = getButtonByText('proposal.submitApplication')
+        expect(button.attributes('aria-disabled')).toBe('true')
+      })
     })
 
     describe('Fallback handler for not submitting in invalid status', () => {

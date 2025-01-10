@@ -3,15 +3,18 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
 import useLocationGrouping from '../use-location-grouping'
+import { i18n } from '@/plugins/i18n'
 import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import { MiiLocation } from '@/types/location.enum'
 import type { MockedObject } from 'vitest'
 
-vi.mock('vue-i18n', () => ({
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
   createI18n: vi.fn(),
-  useI18n: vi.fn().mockImplementation(() => ({
-    t: vi.fn().mockImplementation((key: string) => key),
-  })),
 }))
 
 describe('UseLocationGrouping', () => {
@@ -26,19 +29,22 @@ describe('UseLocationGrouping', () => {
 
   it('should have a default value if it does not have any entries', async () => {
     const { groupOptions } = useLocationGrouping()
+
+    const { t } = i18n.global
+
     expect(groupOptions).toBeDefined()
     expect(groupOptions).toEqual([
       {
         label: undefined,
         options: [
           {
-            label: 'proposal.commentVisibleForAll',
+            label: t('proposal.commentVisibleForAll'),
             value: MiiLocation.VirtualAll,
           },
         ],
       },
       {
-        label: 'general.locations',
+        label: t('general.locations'),
         options: SORTED_ACTIVE_LOCATION_OPTIONS,
       },
     ])
