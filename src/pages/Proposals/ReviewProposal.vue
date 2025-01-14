@@ -10,18 +10,19 @@
     </div>
 
     <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
-      <h2 v-if="!(section.kind === 'single' && section.card.cardLabel === null)">{{ $t(section.sectionLabel) }}</h2>
-
       <template v-if="section.kind === 'array' && proposalData">
         <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
           <section role="region" class="print-region">
-            <h3>
-              <span
-                v-for="(labelKey, labelKeyIdx) in section.arrayLabel"
-                :key="'h3' + sectionItemIdx + 'Key' + labelKeyIdx"
-                >{{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}</span
-              >
-            </h3>
+            <ReviewAreaLabel
+              :section-values="section.mapping.map((mapping) => sectionItem[mapping.key].isDone)"
+              :section-ids="section.mapping.map((mapping) => sectionItem[mapping.key]._id)"
+              headline="h3"
+              :title="
+                section.arrayLabel
+                  .map((labelKey) => (sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key) as string)
+                  .reduce((prev, curr) => prev + ' ' + curr)
+              "
+            />
 
             <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
               <ReviewCard
@@ -30,6 +31,7 @@
                 :card="card"
                 headline="h4"
                 :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
+                hide-review-checkbox
               ></ReviewCard>
             </template>
           </section>
@@ -47,6 +49,15 @@
       </section>
 
       <template v-else-if="section.kind === 'object' && proposalData">
+        <ReviewAreaLabel
+          v-if="section.key === 'applicant' || section.key === 'projectResponsible'"
+          class="form-label-mt-4"
+          :section-values="section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key].isDone)"
+          :section-ids="section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key]._id)"
+          headline="h2"
+          :title="$t(section.sectionLabel)"
+        />
+
         <section
           v-for="(card, cardIdx) in section.mapping"
           :key="'objectCard' + cardIdx"
@@ -58,6 +69,7 @@
             :dto="proposalData[section.key]"
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
+            :hide-review-checkbox="section.key === 'applicant' || section.key === 'projectResponsible'"
           ></ReviewCard>
         </section>
       </template>
@@ -78,6 +90,7 @@
 <script setup lang="ts">
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import ReviewLabel from '@/components/ReviewLabel.vue'
+import ReviewAreaLabel from '@/components/ReviewAreaLabel.vue'
 import type { DefinitionSection } from '@/components/Shared/definition-card.types'
 import useUpload from '@/composables/use-upload'
 import { participantSection } from '@/constants/print-structure/participant-section'
@@ -139,6 +152,9 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     proposalData.value = transformForm(data) as IProposal
+
+    console.log({ proposalData })
+
     const lastDashboard = layoutStore.lastDashboard
     layoutStore.setBreadcrumbs([
       {
@@ -263,6 +279,13 @@ onMounted(async () => {
     span:not(:last-child):after {
       content: ' ';
     }
+  }
+
+  .inline-review-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 }
 </style>

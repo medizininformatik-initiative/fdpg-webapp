@@ -1,13 +1,13 @@
 <template>
-  <section :id="sectionId" class="review-label">
+  <section :id="sectionIds?.map((_id) => _id as string).reduce((prev, curr) => prev + '_' + curr)" class="review-label">
     <component :is="headline" v-if="title">{{ $t(title) }}</component>
 
     <el-checkbox
       v-if="
         authStore.singleKnownRole === Role.FdpgMember &&
-        sectionId &&
         proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
-        !hideReviewCheckbox
+        sectionIds &&
+        sectionIds.length > 0
       "
       v-model="checkboxValue"
       v-loading="isCheckboxLoading"
@@ -35,28 +35,24 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
-  isDone: {
-    type: Boolean,
-    default: false,
-  },
-  sectionId: {
-    type: String,
-    default: undefined,
-  },
   headline: {
     type: String,
     default: 'h3',
   },
-  hideReviewCheckbox: {
-    type: Boolean,
-    default: false,
+  sectionIds: {
+    type: Array<String>,
+    default: undefined,
+  },
+  sectionValues: {
+    type: Array<Boolean>,
+    default: undefined,
   },
 })
 
 const emit = defineEmits(['update:isDone'])
 
 const _isDone = ref()
-_isDone.value = props.isDone.valueOf()
+_isDone.value = props.sectionValues?.map((val) => val as boolean).every((val) => val) ?? false
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id as string)
@@ -72,10 +68,17 @@ const checkboxValue = computed({
     }
 
     isCheckboxLoading.value = true
+
     try {
-      if (proposalId.value && props.sectionId) {
-        await proposalStore.markSectionAsDone(proposalId.value, props.sectionId, value)
+      if (proposalId.value && props.sectionIds && props.sectionIds?.length > 0) {
+        await Promise.all(
+          props.sectionIds
+            .filter((sectionId) => sectionId)
+            .map((sectionId) => sectionId as string)
+            .map((sectionId) => proposalStore.markSectionAsDone(proposalId.value, sectionId, value)),
+        )
       }
+
       _isDone.value = value
       emit('update:isDone', value)
     } catch (error) {
