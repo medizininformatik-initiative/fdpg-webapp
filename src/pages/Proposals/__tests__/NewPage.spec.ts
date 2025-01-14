@@ -137,7 +137,6 @@ describe('UserProjectInformation.vue', () => {
     it('fetches the comments', async () => {
       vi.spyOn(commentStore, 'fetchAll').mockResolvedValue()
       await wrapper.vm.$nextTick()
-      console.log('Called with arguments:', commentStore.fetchAll.mock.calls)
 
       expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
     })
