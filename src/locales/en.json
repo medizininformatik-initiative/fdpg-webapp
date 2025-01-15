@@ -53,7 +53,8 @@
     "resetPasswordModalAction": "Reset",
     "date": "Date",
     "title": "Title",
-    "additionalInformation": "Additional information"
+    "additionalInformation": "Additional information",
+    "selectAll": "Select all"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -530,7 +531,8 @@
     "checkNotesPlaceHolder": "Add your notes...",
     "revertLocationModalTitle": "Do you really want to revert the location vote?",
     "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
-    "revertVote": "Revert vote"
+    "revertVote": "Revert vote",
+    "virtualAllLocations": "All Locations"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

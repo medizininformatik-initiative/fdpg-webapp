@@ -11,7 +11,12 @@
 
   <section role="region" class="action-row">
     <div class="comment-field-actions">
-      <el-button type="primary" class="edit-button" :disabled="!comment || comment.trim().length < 2 || isDisabled" @click="handleSubmit">
+      <el-button
+        type="primary"
+        class="edit-button"
+        :disabled="!comment || comment.trim().length < 2 || isDisabled"
+        @click="handleSubmit"
+      >
         <template v-if="edit">
           {{ $t('general.save') }}
         </template>
@@ -23,6 +28,7 @@
     </div>
     <LocationSelect
       v-if="isMessageToLocation"
+      style="width: 580px"
       v-model="locationSelection"
       :placeholder="visibility || ''"
       :minimum-selection="minimumSelection"
@@ -34,7 +40,7 @@
 import FdpgInput from '@/components/FdpgInput.vue'
 import { FdpgInputSize } from '@/types/component.types'
 import { useVModel } from '@vueuse/core'
-import LocationSelect from './LocationSelect.vue'
+import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { MiiLocation } from '@/types/location.enum'

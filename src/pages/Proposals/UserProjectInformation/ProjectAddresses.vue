@@ -3,14 +3,15 @@
   <el-card class="form-group">
     <FdpgFormItem prop="userProject.addressees.desiredLocations">
       <FdpgLabel info="proposal.desiredLocationsInfo" html-for="proposal.desiredLocations" />
-      <FdpgSelect
+      <LocationSelect
         v-model="addresseesForm.desiredLocations"
-        data-testId="addresseesForm.desiredLocations"
-        test-id-extension="__addresseesForm.desiredLocations"
-        multiple
-        placeholder="proposal.pleaseSelectYourLocations"
-        :options="locationOptions"
         :disabled="reviewMode || addresseesForm.isDone"
+        testIdExtension="__addresseesForm.desiredLocations"
+        placeholder="proposal.pleaseSelectYourLocations"
+        :minimumSelection="minimumSelection"
+        allOptionLabel="proposal.virtualAllLocations"
+        style="width: 100%"
+        :closable="false"
       />
     </FdpgFormItem>
   </el-card>
@@ -22,11 +23,13 @@
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
+import LocationSelect from '@/components/LocationSelect.vue'
 import { MII_LOCATIONS, SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import { MiiLocation } from '@/types/location.enum'
 import type { IAddressees } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
+
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IAddressees>,
@@ -39,13 +42,8 @@ const props = defineProps({
   },
 })
 
-const locationOptions = [
-  {
-    label: MII_LOCATIONS.VIRTUAL_ALL.display,
-    value: MiiLocation.VirtualAll,
-  },
-  ...SORTED_ACTIVE_LOCATION_OPTIONS,
-]
+const minimumSelection: MiiLocation[] = [] // [MiiLocation.VirtualAll]
+
 const emit = defineEmits(['update:modelValue'])
 
 const addresseesForm = useVModel(props, 'modelValue', emit)

@@ -14,6 +14,14 @@ vi.mock('vue-i18n', () => ({
   })),
 }))
 
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
+}))
+
 const mountComponent = () => {
   createTestingPinia()
   const modelValue: IUserProject = JSON.parse(JSON.stringify(mockProposal.userProject))

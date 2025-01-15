@@ -46,6 +46,7 @@
         test-id-extension="__checkboxgroup__initiateContract.selecteLocations"
         placeholder="proposal.pleaseSelectYourLocations"
         :options="locationOptions"
+        shouldDisplayCheckAll
       />
     </div>
     <template #footer>

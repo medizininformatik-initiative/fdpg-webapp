@@ -13,6 +13,14 @@ vi.mock('vue-i18n', () => ({
   })),
 }))
 
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
+}))
+
 const mountComponent = () => {
   const modelValue: IAddressees = JSON.parse(JSON.stringify(mockProposal.userProject.addressees))
   return mount(ProjectAddresses, {
