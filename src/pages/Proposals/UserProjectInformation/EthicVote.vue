@@ -87,20 +87,6 @@
             </FdpgUpload>
           </FdpgFormItem>
         </el-col>
-        <el-col :sm="24">
-          <FdpgFormItem v-if="uploadsForType.length" prop="userProject.ethicVote.admitReputationOfAttachment">
-            <el-checkbox
-              v-model="ethicVoteForm.admitReputationOfAttachment"
-              :size="FdpgInputSize.Small"
-              :disabled="reviewMode || ethicVoteForm.isDone"
-              data-testId="ethicVoteForm__admit__check"
-              class="fdpg-checkbox"
-              name="admitReputationOfAttachment"
-            >
-              {{ $t('proposal.admitReputationOfAttachment') }}</el-checkbox
-            >
-          </FdpgFormItem>
-        </el-col>
       </template>
       <template v-else>
         <el-col :sm="24">

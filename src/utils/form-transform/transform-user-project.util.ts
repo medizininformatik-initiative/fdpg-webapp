@@ -41,7 +41,6 @@ export const transformEthicVote = (ethicVote?: DeepPartial<IEthicVote>): DeepPar
     ethicsCommittee: transformEmptyStringToUndefined(ethicVote?.ethicsCommittee),
     ethicsVoteNumber: transformEmptyStringToUndefined(ethicVote?.ethicsVoteNumber),
     voteFromDate: transformEmptyStringToUndefined(ethicVote?.voteFromDate),
-    admitReputationOfAttachment: ethicVote?.admitReputationOfAttachment,
   }
 }
 

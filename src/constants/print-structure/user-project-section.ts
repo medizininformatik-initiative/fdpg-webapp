@@ -114,14 +114,6 @@ const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = {
       definitions: [[{ key: 'voteFromDate', kind: 'date' }]],
       hideIfThisValueIsFalsy: 'isExisting',
     },
-    {
-      label: 'proposal.admitReputationOfAttachment',
-      size: 24,
-      definitions: [
-        [{ key: 'admitReputationOfAttachment', kind: 'boolean', true: 'proposal.yes', false: 'proposal.no' }],
-      ],
-      hideIfThisValueIsFalsy: 'isExisting',
-    },
   ],
 }
 

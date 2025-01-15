@@ -193,7 +193,6 @@ export const mockProposal: IProposal = {
       ethicsCommittee: 'Ethics committee',
       ethicsVoteNumber: 'DE/GAHNVF',
       voteFromDate: '2022-09-29T22:00:00.000Z',
-      admitReputationOfAttachment: true,
     },
     resourceAndRecontact: {
       _id: 'resourceAndRecontactId',
