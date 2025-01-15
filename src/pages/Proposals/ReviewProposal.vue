@@ -14,14 +14,10 @@
         <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
           <section role="region" class="print-region">
             <ReviewAreaLabel
-              :section-values="section.mapping.map((mapping) => sectionItem[mapping.key].isDone)"
-              :section-ids="section.mapping.map((mapping) => sectionItem[mapping.key]._id)"
+              :section-values="getSectionArrayProposalData(section, sectionItem).map((data) => data.isDone)"
+              :section-ids="getSectionArrayProposalData(section, sectionItem).map((data) => data._id)"
               headline="h3"
-              :title="
-                section.arrayLabel
-                  .map((labelKey) => (sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key) as string)
-                  .reduce((prev, curr) => prev + ' ' + curr)
-              "
+              :title="getArrayLabelFromSection(section, sectionItem)"
             />
 
             <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
@@ -50,10 +46,10 @@
 
       <template v-else-if="section.kind === 'object' && proposalData">
         <ReviewAreaLabel
-          v-if="section.key === 'applicant' || section.key === 'projectResponsible'"
+          v-if="isSinglePersonEntry(section)"
           class="form-label-mt-4"
-          :section-values="section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key].isDone)"
-          :section-ids="section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key]._id)"
+          :section-values="getSectionObjectProposalData(section, proposalData).map((data) => data.isDone)"
+          :section-ids="getSectionObjectProposalData(section, proposalData).map((data) => data._id)"
           headline="h2"
           :title="$t(section.sectionLabel)"
         />
@@ -69,7 +65,7 @@
             :dto="proposalData[section.key]"
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
-            :hide-review-checkbox="section.key === 'applicant' || section.key === 'projectResponsible'"
+            :hide-review-checkbox="isSinglePersonEntry(section)"
           ></ReviewCard>
         </section>
       </template>
@@ -91,7 +87,11 @@
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import ReviewLabel from '@/components/ReviewLabel.vue'
 import ReviewAreaLabel from '@/components/ReviewAreaLabel.vue'
-import type { DefinitionSection } from '@/components/Shared/definition-card.types'
+import type {
+  DefinitionSection,
+  IDefinitionSectionArray,
+  IDefinitionSectionObject,
+} from '@/components/Shared/definition-card.types'
 import useUpload from '@/composables/use-upload'
 import { participantSection } from '@/constants/print-structure/participant-section'
 import { requestedDataSection } from '@/constants/print-structure/requested-data-section'
@@ -153,8 +153,6 @@ const fetchProposal = async () => {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     proposalData.value = transformForm(data) as IProposal
 
-    console.log({ proposalData })
-
     const lastDashboard = layoutStore.lastDashboard
     layoutStore.setBreadcrumbs([
       {
@@ -204,6 +202,35 @@ const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: [string, stri
     return dto?.[parentKey]?.[secondLevelKey]
   }
 }
+
+const getArrayLabelFromSection = (
+  section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
+  sectionItem: any,
+) => {
+  const arrayLabel = section.arrayLabel
+  const arrayLabelKey = section.arrayLabelKey
+
+  if (!arrayLabel || !arrayLabelKey) {
+    return ''
+  }
+
+  return arrayLabel
+    .map((labelKey) => (sectionItem[arrayLabelKey][labelKey.key] ?? labelKey.key) as string)
+    .reduce((prev, curr) => prev + ' ' + curr)
+}
+
+const getSectionObjectProposalData = (
+  section: IDefinitionSectionObject<IProposal, keyof IProposal>,
+  proposalData?: IProposal,
+) => section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key])
+
+const getSectionArrayProposalData = (
+  section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
+  sectionItem: any,
+) => section?.mapping?.map((mapping) => sectionItem[mapping.key]) ?? []
+
+const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
+  section.key === 'applicant' || section.key === 'projectResponsible'
 
 onMounted(async () => {
   await fetchProposal()
