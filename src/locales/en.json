@@ -53,7 +53,8 @@
     "resetPasswordModalAction": "Reset",
     "date": "Date",
     "title": "Title",
-    "additionalInformation": "Additional information"
+    "additionalInformation": "Additional information",
+    "selectAll": "Select all"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -524,14 +525,14 @@
     "publicationType_OTHER": "Conference article",
     "uploadType_ETHIC_VOTE_DECLARATION_OF_NON_RESPONSIBILITY": "EthicVote declaration of non responsibility",
     "admitReputationOfAttachmentInformation": "Every proposal must be accompanied by the ethics vote of the ethics committee responsible for you. If no ethics vote is required, you must enclose a declaration of non-responsibility from the ethics committee. Please make sure that the ethics application on which the vote is based fully covers the project you describe in the proposal. If you request additional data elements from the MII or have additional questions, you will need an amendment from the Ethics Committee to supplement the vote.",
-    "admitReputationOfAttachment": "The attached ethics vote fully covers the use of the data and biospecimens described in the use research proposal.",
     "plannedPublicationDescriptionInfo": "Please briefly describe the intended content of the publication.",
     "plannedPublicationAuthorsInfo": "Please name all authors and co-authors already planned without obligation following the pattern: Max Mustermann, Jane Doe.",
     "fdpgCheckNotes": "Check Notes",
     "checkNotesPlaceHolder": "Add your notes...",
     "revertLocationModalTitle": "Do you really want to revert the location vote?",
     "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
-    "revertVote": "Revert vote"
+    "revertVote": "Revert vote",
+    "virtualAllLocations": "All Locations"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

@@ -7,6 +7,12 @@
     :loading-text="loadingText ? $t(loadingText) : loadingText"
     :no-data-text="noDataText ? $t(noDataText) : noDataText"
   >
+    <template #header v-if="shouldDisplayCheckAll">
+      <el-checkbox v-model="checkAll" @change="handleCheckAll">
+        {{ $t('general.selectAll') }}
+      </el-checkbox>
+    </template>
+
     <el-option
       v-for="({ label, value }, index) in options"
       :key="index + '_' + value"
@@ -19,9 +25,10 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useVModel } from '@vueuse/core'
+import type { CheckboxValueType } from 'element-plus'
 
 export interface SelectOption {
   label: string
@@ -69,6 +76,10 @@ const props = defineProps({
       return validate
     },
   },
+  shouldDisplayCheckAll: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -85,8 +96,24 @@ const selected = computed({
     } else {
       componentDto.value = values
     }
+
+    if (props.options.length === (Array.isArray(componentDto.value) ? (componentDto.value.length ?? 0) : -1)) {
+      checkAll.value = false
+    } else {
+      checkAll.value = true
+    }
   },
 })
+
+const checkAll = ref(false)
+
+const handleCheckAll = (val: CheckboxValueType) => {
+  if (val) {
+    componentDto.value = props.options.map((_) => _.value)
+  } else {
+    componentDto.value = []
+  }
+}
 </script>
 
 <style lang="scss">

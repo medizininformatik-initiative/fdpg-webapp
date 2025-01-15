@@ -1,22 +1,14 @@
 <template>
   <section ref="select" class="location-select">
-    <div
-      class="content"
-      role="button"
-      tabindex="0"
-      :class="{ 'no-pointer': openState }"
-      @click.stop="toggle"
-      @keydown.enter="toggle()"
-    >
-      {{ placeholder }}
-    </div>
     <el-select
       v-model="selection"
-      placeholder=" "
+      :placeholder="$t(placeholder)"
       popper-class="location-dropdown"
       :multiple="true"
-      style="width: 580px"
       @visible-change="handleDropDownChange"
+      collapse-tags
+      :max-collapse-tags="3"
+      :placement="placement"
     >
       <el-option-group v-for="group in groupOptions" :key="group.label" :label="group.label">
         <el-option
@@ -24,7 +16,9 @@
           :key="item.value"
           :label="item.label"
           :value="item.value"
+          :disabled="disabled"
           :data-testId="'option__' + item.value + testIdExtension"
+          :class="vModel.includes(MiiLocation.VirtualAll) ? 'selected' : ''"
         />
       </el-option-group>
     </el-select>
@@ -55,6 +49,18 @@ const props = defineProps({
     type: Array as PropType<MiiLocation[]>,
     required: true,
   },
+  placement: {
+    type: String,
+    default: 'bottom-start',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  allOptionLabel: {
+    type: String,
+    required: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -68,46 +74,48 @@ const selection = computed({
     const wasOldVirtualAll = vModel.value.includes(MiiLocation.VirtualAll)
     const isVirtualAll = values.includes(MiiLocation.VirtualAll)
 
+    const selectionValues = groupOptions
+      .flatMap((groupOption) => groupOption.options)
+      .map((option) => option.value as MiiLocation)
+
     let result: MiiLocation[] = []
 
-    if (wasOldVirtualAll) {
-      result = values.filter((value) => value !== MiiLocation.VirtualAll)
-    } else if (isVirtualAll) {
+    if (wasOldVirtualAll && values.length === 0) {
+      result = []
+    } else if (wasOldVirtualAll) {
+      result = selectionValues.filter((optionVal) => !values.includes(optionVal))
+    } else if (isVirtualAll || values.length === selectionValues.length - 1) {
       result = [MiiLocation.VirtualAll]
     } else {
       result = values
-    }
-
-    if (result.length <= 0) {
-      result.push(...props.minimumSelection)
     }
 
     vModel.value = result
   },
 })
 
-const { groupOptions } = useLocationGrouping()
+const setMinimumSelection = () => {
+  if (vModel.value.length <= 0 && props.minimumSelection.length > 0) {
+    vModel.value.push(...props.minimumSelection)
+  }
+}
+
+const { groupOptions } = useLocationGrouping(undefined, props.allOptionLabel)
 
 const select = ref()
 
 const openState = ref(false)
-const toggle = () => {
-  if (openState.value === false && select.value) {
-    const inputElement = select.value.querySelector('input')
-    inputElement?.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }))
-  }
-}
+
 const handleDropDownChange = (value: boolean) => {
   openState.value = value
+
+  if (!value) {
+    setMinimumSelection()
+  }
 }
 </script>
 
-<style>
-.el-select-dropdown.location-dropdown {
-  /* Sorry. Magic Number since placement property on the el-select is ignored */
-  transform: translateY(-330px);
-}
-</style>
+<style></style>
 
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
@@ -115,48 +123,26 @@ const handleDropDownChange = (value: boolean) => {
 .location-select {
   position: relative;
   display: flex;
+  height: fit-content;
   justify-content: flex-end;
 
   .el-input__inner {
     height: auto;
   }
 
-  :deep(.el-input__suffix) {
-    display: none;
-  }
-
   :deep(.el-select) {
-    pointer-events: none;
     .el-input__wrapper {
       box-shadow: none !important;
       border: none !important;
     }
+
+    .el-tag > i {
+      display: none;
+    }
   }
 
-  :deep(.el-select__tags > span) {
+  :deep(.el-select__tags > i) {
     display: none;
-  }
-
-  .content {
-    position: absolute;
-    z-index: 2;
-    transform: translate(0, 0.2rem);
-    line-height: 47px;
-    border-radius: 5px;
-
-    padding: 0 1rem;
-    background: $gray-900;
-    color: $white;
-    cursor: pointer;
-
-    &.no-pointer {
-      pointer-events: none;
-    }
-
-    &:focus-within {
-      outline: $blue auto 1px;
-      outline-offset: 3px;
-    }
   }
 }
 </style>
