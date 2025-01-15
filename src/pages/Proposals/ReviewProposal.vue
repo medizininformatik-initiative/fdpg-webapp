@@ -14,8 +14,8 @@
         <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
           <section role="region" class="print-region">
             <ReviewAreaLabel
-              :section-values="getSectionArrayProposalData(section, sectionItem).map((data) => data.isDone)"
-              :section-ids="getSectionArrayProposalData(section, sectionItem).map((data) => data._id)"
+              :section-values="getSectionArrayProposalData(section, 'isDone', sectionItem)"
+              :section-ids="getSectionArrayProposalData(section, '_id', sectionItem)"
               headline="h3"
               :title="getArrayLabelFromSection(section, sectionItem)"
             />
@@ -48,8 +48,8 @@
         <ReviewAreaLabel
           v-if="isSinglePersonEntry(section)"
           class="form-label-mt-4"
-          :section-values="getSectionObjectProposalData(section, proposalData).map((data) => data.isDone)"
-          :section-ids="getSectionObjectProposalData(section, proposalData).map((data) => data._id)"
+          :section-values="getSectionObjectProposalData(section, 'isDone', proposalData)"
+          :section-ids="getSectionObjectProposalData(section, '_id', proposalData)"
           headline="h2"
           :title="$t(section.sectionLabel)"
         />
@@ -221,13 +221,15 @@ const getArrayLabelFromSection = (
 
 const getSectionObjectProposalData = (
   section: IDefinitionSectionObject<IProposal, keyof IProposal>,
+  property: string,
   proposalData?: IProposal,
-) => section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key])
+) => section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key]).map((data) => data[property])
 
 const getSectionArrayProposalData = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
+  property: string,
   sectionItem: any,
-) => section?.mapping?.map((mapping) => sectionItem[mapping.key]) ?? []
+) => section?.mapping?.map((mapping) => sectionItem[mapping.key]).map((data) => data[property]) ?? []
 
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
