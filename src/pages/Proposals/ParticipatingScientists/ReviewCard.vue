@@ -6,6 +6,7 @@
       :title="card.cardLabel ?? headlineOverwrite"
       :section-id="dto[card.key]._id"
       :headline="headline"
+      :hide-review-checkbox="hideReviewCheckbox"
     />
 
     <template v-if="card.loopOn">
@@ -34,7 +35,7 @@ import DefinitionCard from '@/components/Shared/DefinitionCard.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { CommentType } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { defineAsyncComponent } from 'vue'
 
 const FdpgCommentCreator = defineAsyncComponent(() => import('@/components/FdpgCommentCreator.vue'))
@@ -62,8 +63,12 @@ defineProps({
   },
   isDraft: {
     type: Boolean,
-    required: true
-  }
+    required: true,
+  },
+  hideReviewCheckbox: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const authStore = useAuthStore()
