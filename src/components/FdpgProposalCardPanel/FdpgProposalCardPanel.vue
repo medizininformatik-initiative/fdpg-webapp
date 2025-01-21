@@ -12,7 +12,7 @@
           class="alert-btn"
           @click="handleShowAllClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ t('dashboard.showAll') }}</el-button
+          >{{ $t('dashboard.showAll') }}</el-button
         >
         <el-button
           v-if="proposals.length > displayCount"
@@ -20,7 +20,7 @@
           class="alert-btn"
           @click="handleShowMoreClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ t('dashboard.showMore') }}</el-button
+          >{{ $t('dashboard.showMore') }}</el-button
         >
         <el-button
           v-if="displayCount > defaultLength"
@@ -28,7 +28,7 @@
           class="alert-btn"
           @click="handleShowLessClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ t('dashboard.showLess') }}</el-button
+          >{{ $t('dashboard.showLess') }}</el-button
         >
       </div>
     </div>
@@ -66,7 +66,6 @@ import { SortDirection } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   panel: {
@@ -89,7 +88,6 @@ const props = defineProps({
     default: SortDirection.ASC,
   },
 })
-const { t } = useI18n()
 const displayCount = ref<number>(props.defaultLength)
 const loading = ref<boolean>(false)
 

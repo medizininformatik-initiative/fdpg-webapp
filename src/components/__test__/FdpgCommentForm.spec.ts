@@ -2,6 +2,8 @@ import FdpgCommentForm from '../FdpgCommentForm.vue'
 import { CommentType } from '@/types/comment.interface'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('@/plugins/i18n', () => ({
   i18n: {
     global: {
@@ -44,7 +46,7 @@ describe('FdpgCommentForm.vue', () => {
   })
 
   describe('if the is done is %s', () => {
-    beforeEach(() => {})
+    beforeEach(() => { })
 
     it('should emit save function', async () => {
       await wrapper.find('.edit-button').trigger('click')

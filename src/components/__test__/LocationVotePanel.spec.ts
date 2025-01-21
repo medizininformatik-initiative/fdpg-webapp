@@ -5,6 +5,8 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockImplementation((entry) => entry),

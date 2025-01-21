@@ -22,4 +22,4 @@ const main = async () => {
   app.mount('#app')
 }
 
-;(async () => await main())()
+  ; (async () => await main())()

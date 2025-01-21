@@ -1,7 +1,7 @@
 <template>
   <FdpgDialog
     v-model="dialogOpen"
-    :title="!report._id ? t('proposal.addReport') : t('proposal.editReport')"
+    :title="!report._id ? $t('proposal.addReport') : $t('proposal.editReport')"
     class="reports--modal"
     @close="closeDialog"
   >
@@ -26,7 +26,7 @@
             <FdpgtextEditor
               v-model="report.content"
               data-testId="report.content"
-              :placeholder="t('proposal.reportContentPlaceholder')"
+              :placeholder="$t('proposal.reportContentPlaceholder')"
             />
           </FdpgFormItem>
         </el-col>
@@ -51,7 +51,7 @@
               link
               :class="{ 'disable-button': !!(uploadedFiles?.length + filesToBeUploaded?.length > 2) }"
             >
-              {{ t('proposal.chooseAFile') }}
+              {{ $t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
               </template>
@@ -62,9 +62,9 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button link @click="closeDialog">{{ t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
         <el-button :disabled="isSaveButtonDisabled" type="primary" @click="createOrUpdateReport">
-          {{ t('general.save') }}
+          {{ $t('general.save') }}
         </el-button>
       </span>
     </template>
@@ -86,9 +86,7 @@ import FdpgInput from './FdpgInput.vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgUpload from './FdpgUpload.vue'
 import FdpgtextEditor from './FdpgTextEditor.vue'
-import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
 const ReportFormRef: Ref<typeof ElForm | undefined> = ref<typeof ElForm>()
 const emit = defineEmits(['update:modelValue', 'reset', 'update:report'])

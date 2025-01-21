@@ -5,11 +5,12 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { CommentType, type ICommentDetail } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
 import { ElButton } from 'element-plus'
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { MiiLocation } from '@/types/location.enum'
 import LocationSelect from '../LocationSelect.vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -55,7 +56,7 @@ describe('MessageCenterAnswerCreator.vue', () => {
 
   it('should emit createAnswer', async () => {
     const allButtons = wrapper.findAllComponents(ElButton)
-    await wrapper.findComponent(FdpgInput).vm.$emit('update:modelValue', 'comment comment comment ')
+    await wrapper.findComponent(FdpgTextEditor).vm.$emit('update:modelValue', 'comment comment comment ')
     await allButtons[0].trigger('click')
     expect(wrapper.emitted('createAnswer')).toBeTruthy()
   })

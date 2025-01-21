@@ -5,6 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount, flushPromises } from '@vue/test-utils'
 import type { MockedObject } from 'vitest'
 import FdpgDropdown from '../FdpgDropdown.vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { DropdownItem, IDropdownIconItem } from '@/types/dropdown.types'
 vi.mock('vue-i18n', () => ({

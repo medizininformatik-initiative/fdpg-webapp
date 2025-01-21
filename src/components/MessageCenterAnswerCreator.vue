@@ -1,18 +1,18 @@
 <template>
   <section class="answer-creator">
-    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="t('proposal.leaveAComment')" />
+    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="$t('proposal.leaveAComment')" />
 
     <section role="region" class="action-row">
       <div class="comment-field-actions">
         <el-button type="primary" :disabled="!answerContent || answerContent.trim().length < 5" @click="handleSubmit">
           <template v-if="edit">
-            {{ t('general.save') }}
+            {{ $t('general.save') }}
           </template>
           <template v-else>
-            {{ t('general.create') }}
+            {{ $t('general.create') }}
           </template>
         </el-button>
-        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ t('general.cancel') }}</el-button>
+        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ $t('general.cancel') }}</el-button>
       </div>
 
       <LocationSelect
@@ -36,7 +36,6 @@ import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import LocationSelect from './LocationSelect.vue'
-import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   message: {
@@ -57,7 +56,6 @@ const authStore = useAuthStore()
 const locationSelection = ref<MiiLocation[]>([])
 const answerContent = ref<string>()
 const inputRef = ref()
-const { t } = useI18n()
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer'])
 
 const toggleAnswerMode = (value: boolean) => {

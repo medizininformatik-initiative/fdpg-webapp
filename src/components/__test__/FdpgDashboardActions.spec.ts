@@ -1,6 +1,7 @@
 import FdpgDashboardActions from '../FdpgDashboardActions.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgDashboardActions.vue', () => {
   let wrapper: any

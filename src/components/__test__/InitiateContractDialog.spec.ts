@@ -5,6 +5,8 @@ import { ElButton, ElIcon, type UploadFile } from 'element-plus'
 import FdpgUpload from '../FdpgUpload.vue'
 import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
 import type { MiiLocation } from '@/types/location.enum'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockReturnValue('Test'),

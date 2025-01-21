@@ -1,6 +1,7 @@
 import FdpgCheckList from '../FdpgCheckList.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgCheckList.vue', () => {
   let wrapper: any

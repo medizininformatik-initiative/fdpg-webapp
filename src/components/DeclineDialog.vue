@@ -1,20 +1,20 @@
 <template>
-  <FdpgDialog v-model="dialogOpen" width="50%" :title="t(title)" :before-close="closeDialog" :show-close="false">
+  <FdpgDialog v-model="dialogOpen" width="50%" :title="$t(title)" :before-close="closeDialog" :show-close="false">
     <div>
-      <p>{{ t(description) }}</p>
+      <p>{{ $t(description) }}</p>
 
       <FdpgLabel html-for="proposal.declineReasonLabel" />
       <FdpgTextEditor
         v-model="declineReason"
         data-testId="declineReason"
-        :placeholder="t('proposal.declineReasonPlaceholder')"
+        :placeholder="$t('proposal.declineReasonPlaceholder')"
       />
     </div>
 
     <template #footer>
       <span>
         <el-button link data-testId="button__closeSignDialog" @click="closeDialog">
-          {{ t('general.cancel') }}
+          {{ $t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
@@ -22,7 +22,7 @@
           data-testid="button__confirm"
           @click="confirm"
         >
-          {{ t(buttonText) }}
+          {{ $t(buttonText) }}
         </el-button>
       </span>
     </template>
@@ -38,7 +38,6 @@ import { useVModel } from '@vueuse/core'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import FdpgDialog from './FdpgDialog.vue'
-import { useI18n } from 'vue-i18n'
 const emit = defineEmits(['update:modelValue', 'confirm'])
 
 const props = defineProps({
@@ -64,7 +63,6 @@ const props = defineProps({
 })
 
 const declineReason = ref<string | undefined>(undefined)
-const { t } = useI18n()
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
   declineReason.value = undefined

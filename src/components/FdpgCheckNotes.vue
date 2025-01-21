@@ -1,10 +1,10 @@
 <template>
   <div>
     <div class="header-row">
-      <h2>{{ t('proposal.fdpgCheckNotes') }}</h2>
+      <h2>{{ $t('proposal.fdpgCheckNotes') }}</h2>
     </div>
     <div v-if="isEditMode">
-      <FdpgTextEditor v-model="fdpgCheckNotes" :placeholder="t('proposal.checkNotesPlaceHolder')"></FdpgTextEditor>
+      <FdpgTextEditor v-model="fdpgCheckNotes" :placeholder="$t('proposal.checkNotesPlaceHolder')"></FdpgTextEditor>
       <el-button class="button__margin" type="primary" @click="sendFdpgCheckNotes">{{ $t('general.save') }}</el-button>
     </div>
     <div class="check-note-content" v-else>

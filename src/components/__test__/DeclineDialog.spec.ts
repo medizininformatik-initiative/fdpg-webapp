@@ -2,9 +2,12 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import type { VueWrapper } from '@vue/test-utils'
 import DeclineDialog from '../DeclineDialog.vue'
-import FdpgInput from '../FdpgInput.vue'
+import FdpgTextEditor from '../FdpgTextEditor.vue'
 import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
 import { ElButton } from 'element-plus'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+
 describe('DeclineDialog.vue', () => {
   let wrapper: VueWrapper
 
@@ -38,7 +41,7 @@ describe('DeclineDialog.vue', () => {
   })
 
   it('should call the closeDialog method', async () => {
-    const fdpgInput = wrapper.findComponent(FdpgInput)
+    const fdpgInput = wrapper.findComponent(FdpgTextEditor)
     await fdpgInput.vm.$emit('update:modelValue', 'test')
 
     const confirmButton = findComponentByText('proposal.rejectRequest', ElButton)

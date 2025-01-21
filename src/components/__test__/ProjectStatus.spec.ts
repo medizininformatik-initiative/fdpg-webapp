@@ -7,6 +7,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { MockedObject } from 'vitest'
 import { Role } from '@/types/oidc.types'
 import { mockProposal } from '@/mocks/proposal.mock'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('ProjectStatus.vue', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>

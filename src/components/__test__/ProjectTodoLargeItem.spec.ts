@@ -2,6 +2,7 @@ import ProjectTodoLargeItem from '../ProjectTodoLargeItem.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import type { IProjectTodo } from '@/types/project-todo.interface'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('ProjectTodoLargeItem.vue', () => {
   let wrapper: VueWrapper
