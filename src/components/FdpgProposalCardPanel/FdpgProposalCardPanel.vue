@@ -2,7 +2,7 @@
   <div class="fdpg-card-panel">
     <div class="header">
       <div class="title-wrapper">
-        <h5 class="title">{{ t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
+        <h5 class="title">{{ $t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
         <div v-loading="loading"></div>
       </div>
       <div class="action-wrapper">
