@@ -1,14 +1,5 @@
 <template>
-  <FdpgInput
-    ref="inputRef"
-    v-model="comment"
-    placeholder="proposal.leaveAComment"
-    :size="FdpgInputSize.Small"
-    type="textarea"
-    :rows="2"
-    autosize
-  />
-
+  <FdpgTextEditor v-model="comment" ref="inputRef" :placeholder="t('proposal.leaveAComment')"></FdpgTextEditor>
   <section role="region" class="action-row">
     <div class="comment-field-actions">
       <el-button
@@ -18,10 +9,10 @@
         @click="handleSubmit"
       >
         <template v-if="edit">
-          {{ $t('general.save') }}
+          {{ t('general.save') }}
         </template>
         <template v-else>
-          {{ $t('general.create') }}
+          {{ t('general.create') }}
         </template>
       </el-button>
       <el-button type="primary" class="cancel-button" plain @click="handleCancel">{{ $t('general.cancel') }}</el-button>
@@ -37,8 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import FdpgInput from '@/components/FdpgInput.vue'
-import { FdpgInputSize } from '@/types/component.types'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useVModel } from '@vueuse/core'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
@@ -49,6 +39,9 @@ import { computed, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {

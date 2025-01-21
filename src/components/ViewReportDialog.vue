@@ -1,15 +1,15 @@
 <template>
-  <FdpgDialog v-model="dialogOpen" :title="$t('proposal.viewReport')" class="reports--modal" @close="closeDialog">
+  <FdpgDialog v-model="dialogOpen" :title="t('proposal.viewReport')" class="reports--modal" @close="closeDialog">
     <dl class="form-group">
-      <dt>{{ $t('general.title') }}</dt>
+      <dt>{{ t('general.title') }}</dt>
       <dd>
         {{ report.title }}
       </dd>
 
-      <dt>{{ $t('proposal.text') }}</dt>
-      <dd>{{ report.content }}</dd>
+      <dt>{{ t('proposal.text') }}</dt>
+      <dd v-html="report.content"></dd>
 
-      <dt>{{ $t('proposal.album') }}</dt>
+      <dt>{{ t('proposal.album') }}</dt>
       <dd>
         <ImageList
           :documents="uploadedFiles"
@@ -21,7 +21,7 @@
     </dl>
     <template #footer>
       <span>
-        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ t('general.cancel') }}</el-button>
       </span>
     </template>
   </FdpgDialog>
@@ -34,7 +34,9 @@ import FdpgDialog from './FdpgDialog.vue'
 import ImageList from './Proposals/Details/ImageList.vue'
 import type { IReportGet, IUpload } from '@/types/proposal.types'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const emit = defineEmits(['update:modelValue', 'reset', 'update:report'])
 const props = defineProps({
   report: {

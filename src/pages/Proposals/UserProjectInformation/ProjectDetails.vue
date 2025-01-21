@@ -5,14 +5,11 @@
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription">
           <FdpgLabel html-for="proposal.simpleProjectDescription" />
-          <FdpgInput
+          <FdpgtextEditor
             v-model="projectDetailsForm.simpleProjectDescription"
             data-testId="projectDetailsForm.simpleProjectDescription"
-            placeholder="proposal.describeTheProject"
+            :placeholder="t('proposal.describeTheProject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
           />
         </FdpgFormItem>
       </el-col>
@@ -37,43 +34,34 @@
             html-for="proposal.hypothesisAndQuestionProjectGoals"
             info="proposal.hypothesisAndQuestionProjectGoalsInfo"
           />
-          <FdpgInput
+          <FdpgtextEditor
             v-model="projectDetailsForm.hypothesisAndQuestionProjectGoals"
             data-testId="projectDetailsForm.hypothesisAndQuestionProjectGoals"
-            placeholder="proposal.indicationOrRepresentationOfAimsObjectives"
+            :placeholder="t('proposal.indicationOrRepresentationOfAimsObjectives')"
             :disabled="reviewMode || projectDetailsForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
           />
         </FdpgFormItem>
-        <p class="example">{{ $t('proposal.egAccordingToOrFromAbstract') }}</p>
+        <p class="example">{{ t('proposal.egAccordingToOrFromAbstract') }}</p>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.scientificBackground">
           <FdpgLabel html-for="proposal.scientificBackground" />
-          <FdpgInput
+          <FdpgtextEditor
             v-model="projectDetailsForm.scientificBackground"
             data-testId="projectDetailsForm.scientificBackground"
-            placeholder="proposal.publicationsOnTheSubject"
+            :placeholder="t('proposal.publicationsOnTheSubject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.materialAndMethods">
           <FdpgLabel html-for="proposal.materialAndMethods" />
-          <FdpgInput
+          <FdpgtextEditor
             v-model="projectDetailsForm.materialAndMethods"
             data-testId="projectDetailsForm.materialAndMethods"
-            placeholder="proposal.describeTheMaterialsAndMethods"
+            :placeholder="t('proposal.describeTheMaterialsAndMethods')"
             :disabled="reviewMode || projectDetailsForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
           />
         </FdpgFormItem>
       </el-col>
@@ -85,16 +73,16 @@
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import { Department } from '@/types/department.enum'
 import type { IProjectDetails } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import FdpgtextEditor from '@/components/FdpgTextEditor.vue'
 
 const props = defineProps({
   modelValue: {

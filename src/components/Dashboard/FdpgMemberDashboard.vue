@@ -3,10 +3,10 @@
     <div class="header">
       <div class="lead">
         <h2 class="title">
-          {{ $t(header.main) }}
+          {{ t(header.main) }}
         </h2>
         <p class="description">
-          {{ $t(header.sub, { x: proposalCount.total }) }}
+          {{ t(header.sub, { x: proposalCount.total }) }}
         </p>
       </div>
       <FdpgSortSelect
@@ -49,7 +49,9 @@ import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { sortOptions } from './constants'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Dashboard)

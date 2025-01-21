@@ -1,7 +1,7 @@
 <template>
   <template v-if="value === undefined"> - </template>
   <template v-else-if="definition.kind === 'translatable'">
-    {{ $t(`${definition.prefix}${value}`) }}
+    {{ t(`${definition.prefix}${value}`) }}
   </template>
 
   <template v-else-if="definition.kind === 'date'">
@@ -9,20 +9,23 @@
   </template>
 
   <template v-else-if="definition.kind === 'boolean'">
-    {{ $t(`${definition[value as string]}`) }}
+    {{ t(`${definition[value as string]}`) }}
   </template>
 
   <template v-else-if="definition.kind === 'lookup'">
     {{ definition.lookupMap[value as string][definition.lookupKey] }}
   </template>
 
-  <template v-else>{{ value }}</template>
+  <template v-else>
+    <div v-html="value"></div>
+  </template>
 </template>
 
 <script setup lang="ts">
 import type { Definitions } from '@/components/Shared/definition-card.types'
 import type { PropType } from 'vue'
 import { getLocaleDateString } from '@/utils/date.util'
+import { useI18n } from 'vue-i18n'
 
 defineProps({
   value: {
@@ -34,4 +37,6 @@ defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 </script>

@@ -1,26 +1,18 @@
 <template>
   <section class="answer-creator">
-    <FdpgInput
-      ref="inputRef"
-      v-model="answerContent"
-      placeholder="proposal.leaveAComment"
-      :size="FdpgInputSize.Small"
-      type="textarea"
-      :rows="2"
-      autosize
-    />
+    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="t('proposal.leaveAComment')" />
 
     <section role="region" class="action-row">
       <div class="comment-field-actions">
         <el-button type="primary" :disabled="!answerContent || answerContent.trim().length < 5" @click="handleSubmit">
           <template v-if="edit">
-            {{ $t('general.save') }}
+            {{ t('general.save') }}
           </template>
           <template v-else>
-            {{ $t('general.create') }}
+            {{ t('general.create') }}
           </template>
         </el-button>
-        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ $t('general.cancel') }}</el-button>
+        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ t('general.cancel') }}</el-button>
       </div>
 
       <LocationSelect
@@ -34,17 +26,17 @@
 </template>
 
 <script setup lang="ts">
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
-import { FdpgInputSize } from '@/types/component.types'
 import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import LocationSelect from './LocationSelect.vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   message: {
@@ -65,7 +57,7 @@ const authStore = useAuthStore()
 const locationSelection = ref<MiiLocation[]>([])
 const answerContent = ref<string>()
 const inputRef = ref()
-
+const { t } = useI18n()
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer'])
 
 const toggleAnswerMode = (value: boolean) => {
