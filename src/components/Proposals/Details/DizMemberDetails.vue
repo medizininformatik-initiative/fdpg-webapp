@@ -173,6 +173,14 @@ const getSignTodo = (): IProjectTodo[] => {
   }
 }
 
+const getCheckContractTodo = () => {
+  const currentProposal = proposalStore.currentProposal
+
+  console.log({ currentProposal })
+
+  return []
+}
+
 const projectDuration = computed(
   () => proposalStore.currentProposal?.userProject.generalProjectInformation.projectDuration,
 )
@@ -220,7 +228,7 @@ const getApproveTodo = (): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo(), ...getSignTodo()]
+  return [...getApproveTodo(), ...getSignTodo(), ...getCheckContractTodo()]
 })
 
 const fetchProposal = async () => {
@@ -251,6 +259,8 @@ const fetchProposal = async () => {
 
 onMounted(async () => {
   await fetchProposal()
+
+  console.log({ project })
 })
 </script>
 

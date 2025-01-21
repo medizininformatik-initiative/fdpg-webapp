@@ -330,9 +330,11 @@ export interface IIsDoneOverview {
 export interface IConditionalApproval {
   location: MiiLocation
   isAccepted: boolean
+  isDizAccepted: boolean
   isContractSigned?: boolean
   dataAmount: number
-  uploadId: string
+  uploadId?: string
+  conditionReasoning?: string
   _id: string
   createdAt: string
   reviewedAt?: string
@@ -351,6 +353,7 @@ export interface IUacApproval {
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
   DizApproved = 'DIZ_APPROVED',
+  DizConditionApproved = 'DIZ_CONDITION_APPROVED',
   UacApproved = 'UAC_APPROVED',
   SignedContract = 'SIGNED_CONTRACT',
   SignedContractAndContractingDone = 'SIGNED_CONTRACT_AND_CONTRACTING_DONE',
@@ -417,6 +420,7 @@ export interface IProposal {
   openDizChecks: MiiLocation[]
   dizApprovedLocations: MiiLocation[]
   uacApprovedLocations: MiiLocation[]
+  dizConditionApprovedLocations: MiiLocation[]
   requestedButExcludedLocations: MiiLocation[]
   signedContracts: MiiLocation[]
   // LOCATION Tasks <----

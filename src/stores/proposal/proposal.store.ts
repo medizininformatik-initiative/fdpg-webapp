@@ -218,8 +218,7 @@ export const useProposalStore = defineStore('Proposal', {
           typedStore.currentProposal.fdpgChecklist = { ...typedStore._checkListLastSuccess }
         }
       }
-    },
-    500),
+    }, 500),
 
     async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args) => void): Promise<void> {
       if (this.currentProposal) {

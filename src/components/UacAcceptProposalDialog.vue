@@ -35,6 +35,16 @@
               </template>
             </el-button>
           </FdpgUpload>
+
+          <FdpgLabel html-for="proposal.acceptReasonLabel" />
+          <FdpgInput
+            v-model="conditionReasoning"
+            data-testId="reasoning"
+            placeholder="proposal.acceptReasonPlaceholder"
+            type="textarea"
+            :rows="2"
+            autosize
+          />
         </FdpgStep>
 
         <FdpgStep
@@ -95,6 +105,7 @@ import { ElForm } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import FdpgFormItem from './FdpgFormItem.vue'
 import FdpgNumberInput from './FdpgNumberInput.vue'
+import FdpgInput from './FdpgInput.vue'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'acceptContract'])
 
@@ -108,9 +119,11 @@ const closeDialog = () => {
   conditionFile.value = null
   form.dataVolume = undefined
   dialogOpen.value = false
+  conditionReasoning.value = undefined
 }
 
 const conditionFile = ref<UploadFile | null>()
+const conditionReasoning = ref<string | undefined>(undefined)
 
 const { t } = useI18n()
 const requiredValidation = {
@@ -161,7 +174,12 @@ const handleRemoveFile = () => {
 
 const acceptContract = () => {
   if (form.dataVolume && form.dataVolume > 0) {
-    emit('acceptContract', form.dataVolume, conditionFile.value)
+    emit(
+      'acceptContract',
+      form.dataVolume,
+      conditionFile.value,
+      (conditionReasoning.value?.trim?.()?.length ?? 0) > 0 ? conditionReasoning.value?.trim() : undefined,
+    )
   }
 }
 </script>

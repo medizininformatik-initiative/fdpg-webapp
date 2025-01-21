@@ -32,6 +32,7 @@ export class ProposalService {
 
   async get(id: string): Promise<IProposal> {
     const response = await this.apiClient.get(`${this.basePath}/${id}`)
+    console.log({ response })
     return response.data
   }
 
@@ -67,6 +68,7 @@ export class ProposalService {
     if (decision.value) {
       formData.append('file', decision.file as Blob)
       formData.append('dataAmount', decision.dataAmount.toString())
+      decision.conditionReasoning && formData.append('conditionReasoning', decision.conditionReasoning)
     } else {
       formData.append('declineReason', decision.declineReason)
     }

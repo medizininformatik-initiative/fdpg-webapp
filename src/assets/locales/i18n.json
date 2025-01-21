@@ -1814,6 +1814,10 @@
       "de": "Es konnten keine Machbarkeits-Anfragen geladen werden",
       "en": "No feasibility requests could be loaded"
     },
+    "acceptReasonPlaceholder": {
+      "de": "Accept Reason Placeholder",
+      "en": "Accept Reason Placeholder"
+    },
     "declineReasonPlaceholder": {
       "de": "Z.B. Es können keine Daten geliefert werden, weil...",
       "en": "E.g. No data can be delivered because..."
