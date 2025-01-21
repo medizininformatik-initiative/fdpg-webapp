@@ -15,7 +15,11 @@ describe('DeclineDialog.vue', () => {
     wrapper = mount(DeclineDialog, {
       global: {
         plugins: [createTestingPinia()],
-        stubs: [],
+        stubs: {
+          FdpgTextEditor: {
+            template: '<textarea />', // Replace with a simple stub
+          },
+        },
       },
       props: {
         modelValue: true,
