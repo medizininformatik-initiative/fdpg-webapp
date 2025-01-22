@@ -8,6 +8,7 @@ import { Role } from '@/types/oidc.types'
 import { ElButton } from 'element-plus'
 import useNotifications from '@/composables/use-notifications'
 import { ProposalStatus, type IProposal } from '@/types/proposal.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-router', () => ({
   createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),

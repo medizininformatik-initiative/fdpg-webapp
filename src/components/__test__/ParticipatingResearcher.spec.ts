@@ -9,6 +9,7 @@ import { Role } from '@/types/oidc.types'
 import { mockProposal } from '@/mocks/proposal.mock'
 import { useUserStore } from '@/stores/user.store'
 import { ElButton } from 'element-plus'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -100,7 +101,7 @@ describe('ParticipatingResearcher.vue', () => {
   })
 
   describe('mock Stores', () => {
-    beforeEach(() => {})
+    beforeEach(() => { })
 
     it('renders', async () => {
       await flushPromises()

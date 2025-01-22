@@ -7,6 +7,7 @@ import type { MockedObject } from 'vitest'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import MessageCenterItem from '../MessageCenterItem.vue'
 import { MiiLocation } from '@/types/location.enum'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

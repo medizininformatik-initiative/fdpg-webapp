@@ -24,14 +24,11 @@
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.feasibility.details">
           <FdpgLabel html-for="proposal.assessmentOfFeasibilityDetails" />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="feasibilityForm.details"
             data-testId="feasibilityForm.details"
-            placeholder="proposal.pleaseEnterAssessmentOfFeasibilityDetails"
+            :placeholder="t('proposal.pleaseEnterAssessmentOfFeasibilityDetails')"
             :disabled="reviewMode || feasibilityForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
           />
         </FdpgFormItem>
       </el-col>
@@ -43,7 +40,6 @@
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
@@ -53,7 +49,8 @@ import type { IFeasibility } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
-
+import { useI18n } from 'vue-i18n'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IFeasibility>,
@@ -67,7 +64,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
-
+const { t } = useI18n()
 const feasibilityStore = useFeasibilityStore()
 const feasibilityForm = useVModel(props, 'modelValue', emit)
 

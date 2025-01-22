@@ -1,6 +1,7 @@
 import FdpgFieldInfo from '../FdpgFieldInfo.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgFieldInfo.vue', () => {
   let wrapper: VueWrapper

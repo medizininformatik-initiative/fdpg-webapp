@@ -144,7 +144,7 @@ const handleDeleteReport = (event: Event, proposalId: string) => {
     callback: async (decision: DecisionType) => (decision === 'confirm' ? await deleteReport(proposalId) : undefined),
   })
 }
-const deleteReport = async (reportId) => {
+const deleteReport = async (reportId: string) => {
   try {
     await proposalStore.deleteReport(proposalId.value, reportId)
   } catch (error) {

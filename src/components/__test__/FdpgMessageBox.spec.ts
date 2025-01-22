@@ -4,6 +4,8 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import type { MockedObject } from 'vitest'
 import { ElButton } from 'element-plus'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockImplementation((entry) => entry),

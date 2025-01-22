@@ -2,6 +2,7 @@ import ReportGallery from '../ReportGallery.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import type { IReportFile } from '@/types/proposal.types'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('ReportGallery.vue', () => {
   let wrapper: VueWrapper
@@ -10,7 +11,7 @@ describe('ReportGallery.vue', () => {
       props: {
         uploads: [
           { downloadUrl: 'string', mimetype: 'string', fileName: 'sdf', fileSize: 'asdf', createdAt: 'asdf' },
-        ] as unknown as IReportFile,
+        ] as unknown as IReportFile[],
       },
       global: {
         plugins: [createTestingPinia()],

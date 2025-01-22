@@ -17,6 +17,7 @@ import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import { useLayoutStore } from '@/stores/layout.store'
 import type { UploadFile } from 'element-plus'
 import type { MiiLocation } from '@/types/location.enum'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   createI18n: vi.fn(),

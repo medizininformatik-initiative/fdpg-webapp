@@ -4,13 +4,10 @@
       <p>{{ $t(description) }}</p>
 
       <FdpgLabel html-for="proposal.declineReasonLabel" />
-      <FdpgInput
+      <FdpgTextEditor
         v-model="declineReason"
         data-testId="declineReason"
-        placeholder="proposal.declineReasonPlaceholder"
-        type="textarea"
-        :rows="2"
-        autosize
+        :placeholder="$t('proposal.declineReasonPlaceholder')"
       />
     </div>
 
@@ -39,9 +36,8 @@ import { ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useVModel } from '@vueuse/core'
 import FdpgLabel from './FdpgLabel.vue'
-import FdpgInput from './FdpgInput.vue'
+import FdpgTextEditor from './FdpgTextEditor.vue'
 import FdpgDialog from './FdpgDialog.vue'
-
 const emit = defineEmits(['update:modelValue', 'confirm'])
 
 const props = defineProps({
@@ -67,7 +63,6 @@ const props = defineProps({
 })
 
 const declineReason = ref<string | undefined>(undefined)
-
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
   declineReason.value = undefined

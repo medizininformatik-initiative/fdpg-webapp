@@ -5,6 +5,7 @@ import { mockProposal } from '@/mocks/proposal.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { mount } from '@vue/test-utils'
 import type { IConditionalApproval, IUacApproval } from '@/types/proposal.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

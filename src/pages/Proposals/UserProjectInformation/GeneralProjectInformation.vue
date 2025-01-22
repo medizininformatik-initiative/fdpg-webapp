@@ -42,14 +42,11 @@
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.generalProjectInformation.projectFunding">
           <FdpgLabel required html-for="proposal.projectFunding" />
-          <FdpgInput
+
+          <FdpgTextEditor
             v-model="generalProjectInformationForm.projectFunding"
-            data-testId="generalProjectInformation.projectFunding"
-            placeholder="proposal.pleaseEnterTheProjectFunding"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
-            type="textarea"
-            :rows="2"
-            autosize
+            data-testId="generalProjectInformation.projectFunding"
           />
         </FdpgFormItem>
       </el-col>
@@ -73,7 +70,7 @@
 <script setup lang="ts">
 import FdpgDatePicker from '@/components/FdpgDatePicker.vue'
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'

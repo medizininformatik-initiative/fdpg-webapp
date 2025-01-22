@@ -7,6 +7,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import type { MockedObject } from 'vitest'
 import type { IReportGet } from '@/types/proposal.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

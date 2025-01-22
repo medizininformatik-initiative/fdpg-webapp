@@ -34,8 +34,7 @@
               }}</span>
             </h5>
           </div>
-          <div class="comment-card-body">
-            {{ comment.content }}
+          <div class="comment-card-body" v-html="comment.content">
           </div>
           <div class="comment-card-actions">
             <div class="left">

@@ -3,6 +3,7 @@ import DetailTopBar from '../DetailTopBar.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import type { IButtonConfig } from '@/types/button-config.interface'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

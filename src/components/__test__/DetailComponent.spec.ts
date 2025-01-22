@@ -4,6 +4,7 @@ import { mount, type VueWrapper } from '@vue/test-utils'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { MockedObject } from 'vitest'
 import { Role } from '@/types/oidc.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('DetailComponent.vue', () => {
   let authStore: MockedObject<ReturnType<typeof useAuthStore>>

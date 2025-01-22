@@ -35,14 +35,11 @@
 
       <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
         <FdpgLabel html-for="proposal.dataPrivacyExtra" />
-        <FdpgInput
+        <FdpgtextEditor
           v-model="typeOfUseForm.dataPrivacyExtra"
           data-testId="typeOfUseForm.dataPrivacyExtra"
-          placeholder="proposal.dataPrivacyExtraPlaceholder"
+          :placeholder="t('proposal.dataPrivacyExtraPlaceholder')"
           :disabled="reviewMode || typeOfUseForm.isDone"
-          type="textarea"
-          :rows="2"
-          autosize
         />
       </FdpgFormItem>
     </div>
@@ -66,7 +63,6 @@ import type { PropType } from 'vue'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
 
 const props = defineProps({
   modelValue: {
@@ -96,7 +92,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const typeOfUseForm = useVModel(props, 'modelValue', emit)
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 onMounted(async () => {

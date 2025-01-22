@@ -3,6 +3,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import DocumentList from '../Proposals/Details/DocumentList.vue'
 import { ElUpload, type UploadFile, type UploadFiles } from 'element-plus'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
