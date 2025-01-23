@@ -16,28 +16,8 @@
       >
         <FdpgRadio
           :test-id-extension="'__' + identifier"
-          value="DATA_RECEIVER"
-          label="proposal.participantCategory_DATA_RECEIVER"
-        />
-        <FdpgRadio
-          :test-id-extension="'__' + identifier"
-          value="BIOSAMPLE_RECEIVER"
-          label="proposal.participantCategory_BIOSAMPLE_RECEIVER"
-        />
-        <FdpgRadio
-          :test-id-extension="'__' + identifier"
           value="DATA_AND_BIOSAMPLE_RECEIVER"
           label="proposal.participantCategory_DATA_AND_BIOSAMPLE_RECEIVER"
-        />
-        <FdpgRadio
-          :test-id-extension="'__' + identifier"
-          value="PROJECT_LEADER"
-          label="proposal.participantCategory_PROJECT_LEADER"
-        />
-        <FdpgRadio
-          :test-id-extension="'__' + identifier"
-          value="ADDITIONAL_PROJECT_LEADER"
-          label="proposal.participantCategory_ADDITIONAL_PROJECT_LEADER"
         />
       </el-radio-group>
     </FdpgFormItem>
@@ -48,11 +28,11 @@
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgRadio from '@/components/FdpgRadio.vue'
-import type { IParticipantCategory } from '@/types/proposal.types'
+import { ParticipantType, type IParticipantCategory } from '@/types/proposal.types'
 import { requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
-import type { PropType } from 'vue'
+import { onMounted, type PropType } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -89,4 +69,10 @@ const participantCategory = useVModel(props, 'modelValue', emit)
 const formRules = {
   category: requiredValidationFunc(undefined, props.required),
 }
+
+onMounted(() => {
+  if (props.modelValue.category === undefined) {
+    participantCategory.value.category = ParticipantType.DataAndBiosampleReceiver
+  }
+})
 </script>
