@@ -330,7 +330,6 @@ export interface IIsDoneOverview {
 export interface IConditionalApproval {
   location: MiiLocation
   isAccepted: boolean
-  isDizAccepted: boolean
   isContractSigned?: boolean
   dataAmount: number
   uploadId?: string
@@ -353,7 +352,7 @@ export interface IUacApproval {
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
   DizApproved = 'DIZ_APPROVED',
-  DizConditionApproved = 'DIZ_CONDITION_APPROVED',
+  DizConditionCheck = 'DIZ_CONDITION_CHECK',
   UacApproved = 'UAC_APPROVED',
   SignedContract = 'SIGNED_CONTRACT',
   SignedContractAndContractingDone = 'SIGNED_CONTRACT_AND_CONTRACTING_DONE',
@@ -419,6 +418,7 @@ export interface IProposal {
   // One location should only be in one state at the same time
   openDizChecks: MiiLocation[]
   dizApprovedLocations: MiiLocation[]
+  openDizConditionChecks: MiiLocation[]
   uacApprovedLocations: MiiLocation[]
   dizConditionApprovedLocations: MiiLocation[]
   requestedButExcludedLocations: MiiLocation[]
@@ -426,6 +426,7 @@ export interface IProposal {
   // LOCATION Tasks <----
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
+  locationConditionDraft: IConditionalApproval[]
   conditionalApprovals: IConditionalApproval[]
   uacApprovals: IUacApproval[]
   totalPromisedDataAmount?: number

@@ -32,7 +32,6 @@ export class ProposalService {
 
   async get(id: string): Promise<IProposal> {
     const response = await this.apiClient.get(`${this.basePath}/${id}`)
-    console.log({ response })
     return response.data
   }
 
@@ -43,6 +42,7 @@ export class ProposalService {
       panelQuery,
     }
     const response = await this.apiClient.get(this.basePath, { params })
+
     return response.data
   }
 
@@ -91,6 +91,11 @@ export class ProposalService {
 
   async setDizApproval(id: string, decision: DizApprovalDecision): Promise<void> {
     await this.apiClient.post(`${this.basePath}/${id}/dizApproval`, decision)
+  }
+
+  async setDizConditionApproval(id: string, vote: UacApprovalDecision): Promise<void> {
+    console.log({ vote })
+    await this.apiClient.post(`${this.basePath}/${id}/dizConditionApproval`, vote)
   }
 
   async signContract(id: string, decision: ContractDecision): Promise<IProposal> {

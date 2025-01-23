@@ -119,6 +119,10 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.setDizApproval(id, decision)
     },
 
+    async setDizConditionApproval(id: string, decision: UacApprovalDecision): Promise<void> {
+      await this.apiService.setDizConditionApproval(id, decision)
+    },
+
     async signContract(id: string, decision: ContractDecision): Promise<void> {
       await this.apiService.signContract(id, decision)
     },

@@ -1,4 +1,5 @@
 <template>
+  <pre>{{ console.log(proposal.locationState) }}</pre>
   <PanelTodoStatus
     :icon-class="stateMap[proposal.locationState].icon"
     :style-class="stateMap[proposal.locationState].styleClass"
@@ -34,6 +35,11 @@ const stateMap: Record<LocationState, ILocationState> = {
   },
   [LocationState.DizApproved]: {
     message: `locationStatus.${LocationState.DizApproved}`,
+    icon: 'fa-solid fa-list-check',
+    styleClass: 'active',
+  },
+  [LocationState.DizConditionCheck]: {
+    message: `locationStatus.${LocationState.IsDizCheck}`,
     icon: 'fa-solid fa-list-check',
     styleClass: 'active',
   },

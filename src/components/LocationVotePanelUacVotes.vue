@@ -110,7 +110,7 @@
               class="contract-condition-row"
             >
               <div
-                v-if="authStore.singleKnownRole === Role.FdpgMember"
+                v-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.uploadId"
                 role="button"
                 class="condition-text cursor-pointer"
                 :data-testId="'button__condition-download__' + conditionalApproval.location"
@@ -119,6 +119,9 @@
                 @keydown.enter="handleDownload(conditionalApproval.uploadId)"
               >
                 {{ MII_LOCATIONS[conditionalApproval.location].display }}: {{ conditionalApproval.upload.fileName }}
+              </div>
+              <div v-else-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.conditionReasoning">
+                {{ MII_LOCATIONS[conditionalApproval.location].display }}: {{ conditionalApproval.conditionReasoning }}
               </div>
               <div
                 v-else

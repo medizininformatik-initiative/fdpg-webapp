@@ -4,8 +4,63 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+
+    <template v-if="isConditionCheck">
+      <div class="section">
+        <h2 class="section-title">Review UAC Conditions</h2>
+        <div v-if="!!uacCondition">
+          <div
+            v-if="uacCondition.uploadId"
+            role="button"
+            class="condition-text cursor-pointer"
+            :data-testId="'button__condition-download__' + uacCondition.location"
+            tabindex="0"
+            @click="handleDownload(uacCondition.uploadId)"
+            @keydown.enter="handleDownload(uacCondition.uploadId)"
+          >
+            <pre>{{ console.log({ uacCondition }) }}</pre>
+            {{ MII_LOCATIONS[uacCondition.location].display }}:
+            {{
+              proposalStore.currentProposal.uploads.find((upload: any) => upload._id === uacCondition.uploadId).fileName
+            }}
+          </div>
+
+          <FdpgInput v-model="uacCondition.conditionReasoning"></FdpgInput>
+
+          <div class="condition-interaction">
+            <div class="condition-data-amount">
+              {{ $t('proposal.conditionApprovalDataVolume', { amount: uacCondition.dataAmount }) }}
+            </div>
+
+            <div class="condition-actions">
+              <el-button
+                class="negative"
+                :disabled="uacCondition.reviewedAt !== undefined"
+                :data-testId="'button__condition-decline__' + uacCondition.location"
+                @click="rejectProposal()"
+                ><i class="el-icon-close" role="button"
+              /></el-button>
+
+              <el-button
+                class="positive"
+                :disabled="uacCondition.reviewedAt !== undefined"
+                :data-testId="'button__condition-accept__' + uacCondition.location"
+                @click="acceptProposal()"
+              >
+                <i class="el-icon-check" role="button" />
+              </el-button>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <p>no conditions</p>
+        </div>
+      </div>
+    </template>
+
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
+
     <ProjectHistory />
 
     <div class="divider" />
@@ -58,9 +113,12 @@ import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import FdpgInput from '@/components/FdpgInput.vue'
+import useDownload from '@/composables/use-download'
+import { MII_LOCATIONS } from '@/constants'
 
 const { t } = useI18n()
 const showPublications = ref(false)
@@ -68,6 +126,11 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
+const isConditionCheck = computed(
+  () => proposalStore.currentProposal?.locationStatus === LocationState.DizConditionCheck,
+)
+const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
+
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -83,6 +146,42 @@ const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const openProposal = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+}
+
+const { downloadFile } = useDownload(proposalId, showErrorMessage)
+const handleDownload = async (id: string) => {
+  if (proposalId.value) {
+    await downloadFile(id)
+  }
+}
+
+const rejectProposal = async () => {
+  await proposalStore.setDizConditionApproval(proposalId.value, {
+    value: false,
+    declineReason: '',
+  })
+}
+
+const acceptProposal = async () => {
+  const uacConditionVal = uacCondition.value
+
+  if (!uacConditionVal) {
+    showErrorMessage(t('general.failedSubmit'))
+    return
+  }
+
+  try {
+    await proposalStore.setDizConditionApproval(proposalId.value, {
+      value: true,
+      dataAmount: uacConditionVal.dataAmount,
+      conditionReasoning: uacConditionVal.conditionReasoning,
+    })
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
+  }
 }
 
 const setDizApproval = async (decision: DizApprovalDecision) => {
@@ -259,8 +358,6 @@ const fetchProposal = async () => {
 
 onMounted(async () => {
   await fetchProposal()
-
-  console.log({ project })
 })
 </script>
 
