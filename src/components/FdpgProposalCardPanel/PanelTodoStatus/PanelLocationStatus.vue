@@ -1,5 +1,4 @@
 <template>
-  <pre>{{ console.log(proposal.locationState) }}</pre>
   <PanelTodoStatus
     :icon-class="stateMap[proposal.locationState].icon"
     :style-class="stateMap[proposal.locationState].styleClass"

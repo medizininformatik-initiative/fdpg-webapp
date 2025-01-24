@@ -4,8 +4,6 @@ import { LocationState, ProjectStatusType, ProposalStatus } from '@/types/propos
 import { getLocaleDateString } from '../date.util'
 
 export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
-  console.log(proposal.locationStatus)
-
   if (proposal.isLocked) {
     return {
       type: ProjectStatusType.warning,

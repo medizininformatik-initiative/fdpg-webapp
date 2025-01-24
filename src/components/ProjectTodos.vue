@@ -7,7 +7,7 @@
         <ProjectTodoLargeItem
           v-else
           :is-disabled="isDisabled"
-          :has-actions="projectTodo.type === 'decision'"
+          :has-actions="projectTodo.type === 'decision' || projectTodo.type === 'condition-check'"
           :project-todo="projectTodo"
         ></ProjectTodoLargeItem>
       </template>

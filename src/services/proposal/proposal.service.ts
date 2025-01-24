@@ -94,7 +94,6 @@ export class ProposalService {
   }
 
   async setDizConditionApproval(id: string, vote: UacApprovalDecision): Promise<void> {
-    console.log({ vote })
     await this.apiClient.post(`${this.basePath}/${id}/dizConditionApproval`, vote)
   }
 

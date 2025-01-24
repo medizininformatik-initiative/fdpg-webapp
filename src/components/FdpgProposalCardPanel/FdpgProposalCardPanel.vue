@@ -42,7 +42,6 @@
       @keydown.tab.shift="handleShiftTab($event)"
     >
       <el-col v-for="proposal in filteredProposals" :key="proposal._id" :lg="8" :md="12" :sm="24">
-        <pre>{{ console.log(proposal.locationState) }}</pre>
         <FdpgProposalCard
           :proposal="proposal"
           :type="panel.type"

@@ -5,59 +5,6 @@
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
 
-    <template v-if="isConditionCheck">
-      <div class="section">
-        <h2 class="section-title">Review UAC Conditions</h2>
-        <div v-if="!!uacCondition">
-          <div
-            v-if="uacCondition.uploadId"
-            role="button"
-            class="condition-text cursor-pointer"
-            :data-testId="'button__condition-download__' + uacCondition.location"
-            tabindex="0"
-            @click="handleDownload(uacCondition.uploadId)"
-            @keydown.enter="handleDownload(uacCondition.uploadId)"
-          >
-            <pre>{{ console.log({ uacCondition }) }}</pre>
-            {{ MII_LOCATIONS[uacCondition.location].display }}:
-            {{
-              proposalStore.currentProposal.uploads.find((upload: any) => upload._id === uacCondition.uploadId).fileName
-            }}
-          </div>
-
-          <FdpgInput v-model="uacCondition.conditionReasoning"></FdpgInput>
-
-          <div class="condition-interaction">
-            <div class="condition-data-amount">
-              {{ $t('proposal.conditionApprovalDataVolume', { amount: uacCondition.dataAmount }) }}
-            </div>
-
-            <div class="condition-actions">
-              <el-button
-                class="negative"
-                :disabled="uacCondition.reviewedAt !== undefined"
-                :data-testId="'button__condition-decline__' + uacCondition.location"
-                @click="rejectProposal()"
-                ><i class="el-icon-close" role="button"
-              /></el-button>
-
-              <el-button
-                class="positive"
-                :disabled="uacCondition.reviewedAt !== undefined"
-                :data-testId="'button__condition-accept__' + uacCondition.location"
-                @click="acceptProposal()"
-              >
-                <i class="el-icon-check" role="button" />
-              </el-button>
-            </div>
-          </div>
-        </div>
-        <div v-else>
-          <p>no conditions</p>
-        </div>
-      </div>
-    </template>
-
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
 
@@ -116,9 +63,6 @@ import type { UploadFile } from 'element-plus'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import FdpgInput from '@/components/FdpgInput.vue'
-import useDownload from '@/composables/use-download'
-import { MII_LOCATIONS } from '@/constants'
 
 const { t } = useI18n()
 const showPublications = ref(false)
@@ -126,9 +70,6 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
-const isConditionCheck = computed(
-  () => proposalStore.currentProposal?.locationStatus === LocationState.DizConditionCheck,
-)
 const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
 
 const currentProposalStatus = [
@@ -148,21 +89,21 @@ const openProposal = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
 }
 
-const { downloadFile } = useDownload(proposalId, showErrorMessage)
-const handleDownload = async (id: string) => {
-  if (proposalId.value) {
-    await downloadFile(id)
+const rejectConditionCheck = async (declineReason: string) => {
+  try {
+    await proposalStore.setDizConditionApproval(proposalId.value, {
+      value: false,
+      declineReason,
+    })
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 
-const rejectProposal = async () => {
-  await proposalStore.setDizConditionApproval(proposalId.value, {
-    value: false,
-    declineReason: '',
-  })
-}
-
-const acceptProposal = async () => {
+const acceptConditionCheck = async (conditionReasoning?: string) => {
   const uacConditionVal = uacCondition.value
 
   if (!uacConditionVal) {
@@ -174,7 +115,7 @@ const acceptProposal = async () => {
     await proposalStore.setDizConditionApproval(proposalId.value, {
       value: true,
       dataAmount: uacConditionVal.dataAmount,
-      conditionReasoning: uacConditionVal.conditionReasoning,
+      conditionReasoning,
     })
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: RouteName.Dashboard })
@@ -197,7 +138,15 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
 
 const isDeclineDialogOpen = ref(false)
 const handleDizDeclineConfirm = async (declineReason: string) => {
-  await setDizApproval({ value: false, declineReason })
+  const currentProposal = proposalStore.currentProposal
+  const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
+  const isConditionCheckStatus = currentProposal?.locationStatus === LocationState.DizConditionCheck
+
+  if (isLocationCheckStatus && isConditionCheckStatus) {
+    await rejectConditionCheck(declineReason)
+  } else {
+    await setDizApproval({ value: false, declineReason })
+  }
 }
 const handleDizApprovalAcceptDialog = async () => {
   messageBoxStore.setMessageBoxInfo({
@@ -272,12 +221,41 @@ const getSignTodo = (): IProjectTodo[] => {
   }
 }
 
-const getCheckContractTodo = () => {
+const getCheckContractTodo = (): IProjectTodo[] => {
   const currentProposal = proposalStore.currentProposal
+  const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
+  const isConditionCheckStatus = currentProposal?.locationStatus === LocationState.DizConditionCheck
 
-  console.log({ currentProposal })
+  if (isLocationCheckStatus && isConditionCheckStatus) {
+    const [condition] = currentProposal.locationConditionDraft
+
+    if (!condition) {
+      showErrorMessage()
+      return []
+    }
+
+    return [
+      {
+        title: t('proposal.reviewUacConditionTitle'),
+        description: t('proposal.reviewUacConditionDescription'),
+        action: (decision: boolean, updatedConditionReasoning?: string) =>
+          handleConditionDecision(decision, updatedConditionReasoning),
+        type: 'condition-check',
+        testId: 'todo__button__review__uac__condition',
+        condition: condition,
+      },
+    ]
+  }
 
   return []
+}
+
+const handleConditionDecision = async (decision: boolean, updatedConditionReasoning?: string) => {
+  if (decision === true) {
+    await acceptConditionCheck(updatedConditionReasoning)
+  } else {
+    isDeclineDialogOpen.value = true
+  }
 }
 
 const projectDuration = computed(

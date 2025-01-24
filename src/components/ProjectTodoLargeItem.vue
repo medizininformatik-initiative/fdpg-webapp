@@ -20,7 +20,7 @@
           :disabled="isDisabled"
           class="positive"
           :data-testId="projectTodo.testId + '__true'"
-          @click="projectTodo.action(true)"
+          @click="projectTodo.action(true, uacCondition?.conditionReasoning)"
         >
           <i class="el-icon-check" aria-hidden="true" />
         </el-button>
@@ -29,14 +29,20 @@
     <div class="check-proposal-card-content">
       {{ $t(projectTodo.description) }}
     </div>
+    <div v-if="projectTodo.type === 'condition-check' && uacCondition">
+      <ProjectTodosConditionReview :is-disabled="isDisabled" :uac-condition="uacCondition" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { PropType } from 'vue'
+import { computed, type PropType } from 'vue'
+import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 
-defineProps({
+const uacCondition = computed(() => props.projectTodo.condition)
+
+const props = defineProps({
   projectTodo: {
     type: Object as PropType<IProjectTodo>,
     required: true,
