@@ -136,9 +136,13 @@ const showResearcherStatus = computed(() => {
 const showLockedStatus = computed(() => {
   return props.proposal.isLocked
 })
-const notificationIcon = {
+const notificationIcon: Record<FdpgTaskType, string> = {
   [FdpgTaskType.Comment]: 'bi bi-chat-right-text',
   [FdpgTaskType.ConditionApproval]: 'bi bi-file-earmark',
+  [FdpgTaskType.UacApprovalComplete]: '',
+  [FdpgTaskType.DataAmountReached]: '',
+  [FdpgTaskType.ContractComplete]: '',
+  [FdpgTaskType.DueDateReached]: '',
 }
 const notifications = computed(() => {
   if (authStore.singleKnownRole === Role.FdpgMember) {

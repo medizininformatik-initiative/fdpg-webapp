@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils'
 import PanelLocationVote from './PanelLocationVote.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mockProposalDetail } from '@/mocks/proposal.mock'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

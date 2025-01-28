@@ -9,7 +9,7 @@ export default () => {
     const relatedTargetPanel = relatedTarget?.closest('.fdpg-card-panel')
     const isElementOfSamePanel = targetPanel?.isSameNode(relatedTargetPanel)
 
-    if (!isElementOfSamePanel) {
+    if (isElementOfSamePanel === undefined) {
       const targetPanelRow = targetPanel?.querySelector('.el-row')
       keyboardNavigation.setFocus(targetPanelRow)
     }
