@@ -10,6 +10,8 @@ import { useCommentStore } from '@/stores/comment/comment.store'
 import useNotifications from '@/composables/use-notifications'
 import { MiiLocation } from '@/types/location.enum'
 import { ElSwitch } from 'element-plus'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockReturnValue('Test'),

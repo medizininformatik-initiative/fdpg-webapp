@@ -10,6 +10,7 @@ import type { IProposal } from '@/types/proposal.types'
 import { useRouter } from 'vue-router'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import { RouteName } from '@/types/route-name.enum'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   createI18n: vi.fn(),

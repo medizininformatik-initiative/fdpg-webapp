@@ -2,6 +2,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import EditProfileDialog from '../EditProfileDialog.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   createI18n: vi.fn(),

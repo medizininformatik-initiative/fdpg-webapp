@@ -1,6 +1,7 @@
 import FdpgDropdown from '../FdpgDropdown.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgDropdown.vue', () => {
   let wrapper: VueWrapper
@@ -16,7 +17,7 @@ describe('FdpgDropdown.vue', () => {
         items: [
           {
             label: 'TranslationSchema',
-            action: () => {},
+            action: () => { },
             kind: 'basic',
           },
         ],

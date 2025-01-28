@@ -3,6 +3,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { MenuType } from '@/types/sidebar-menu.types'
 import { RouteName } from '@/types/route-name.enum'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgSidebarItemRoute.vue', () => {
   let wrapper: VueWrapper

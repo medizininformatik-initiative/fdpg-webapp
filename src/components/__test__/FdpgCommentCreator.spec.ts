@@ -1,7 +1,7 @@
 import FdpgCommentCreator from '../FdpgCommentCreator.vue'
 import { CommentType } from '@/types/comment.interface'
 import { useCommentStore } from '@/stores/comment/comment.store'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import { createTestingPinia } from '@pinia/testing'

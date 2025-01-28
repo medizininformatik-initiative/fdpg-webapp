@@ -9,6 +9,7 @@ import { Role } from '@/types/oidc.types'
 import { mockProposal } from '@/mocks/proposal.mock'
 import PublicationDialog from '../PublicationDialog.vue'
 import useNotifications from '@/composables/use-notifications'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),

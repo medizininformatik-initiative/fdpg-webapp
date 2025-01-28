@@ -10,6 +10,7 @@ import { useMessageBoxStore } from '@/stores/messageBox.store'
 import ReportDialog from '../ReportDialog.vue'
 import ViewReportDialog from '../ViewReportDialog.vue'
 import useNotifications from '@/composables/use-notifications'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),

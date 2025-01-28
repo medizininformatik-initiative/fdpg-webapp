@@ -23,11 +23,10 @@
         <el-col :sm="24">
           <FdpgFormItem prop="content">
             <FdpgLabel html-for="proposal.text" />
-            <FdpgInput
+            <FdpgtextEditor
               v-model="report.content"
-              type="textarea"
               data-testId="report.content"
-              placeholder="proposal.reportContentPlaceholder"
+              :placeholder="$t('proposal.reportContentPlaceholder')"
             />
           </FdpgFormItem>
         </el-col>
@@ -86,6 +85,7 @@ import FdpgFormItem from './FdpgFormItem.vue'
 import FdpgInput from './FdpgInput.vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgUpload from './FdpgUpload.vue'
+import FdpgtextEditor from './FdpgTextEditor.vue'
 
 const { showErrorMessage } = useNotifications()
 const ReportFormRef: Ref<typeof ElForm | undefined> = ref<typeof ElForm>()

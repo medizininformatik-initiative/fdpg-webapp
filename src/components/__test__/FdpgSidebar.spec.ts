@@ -1,6 +1,7 @@
 import FdpgSidebar from '../FdpgSidebar.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgSidebar.vue', () => {
   let wrapper: VueWrapper

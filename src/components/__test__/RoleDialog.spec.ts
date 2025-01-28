@@ -4,6 +4,8 @@ import FdpgDialog from '../FdpgDialog.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 vi.mock('vue-router', () => ({
   createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
   createWebHistory: vi.fn(),

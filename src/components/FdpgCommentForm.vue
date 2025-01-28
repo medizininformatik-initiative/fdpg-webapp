@@ -1,14 +1,5 @@
 <template>
-  <FdpgInput
-    ref="inputRef"
-    v-model="comment"
-    placeholder="proposal.leaveAComment"
-    :size="FdpgInputSize.Small"
-    type="textarea"
-    :rows="2"
-    autosize
-  />
-
+  <FdpgTextEditor v-model="comment" ref="inputRef" :placeholder="$t('proposal.leaveAComment')"></FdpgTextEditor>
   <section role="region" class="action-row">
     <div class="comment-field-actions">
       <el-button
@@ -37,8 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import FdpgInput from '@/components/FdpgInput.vue'
-import { FdpgInputSize } from '@/types/component.types'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useVModel } from '@vueuse/core'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'

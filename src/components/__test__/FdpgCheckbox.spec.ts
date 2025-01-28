@@ -1,6 +1,7 @@
 import FdpgCheckbox from '../FdpgCheckbox.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('FdpgCheckbox.vue', () => {
   let wrapper: any

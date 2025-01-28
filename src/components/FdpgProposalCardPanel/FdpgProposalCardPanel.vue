@@ -3,7 +3,7 @@
     <div class="header">
       <div class="title-wrapper">
         <h5 class="title">{{ $t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
-        <div v-loading="loading" />
+        <div v-loading="loading"></div>
       </div>
       <div class="action-wrapper">
         <el-button
@@ -88,7 +88,6 @@ const props = defineProps({
     default: SortDirection.ASC,
   },
 })
-
 const displayCount = ref<number>(props.defaultLength)
 const loading = ref<boolean>(false)
 

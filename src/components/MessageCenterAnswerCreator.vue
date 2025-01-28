@@ -1,14 +1,6 @@
 <template>
   <section class="answer-creator">
-    <FdpgInput
-      ref="inputRef"
-      v-model="answerContent"
-      placeholder="proposal.leaveAComment"
-      :size="FdpgInputSize.Small"
-      type="textarea"
-      :rows="2"
-      autosize
-    />
+    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="$t('proposal.leaveAComment')" />
 
     <section role="region" class="action-row">
       <div class="comment-field-actions">
@@ -34,12 +26,11 @@
 </template>
 
 <script setup lang="ts">
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
-import { FdpgInputSize } from '@/types/component.types'
 import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
@@ -65,7 +56,6 @@ const authStore = useAuthStore()
 const locationSelection = ref<MiiLocation[]>([])
 const answerContent = ref<string>()
 const inputRef = ref()
-
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer'])
 
 const toggleAnswerMode = (value: boolean) => {

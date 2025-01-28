@@ -11,7 +11,7 @@ import { ElButton } from 'element-plus'
 import { ref } from 'vue'
 import { nextTick } from 'vue'
 import useNotifications from '@/composables/use-notifications'
-import { spy } from '@vitest/utils'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

@@ -2,6 +2,7 @@ import FdpgDatePicker from '../FdpgDatePicker.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import { CommentType } from '@/types/comment.interface'
+import { beforeEach, describe, expect, it } from 'vitest'
 
 describe('FdpgDatePicker.vue', () => {
   let wrapper: any
