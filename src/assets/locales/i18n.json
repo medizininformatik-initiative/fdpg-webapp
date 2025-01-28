@@ -296,6 +296,14 @@
       "de": "Forschungsprojekt wurde vom DIZ abelehnt",
       "en": "Research project was rejected by the DIZ"
     },
+    "DIZ_ACCEPT_WITH_CONDITIONS": {
+      "de": "Forschungsprojekt wurde vom DIZ unter Auflagen genehmigt",
+      "en": "Research project approved by DIZ under conditions"
+    },
+    "DIZ_ACCEPT_WITHOUT_CONDITIONS": {
+      "de": "Forschungsprojekt wurde vom DIZ genehmigt",
+      "en": "Research project approved by DIZ"
+    },
     "UAC_VOTE_ACCEPT": {
       "de": "Forschungsprojekt wurde vom UAC genehmigt",
       "en": "Research project was approved by the UAC"
@@ -1438,6 +1446,14 @@
       "de": "Auflagen hinzufügen (optional)",
       "en": "Add conditions (optional)"
     },
+    "acceptReasonLabel": {
+      "de": "Auflagen als Text",
+      "en": "Condition as text"
+    },
+    "acceptReasonPlaceholder": {
+      "de": "Sie können Ihre Auflagen hier hineinschreiben",
+      "en": "You may enter conditions here"
+    },
     "specifyTheAmountOfData": {
       "de": "Datenmenge angeben",
       "en": "Specify Datavolume"
@@ -1526,9 +1542,37 @@
       "de": "Vertrag unterschreiben",
       "en": "Sign contract"
     },
+    "preperationOfContractTitle": {
+      "de": "Vorbereitung des Vertragsschlusses",
+      "en": "Preparation of contract"
+    },
+    "preperationOfContractDescription": {
+      "de": "Das FDPG wird mithilfe der Auflagen einen Nutzungsvertrag vorbereiten und ihn den Forschenden und Ihrem Standort zur Unterzeichnung zusenden.",
+      "en": "The FDPG will prepare a contract with the help of the conditions and send it to the researchers and your location for signature."
+    },
     "youWillReceiveANotificationAsSoonAsYouCanUploadTheSignedContract": {
       "de": "Sie erhalten eine Benachrichtigung sobald der Vertragsprozess angestoßen wird",
       "en": "You will receive a notification as soon as you can upload the signed contract"
+    },
+    "furtherProcessingByDicTitle": {
+      "de": "Weiterverarbeitung im DIZ",
+      "en": "Further processing in the DIC"
+    },
+    "furtherProcessingByDicDescription": {
+      "de": "Nach dem Absenden, erhält die Transferstelle des DIZ Ihre Rückmeldung zur Weiterverarbeitung.",
+      "en": "After sending, the DIC transfer office will receive your feedback for further processing."
+    },
+    "reviewUacConditionTitle": {
+      "de": "Bitte verarbeiten Sie die Auflagen des UACs",
+      "en": "Please, process the UAC conditions"
+    },
+    "reviewUacConditionDescription": {
+      "de": "Auflagen müssen im Textformat an das FDPG weitergegeben werden, damit sie automatisch verarbeitet werden können. Falls Ihr UAC die Auflagen als PDF beigelegt hat, müssen Sie die entscheidenden Teile in das Textfeld kopieren.",
+      "en": "Conditions must be forwarded to the FDPG in text format so that they can be processed automatically. If your UAC has attached the condition as a PDF, you must copy the relevant parts into the text field."
+    },
+    "reviewUacConditionFile": {
+      "de": "Ihr UAC hat seiner Entscheidung das folgende Dokument beigelegt.",
+      "en": "Your UAC has attached the following document to its decision"
     },
     "sendContract": {
       "de": "Vertrag abschließen",
@@ -1813,10 +1857,6 @@
     "noFeasibilityQueriesWhenError": {
       "de": "Es konnten keine Machbarkeits-Anfragen geladen werden",
       "en": "No feasibility requests could be loaded"
-    },
-    "acceptReasonPlaceholder": {
-      "de": "Accept Reason Placeholder",
-      "en": "Accept Reason Placeholder"
     },
     "declineReasonPlaceholder": {
       "de": "Z.B. Es können keine Daten geliefert werden, weil...",

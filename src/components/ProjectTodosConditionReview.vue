@@ -1,31 +1,38 @@
 <template>
   <section class="section contract-conditions">
-    <div class="contract-condition-row">
-      <div
-        v-if="uacCondition.uploadId"
-        role="button"
-        class="condition-text cursor-pointer"
-        :data-testId="'button__condition-download__' + uacCondition.location"
-        tabindex="0"
-        @click="handleDownload(uacCondition.uploadId)"
-        @keydown.enter="handleDownload(uacCondition.uploadId)"
-      >
-        {{ MII_LOCATIONS[uacCondition.location].display }}:
-        {{ getFileName(uacCondition.uploadId) }}
+    <template v-if="uacCondition.uploadId">
+      <div class="contract-condition-row">
+        {{ $t('proposal.reviewUacConditionFile') }}
       </div>
 
-      <div class="condition-interaction">
-        <div class="condition-data-amount">
-          {{ $t('proposal.conditionApprovalDataVolume', { amount: uacCondition.dataAmount }) }}
+      <div class="contract-condition-row">
+        <div
+          role="button"
+          class="condition-text cursor-pointer"
+          :data-testId="'button__condition-download__' + uacCondition.location"
+          tabindex="0"
+          @click="handleDownload(uacCondition.uploadId)"
+          @keydown.enter="handleDownload(uacCondition.uploadId)"
+        >
+          {{ MII_LOCATIONS[uacCondition.location].display }}:
+          {{ getFileName(uacCondition.uploadId) }}
+        </div>
+        <div class="condition-interaction">
+          <div class="condition-data-amount">
+            {{ $t('proposal.conditionApprovalDataVolume', { amount: uacCondition.dataAmount }) }}
+          </div>
         </div>
       </div>
-    </div>
+    </template>
 
     <div class="contract-condition-row">
       <div class="condition-text-area">
-        <div>Forwarded conditions to FDPG members</div>
-        <div v-if="isDisabled">{{ uacCondition.conditionReasoning }}</div>
-        <FdpgInput v-else v-model="uacCondition.conditionReasoning" type="textarea" :rows="2" autosize></FdpgInput>
+        <FdpgTextEditor
+          v-model="uacCondition.conditionReasoning"
+          placeholder="proposal.acceptReasonPlaceholder"
+          :rows="2"
+          :disabled="isDisabled"
+        ></FdpgTextEditor>
       </div>
     </div>
   </section>
@@ -40,6 +47,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IConditionalApproval } from '@/types/proposal.types'
 import { computed, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
+import FdpgTextEditor from './FdpgTextEditor.vue'
 
 const props = defineProps({
   uacCondition: {

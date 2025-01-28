@@ -37,7 +37,7 @@
           </FdpgUpload>
 
           <FdpgLabel html-for="proposal.acceptReasonLabel" />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="conditionReasoning"
             data-testId="reasoning"
             placeholder="proposal.acceptReasonPlaceholder"
@@ -67,9 +67,15 @@
         </FdpgStep>
 
         <FdpgStep
+          step-icon-color="blue-green"
+          :title="$t('proposal.furtherProcessingByDicTitle')"
+          :description="$t('proposal.furtherProcessingByDicDescription')"
+        />
+
+        <FdpgStep
           step-icon-color="medium-green"
-          :title="$t('proposal.sign')"
-          :description="$t('proposal.youWillReceiveANotificationAsSoonAsYouCanUploadTheSignedContract')"
+          :title="$t('proposal.preperationOfContractTitle')"
+          :description="$t('proposal.preperationOfContractDescription')"
         />
       </el-steps>
     </div>
@@ -106,6 +112,7 @@ import { useI18n } from 'vue-i18n'
 import FdpgFormItem from './FdpgFormItem.vue'
 import FdpgNumberInput from './FdpgNumberInput.vue'
 import FdpgInput from './FdpgInput.vue'
+import FdpgTextEditor from './FdpgTextEditor.vue'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'acceptContract'])
 
