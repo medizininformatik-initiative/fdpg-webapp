@@ -103,13 +103,12 @@
                 $t('proposal.locationConditions', { count: table.conditionalApprovals.length })
               }}
             </h3>
-            <el-collapse
-              v-for="(conditionalApproval, conditionIdx) in table.conditionalApprovals"
-              :key="'conditional' + conditionIdx"
-              role="row"
-              class="contract-condition-row"
-            >
-              <el-collapse-item :disabled="authStore.singleKnownRole !== Role.FdpgMember">
+            <el-collapse class="contract-condition-row contract-condition-collapse-parent">
+              <el-collapse-item
+                v-for="conditionalApproval in table.conditionalApprovals"
+                :disabled="authStore.singleKnownRole !== Role.FdpgMember"
+                class="condition-row"
+              >
                 <template #title>
                   <div class="el-collapse-item-title">
                     {{ MII_LOCATIONS[conditionalApproval.location].display }}
@@ -647,6 +646,14 @@ onMounted(() => {
         width: 100%;
         padding-right: 1em;
       }
+
+      .condition-row {
+        margin-bottom: unset;
+      }
+    }
+
+    .contract-condition-collapse-parent {
+      flex-direction: column;
     }
 
     .condition-actions {
