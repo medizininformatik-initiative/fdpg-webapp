@@ -8,7 +8,7 @@
       :options="options"
       :enable="!props.disabled"
       :readOnly="props.disabled"
-      :placeholder="$t(placeholder)"
+      :placeholder="!!placeholder ? $t(placeholder) : ''"
     />
   </div>
 </template>
