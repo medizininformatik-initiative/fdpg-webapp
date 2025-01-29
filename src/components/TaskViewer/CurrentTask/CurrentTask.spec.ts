@@ -1,9 +1,10 @@
 import { mockCommentDetailForTask } from '@/mocks/comment.mock'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import { createTestingPinia } from '@pinia/testing'
-import type { VueWrapper } from '@vue/test-utils';
+import type { VueWrapper } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
 import CurrentTask from './CurrentTask.vue'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
