@@ -20,6 +20,7 @@ import type { ContractDecision } from '@/types/sign-contract.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
+import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types copy'
 
 export class ProposalService {
   private basePath = '/proposals'
@@ -67,7 +68,6 @@ export class ProposalService {
 
     if (decision.value) {
       formData.append('file', decision.file as Blob)
-      formData.append('dataAmount', decision.dataAmount.toString())
       decision.conditionReasoning && formData.append('conditionReasoning', decision.conditionReasoning)
     } else {
       formData.append('declineReason', decision.declineReason)
@@ -93,7 +93,7 @@ export class ProposalService {
     await this.apiClient.post(`${this.basePath}/${id}/dizApproval`, decision)
   }
 
-  async setDizConditionApproval(id: string, vote: UacApprovalDecision): Promise<void> {
+  async setDizConditionApproval(id: string, vote: DizConditionApprovalDecision): Promise<void> {
     await this.apiClient.post(`${this.basePath}/${id}/dizConditionApproval`, vote)
   }
 

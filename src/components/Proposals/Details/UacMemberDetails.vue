@@ -90,8 +90,8 @@ const setUacApproval = async (decision: UacApprovalDecision) => {
   }
 }
 
-const handleUacApprovalConfirm = async (dataAmount: number, file?: UploadFile, conditionReasoning?: string) => {
-  await setUacApproval({ value: true, dataAmount, file: file?.raw, conditionReasoning })
+const handleUacApprovalConfirm = async (file?: UploadFile, conditionReasoning?: string) => {
+  await setUacApproval({ value: true, file: file?.raw, conditionReasoning })
 }
 
 const handleUacApprovalDeclineConfirm = async (declineReason: string) => {

@@ -10,14 +10,15 @@
       </h3>
       <div v-if="hasActions" class="check-proposal-card-actions">
         <el-button
-          :disabled="isDisabled"
+          :disabled="isDisabled || negativeChildDisableButton"
           class="negative"
           :data-testId="projectTodo.testId + '__false'"
           @click="projectTodo.action(false)"
-          ><i class="el-icon-close" aria-hidden="true"
-        /></el-button>
+        >
+          <i class="el-icon-close" aria-hidden="true" />
+        </el-button>
         <el-button
-          :disabled="isDisabled"
+          :disabled="isDisabled || positiveChildDisableButton"
           class="positive"
           :data-testId="projectTodo.testId + '__true'"
           @click="projectTodo.action(true, uacCondition?.conditionReasoning)"
@@ -30,14 +31,18 @@
       {{ $t(projectTodo.description) }}
     </div>
     <div v-if="projectTodo.type === 'condition-check' && uacCondition">
-      <ProjectTodosConditionReview :is-disabled="isDisabled" :uac-condition="uacCondition" />
+      <ProjectTodosConditionReview
+        :is-disabled="isDisabled"
+        :uac-condition="uacCondition"
+        @disableButton="onChildTriggeredDisableButton"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { computed, type PropType } from 'vue'
+import { computed, ref, type PropType } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 
 const uacCondition = computed(() => props.projectTodo.condition)
@@ -56,6 +61,17 @@ const props = defineProps({
     default: false,
   },
 })
+
+const positiveChildDisableButton = ref<boolean>(props.isDisabled)
+const negativeChildDisableButton = ref<boolean>(props.isDisabled)
+
+const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; button: 'positive' | 'negative' }) => {
+  if (button === 'positive') {
+    positiveChildDisableButton.value = value
+  } else {
+    negativeChildDisableButton.value = value
+  }
+}
 </script>
 
 <style lang="scss" scoped>

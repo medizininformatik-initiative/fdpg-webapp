@@ -23,6 +23,7 @@ import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
+import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types copy'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -119,7 +120,7 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.setDizApproval(id, decision)
     },
 
-    async setDizConditionApproval(id: string, decision: UacApprovalDecision): Promise<void> {
+    async setDizConditionApproval(id: string, decision: DizConditionApprovalDecision): Promise<void> {
       await this.apiService.setDizConditionApproval(id, decision)
     },
 
