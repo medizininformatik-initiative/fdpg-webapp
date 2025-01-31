@@ -57,7 +57,9 @@
       />
       <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
 
-      <FdpgLabel html-for="proposal.attachmentsOptional" size="large" />
+      <FdpgLabel html-for="" size="large">{{
+        `${$t('proposal.attachmentsOptional')}  (${uploadsForType.length || ''})`
+      }}</FdpgLabel>
       <p class="desc">
         {{
           proposalId
