@@ -7,9 +7,7 @@
       <FdpgTextEditor v-model="fdpgCheckNotes" :placeholder="$t('proposal.checkNotesPlaceHolder')"></FdpgTextEditor>
       <el-button class="button__margin" type="primary" @click="sendFdpgCheckNotes">{{ $t('general.save') }}</el-button>
     </div>
-    <div class="check-note-content" v-else>
-      {{ proposalStore?.currentProposal?.fdpgCheckNotes }}
-    </div>
+    <div class="check-note-content" v-else v-html="proposalStore.currentProposal.fdpgCheckNotes"></div>
     <el-divider />
   </div>
 </template>
