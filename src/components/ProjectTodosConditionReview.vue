@@ -39,7 +39,7 @@
     </section>
 
     <section class="section contract-conditions">
-      <h3>{{ $t('proposal.specifyTheAmountOfData') }}</h3>
+      <h3 class="no-padding">{{ $t('proposal.specifyTheAmountOfData') }}</h3>
       <p>{{ $t('proposal.asADataProviderYouMustSpecifyAQuantity') }}</p>
       <el-form ref="formRef" class="contract-condition-row" :model="form" :rules="rules" @validate="onValidate">
         <FdpgFormItem prop="dataVolume">
@@ -153,8 +153,11 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 2em;
-}
 
+  .section {
+    margin: unset;
+  }
+}
 .contract-conditions {
   margin-top: 1rem;
   padding: 0 0 1rem 0;
@@ -176,16 +179,16 @@ onMounted(async () => {
     }
   }
 
+  .no-padding {
+    padding: unset;
+  }
+
   .contract-condition-row {
     display: flex;
     justify-content: space-between;
 
     padding: 0 12px;
     line-height: 24px;
-
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
 
     .condition-text {
       font-size: 16px;

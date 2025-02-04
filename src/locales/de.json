@@ -543,7 +543,10 @@
     "revertLocationModalTitle": "Möchten Sie das Votum wirklich zurücksetzen?",
     "revertLocationModalDescription": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
     "revertVote": "Zurücksetzen",
-    "virtualAllLocations": "Alle Standorte"
+    "virtualAllLocations": "Alle Standorte",
+    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent",
+    "updateAdditionalLocationPublicationName": "Die Nennung Ihres Standortes in einer wissenschaftlichen Publikation",
+    "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

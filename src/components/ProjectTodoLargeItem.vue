@@ -37,6 +37,13 @@
         @disableButton="onChildTriggeredDisableButton"
       />
     </div>
+    <div v-if="projectTodo.type === 'additional-location-information' && projectTodo.additionalInformation">
+      <ProjectTodosAdditionalLocationInformation
+        :is-disabled="isDisabled || projectTodo.readonly"
+        :additional-information="projectTodo.additionalInformation"
+        @submit="projectTodo.action"
+      />
+    </div>
   </div>
 </template>
 
@@ -44,6 +51,7 @@
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { computed, ref, type PropType } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
+import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
 
 const uacCondition = computed(() => props.projectTodo.condition)
 

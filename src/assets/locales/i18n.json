@@ -2145,6 +2145,18 @@
     "virtualAllLocations": {
       "de": "Alle Standorte",
       "en": "All Locations"
+    },
+    "updateAdditionalLocationLegalBasis": {
+      "de": "Rechtsgrundlage ist der Broad Consent",
+      "en": "The legal basis is the Broad Consent"
+    },
+    "updateAdditionalLocationPublicationName": {
+      "de": "Die Nennung Ihres Standortes in einer wissenschaftlichen Publikation",
+      "en": "The naming of your location in a scientific publication"
+    },
+    "updateAdditionalLocationPublicationNamePlaceholder": {
+      "de": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll.",
+      "en": "Here, you can enter the name of your location as it should appear in scientific publications."
     }
   },
   "roles": {
