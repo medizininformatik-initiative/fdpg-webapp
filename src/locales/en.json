@@ -544,8 +544,10 @@
     "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
     "revertVote": "Revert vote",
     "virtualAllLocations": "All Locations",
+    "updateAdditionalLocationInformationTodoTitle": "Provide additional information with your decision",
+    "updateAdditionalLocationInformationTodoDescription": "In case of an acception, please provide the following information for the project.",
     "updateAdditionalLocationLegalBasis": "The legal basis is the Broad Consent",
-    "updateAdditionalLocationPublicationName": "The naming of your location in a scientific publication",
+    "updateAdditionalLocationPublicationName": "We have a standard formulation from all locations for the contract appendix, which lists how the locations should be named in acknowledgements of publications. You only need to enter details here if you wish to make a project-specific change to this text. Let us know about permanent changes via the comments.",
     "updateAdditionalLocationPublicationNamePlaceholder": "Here, you can enter the name of your location as it should appear in scientific publications."
   },
   "roles": {

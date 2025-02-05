@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import type { IEditAdditionalLocationProposalInformation } from '@/types/proposal.types'
-import { onMounted, reactive, ref, watch, type PropType } from 'vue'
+import { reactive, ref, watch, type PropType } from 'vue'
 import FdpgInput from './FdpgInput.vue'
 
 const props = defineProps({
@@ -67,12 +67,10 @@ watch(
 
 const onSubmit = () => {
   emit('submit', { legalBasis: form.legalBasis, locationPublicationName: form.locationPublicationName })
+  props.additionalInformation.legalBasis = form.legalBasis
+  props.additionalInformation.locationPublicationName = form.locationPublicationName
   formChanged.value = false
 }
-
-onMounted(() => {
-  console.log(props.additionalInformation)
-})
 </script>
 
 <style lang="scss" scoped>
