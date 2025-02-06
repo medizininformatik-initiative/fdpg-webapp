@@ -88,6 +88,7 @@ export const transformForm = (
     totalContractedDataAmount: form?.totalContractedDataAmount,
     declineReasons: form?.declineReasons ?? [],
     version: transformVersion(form?.version),
-    fdpgCheckNotes: form?.fdpgCheckNotes
+    fdpgCheckNotes: form?.fdpgCheckNotes,
+    isParticipatingScientist: form?.isParticipatingScientist,
   }
 }

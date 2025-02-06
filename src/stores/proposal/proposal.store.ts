@@ -23,6 +23,7 @@ import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
+
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -218,8 +219,7 @@ export const useProposalStore = defineStore('Proposal', {
           typedStore.currentProposal.fdpgChecklist = { ...typedStore._checkListLastSuccess }
         }
       }
-    },
-      500),
+    }, 500),
 
     async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args: any) => void): Promise<void> {
       if (this.currentProposal) {
@@ -240,6 +240,7 @@ export const useProposalStore = defineStore('Proposal', {
       this.currentSortDirection =
         this.currentSortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
     },
+
     async createProposalPublication(proposalId: string, publication: IPublicationCreateAndUpdate): Promise<void> {
       const resp = await this.apiService.createPublication(proposalId, publication)
       if (this.currentProposal?._id === proposalId) {
@@ -302,6 +303,10 @@ export const useProposalStore = defineStore('Proposal', {
     async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
       await this.apiService.revertLocationVote(id, location)
       await this.setCurrentProposal(id)
+    },
+
+    isCurrentUserParticipatingScientist(): boolean {
+      return !!this.currentProposal?.isParticipatingScientist
     },
   },
 
