@@ -162,7 +162,6 @@
     "name": "Name",
     "pleaseEnterTheName": "Please enter the name",
     "detailsOfTheInstitutionFacility": "Details of the institution/facility",
-    "revert": "Revert",
     "fullCorrectNameOfTheInstitutionFacilityJurPerson": "Full/correct name of the institution/facility/jur. person",
     "pleaseEnterTheFullCorrectNameOfTheInstitutionFacilityJurPerson": "Please enter the name",
     "street": "Street",
@@ -306,7 +305,7 @@
     "messagesToApplicants": "Messages to applicant",
     "messagesToLocations": "Messages to locations",
     "messagesToFdpg": "Messages to FDPG",
-    "uniquenessGivenDescription": "Please look manually or on the basis of the project proposals if there are already similar projects. \nConfirm the uniqueness of the project or request changes in the title or reject the project proposal with reasons.",
+    "uniquenessGivenDescription": "Please look manually or on the basis of the project proposals if there are already similar projects. \\nConfirm the uniqueness of the project or request changes in the title or reject the project proposal with reasons.",
     "checkedAreas": "Checked areas ({isDoneCount}/{fieldCount})",
     "checkedAreasDescription": "Please review the application for content and completeness. Mark areas as reviewed. Leave tasks for the applicant and request revisions if necessary. If the application is found to be correct without objection you may forward it to the sites",
     "numberOfRequestedInstitutions": "Number of institutions",
@@ -531,8 +530,10 @@
     "checkNotesPlaceHolder": "Add your notes...",
     "revertLocationModalTitle": "Do you really want to revert the location vote?",
     "revertLocationModalDescription": "By reverting the location vote, the location will be able to vote again.",
-    "revertVote": "Revert vote",
-    "virtualAllLocations": "All Locations"
+    "revertVote": "Revert Vote",
+    "revert": "Revert",
+    "virtualAllLocations": "All Locations",
+    "projectDeadline": "Project deadline"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
