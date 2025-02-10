@@ -92,5 +92,6 @@ export const transformForm = (
     version: transformVersion(form?.version),
     fdpgCheckNotes: form?.fdpgCheckNotes,
     additionalLocationInformation: form?.additionalLocationInformation ?? [],
+    isParticipatingScientist: form?.isParticipatingScientist,
   }
 }

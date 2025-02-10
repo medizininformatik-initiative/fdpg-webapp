@@ -441,6 +441,7 @@ export interface IProposal {
   totalContractedDataAmount?: number
   declineReasons: IDeclineReason[]
   fdpgCheckNotes?: string
+  isParticipatingScientist?: boolean
 }
 
 export enum FdpgTaskType {

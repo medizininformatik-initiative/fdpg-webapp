@@ -246,6 +246,7 @@ export const useProposalStore = defineStore('Proposal', {
       this.currentSortDirection =
         this.currentSortDirection === SortDirection.ASC ? SortDirection.DESC : SortDirection.ASC
     },
+
     async createProposalPublication(proposalId: string, publication: IPublicationCreateAndUpdate): Promise<void> {
       const resp = await this.apiService.createPublication(proposalId, publication)
       if (this.currentProposal?._id === proposalId) {
@@ -315,6 +316,10 @@ export const useProposalStore = defineStore('Proposal', {
       additionalLocationInformation: IEditAdditionalLocationProposalInformation,
     ) {
       await this.apiService.updateAdditionalLocationInformation(id, additionalLocationInformation)
+    },
+
+    isCurrentUserParticipatingScientist(): boolean {
+      return !!this.currentProposal?.isParticipatingScientist
     },
   },
 
