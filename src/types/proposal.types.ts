@@ -332,7 +332,8 @@ export interface IConditionalApproval {
   isAccepted: boolean
   isContractSigned?: boolean
   dataAmount: number
-  uploadId: string
+  uploadId?: string
+  conditionReasoning?: string
   _id: string
   createdAt: string
   reviewedAt?: string
@@ -347,10 +348,18 @@ export interface IUacApproval {
   createdAt: string
   signedAt?: string
 }
+export interface IAdditionalLocationProposalInformation {
+  location: MiiLocation
+  legalBasis: boolean
+  locationPublicationName?: string
+}
+
+export type IEditAdditionalLocationProposalInformation = Omit<IAdditionalLocationProposalInformation, 'location'>
 
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
   DizApproved = 'DIZ_APPROVED',
+  DizConditionCheck = 'DIZ_CONDITION_CHECK',
   UacApproved = 'UAC_APPROVED',
   SignedContract = 'SIGNED_CONTRACT',
   SignedContractAndContractingDone = 'SIGNED_CONTRACT_AND_CONTRACTING_DONE',
@@ -416,12 +425,16 @@ export interface IProposal {
   // One location should only be in one state at the same time
   openDizChecks: MiiLocation[]
   dizApprovedLocations: MiiLocation[]
+  openDizConditionChecks: MiiLocation[]
   uacApprovedLocations: MiiLocation[]
+  dizConditionApprovedLocations: MiiLocation[]
   requestedButExcludedLocations: MiiLocation[]
   signedContracts: MiiLocation[]
   // LOCATION Tasks <----
+  additionalLocationInformation: IAdditionalLocationProposalInformation[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
+  locationConditionDraft: IConditionalApproval[]
   conditionalApprovals: IConditionalApproval[]
   uacApprovals: IUacApproval[]
   totalPromisedDataAmount?: number

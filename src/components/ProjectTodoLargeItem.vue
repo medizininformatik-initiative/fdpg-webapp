@@ -10,17 +10,18 @@
       </h3>
       <div v-if="hasActions" class="check-proposal-card-actions">
         <el-button
-          :disabled="isDisabled"
+          :disabled="isDisabled || negativeChildDisableButton"
           class="negative"
           :data-testId="projectTodo.testId + '__false'"
           @click="projectTodo.action(false)"
-          ><i class="el-icon-close" aria-hidden="true"
-        /></el-button>
+        >
+          <i class="el-icon-close" aria-hidden="true" />
+        </el-button>
         <el-button
-          :disabled="isDisabled"
+          :disabled="isDisabled || positiveChildDisableButton"
           class="positive"
           :data-testId="projectTodo.testId + '__true'"
-          @click="projectTodo.action(true)"
+          @click="projectTodo.action(true, uacCondition?.conditionReasoning)"
         >
           <i class="el-icon-check" aria-hidden="true" />
         </el-button>
@@ -29,14 +30,32 @@
     <div class="check-proposal-card-content">
       {{ $t(projectTodo.description) }}
     </div>
+    <div v-if="projectTodo.type === 'condition-check' && uacCondition">
+      <ProjectTodosConditionReview
+        :is-disabled="isDisabled"
+        :uac-condition="uacCondition"
+        @disableButton="onChildTriggeredDisableButton"
+      />
+    </div>
+    <div v-if="projectTodo.type === 'additional-location-information' && projectTodo.additionalInformation">
+      <ProjectTodosAdditionalLocationInformation
+        :is-disabled="isDisabled || projectTodo.readonly"
+        :additional-information="projectTodo.additionalInformation"
+        @submit="projectTodo.action"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { PropType } from 'vue'
+import { computed, ref, type PropType } from 'vue'
+import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
+import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
 
-defineProps({
+const uacCondition = computed(() => props.projectTodo.condition)
+
+const props = defineProps({
   projectTodo: {
     type: Object as PropType<IProjectTodo>,
     required: true,
@@ -50,6 +69,17 @@ defineProps({
     default: false,
   },
 })
+
+const positiveChildDisableButton = ref<boolean>(props.isDisabled)
+const negativeChildDisableButton = ref<boolean>(props.isDisabled)
+
+const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; button: 'positive' | 'negative' }) => {
+  if (button === 'positive') {
+    positiveChildDisableButton.value = value
+  } else {
+    negativeChildDisableButton.value = value
+  }
+}
 </script>
 
 <style lang="scss" scoped>

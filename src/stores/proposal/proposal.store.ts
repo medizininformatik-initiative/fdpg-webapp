@@ -12,6 +12,8 @@ import type {
   IPublicationCreateAndUpdate,
   IReportCreate,
   IReportUpdate,
+  IAdditionalLocationProposalInformation,
+  IEditAdditionalLocationProposalInformation,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -23,7 +25,7 @@ import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
-
+import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -118,6 +120,10 @@ export const useProposalStore = defineStore('Proposal', {
 
     async setDizApproval(id: string, decision: DizApprovalDecision): Promise<void> {
       await this.apiService.setDizApproval(id, decision)
+    },
+
+    async setDizConditionApproval(id: string, decision: DizConditionApprovalDecision): Promise<void> {
+      await this.apiService.setDizConditionApproval(id, decision)
     },
 
     async signContract(id: string, decision: ContractDecision): Promise<void> {
@@ -303,6 +309,13 @@ export const useProposalStore = defineStore('Proposal', {
     async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
       await this.apiService.revertLocationVote(id, location)
       await this.setCurrentProposal(id)
+    },
+
+    async updateAdditionalLocationInformation(
+      id: string,
+      additionalLocationInformation: IEditAdditionalLocationProposalInformation,
+    ) {
+      await this.apiService.updateAdditionalLocationInformation(id, additionalLocationInformation)
     },
 
     isCurrentUserParticipatingScientist(): boolean {

@@ -40,6 +40,12 @@ export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
         description: 'projectStatus.LOC_DIZ_APPROVED',
         descriptionI18nParameter: { date: getLocaleDateString(proposal.dueDateForStatus) },
       }
+    case LocationState.DizConditionCheck:
+      return {
+        type: ProjectStatusType.warning,
+        description: 'projectStatus.LOC_DIZ_CHECK',
+        descriptionI18nParameter: { date: getLocaleDateString(proposal.dueDateForStatus) },
+      }
     case LocationState.UacApproved:
       if (proposal.researcherSignedAt !== undefined) {
         return {

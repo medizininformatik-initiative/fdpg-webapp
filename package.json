@@ -28,6 +28,7 @@
     "element-theme-chalk": "^2.15.14",
     "lodash-es": "^4.17.21",
     "pinia": "^2.2.8",
+    "public-google-sheets-parser": "^1.5.4",
     "tslib": "^2.8.1",
     "vue": "^3.5.13",
     "vue-i18n": "^10.0.5",

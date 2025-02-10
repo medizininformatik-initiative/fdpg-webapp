@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import type { TranslationSchema } from '@/plugins/i18n'
-import type { IProposalDetail} from '@/types/proposal.types';
+import type { IProposalDetail } from '@/types/proposal.types'
 import { LocationState } from '@/types/proposal.types'
 import type { PropType } from 'vue'
 import PanelTodoStatus from './PanelTodoStatus.vue'
@@ -34,6 +34,11 @@ const stateMap: Record<LocationState, ILocationState> = {
   },
   [LocationState.DizApproved]: {
     message: `locationStatus.${LocationState.DizApproved}`,
+    icon: 'fa-solid fa-list-check',
+    styleClass: 'active',
+  },
+  [LocationState.DizConditionCheck]: {
+    message: `locationStatus.${LocationState.IsDizCheck}`,
     icon: 'fa-solid fa-list-check',
     styleClass: 'active',
   },
