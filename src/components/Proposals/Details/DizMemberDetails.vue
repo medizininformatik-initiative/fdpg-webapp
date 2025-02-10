@@ -4,7 +4,8 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
-
+    <ContractParticipants v-if="showContractingParticipants" />
+    <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
 
@@ -46,6 +47,8 @@ import ProjectTodos from '@/components/ProjectTodos.vue'
 import ProjectHistory from '@/components/Proposals/Details/ProjectHistory.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
 import SignDialog from '@/components/SignDialog.vue'
+import ContractParticipants from '@/components/ContractParticipants.vue'
+import LocationVotePanel from '@/components/LocationVotePanel.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
@@ -77,6 +80,21 @@ const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
 
+const showContractingParticipants = computed(() => {
+  return (
+    status.value === ProposalStatus.Contracting ||
+    status.value === ProposalStatus.ExpectDataDelivery ||
+    status.value === ProposalStatus.DataResearch ||
+    status.value === ProposalStatus.DataCorrupt ||
+    status.value === ProposalStatus.ReadyToArchive ||
+    status.value === ProposalStatus.FinishedProject ||
+    status.value === ProposalStatus.Archived ||
+    status.value === ProposalStatus.Rejected
+  )
+})
+const showLocationVotePanel = computed(() => {
+  return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
+})
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -142,6 +160,7 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
 }
 
 const isDeclineDialogOpen = ref(false)
+
 const handleDizDeclineConfirm = async (declineReason: string) => {
   const currentProposal = proposalStore.currentProposal
   const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck

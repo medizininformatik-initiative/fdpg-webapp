@@ -209,7 +209,7 @@ export const useProposalStore = defineStore('Proposal', {
       id: string,
       checklist: IFdpgChecklist,
       store: unknown,
-      errorCb?: (...args) => void,
+      errorCb?: (...args: any) => void,
     ) {
       const typedStore = store as IProposalState
 
@@ -227,7 +227,7 @@ export const useProposalStore = defineStore('Proposal', {
       }
     }, 500),
 
-    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args) => void): Promise<void> {
+    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args: any) => void): Promise<void> {
       if (this.currentProposal) {
         this.currentProposal.fdpgChecklist = { ...checklist }
       }
@@ -322,8 +322,8 @@ export const useProposalStore = defineStore('Proposal', {
     filteredProposal: (state) => {
       const searchString = state.search?.trim()?.toLocaleLowerCase()
       if (searchString !== undefined && searchString.length > 1) {
-        return Object.keys(state.proposals).reduce((acc, key) => {
-          acc[key] = state.proposals[key].filter(
+        return Object.keys(state.proposals).reduce((acc: { [key in PanelQuery]?: IProposalDetail[] }, key) => {
+          acc[key as PanelQuery] = state.proposals[key as PanelQuery]?.filter(
             (proposal: IProposalDetail) =>
               proposal.projectAbbreviation?.toLocaleLowerCase().includes(searchString) ||
               proposal.ownerName?.toLocaleLowerCase().includes(searchString) ||

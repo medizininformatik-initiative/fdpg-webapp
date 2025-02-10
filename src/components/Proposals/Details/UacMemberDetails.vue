@@ -4,6 +4,8 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+    <ContractParticipants v-if="showContractingParticipants" />
+    <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
     <ProjectHistory />
@@ -36,6 +38,8 @@ import ProjectHistory from '@/components/Proposals/Details/ProjectHistory.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
 import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import UacAcceptProposalDialog from '@/components/UacAcceptProposalDialog.vue'
+import ContractParticipants from '@/components/ContractParticipants.vue'
+import LocationVotePanel from '@/components/LocationVotePanel.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
@@ -59,6 +63,21 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const router = useRouter()
+const showContractingParticipants = computed(() => {
+  return (
+    status.value === ProposalStatus.Contracting ||
+    status.value === ProposalStatus.ExpectDataDelivery ||
+    status.value === ProposalStatus.DataResearch ||
+    status.value === ProposalStatus.DataCorrupt ||
+    status.value === ProposalStatus.ReadyToArchive ||
+    status.value === ProposalStatus.FinishedProject ||
+    status.value === ProposalStatus.Archived ||
+    status.value === ProposalStatus.Rejected
+  )
+})
+const showLocationVotePanel = computed(() => {
+  return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
+})
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,

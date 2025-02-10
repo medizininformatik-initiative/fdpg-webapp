@@ -5,7 +5,7 @@ export interface IProjectTodo {
   date?: string
   title: string
   description: string
-  action: (...args) => void
+  action: (...args: any) => void
   actionLabel?: TranslationSchema
   type: 'comment' | 'decision' | 'info' | 'condition-check' | 'additional-location-information'
   icon?: string

@@ -31,7 +31,7 @@ describe('UseCardPanelAccessibility', () => {
         expectedCalls: 0,
       },
       {
-        value: false,
+        value: undefined,
         expectedCalls: 1,
       },
     ]
