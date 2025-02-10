@@ -23,7 +23,8 @@ const buildLangFiles = async () => {
   const sheetNames = indexSheet.map((row) => row.sheetName)
 
   // => [{ "general": Sheet }, { "errors": Sheet }]
-  const sheetsResult = await Promise.all(
+  let sheetsResult = []
+  sheetsResult = await Promise.all(
     sheetNames.map(async (sheetName) => ({
       [sheetName]: await getSheet(SPREADSHEET_ID, sheetName),
     })),
