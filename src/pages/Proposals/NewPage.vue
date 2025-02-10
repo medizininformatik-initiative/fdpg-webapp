@@ -57,7 +57,9 @@
       />
       <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
 
-      <FdpgLabel html-for="proposal.attachmentsOptional" size="large" />
+      <FdpgLabel html-for="" size="large">{{
+        `${$t('proposal.attachmentsOptional')}  (${uploadsForType.length || ''})`
+      }}</FdpgLabel>
       <p class="desc">
         {{
           proposalId
@@ -158,6 +160,7 @@ import ProjectApplicant from './ProjectApplicant.vue'
 import ProjectResponsibility from './ProjectResponsibility.vue'
 import ProjectUser from './ProjectUser.vue'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
+import { CommentType, type ICommentDetail } from '@/types/comment.interface'
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -173,35 +176,18 @@ const { t } = useI18n()
 const layoutStore = useLayoutStore()
 const router = useRouter()
 const { params, query } = useRoute()
+const commentStore = useCommentStore()
 
 const proposalForm = ref<IProposal>()
 const proposalId = computed(() => proposalForm.value?._id as string)
 const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
 )
-const isReviewMode = computed(() => {
-  return !(
-    proposalForm.value?.status === undefined ||
-    proposalForm.value?.status === ProposalStatus.Draft ||
-    proposalForm.value?.status === ProposalStatus.Rework
-  )
-})
-
-const openDetails = () => {
-  if (proposalId.value) {
-    router.push({
-      name: RouteName.ProposalDetails,
-      params: { id: proposalId.value },
-    })
-  }
-}
-
 const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
 const proposalStore = useProposalStore()
-const commentStore = useCommentStore()
 
 const formRef = ref<FormInstance>()
 
@@ -286,6 +272,28 @@ const rules = ref<Record<string, any>>({
   status: null,
 })
 
+const isReviewMode = computed(() => {
+  return !(
+    proposalForm.value?.status === undefined ||
+    proposalForm.value?.status === ProposalStatus.Draft ||
+    proposalForm.value?.status === ProposalStatus.Rework
+  )
+})
+
+const OpenProposalTasks = computed(() => {
+  return commentStore.comments
+    .filter((comment: ICommentDetail) => comment.type === CommentType.PROPOSAL_TASK)
+    .filter((task: ICommentDetail) => !task.isDone)
+})
+
+const openDetails = () => {
+  if (proposalId.value) {
+    router.push({
+      name: RouteName.ProposalDetails,
+      params: { id: proposalId.value },
+    })
+  }
+}
 const getFormValues = () => {
   return transformForm(proposalForm.value, true)
 }
@@ -428,67 +436,9 @@ const scrollToAnchor = async () => {
     }
   }
 }
-
-watch(
-  ethicVoteUploads,
-  (newEthicVoteUploads) => {
-    if (newEthicVoteUploads?.length) {
-      formRef.value?.validateField(['userProject.ethicVote.ethicVoteUploads'], () => {})
-    }
-  },
-  {
-    deep: true,
-  },
-)
-onMounted(async () => {
-  try {
-    await proposalStore.setCurrentProposal(params.id as string)
-    await setUpPage()
-  } catch (error) {
-    console.log(error)
-    showErrorMessage()
-    router.push({ name: RouteName.Dashboard })
-  }
-
-  if (params.id) {
-    try {
-      await commentStore.fetchAll({ proposalId: params.id as string })
-      await setUpPage()
-      await scrollToAnchor()
-    } catch (error) {
-      console.log(error)
-      showErrorMessage()
-    }
-  }
-
-  const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
-  const isEditable =
-    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
-    proposalStore.currentProposal?.status === ProposalStatus.Rework
-  if (params.id && isDateDefined && isEditable) {
-    let invalidFields: ValidateFieldsError | undefined
-    await formRef.value?.validateField(
-      ['userProject.generalProjectInformation.desiredStartTime'],
-      (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-        invalidFields = invalidFieldsResult
-      },
-    )
-
-    if (invalidFields && Object.keys(invalidFields).length > 0) {
-      raiseErrors(invalidFields)
-      return
-    }
-  }
-
-  watch(() => proposalForm.value, waitForValidation, { deep: true })
-  await waitForValidation()
-
-  watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
-  setValidationStatus()
-})
-
 const setValidationStatus = () => {
-  isValidToSubmit.value = allFieldsValid.value && !!proposalId.value
+  const hasOpenTasks = OpenProposalTasks.value.length > 0 && proposalForm.value?.status === ProposalStatus.Rework
+  isValidToSubmit.value = allFieldsValid.value && !!proposalId.value && !hasOpenTasks
 }
 
 const waitForValidation = async () => {
@@ -571,6 +521,70 @@ const getFormRuleArrayFromPath = (obj: Record<string, any>, path?: string) => {
 
   return [current]
 }
+watch(
+  ethicVoteUploads,
+  (newEthicVoteUploads) => {
+    if (newEthicVoteUploads?.length) {
+      formRef.value?.validateField(['userProject.ethicVote.ethicVoteUploads'], () => {})
+    }
+  },
+  {
+    deep: true,
+  },
+)
+watch(
+  OpenProposalTasks,
+  () => {
+    setValidationStatus()
+  },
+  { deep: true, immediate: true },
+)
+onMounted(async () => {
+  try {
+    await proposalStore.setCurrentProposal(params.id as string)
+    await setUpPage()
+  } catch (error) {
+    console.log(error)
+    showErrorMessage()
+    router.push({ name: RouteName.Dashboard })
+  }
+
+  if (params.id) {
+    try {
+      await commentStore.fetchAll({ proposalId: params.id as string })
+      await setUpPage()
+      await scrollToAnchor()
+    } catch (error) {
+      console.log(error)
+      showErrorMessage()
+    }
+  }
+
+  const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
+  const isEditable =
+    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+    proposalStore.currentProposal?.status === ProposalStatus.Rework
+  if (params.id && isDateDefined && isEditable) {
+    let invalidFields: ValidateFieldsError | undefined
+    await formRef.value?.validateField(
+      ['userProject.generalProjectInformation.desiredStartTime'],
+      (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+        invalidFields = invalidFieldsResult
+      },
+    )
+
+    if (invalidFields && Object.keys(invalidFields).length > 0) {
+      raiseErrors(invalidFields)
+      return
+    }
+  }
+
+  watch(() => proposalForm.value, waitForValidation, { deep: true })
+  await waitForValidation()
+
+  watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
+  setValidationStatus()
+})
 </script>
 
 <style lang="scss">

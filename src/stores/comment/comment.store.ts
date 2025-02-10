@@ -7,6 +7,7 @@ import type {
   ICreateAnswer,
 } from '@/types/comment.interface'
 import { defineStore } from 'pinia'
+import { useProposalStore } from '../proposal/proposal.store'
 
 export interface ICommentState {
   apiService: CommentService
@@ -40,6 +41,7 @@ export const useCommentStore = defineStore('Comment', {
     },
 
     async markCommentAsDone(commentId: string, value: boolean): Promise<void> {
+      const proposalStore = useProposalStore()
       await this.apiService.markCommentAsDone(commentId, value)
 
       const index = this.comments.findIndex((currentComments) => currentComments._id === commentId)
@@ -47,6 +49,7 @@ export const useCommentStore = defineStore('Comment', {
       if (index !== -1) {
         this.comments[index].isDone = value
       }
+      if (proposalStore.currentProposal?._id) await this.fetchAll({ proposalId: proposalStore.currentProposal._id })
     },
 
     async markAnswerAsDone(commentId: string, answerId: string, value: boolean): Promise<void> {

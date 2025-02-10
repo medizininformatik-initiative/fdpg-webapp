@@ -17,7 +17,7 @@
       />
     </div>
 
-    <div class="task__content">{{ task.content }}</div>
+    <div class="task__content" v-html="task.content"></div>
   </section>
 </template>
 

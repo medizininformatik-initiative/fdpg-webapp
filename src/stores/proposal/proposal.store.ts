@@ -12,6 +12,8 @@ import type {
   IPublicationCreateAndUpdate,
   IReportCreate,
   IReportUpdate,
+  IAdditionalLocationProposalInformation,
+  IEditAdditionalLocationProposalInformation,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -23,6 +25,7 @@ import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
+import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -119,7 +122,7 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.setDizApproval(id, decision)
     },
 
-    async setDizConditionApproval(id: string, decision: UacApprovalDecision): Promise<void> {
+    async setDizConditionApproval(id: string, decision: DizConditionApprovalDecision): Promise<void> {
       await this.apiService.setDizConditionApproval(id, decision)
     },
 
@@ -206,7 +209,7 @@ export const useProposalStore = defineStore('Proposal', {
       id: string,
       checklist: IFdpgChecklist,
       store: unknown,
-      errorCb?: (...args) => void,
+      errorCb?: (...args: any) => void,
     ) {
       const typedStore = store as IProposalState
 
@@ -224,7 +227,7 @@ export const useProposalStore = defineStore('Proposal', {
       }
     }, 500),
 
-    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args) => void): Promise<void> {
+    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args: any) => void): Promise<void> {
       if (this.currentProposal) {
         this.currentProposal.fdpgChecklist = { ...checklist }
       }
@@ -306,14 +309,21 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.revertLocationVote(id, location)
       await this.setCurrentProposal(id)
     },
+
+    async updateAdditionalLocationInformation(
+      id: string,
+      additionalLocationInformation: IEditAdditionalLocationProposalInformation,
+    ) {
+      await this.apiService.updateAdditionalLocationInformation(id, additionalLocationInformation)
+    },
   },
 
   getters: {
     filteredProposal: (state) => {
       const searchString = state.search?.trim()?.toLocaleLowerCase()
       if (searchString !== undefined && searchString.length > 1) {
-        return Object.keys(state.proposals).reduce((acc, key) => {
-          acc[key] = state.proposals[key].filter(
+        return Object.keys(state.proposals).reduce((acc: { [key in PanelQuery]?: IProposalDetail[] }, key) => {
+          acc[key as PanelQuery] = state.proposals[key as PanelQuery]?.filter(
             (proposal: IProposalDetail) =>
               proposal.projectAbbreviation?.toLocaleLowerCase().includes(searchString) ||
               proposal.ownerName?.toLocaleLowerCase().includes(searchString) ||

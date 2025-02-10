@@ -348,6 +348,13 @@ export interface IUacApproval {
   createdAt: string
   signedAt?: string
 }
+export interface IAdditionalLocationProposalInformation {
+  location: MiiLocation
+  legalBasis: boolean
+  locationPublicationName?: string
+}
+
+export type IEditAdditionalLocationProposalInformation = Omit<IAdditionalLocationProposalInformation, 'location'>
 
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
@@ -424,6 +431,7 @@ export interface IProposal {
   requestedButExcludedLocations: MiiLocation[]
   signedContracts: MiiLocation[]
   // LOCATION Tasks <----
+  additionalLocationInformation: IAdditionalLocationProposalInformation[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
   locationConditionDraft: IConditionalApproval[]

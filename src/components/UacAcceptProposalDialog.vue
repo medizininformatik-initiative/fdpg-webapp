@@ -49,25 +49,6 @@
 
         <FdpgStep
           step-icon-color="blue-green"
-          :title="$t('proposal.specifyTheAmountOfData')"
-          :description="$t('proposal.asADataProviderYouMustSpecifyAQuantity')"
-        >
-          <p>{{ $t('proposal.asADataProviderYouMustSpecifyAQuantity') }}</p>
-
-          <el-form ref="formRef" class="data-volume" :model="form" :rules="rules" @validate="onValidate">
-            <FdpgFormItem prop="dataVolume">
-              <FdpgLabel required html-for="proposal.dataVolume" />
-              <FdpgNumberInput
-                v-model="form.dataVolume"
-                placeholder="proposal.acceptContractDataVolumePlaceholder"
-                data-testId="input__dataVolume"
-              />
-            </FdpgFormItem>
-          </el-form>
-        </FdpgStep>
-
-        <FdpgStep
-          step-icon-color="blue-green"
           :title="$t('proposal.furtherProcessingByDicTitle')"
           :description="$t('proposal.furtherProcessingByDicDescription')"
         />
@@ -85,12 +66,7 @@
         <el-button link data-testId="button__closeApprovalDialog" @click="closeDialog">
           {{ $t('general.cancel') }}
         </el-button>
-        <el-button
-          type="primary"
-          :disabled="!isValidToSubmit"
-          data-testId="button__uacApproval-accept"
-          @click="acceptContract"
-        >
+        <el-button type="primary" data-testId="button__uacApproval-accept" @click="acceptContract">
           {{ $t('proposal.uacApprovalModalAgreeButton') }}
         </el-button>
       </span>
@@ -100,18 +76,13 @@
 
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgStep from '@/components/FdpgStep.vue'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import { useVModel } from '@vueuse/core'
-import { ElForm } from 'element-plus'
-import { useI18n } from 'vue-i18n'
-import FdpgFormItem from './FdpgFormItem.vue'
-import FdpgNumberInput from './FdpgNumberInput.vue'
-import FdpgInput from './FdpgInput.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'acceptContract'])
@@ -124,52 +95,12 @@ const dialogOpen = useVModel(props, 'modelValue', emit)
 
 const closeDialog = () => {
   conditionFile.value = null
-  form.dataVolume = undefined
   dialogOpen.value = false
   conditionReasoning.value = undefined
 }
 
 const conditionFile = ref<UploadFile | null>()
 const conditionReasoning = ref<string | undefined>(undefined)
-
-const { t } = useI18n()
-const requiredValidation = {
-  required: true,
-  trigger: ['change', 'blur'],
-  message: t('general.requiredField'),
-}
-
-const requiredDataVolume = (_rule: any, value: any, callback: any) => {
-  if (!value) {
-    return callback(new Error(t('general.requiredField')))
-  }
-  setTimeout(() => {
-    if (!Number.isInteger(value)) {
-      callback(new Error(t('general.requiredField')))
-    } else {
-      if (value <= 0) {
-        callback(new Error(t('general.requiredField')))
-      } else {
-        callback()
-      }
-    }
-  }, 1000)
-}
-
-const form = reactive({
-  dataVolume: undefined,
-})
-
-const rules = ref<Record<string, any>>({
-  dataVolume: [requiredValidation, { validator: requiredDataVolume, trigger: 'blur' }],
-})
-
-const formRef = ref<typeof ElForm>()
-
-const isValidToSubmit = ref<boolean>(false)
-const onValidate = (_field, value) => {
-  isValidToSubmit.value = value
-}
 
 const handleChangeFileList = (file: UploadFile) => {
   conditionFile.value = file
@@ -180,13 +111,10 @@ const handleRemoveFile = () => {
 }
 
 const acceptContract = () => {
-  if (form.dataVolume && form.dataVolume > 0) {
-    emit(
-      'acceptContract',
-      form.dataVolume,
-      conditionFile.value,
-      (conditionReasoning.value?.trim?.()?.length ?? 0) > 0 ? conditionReasoning.value?.trim() : undefined,
-    )
-  }
+  emit(
+    'acceptContract',
+    conditionFile.value,
+    (conditionReasoning.value?.trim?.()?.length ?? 0) > 0 ? conditionReasoning.value?.trim() : undefined,
+  )
 }
 </script>

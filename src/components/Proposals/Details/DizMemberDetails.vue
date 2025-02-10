@@ -4,7 +4,8 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
-
+    <ContractParticipants v-if="showContractingParticipants" />
+    <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
 
@@ -46,6 +47,8 @@ import ProjectTodos from '@/components/ProjectTodos.vue'
 import ProjectHistory from '@/components/Proposals/Details/ProjectHistory.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
 import SignDialog from '@/components/SignDialog.vue'
+import ContractParticipants from '@/components/ContractParticipants.vue'
+import LocationVotePanel from '@/components/LocationVotePanel.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
@@ -54,7 +57,12 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { LocationState, ProposalStatus } from '@/types/proposal.types'
+import {
+  LocationState,
+  ProposalStatus,
+  type IAdditionalLocationProposalInformation,
+  type IEditAdditionalLocationProposalInformation,
+} from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -72,6 +80,21 @@ const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
 
+const showContractingParticipants = computed(() => {
+  return (
+    status.value === ProposalStatus.Contracting ||
+    status.value === ProposalStatus.ExpectDataDelivery ||
+    status.value === ProposalStatus.DataResearch ||
+    status.value === ProposalStatus.DataCorrupt ||
+    status.value === ProposalStatus.ReadyToArchive ||
+    status.value === ProposalStatus.FinishedProject ||
+    status.value === ProposalStatus.Archived ||
+    status.value === ProposalStatus.Rejected
+  )
+})
+const showLocationVotePanel = computed(() => {
+  return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
+})
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -137,6 +160,7 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
 }
 
 const isDeclineDialogOpen = ref(false)
+
 const handleDizDeclineConfirm = async (declineReason: string) => {
   const currentProposal = proposalStore.currentProposal
   const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
@@ -214,6 +238,7 @@ const getSignTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleSignTodo(decision),
         type: 'decision',
         testId: 'todo__button__signContract',
+        readonly: false,
       },
     ]
   } else {
@@ -243,11 +268,22 @@ const getCheckContractTodo = (): IProjectTodo[] => {
         type: 'condition-check',
         testId: 'todo__button__review__uac__condition',
         condition: condition,
+        readonly: false,
       },
     ]
   }
 
   return []
+}
+
+const updateAdditionalInformation = async (additionalInformation: IEditAdditionalLocationProposalInformation) => {
+  try {
+    await proposalStore.updateAdditionalLocationInformation(proposalId.value, additionalInformation)
+    showSuccessMessage(t('general.submitted'))
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
+  }
 }
 
 const handleConditionDecision = async (decision: boolean, updatedConditionReasoning?: string) => {
@@ -297,6 +333,7 @@ const getApproveTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleDizApprovalTodo(decision),
         type: 'decision',
         testId: 'todo__button__dizApproval',
+        readonly: false,
       },
     ]
   } else {
@@ -305,12 +342,37 @@ const getApproveTodo = (): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo(), ...getSignTodo(), ...getCheckContractTodo()]
+  return [...getApproveTodo(), ...getSignTodo(), ...getAdditionalLocationInformationTodo(), ...getCheckContractTodo()]
 })
+
+const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
+  const isLocationCheckStatus = proposalStore.currentProposal?.status === ProposalStatus.LocationCheck
+  const additionalLocationInformation = proposalStore.currentProposal?.additionalLocationInformation[0] ?? {
+    legalBasis: false,
+    locationPublicationName: '',
+  }
+
+  console.log({ additionalLocationInformation })
+
+  return [
+    {
+      title: t('proposal.updateAdditionalLocationInformationTodoTitle'),
+      description: t('proposal.updateAdditionalLocationInformationTodoDescription'),
+      action: (additionalInformation: IEditAdditionalLocationProposalInformation) =>
+        updateAdditionalInformation(additionalInformation),
+      type: 'additional-location-information',
+      additionalInformation: additionalLocationInformation,
+      readonly: !isLocationCheckStatus,
+    },
+  ]
+}
 
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
+
+    console.log({ data })
+
     showPublications.value =
       (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)

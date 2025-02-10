@@ -2145,6 +2145,26 @@
     "virtualAllLocations": {
       "de": "Alle Standorte",
       "en": "All Locations"
+    },
+    "updateAdditionalLocationInformationTodoTitle": {
+      "de": "Bereitstellung zusätzlicher Informationen mit Ihrer Entscheidung",
+      "en": "Provide additional information with your decision"
+    },
+    "updateAdditionalLocationInformationTodoDescription": {
+      "de": "Im Falle eines Projektteilnahme, teilen Sie bitte die unten aufgeführten Informationen zum Projekt mit.",
+      "en": "In case of an acception, please provide the following information for the project."
+    },
+    "updateAdditionalLocationLegalBasis": {
+      "de": "Rechtsgrundlage ist der Broad Consent",
+      "en": "The legal basis is the Broad Consent"
+    },
+    "updateAdditionalLocationPublicationName": {
+      "de": "Für den Vertragsanhang, in dem aufgeführt ist, wie die Standorte in Acknowlegements von Publikationen benannt werden sollen, haben wir von allen Standorten eine Standardformulieren. Sie müssen hier nur Angaben machen, falls Sie eine projektspezifische Änderung an diesem Text vornehmen möchten. Bitte teilen Sie uns dauerhafte Änderungen an den Vorgaben zur Nennung in Publikationen über die Kommentare mit.",
+      "en": "We have a standard formulation from all locations for the contract appendix, which lists how the locations should be named in acknowledgements of publications. You only need to enter details here if you wish to make a project-specific change to this text. Let us know about permanent changes via the comments."
+    },
+    "updateAdditionalLocationPublicationNamePlaceholder": {
+      "de": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll.",
+      "en": "Here, you can enter the name of your location as it should appear in scientific publications."
     }
   },
   "roles": {

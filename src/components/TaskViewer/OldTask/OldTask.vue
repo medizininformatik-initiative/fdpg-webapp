@@ -16,13 +16,13 @@
       />
     </div>
 
-    <div class="task__content" :class="{ 'task__content--expanded': isExpanded }">{{ task.content }}</div>
+    <div class="task__content" :class="{ 'task__content--expanded': isExpanded }" v-html="task.content"></div>
   </section>
 </template>
 
 <script setup lang="ts">
 import type { ICommentDetail } from '@/types/comment.interface'
-import type { PropType} from 'vue';
+import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 

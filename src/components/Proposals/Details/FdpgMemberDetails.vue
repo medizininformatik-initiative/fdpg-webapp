@@ -513,7 +513,11 @@ const showContractingParticipants = computed(() => {
     status.value === ProposalStatus.Contracting ||
     status.value === ProposalStatus.ExpectDataDelivery ||
     status.value === ProposalStatus.DataResearch ||
-    status.value === ProposalStatus.DataCorrupt
+    status.value === ProposalStatus.DataCorrupt ||
+    status.value === ProposalStatus.ReadyToArchive ||
+    status.value === ProposalStatus.FinishedProject ||
+    status.value === ProposalStatus.Archived ||
+    status.value === ProposalStatus.Rejected
   )
 })
 

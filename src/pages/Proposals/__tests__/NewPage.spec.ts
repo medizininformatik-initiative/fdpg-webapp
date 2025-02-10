@@ -12,6 +12,8 @@ import { useRouter } from 'vue-router'
 import { RouteName } from '@/types/route-name.enum'
 import type { ValidateFieldsError } from 'async-validator'
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
+import { CommentType, type ICommentDetail } from '@/types/comment.interface'
+import { mockCommentDetailForTask } from '@/mocks/comment.mock'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
@@ -457,6 +459,56 @@ describe('UserProjectInformation.vue', () => {
 
         const button = getButtonByText('proposal.submitApplication')
         expect(button.attributes('aria-disabled')).toBe(proposalId ? 'false' : 'true')
+      })
+    })
+    describe('Submit button behavior', () => {
+      let proposal: IProposal
+
+      beforeEach(async () => {
+        createTestingPinia()
+        proposal = JSON.parse(JSON.stringify(mockProposal))
+        proposalStore = vi.mocked(useProposalStore())
+        commentStore = vi.mocked(useCommentStore())
+        proposalStore.currentProposal = proposal
+        proposalStore.currentProposal.status = ProposalStatus.Rework
+        commentStore.comments = [
+          {
+            ...mockCommentDetailForTask,
+          } as ICommentDetail,
+        ]
+        wrapper = mountComponent(false) as any
+        wrapper.vm.allFieldsValid = true
+      })
+
+      it('disables the submit button if there are open tasks', async () => {
+        await flushPromises()
+
+        const button = getButtonByText('proposal.submitApplication')
+
+        expect(button.attributes('aria-disabled')).toBe('true')
+      })
+
+      it('enables the submit button if there are no open tasks', async () => {
+        commentStore.comments = [
+          {
+            ...mockCommentDetailForTask,
+            isDone: true,
+          } as ICommentDetail,
+        ]
+        const OpenProposalTasks = () => {
+          return commentStore.comments
+            .filter((comment: ICommentDetail) => comment.type === CommentType.PROPOSAL_TASK)
+            .filter((task: ICommentDetail) => !task.isDone)
+        }
+        const hasOpenTasks =
+          OpenProposalTasks.length > 0 && proposalStore.currentProposal?.status === ProposalStatus.Rework
+
+        await flushPromises()
+
+        const button = getButtonByText('proposal.submitApplication')
+
+        // Assert that the button is enabled
+        expect(button.attributes('aria-disabled')).toBe('false')
       })
     })
 
