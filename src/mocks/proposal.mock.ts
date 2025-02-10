@@ -20,6 +20,7 @@ export const mockProposal: IProposal = {
   publications: [
     { title: 'ShortCut', doi: 'ShortCut', link: 'ShortCut', createdAt: '', updatedAt: '', _id: 'publicationId' },
   ],
+  additionalLocationInformation: [],
   reports: [
     {
       title: 'title',
@@ -365,6 +366,7 @@ export const mockProposal: IProposal = {
   openDizChecks: [],
   dizApprovedLocations: [],
   uacApprovedLocations: [],
+  openDizConditionChecks: [],
   requestedButExcludedLocations: [
     MiiLocation.KUM,
     MiiLocation.UKT,
@@ -401,6 +403,7 @@ export const mockProposal: IProposal = {
     MiiLocation.UKRUB,
   ],
   signedContracts: [MiiLocation.MRI, MiiLocation.UKK],
+  locationConditionDraft: [],
   conditionalApprovals: [
     {
       location: MiiLocation.UKK,

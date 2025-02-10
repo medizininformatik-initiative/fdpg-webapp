@@ -8,6 +8,7 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
+
     <ProjectHistory />
 
     <div class="divider" />
@@ -56,13 +57,18 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { LocationState, ProposalStatus } from '@/types/proposal.types'
+import {
+  LocationState,
+  ProposalStatus,
+  type IAdditionalLocationProposalInformation,
+  type IEditAdditionalLocationProposalInformation,
+} from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -72,6 +78,7 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
+const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
 
 const showContractingParticipants = computed(() => {
   return (
@@ -88,6 +95,7 @@ const showContractingParticipants = computed(() => {
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
+
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -105,6 +113,42 @@ const openProposal = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
 }
 
+const rejectConditionCheck = async (declineReason: string) => {
+  try {
+    await proposalStore.setDizConditionApproval(proposalId.value, {
+      value: false,
+      declineReason,
+    })
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
+
+const acceptConditionCheck = async (conditionReasoning?: string) => {
+  const uacConditionVal = uacCondition.value
+
+  if (!uacConditionVal) {
+    showErrorMessage(t('general.failedSubmit'))
+    return
+  }
+
+  try {
+    await proposalStore.setDizConditionApproval(proposalId.value, {
+      value: true,
+      dataAmount: uacConditionVal.dataAmount,
+      conditionReasoning,
+    })
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
+
 const setDizApproval = async (decision: DizApprovalDecision) => {
   try {
     await proposalStore.setDizApproval(proposalId.value, decision)
@@ -119,7 +163,15 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
 const isDeclineDialogOpen = ref(false)
 
 const handleDizDeclineConfirm = async (declineReason: string) => {
-  await setDizApproval({ value: false, declineReason })
+  const currentProposal = proposalStore.currentProposal
+  const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
+  const isConditionCheckStatus = currentProposal?.locationStatus === LocationState.DizConditionCheck
+
+  if (isLocationCheckStatus && isConditionCheckStatus) {
+    await rejectConditionCheck(declineReason)
+  } else {
+    await setDizApproval({ value: false, declineReason })
+  }
 }
 const handleDizApprovalAcceptDialog = async () => {
   messageBoxStore.setMessageBoxInfo({
@@ -187,10 +239,59 @@ const getSignTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleSignTodo(decision),
         type: 'decision',
         testId: 'todo__button__signContract',
+        readonly: false,
       },
     ]
   } else {
     return []
+  }
+}
+
+const getCheckContractTodo = (): IProjectTodo[] => {
+  const currentProposal = proposalStore.currentProposal
+  const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
+  const isConditionCheckStatus = currentProposal?.locationStatus === LocationState.DizConditionCheck
+
+  if (isLocationCheckStatus && isConditionCheckStatus) {
+    const [condition] = currentProposal.locationConditionDraft
+
+    if (!condition) {
+      showErrorMessage()
+      return []
+    }
+
+    return [
+      {
+        title: t('proposal.reviewUacConditionTitle'),
+        description: t('proposal.reviewUacConditionDescription'),
+        action: (decision: boolean, updatedConditionReasoning?: string) =>
+          handleConditionDecision(decision, updatedConditionReasoning),
+        type: 'condition-check',
+        testId: 'todo__button__review__uac__condition',
+        condition: condition,
+        readonly: false,
+      },
+    ]
+  }
+
+  return []
+}
+
+const updateAdditionalInformation = async (additionalInformation: IEditAdditionalLocationProposalInformation) => {
+  try {
+    await proposalStore.updateAdditionalLocationInformation(proposalId.value, additionalInformation)
+    showSuccessMessage(t('general.submitted'))
+  } catch (error) {
+    console.log(error)
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
+
+const handleConditionDecision = async (decision: boolean, updatedConditionReasoning?: string) => {
+  if (decision === true) {
+    await acceptConditionCheck(updatedConditionReasoning)
+  } else {
+    isDeclineDialogOpen.value = true
   }
 }
 
@@ -233,6 +334,7 @@ const getApproveTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleDizApprovalTodo(decision),
         type: 'decision',
         testId: 'todo__button__dizApproval',
+        readonly: false,
       },
     ]
   } else {
@@ -241,12 +343,37 @@ const getApproveTodo = (): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo(), ...getSignTodo()]
+  return [...getApproveTodo(), ...getSignTodo(), ...getAdditionalLocationInformationTodo(), ...getCheckContractTodo()]
 })
+
+const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
+  const isLocationCheckStatus = proposalStore.currentProposal?.status === ProposalStatus.LocationCheck
+  const additionalLocationInformation = proposalStore.currentProposal?.additionalLocationInformation[0] ?? {
+    legalBasis: false,
+    locationPublicationName: '',
+  }
+
+  console.log({ additionalLocationInformation })
+
+  return [
+    {
+      title: t('proposal.updateAdditionalLocationInformationTodoTitle'),
+      description: t('proposal.updateAdditionalLocationInformationTodoDescription'),
+      action: (additionalInformation: IEditAdditionalLocationProposalInformation) =>
+        updateAdditionalInformation(additionalInformation),
+      type: 'additional-location-information',
+      additionalInformation: additionalLocationInformation,
+      readonly: !isLocationCheckStatus,
+    },
+  ]
+}
 
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
+
+    console.log({ data })
+
     showPublications.value =
       (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)

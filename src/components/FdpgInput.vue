@@ -7,6 +7,7 @@
     :placeholder="$t(placeholder)"
     @blur="handleBlur"
     @focus="handleFocus"
+    :disabled="isDisabled"
   />
 </template>
 
@@ -24,6 +25,10 @@ defineProps({
   size: {
     type: String as PropType<FdpgInputSize>,
     default: FdpgInputSize.Default,
+  },
+  isDisabled: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -79,15 +79,18 @@ export const transformForm = (
     isDoneOverview: form?.isDoneOverview ?? {},
     openDizChecks: form?.openDizChecks ?? [],
     dizApprovedLocations: form?.dizApprovedLocations ?? [],
+    dizConditionApprovedLocations: form?.dizConditionApprovedLocations ?? [],
     uacApprovedLocations: form?.uacApprovedLocations ?? [],
     requestedButExcludedLocations: form?.requestedButExcludedLocations ?? [],
     signedContracts: form?.signedContracts ?? [],
+    locationConditionDraft: form?.locationConditionDraft ?? [],
     conditionalApprovals: form?.conditionalApprovals ?? [],
     uacApprovals: form?.uacApprovals ?? [],
     totalPromisedDataAmount: form?.totalPromisedDataAmount,
     totalContractedDataAmount: form?.totalContractedDataAmount,
     declineReasons: form?.declineReasons ?? [],
     version: transformVersion(form?.version),
-    fdpgCheckNotes: form?.fdpgCheckNotes
+    fdpgCheckNotes: form?.fdpgCheckNotes,
+    additionalLocationInformation: form?.additionalLocationInformation ?? [],
   }
 }

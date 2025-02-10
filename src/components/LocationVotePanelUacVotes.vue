@@ -103,60 +103,63 @@
                 $t('proposal.locationConditions', { count: table.conditionalApprovals.length })
               }}
             </h3>
-            <section
-              v-for="(conditionalApproval, conditionIdx) in table.conditionalApprovals"
-              :key="'conditional' + conditionIdx"
-              role="row"
-              class="contract-condition-row"
-            >
-              <div
-                v-if="authStore.singleKnownRole === Role.FdpgMember"
-                role="button"
-                class="condition-text cursor-pointer"
-                :data-testId="'button__condition-download__' + conditionalApproval.location"
-                tabindex="0"
-                @click="handleDownload(conditionalApproval.uploadId)"
-                @keydown.enter="handleDownload(conditionalApproval.uploadId)"
+            <el-collapse class="contract-condition-row contract-condition-collapse-parent">
+              <el-collapse-item
+                v-for="conditionalApproval in table.conditionalApprovals"
+                :disabled="authStore.singleKnownRole !== Role.FdpgMember"
+                class="condition-row"
               >
-                {{ MII_LOCATIONS[conditionalApproval.location].display }}: {{ conditionalApproval.upload.fileName }}
-              </div>
-              <div
-                v-else
-                class="condition-text"
-                :data-testId="'button__condition-download__' + conditionalApproval.location"
-              >
-                {{ MII_LOCATIONS[conditionalApproval.location].display }}
-              </div>
+                <template #title>
+                  <div class="el-collapse-item-title">
+                    {{ MII_LOCATIONS[conditionalApproval.location].display }}
+                    <div class="condition-interaction">
+                      <div class="condition-data-amount">
+                        {{ $t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
+                      </div>
+                      <div class="condition-status" :class="conditionalApproval.statusTagStyle">
+                        {{ $t(conditionalApproval.statusTagText) }}
+                      </div>
 
-              <div class="condition-interaction">
-                <div class="condition-data-amount">
-                  {{ $t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
-                </div>
-                <div class="condition-status" :class="conditionalApproval.statusTagStyle">
-                  {{ $t(conditionalApproval.statusTagText) }}
-                </div>
+                      <div v-if="authStore.singleKnownRole === Role.FdpgMember" class="condition-actions">
+                        <el-button
+                          class="negative"
+                          :class="conditionalApproval.statusTagStyle"
+                          :disabled="conditionalApproval.reviewedAt !== undefined"
+                          :data-testId="'button__condition-decline__' + conditionalApproval.location"
+                          @click="acceptCondition(conditionalApproval._id, false)"
+                          ><i class="el-icon-close" role="button"
+                        /></el-button>
+                        <el-button
+                          class="positive"
+                          :class="conditionalApproval.statusTagStyle"
+                          :disabled="conditionalApproval.reviewedAt !== undefined"
+                          :data-testId="'button__condition-accept__' + conditionalApproval.location"
+                          @click="acceptCondition(conditionalApproval._id, true)"
+                        >
+                          <i class="el-icon-check" role="button" />
+                        </el-button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
 
-                <div v-if="authStore.singleKnownRole === Role.FdpgMember" class="condition-actions">
-                  <el-button
-                    class="negative"
-                    :class="conditionalApproval.statusTagStyle"
-                    :disabled="conditionalApproval.reviewedAt !== undefined"
-                    :data-testId="'button__condition-decline__' + conditionalApproval.location"
-                    @click="acceptCondition(conditionalApproval._id, false)"
-                    ><i class="el-icon-close" role="button"
-                  /></el-button>
-                  <el-button
-                    class="positive"
-                    :class="conditionalApproval.statusTagStyle"
-                    :disabled="conditionalApproval.reviewedAt !== undefined"
-                    :data-testId="'button__condition-accept__' + conditionalApproval.location"
-                    @click="acceptCondition(conditionalApproval._id, true)"
-                  >
-                    <i class="el-icon-check" role="button" />
-                  </el-button>
+                <div
+                  v-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.uploadId"
+                  role="button"
+                  class="condition-text cursor-pointer"
+                  :data-testId="'button__condition-download__' + conditionalApproval.location"
+                  tabindex="0"
+                  @click="handleDownload(conditionalApproval.uploadId)"
+                  @keydown.enter="handleDownload(conditionalApproval.uploadId)"
+                >
+                  {{ conditionalApproval.upload.fileName }}
                 </div>
-              </div>
-            </section>
+                <div
+                  v-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.conditionReasoning"
+                  v-html="conditionalApproval.conditionReasoning"
+                ></div>
+              </el-collapse-item>
+            </el-collapse>
           </section>
         </template>
 
@@ -611,6 +614,9 @@ onMounted(() => {
         padding: 1px 12px;
         border: 1px solid;
         height: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &.pending {
           background-color: color.adjust($gray-900, $lightness: 50%);
@@ -628,6 +634,26 @@ onMounted(() => {
           color: $black;
         }
       }
+
+      .el-collapse-item {
+        width: 100%;
+      }
+
+      .el-collapse-item-title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding-right: 1em;
+      }
+
+      .condition-row {
+        margin-bottom: unset;
+      }
+    }
+
+    .contract-condition-collapse-parent {
+      flex-direction: column;
     }
 
     .condition-actions {

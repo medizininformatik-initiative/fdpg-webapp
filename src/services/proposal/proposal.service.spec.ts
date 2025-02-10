@@ -115,7 +115,6 @@ describe('ProposalService', () => {
     const formData = new FormData()
     formData.append('value', UACAccept.value.toString())
     formData.append('file', UACAccept.file as Blob)
-    formData.append('dataAmount', UACAccept.dataAmount.toString())
     expect(apiClient.post).toHaveBeenCalledWith(`${basePath}/${proposalId}/uacApproval`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',

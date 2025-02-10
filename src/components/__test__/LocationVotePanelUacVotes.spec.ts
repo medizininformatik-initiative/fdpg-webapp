@@ -125,13 +125,4 @@ describe('LocationVotePanelUacVotes.vue', () => {
     await nextTick()
     expect(wrapper.find('.decline-reason__data').attributes()).toBeTruthy()
   })
-
-  describe('admin role', () => {
-    beforeEach(() => {
-      authStore.singleKnownRole = Role.Admin
-    })
-    it('should check different roles', async () => {
-      expect(wrapper.find('.condition-text').attributes().class).not.toContain('cursor-pointer')
-    })
-  })
 })
