@@ -30,7 +30,7 @@
         <div class="condition-text-area">
           <FdpgTextEditor
             v-model="uacCondition.conditionReasoning"
-            placeholder="proposal.acceptReasonPlaceholder"
+            :placeholder="$t('proposal.acceptReasonPlaceholder')"
             :rows="2"
             :disabled="isDisabled"
           ></FdpgTextEditor>
