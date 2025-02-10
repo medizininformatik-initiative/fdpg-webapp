@@ -164,7 +164,6 @@
     "name": "Name",
     "pleaseEnterTheName": "Bitte geben Sie den Nachnamen an",
     "detailsOfTheInstitutionFacility": "Angaben zur Institution/Einrichtung",
-    "revert": "Zurücksetzen",
     "fullCorrectNameOfTheInstitutionFacilityJurPerson": "Vollständige/korrekte Bezeichnung der Institution/Einrichtung/jur. Person",
     "pleaseEnterTheFullCorrectNameOfTheInstitutionFacilityJurPerson": "Bitte geben Sie die Bezeichnung ein",
     "street": "Straße",
@@ -308,7 +307,7 @@
     "messagesToApplicants": "Mitteilungen an Antragsteller",
     "messagesToLocations": "Mitteilungen an Standorte",
     "messagesToFdpg": "Mitteilungen an FDPG",
-    "uniquenessGivenDescription": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
+    "uniquenessGivenDescription": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \\nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
     "checkedAreas": "Geprüfte Bereiche ({isDoneCount}/{fieldCount})",
     "checkedAreasDescription": "Bitte prüfen Sie den Antrag auf Inhalte und Vollständigkeit. Markieren Sie Bereiche als geprüft. Hinterlassen Sie dem Antragsteller Aufgaben und Fragen ggf. eine Überarbeitung an. Wer der Antrag ohne Beanstandung der Richtigkeit entspricht können Sie diesen an die Standorte weiterleiten",
     "numberOfRequestedInstitutions": "Anzahl der Standorte",
@@ -543,12 +542,9 @@
     "revertLocationModalTitle": "Möchten Sie das Votum wirklich zurücksetzen?",
     "revertLocationModalDescription": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
     "revertVote": "Zurücksetzen",
+    "revert": "Zurücksetzen",
     "virtualAllLocations": "Alle Standorte",
-    "updateAdditionalLocationInformationTodoTitle": "Bereitstellung zusätzlicher Informationen mit Ihrer Entscheidung",
-    "updateAdditionalLocationInformationTodoDescription": "Im Falle eines Projektteilnahme, teilen Sie bitte die unten aufgeführten Informationen zum Projekt mit.",
-    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent",
-    "updateAdditionalLocationPublicationName": "Für den Vertragsanhang, in dem aufgeführt ist, wie die Standorte in Acknowlegements von Publikationen benannt werden sollen, haben wir von allen Standorten eine Standardformulieren. Sie müssen hier nur Angaben machen, falls Sie eine projektspezifische Änderung an diesem Text vornehmen möchten. Bitte teilen Sie uns dauerhafte Änderungen an den Vorgaben zur Nennung in Publikationen über die Kommentare mit.",
-    "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll."
+    "projectDeadline": "Fristen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
