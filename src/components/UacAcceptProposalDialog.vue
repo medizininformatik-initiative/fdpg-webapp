@@ -40,7 +40,7 @@
           <FdpgTextEditor
             v-model="conditionReasoning"
             data-testId="reasoning"
-            placeholder="proposal.acceptReasonPlaceholder"
+            :placeholder="$t('proposal.acceptReasonPlaceholder')"
             type="textarea"
             :rows="2"
             autosize
