@@ -65,7 +65,6 @@ import { computed, onMounted, reactive, ref, type PropType } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import { useI18n } from 'vue-i18n'
-import { isNumber } from 'element-plus/es/utils'
 
 const props = defineProps({
   uacCondition: {
