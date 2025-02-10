@@ -18,11 +18,6 @@
             {{ MII_LOCATIONS[uacCondition.location].display }}:
             {{ getFileName(uacCondition.uploadId) }}
           </div>
-          <div class="condition-interaction">
-            <div class="condition-data-amount">
-              {{ $t('proposal.conditionApprovalDataVolume', { amount: uacCondition.dataAmount }) }}
-            </div>
-          </div>
         </div>
       </template>
 
