@@ -276,7 +276,8 @@ const isReviewMode = computed(() => {
   return !(
     proposalForm.value?.status === undefined ||
     proposalForm.value?.status === ProposalStatus.Draft ||
-    proposalForm.value?.status === ProposalStatus.Rework
+    proposalForm.value?.status === ProposalStatus.Rework ||
+    !proposalForm.value.isParticipatingScientist
   )
 })
 
