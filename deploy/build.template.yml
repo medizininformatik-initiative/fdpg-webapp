@@ -23,6 +23,10 @@ steps:
     condition: ne(variables.CACHE_RESTORED, 'true')
     displayName: Installing Modules
 
+- script: |
+    yarn run i18n:build
+  displayName: 'Update translation files.'
+
   - script: |
       if [ ${{ parameters.ENV }} = print ]; then
         yarn run build:print --mode prod

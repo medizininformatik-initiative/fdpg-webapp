@@ -162,7 +162,6 @@
     "name": "Name",
     "pleaseEnterTheName": "Bitte geben Sie den Nachnamen an",
     "detailsOfTheInstitutionFacility": "Angaben zur Institution/Einrichtung",
-    "revert": "Zurücksetzen",
     "fullCorrectNameOfTheInstitutionFacilityJurPerson": "Vollständige/korrekte Bezeichnung der Institution/Einrichtung/jur. Person",
     "pleaseEnterTheFullCorrectNameOfTheInstitutionFacilityJurPerson": "Bitte geben Sie die Bezeichnung ein",
     "street": "Straße",
@@ -306,7 +305,7 @@
     "messagesToApplicants": "Mitteilungen an Antragsteller",
     "messagesToLocations": "Mitteilungen an Standorte",
     "messagesToFdpg": "Mitteilungen an FDPG",
-    "uniquenessGivenDescription": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
+    "uniquenessGivenDescription": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \\nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
     "checkedAreas": "Geprüfte Bereiche ({isDoneCount}/{fieldCount})",
     "checkedAreasDescription": "Bitte prüfen Sie den Antrag auf Inhalte und Vollständigkeit. Markieren Sie Bereiche als geprüft. Hinterlassen Sie dem Antragsteller Aufgaben und Fragen ggf. eine Überarbeitung an. Wer der Antrag ohne Beanstandung der Richtigkeit entspricht können Sie diesen an die Standorte weiterleiten",
     "numberOfRequestedInstitutions": "Anzahl der Standorte",
@@ -532,7 +531,9 @@
     "revertLocationModalTitle": "Möchten Sie das Votum wirklich zurücksetzen?",
     "revertLocationModalDescription": "Indem Sie das Votum zurücksetzen, wird der sendende Standort benachrichtigt und kann das Votum erneut einreichen.",
     "revertVote": "Zurücksetzen",
-    "virtualAllLocations": "Alle Standorte"
+    "revert": "Zurücksetzen",
+    "virtualAllLocations": "Alle Standorte",
+    "projectDeadline": "Fristen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

@@ -1,62 +1,79 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const fs = require('fs')
+const fs = require('fs/promises')
+const path = require('path')
+const PublicGoogleSheetsParser = require('public-google-sheets-parser')
 
-function writeFileSyncRecursive(filename, content, charset) {
-  // -- normalize path separator to '/' instead of path.sep,
-  // -- as / works in node for Windows as well, and mixed \\ and / can appear in the path
-  let filepath = filename.replace(/\\/g, '/')
+/**
+ * This ID can be extracted from the Google Docs URL
+ * https://docs.google.com/spreadsheets/d/1LdXRWTpKVwk8Zgfzb4467hIbOqvIr5TIIv5zjYCz1fA
+ * Duplicate it via "File -> Make a copy" and make it accessible to "Anyone with the link"
+ * When adding a new category add the sheet name into the 'index' sheet
+ */
+const SPREADSHEET_ID = '1LdXRWTpKVwk8Zgfzb4467hIbOqvIr5TIIv5zjYCz1fA'
+const OUTPUT_PATH = path.resolve(__dirname, '../locales')
 
-  // -- preparation to allow absolute paths as well
-  let root = ''
-  if (filepath[0] === '/') {
-    root = '/'
-    filepath = filepath.slice(1)
-  } else if (filepath[1] === ':') {
-    root = filepath.slice(0, 3) // c:\
-    filepath = filepath.slice(3)
-  }
+const getSheet = (spreadsheetId, sheetName) => {
+  const parser = new PublicGoogleSheetsParser(spreadsheetId, sheetName)
+  return parser.parse()
+}
 
-  // -- create folders all the way down
-  const folders = filepath.split('/').slice(0, -1) // remove last item, file
-  folders.reduce(
-    (acc, folder) => {
-      const folderPath = `${acc + folder}/`
-      if (!fs.existsSync(folderPath)) {
-        fs.mkdirSync(folderPath)
-      }
-      return folderPath
-    },
-    root, // first 'acc', important
+const buildLangFiles = async () => {
+  const indexSheet = await getSheet(SPREADSHEET_ID)
+
+  // => ["general", "errors", ...]
+  const sheetNames = indexSheet.map((row) => row.sheetName)
+
+  // => [{ "general": Sheet }, { "errors": Sheet }]
+  const sheetsResult = await Promise.all(
+    sheetNames.map(async (sheetName) => ({
+      [sheetName]: await getSheet(SPREADSHEET_ID, sheetName),
+    })),
   )
 
-  // -- write file
-  fs.writeFileSync(root + filepath, content, charset)
+  // => { "general": Sheet, "errors": Sheet }
+  // => { "general": [{ "key": "book", "de-DE": "Buch", "en-EN": "book" }], ... }
+  const categories = sheetsResult.reduce((acc, cur) => ({ ...acc, ...cur }), {})
+
+  // collects all the keys found in those sheets and filters out the "key"
+  // => [ 'de-DE', 'en-EN' ]
+  const languages = Object.keys(
+    // => { key: 'german', 'de-DE': 'Deutsch', 'en-EN': 'German' }
+    Object.values(categories).reduce(
+      (acc, cur) => ({
+        ...acc,
+        ...cur.reduce((acc2, cur2) => ({ ...cur2, ...acc2 })),
+      }),
+      {},
+    ),
+  ).filter((key) => key !== 'key')
+
+  console.info(`languages: ${languages}`)
+
+  const getLocale = (language) =>
+    Object.entries(categories).reduce(
+      (acc, [category, sheet]) => ({
+        ...acc,
+        ...sheet.reduce(
+          (acc2, row) => ({
+            ...acc2,
+            [category]: {
+              ...acc2[category],
+              [row.key]: row[language],
+            },
+          }),
+          {},
+        ),
+      }),
+      {},
+    )
+
+  await Promise.all(
+    languages.map(async (language) => {
+      const locale = getLocale(language)
+      const fileName = `${OUTPUT_PATH}/${language}.json`
+      await fs.writeFile(fileName, JSON.stringify(locale))
+      console.info(`wrote: ${fileName}`)
+    }),
+  )
 }
 
-function parseSource(data) {
-  const tabsName = Object.keys(data)
-  const detectedLanguages = Object.keys(data[tabsName[0]][Object.keys(data[tabsName[0]])[0]])
-
-  detectedLanguages.forEach((language) => {
-    const messages = tabsName.reduce((acc, tabName) => {
-      if (!(tabName in acc)) {
-        acc[tabName] = {}
-      }
-
-      Object.keys(data[tabName]).forEach((key) => {
-        acc[tabName][key] = data[tabName][key][language]?.replace(/\\n/g, '\n') ?? ''
-      })
-
-      return acc
-    }, {})
-
-    const fileContent = JSON.stringify(messages)
-    writeFileSyncRecursive(`./src/locales/${language.toLocaleLowerCase()}.json`, fileContent)
-  })
-}
-
-// The export file must be placed at this location : src/assets/
-fs.readFile('./src/assets/locales/i18n.json', (err, data) => {
-  if (err) throw err
-  parseSource(JSON.parse(data))
-})
+buildLangFiles()
