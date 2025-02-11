@@ -1,9 +1,7 @@
 <template>
   <div v-if="!(hideDocuments && hideContracts)" class="section">
     <template v-if="!hideDocuments">
-      <h2 class="section-title">
-        {{ $t('proposal.appendix') }}
-      </h2>
+      <h2 class="section-title">{{ $t('proposal.appendix') }} ({{ documents.length }})</h2>
 
       <DocumentList
         :documents="documents"
