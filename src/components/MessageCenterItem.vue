@@ -26,7 +26,7 @@
       </template>
     </div>
 
-    <div class="message-content" v-html="message.content"></div>
+    <div class="message-content ql-editor" v-html="message.content"></div>
 
     <section v-if="couldAnswer || authStore.singleKnownRole === Role.FdpgMember" role="region">
       <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">

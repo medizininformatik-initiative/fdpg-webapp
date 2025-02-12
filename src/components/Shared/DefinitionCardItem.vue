@@ -17,7 +17,7 @@
   </template>
 
   <template v-else>
-    <div v-html="value"></div>
+    <div class="ql-editor" v-html="value"></div>
   </template>
 </template>
 
