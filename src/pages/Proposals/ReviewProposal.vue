@@ -71,12 +71,7 @@
       </template>
     </template>
 
-    <ReviewLabel
-      class="form-label-mt-4"
-      title="proposal.appendix"
-      headline="h2"
-      :additionalText="uploadsForType.length ? uploadsForType.length.toString() : ''"
-    />
+    <ReviewLabel class="form-label-mt-4" title="proposal.appendix" headline="h2" :counter="uploadsForType.length" />
     <DocumentList
       :documents="uploadsForType"
       :proposal-id="proposalId"

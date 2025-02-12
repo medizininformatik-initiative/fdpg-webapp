@@ -1,7 +1,7 @@
 <template>
   <section :id="sectionId" class="review-label">
     <component :is="headline" v-if="title"
-      >{{ $t(title) }} <span v-if="additionalText">({{ additionalText }})</span></component
+      >{{ $t(title) }} <span v-if="counter >= 0">({{ counter }})</span></component
     >
 
     <el-checkbox
@@ -53,8 +53,8 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  additionalText: {
-    type: String,
+  counter: {
+    type: Number,
     default: undefined,
   },
 })
