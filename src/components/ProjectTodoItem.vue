@@ -4,7 +4,11 @@
       <i class="bi-clipboard-check" aria-hidden="true" />
 
       <span class="todo-title" @click="toggleExpand">{{ projectTodo.date }} {{ projectTodo.title }}</span>
-      <div v-show="!isExpanded" class="todo-description todo-description--short" v-html="projectTodo.description"></div>
+      <div
+        v-show="!isExpanded"
+        class="todo-description todo-description--short ql-editor"
+        v-html="projectTodo.description"
+      ></div>
 
       <i
         class="el-icon-arrow-right"
@@ -16,7 +20,7 @@
       />
     </div>
     <template v-if="isExpanded">
-      <div class="todo-description todo-description--long" v-html="projectTodo.description"></div>
+      <div class="todo-description todo-description--long ql-editor" v-html="projectTodo.description"></div>
 
       <div
         v-if="projectTodo.actionLabel"

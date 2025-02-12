@@ -8,7 +8,11 @@
       <el-button class="button__margin" type="primary" @click="sendFdpgCheckNotes">{{ $t('general.save') }}</el-button>
     </div>
     <div class="check-note-content" v-else>
-      <div v-if="proposalStore.currentProposal" v-html="proposalStore.currentProposal.fdpgCheckNotes"></div>
+      <div
+        class="ql-editor"
+        v-if="proposalStore.currentProposal"
+        v-html="proposalStore.currentProposal.fdpgCheckNotes"
+      ></div>
     </div>
     <el-divider />
   </div>

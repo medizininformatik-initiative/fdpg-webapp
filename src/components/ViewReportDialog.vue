@@ -7,7 +7,7 @@
       </dd>
 
       <dt>{{ $t('proposal.text') }}</dt>
-      <dd v-html="report.content"></dd>
+      <dd class="ql-editor" v-html="report.content"></dd>
 
       <dt>{{ $t('proposal.album') }}</dt>
       <dd>
