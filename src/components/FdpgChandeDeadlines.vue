@@ -2,14 +2,18 @@
   <div class="section">
     <h2 class="section-title">{{ $t('proposal.deadlinesChange') }}</h2>
 
-    <el-row :gutter="20" v-for="(value, key) in filteredDueDates" :key="key">
+    <el-row :gutter="20" v-for="(value, key) in deadlines" :key="key">
       <el-col :span="24">
-        <FdpgDeadlineItem v-model="filteredDueDates[key]" :label="key" :placeholder="$t(`proposal.dueDateNotSet`)" />
+        <FdpgDeadlineItem
+          v-model="deadlines[key]"
+          :label="cleanDueDateKey(key)"
+          :placeholder="$t(`proposal.dueDateNotSet`)"
+        />
       </el-col>
     </el-row>
 
     <el-row justify="end" class="button-row">
-      <el-col :span="1">
+      <el-col :span="3">
         <el-button type="primary" @click="saveDeadlines">
           {{ $t('general.save') }}
         </el-button>
@@ -19,9 +23,9 @@
 </template>
 
 <script setup>
-import { defineProps, toRefs, computed, reactive } from 'vue'
+import { defineProps, ref, watchEffect } from 'vue'
 import FdpgDeadlineItem from './FdpgDeadlineItem.vue'
-import { statusToDueDatesMap } from '@/utils/deadlines'
+import { cleanDueDateKey } from '@/utils/deadlines'
 
 const props = defineProps({
   deadlines: {
@@ -34,19 +38,18 @@ const props = defineProps({
   },
 })
 
-const { deadlines } = toRefs(props)
 const emit = defineEmits(['saveDeadlines'])
 
-const filteredDueDates = reactive(
-  Object.fromEntries(
-    Object.keys(props.deadlines)
-      .filter((dueDateKey) => statusToDueDatesMap[props.status]?.includes(dueDateKey))
-      .map((key) => [key, props.deadlines[key]]),
-  ),
-)
+const deadlines = ref({})
+
+watchEffect(() => {
+  if (props.deadlines) {
+    deadlines.value = { ...props.deadlines }
+  }
+})
 
 const saveDeadlines = () => {
-  emit('saveDeadlines', { ...filteredDueDates })
+  emit('saveDeadlines', { ...deadlines.value })
 }
 </script>
 
@@ -65,5 +68,11 @@ h2 {
 
 .button-row {
   margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.el-button {
+  width: 100%;
 }
 </style>

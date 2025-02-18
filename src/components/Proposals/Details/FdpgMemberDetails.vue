@@ -10,7 +10,7 @@
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
     <FdpgChandeDeadlines
-      :deadlines="proposalStore.currentProposal.deadlines"
+      :deadlines="filteredDueDates"
       :status="status"
       @saveDeadlines="handleSaveDeadlines"
     ></FdpgChandeDeadlines>
@@ -91,7 +91,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import type { UploadFile, UploadRawFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -103,7 +103,8 @@ import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
 import FdpgChandeDeadlines from '@/components/FdpgChandeDeadlines.vue'
-import type { Deadlines } from '@/types/due-date.enum'
+import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
+import { statusToDueDatesMap } from '@/utils/deadlines'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -149,6 +150,18 @@ const isInitiateContractDialogOpen = ref(false)
 const handleToContractingClick = () => {
   isInitiateContractDialogOpen.value = true
 }
+
+const filteredDueDates = computed(() => {
+  return Object.fromEntries(
+    Object.keys(proposalStore.currentProposal?.deadlines || {})
+      .filter(
+        (dueDateKey) =>
+          proposalStore.currentProposal?.status &&
+          statusToDueDatesMap[proposalStore.currentProposal.status]?.includes(dueDateKey as DueDateEnum),
+      )
+      .map((key) => [key, (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key]]),
+  )
+})
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
