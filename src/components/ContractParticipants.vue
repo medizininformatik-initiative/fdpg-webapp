@@ -1,6 +1,8 @@
 <template>
   <section role="region" class="section contract-participants">
-    <h2>{{ $t('proposal.xContractParticipants', { count: uacFullyApproved.length + 1 }) }}</h2>
+    <h2>
+      {{ $t('proposal.xContractParticipants', { count: signedContractsCount + signedContractsPendingCount + 1 }) }}
+    </h2>
     <section role="menubar" class="tab-bar">
       <div
         role="menuitem"
@@ -20,7 +22,11 @@
         @click="setActiveTab('locations')"
         @keydown.enter="setActiveTab('locations')"
       >
-        {{ $t('proposal.xLocations', { count: uacFullyApproved.length }) }}
+        {{
+          $t('proposal.xLocations', {
+            count: signedContractsCount + signedContractsPendingCount,
+          })
+        }}
       </div>
     </section>
 
@@ -37,7 +43,16 @@
     </section>
 
     <section v-show="activeTab === 'locations'" role="region">
+      <section v-if="isResearcher" role="row" class="contract-researcher-row">
+        <div>
+          {{ $t('proposal.contractPendingLocationCount', { count: signedContractsPendingCount }) }}
+        </div>
+        <div>
+          {{ $t('proposal.contractAcceptedLocationCount', { count: signedContractsCount }) }}
+        </div>
+      </section>
       <section
+        v-else
         v-for="location in uacFullyApproved.slice(0, isFullView ? uacFullyApproved.length : 3)"
         :key="'approved_' + location._id"
         role="row"
@@ -53,7 +68,7 @@
       </section>
 
       <div
-        v-if="uacFullyApproved.length > 3"
+        v-if="uacFullyApproved.length > 3 && !isResearcher"
         class="show-more"
         role="button"
         tabindex="0"
@@ -71,11 +86,18 @@
 <script setup lang="ts">
 import { MII_LOCATIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
+import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { Role } from '@/types/oidc.types'
 import { computed, ref } from 'vue'
 
 type StatusTagStyle = 'pending' | 'accepted' | 'rejected'
 const proposalStore = useProposalStore()
+const authStore = useAuthStore()
+
+const isResearcher = computed(() => authStore.singleKnownRole === Role.Researcher)
+const signedContractsCount = computed(() => proposalStore.currentProposal?.signedContractsCount ?? 0)
+const signedContractsPendingCount = computed(() => proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
 
 const uacFullyApproved = computed(() => {
   const conditionAccepted =
@@ -175,6 +197,17 @@ const toggleFullView = () => {
       &.active {
         background: color.adjust($blue, $lightness: 40%);
       }
+    }
+  }
+
+  .contract-researcher-row {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    gap: 0.5em;
+
+    &:not(:last-child) {
+      margin-bottom: 1rem;
     }
   }
 

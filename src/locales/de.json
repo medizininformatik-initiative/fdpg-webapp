@@ -549,7 +549,9 @@
     "updateAdditionalLocationInformationTodoDescription": "Im Falle eines Projektteilnahme, teilen Sie bitte die unten aufgeführten Informationen zum Projekt mit.",
     "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent",
     "updateAdditionalLocationPublicationName": "Für den Vertragsanhang, in dem aufgeführt ist, wie die Standorte in Acknowlegements von Publikationen benannt werden sollen, haben wir von allen Standorten eine Standardformulieren. Sie müssen hier nur Angaben machen, falls Sie eine projektspezifische Änderung an diesem Text vornehmen möchten. Bitte teilen Sie uns dauerhafte Änderungen an den Vorgaben zur Nennung in Publikationen über die Kommentare mit.",
-    "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll."
+    "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll.",
+    "contractPendingLocationCount": "Ausstehend für {count} Standorte",
+    "contractAcceptedLocationCount": "Akzeptiert von {count} Standorten"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

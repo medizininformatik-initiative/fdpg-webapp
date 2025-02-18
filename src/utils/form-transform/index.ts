@@ -93,5 +93,12 @@ export const transformForm = (
     fdpgCheckNotes: form?.fdpgCheckNotes,
     additionalLocationInformation: form?.additionalLocationInformation ?? [],
     isParticipatingScientist: form?.isParticipatingScientist,
+
+    signedContractsCount: form?.signedContractsCount,
+    signedContractsPendingCount: form?.signedContractsPendingCount,
+    uacApprovedLocationsCount: form?.uacApprovedLocationsCount,
+    requestedButExcludedLocationsCount: form?.requestedButExcludedLocationsCount,
+    conditionalApprovalsCount: form?.conditionalApprovalsCount,
+    uacApprovalsCount: form?.uacApprovalsCount,
   }
 }

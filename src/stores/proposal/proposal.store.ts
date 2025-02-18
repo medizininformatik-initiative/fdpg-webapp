@@ -12,7 +12,6 @@ import type {
   IPublicationCreateAndUpdate,
   IReportCreate,
   IReportUpdate,
-  IAdditionalLocationProposalInformation,
   IEditAdditionalLocationProposalInformation,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
