@@ -89,7 +89,10 @@
                   :width="column.width"
                   :min-width="column.minWidth"
                 >
-                  <template v-if="currentProposal?.status === ProposalStatus.LocationCheck" #default="props">
+                  <template
+                    v-if="proposalStore.currentProposal?.status === ProposalStatus.LocationCheck"
+                    #default="props"
+                  >
                     <el-button
                       :data-testId="'button__revert__' + props.row.location"
                       @click="handleRevertLocation(props.row.location)"
@@ -215,7 +218,7 @@ import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store
 import { useI18n } from 'vue-i18n'
 
 const proposalStore = useProposalStore()
-const proposalId = computed(() => currentProposal?._id ?? '')
+const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
 const authStore = useAuthStore()
 const messageBoxStore = useMessageBoxStore()
 const { t } = useI18n()
