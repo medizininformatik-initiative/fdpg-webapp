@@ -8,6 +8,13 @@
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
+
+    <FdpgChandeDeadlines
+      :deadlines="proposalStore.currentProposal.deadlines"
+      :status="status"
+      @saveDeadlines="handleSaveDeadlines"
+    ></FdpgChandeDeadlines>
+
     <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
@@ -95,6 +102,8 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
+import FdpgChandeDeadlines from '@/components/FdpgChandeDeadlines.vue'
+import type { Deadlines } from '@/types/due-date.enum'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -549,6 +558,9 @@ const fetchProposal = async () => {
     await router.push({ name: RouteName.Dashboard })
     console.log(error)
   }
+}
+const handleSaveDeadlines = async (deadlines: Deadlines) => {
+  await proposalStore.updateDeadlines(proposalId.value, deadlines)
 }
 
 onMounted(async () => {

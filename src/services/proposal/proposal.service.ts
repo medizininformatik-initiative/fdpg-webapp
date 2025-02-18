@@ -22,6 +22,7 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
+import type { Deadlines } from '@/types/due-date.enum'
 
 export class ProposalService {
   private basePath = '/proposals'
@@ -269,6 +270,11 @@ export class ProposalService {
   ): Promise<void> {
     await this.apiClient.post(`${this.basePath}/${id}/additionalLocationInformation`, {
       ...additionalLocationInformation,
+    })
+  }
+  async updateDeadlines(id: string, deadlines: Deadlines): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/deadlines`, {
+      deadlines,
     })
   }
 }

@@ -6,6 +6,7 @@ import type { PanelQuery } from './sort-filter.types'
 import type { UploadType } from './upload.types'
 import type { IVersion } from './version.interface'
 import type { PublicationType } from './publication-type.enum'
+import type { Deadlines, DueDateEnum } from './due-date.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -442,6 +443,7 @@ export interface IProposal {
   declineReasons: IDeclineReason[]
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
+  deadlines: Deadlines
 }
 
 export enum FdpgTaskType {
