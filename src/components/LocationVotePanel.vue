@@ -40,10 +40,11 @@ const progressItems = computed(() => {
 
   const numberOfApprovedLocationsInContractingStatus = proposalStore.currentProposal?.numberOfApprovedLocations ?? 0
   const numberOfApprovedAndSelectedLocationsInContractingStatus =
-    numberOfApprovedLocationsInContractingStatus - uacApprovedAndSelectedLocations
+    (proposalStore.currentProposal?.signedContractsCount ?? 0) +
+    (proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
 
   const signingComplete =
-    (proposalStore.currentProposal?.signedContractsCount ?? 0) >= numberOfApprovedLocationsInContractingStatus
+    numberOfApprovedAndSelectedLocationsInContractingStatus >= numberOfApprovedLocationsInContractingStatus
 
   const getParticipants = () => {
     const status = proposalStore.currentProposal?.status
@@ -59,7 +60,7 @@ const progressItems = computed(() => {
         status: { success: signingComplete },
         title: 'proposal.signedContracts',
         value: proposalStore.currentProposal?.signedContractsCount ?? 0,
-        max: numberOfApprovedAndSelectedLocationsInContractingStatus,
+        max: numberOfApprovedLocationsInContractingStatus,
       }
     }
   }
