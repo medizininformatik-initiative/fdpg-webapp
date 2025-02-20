@@ -21,6 +21,7 @@
       :type="type"
       @close="handleCancelClick"
       @save="handleSubmit"
+      :reviewMode="reviewMode"
     />
   </section>
 </template>
@@ -44,6 +45,10 @@ const props = defineProps({
   type: {
     type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
     required: true,
+  },
+  reviewMode: {
+    type: Boolean,
+    default: false,
   },
 })
 

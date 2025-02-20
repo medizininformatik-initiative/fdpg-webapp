@@ -93,17 +93,7 @@
       </FdpgUpload>
     </el-form>
 
-    <el-row
-      v-if="
-        !proposalStore.currentProposal ||
-        proposalStore.currentProposal.status === ProposalStatus.Draft ||
-        proposalStore.currentProposal.status === ProposalStatus.Rework ||
-        proposalStore.currentProposal.status === undefined
-      "
-      type="flex"
-      justify="end"
-      class="action-wrapper"
-    >
+    <el-row v-if="!proposalStore.currentProposal || !isReviewMode" type="flex" justify="end" class="action-wrapper">
       <el-button type="primary" plain data-test-id="handleSaveDraft" @click="handleSaveDraft">{{
         $t('proposal.saveDraft')
       }}</el-button>
@@ -273,14 +263,19 @@ const rules = ref<Record<string, any>>({
 })
 
 const isReviewMode = computed(() => {
-  return !(
-    proposalForm.value?.status === undefined ||
-    proposalForm.value?.status === ProposalStatus.Draft ||
-    proposalForm.value?.status === ProposalStatus.Rework ||
-    !proposalForm.value.isParticipatingScientist
+  return (
+    !(
+      proposalForm.value?.status === undefined ||
+      proposalForm.value?.status === ProposalStatus.Draft ||
+      proposalForm.value?.status === ProposalStatus.Rework
+    ) || isParticipatingScientist.value
   )
 })
-
+const isParticipatingScientist = computed(() => {
+  return proposalStore.currentProposal?.isParticipatingScientist !== undefined
+    ? proposalStore.currentProposal.isParticipatingScientist
+    : false
+})
 const OpenProposalTasks = computed(() => {
   return commentStore.comments
     .filter((comment: ICommentDetail) => comment.type === CommentType.PROPOSAL_TASK)
