@@ -6,7 +6,10 @@
     <ProjectStatus :proposal-status="status"></ProjectStatus>
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
-    <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
+    <ProjectTodos
+      :is-disabled="proposalStore.currentProposal?.isLocked || isParticipatingScientist"
+      :project-todos="projectTodos"
+    ></ProjectTodos>
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
@@ -18,7 +21,7 @@
       access-for-maintenance
     ></ProjectReports>
     <ProjectHistory />
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :reviewMode="isParticipatingScientist" />
   </el-container>
 
   <SignDialog v-model="isSignDialogOpen" @accept-contract="handleContractSignConfirm" />
@@ -303,6 +306,8 @@ const projectTodos = computed<IProjectTodo[]>(() => {
     ...getCommentTodos(commentStore.comments),
   ]
 })
+
+const isParticipatingScientist = computed(() => proposalStore.currentProposal?.isParticipatingScientist)
 
 const fetchProposal = async () => {
   try {

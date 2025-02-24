@@ -1,7 +1,12 @@
 <template>
-  <FdpgTextEditor v-model="comment" ref="inputRef" :placeholder="$t('proposal.leaveAComment')"></FdpgTextEditor>
+  <FdpgTextEditor
+    v-model="comment"
+    ref="inputRef"
+    :placeholder="$t('proposal.leaveAComment')"
+    v-if="!reviewMode"
+  ></FdpgTextEditor>
   <section role="region" class="action-row">
-    <div class="comment-field-actions">
+    <div class="comment-field-actions" v-if="!reviewMode">
       <el-button
         type="primary"
         class="edit-button"
@@ -57,6 +62,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
     required: false,
+  },
+  reviewMode: {
+    type: Boolean,
+    default: false,
   },
 })
 
