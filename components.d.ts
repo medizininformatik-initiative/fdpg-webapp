@@ -61,6 +61,7 @@ declare module 'vue' {
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FdpgCheckbox: typeof import('./src/components/FdpgCheckbox.vue')['default']
     FdpgCheckList: typeof import('./src/components/FdpgCheckList.vue')['default']
+    FdpgCheckListTable: typeof import('./src/components/FdpgCheckListTable.vue')['default']
     FdpgCheckNotes: typeof import('./src/components/FdpgCheckNotes.vue')['default']
     FdpgCommentCreator: typeof import('./src/components/FdpgCommentCreator.vue')['default']
     FdpgCommentForm: typeof import('./src/components/FdpgCommentForm.vue')['default']
