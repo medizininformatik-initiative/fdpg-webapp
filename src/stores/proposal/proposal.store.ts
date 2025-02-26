@@ -45,7 +45,12 @@ export const useProposalStore = defineStore('Proposal', {
     currentSortField: 'submittedAt',
     currentSortDirection: SortDirection.DESC,
     counts: {},
-    _checkListLastSuccess: {},
+    _checkListLastSuccess: {
+      isRegistrationLinkSent: false,
+      checkListVerification: [],
+      fdpgInternalCheckNotes: '',
+      projectProperties: [],
+    },
     search: undefined,
   }),
 
@@ -207,7 +212,7 @@ export const useProposalStore = defineStore('Proposal', {
 
     _updateFdpgChecklistDebounced: debounce(async function (
       id: string,
-      checklist: IFdpgChecklist,
+      checklist: Partial<IFdpgChecklist[keyof IFdpgChecklist]>,
       store: unknown,
       errorCb?: (...args: any) => void,
     ) {
@@ -215,7 +220,7 @@ export const useProposalStore = defineStore('Proposal', {
 
       try {
         await typedStore.apiService.updateFdpgChecklist(id, checklist)
-        typedStore._checkListLastSuccess = checklist
+        // typedStore._checkListLastSuccess = checklist
       } catch (error) {
         if (errorCb) {
           errorCb(error)
@@ -227,9 +232,13 @@ export const useProposalStore = defineStore('Proposal', {
       }
     }, 500),
 
-    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args: any) => void): Promise<void> {
+    async updateFdpgChecklist(
+      id: string,
+      checklist: Partial<IFdpgChecklist[keyof IFdpgChecklist]>,
+      errorCb?: (...args: any) => void,
+    ): Promise<void> {
       if (this.currentProposal) {
-        this.currentProposal.fdpgChecklist = { ...checklist }
+        // this.currentProposal.fdpgChecklist = { ...checklist }
       }
       return this._updateFdpgChecklistDebounced(id, checklist, this, errorCb)
     },

@@ -27,9 +27,10 @@
     <FdpgCheckList
       v-if="status === ProposalStatus.FdpgCheck"
       v-model="fdpgChecklist"
-      :checklist-options="checklistOptions"
+      :checklist="proposalStore.currentProposal.fdpgChecklist"
       :is-disabled="proposalStore.currentProposal.isLocked"
       title="proposal.checklistVerification"
+      @update:listItem="(event: IChecklistItem) => updateChecklistItem(event)"
     ></FdpgCheckList>
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
@@ -77,7 +78,7 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IFdpgChecklist } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
@@ -279,22 +280,6 @@ const handleExportProposalPdfClick = async () => {
   }
 }
 
-const getIsUniqueTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
-  if (proposalStatus === ProposalStatus.FdpgCheck) {
-    return [
-      {
-        title: t('proposal.checkProjectForUniqueness'),
-        description: t('proposal.uniquenessGivenDescription'),
-        action: () => {},
-        type: 'info',
-        isDone: isChecklistDone.value,
-      },
-    ]
-  } else {
-    return []
-  }
-}
-
 const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
   if (proposalStatus === ProposalStatus.FdpgCheck) {
     const isDoneCount = proposalStore.currentProposal?.isDoneOverview?.isDoneCount
@@ -318,7 +303,7 @@ const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getIsUniqueTodo(status.value), ...getIsCheckedTodo(status.value)]
+  return getIsCheckedTodo(status.value)
 })
 
 const projectDuration = computed(
@@ -431,7 +416,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__toLocationCheck',
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
-    isDisabled: !isChecklistDone.value || proposalStore.currentProposal?.isLocked,
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',
@@ -482,31 +467,7 @@ const {
   showErrorMessage,
 )
 
-const fdpgChecklist = computed({
-  get() {
-    return proposalStore.currentProposal?.fdpgChecklist ?? {}
-  },
-  set(checkList: IFdpgChecklist) {
-    if (proposalStore.currentProposal) {
-      const errorCb = (_error: any) => {
-        showErrorMessage(t('proposal.checklistGenericError'))
-      }
-      proposalStore.updateFdpgChecklist(proposalId.value, checkList, errorCb)
-    }
-  },
-})
-
-const checklistOptions: Record<keyof IFdpgChecklist, TranslationSchema> = {
-  isRegistrationLinkSent: 'proposal.isRegistrationLinkSentLabel',
-  isUnique: 'proposal.isUniqueLabel',
-  isAttachmentsChecked: 'proposal.isAttachmentsCheckedLabel',
-  isChecked: 'proposal.isCheckedLabel',
-}
-
-const isChecklistDone = computed(() => {
-  const checked = Object.values(proposalStore.currentProposal?.fdpgChecklist ?? {}).filter((value) => value).length
-  return checked === Object.keys(checklistOptions).length
-})
+const fdpgChecklist = computed(() => proposalStore.currentProposal?.fdpgChecklist ?? {})
 
 const showContractingParticipants = computed(() => {
   return (
@@ -549,6 +510,13 @@ const fetchProposal = async () => {
     await router.push({ name: RouteName.Dashboard })
     console.log(error)
   }
+}
+const updateChecklistItem = (item: Partial<IFdpgChecklist[keyof IFdpgChecklist]>) => {
+  if (!proposalId.value) {
+    console.error('Proposal ID is missing')
+    return
+  }
+  proposalStore.updateFdpgChecklist(proposalId.value, item)
 }
 
 onMounted(async () => {

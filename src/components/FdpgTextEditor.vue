@@ -9,6 +9,7 @@
       :enable="!props.disabled"
       :readOnly="props.disabled"
       :placeholder="placeholder"
+      @blur="() => emit('blur')"
     />
   </div>
 </template>
@@ -21,7 +22,7 @@ const props = defineProps({
   disabled: Boolean,
   placeholder: String,
 })
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'blur'])
 
 const textEditor = ref()
 defineExpose({
