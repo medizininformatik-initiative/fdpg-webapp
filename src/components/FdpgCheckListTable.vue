@@ -1,5 +1,5 @@
 <template>
-  <table class="my-table">
+  <table class="checklist-table">
     <tbody>
       <!-- Parent Rows -->
 
@@ -8,7 +8,7 @@
           <td>{{ $t(`proposal.${row.questionKey}`) }}</td>
 
           <td>
-            <el-radio-group v-model="row.value[0]" @change="handleOptionChange(row)" v-if="row.isMultiple === false">
+            <el-radio-group v-model="row.answer[0]" @change="handleOptionChange(row)" v-if="row.isMultiple === false">
               <FdpgRadio
                 v-for="(option, index) in row.options"
                 :key="index"
@@ -17,7 +17,7 @@
                 :size="FdpgInputSize.Small"
               ></FdpgRadio>
             </el-radio-group>
-            <el-checkbox-group v-model="row.value" v-else @change="handleOptionChange(row)">
+            <el-checkbox-group v-model="row.answer" v-else @change="handleOptionChange(row)">
               <FdpgCheckbox
                 v-for="(option, index) in row.options"
                 :key="index"
@@ -33,9 +33,9 @@
           </td>
         </tr>
 
-        <tr v-if="row.value[0] === 'yes' && row.sublist?.length" :key="`sublist-${row._id}`">
+        <tr v-if="row.answer[0] === 'yes' && row.sublist?.length" :key="`sublist-${row._id}`">
           <td colspan="3">
-            <table class="my-table">
+            <table class="sub-table">
               <tbody>
                 <!-- Use sublist items directly -->
 
@@ -43,20 +43,22 @@
                   <td>{{ $t(`proposal.${subItem.questionKey}`) }}</td>
 
                   <td>
-                    <el-radio-group v-model="subItem.value[0]" v-if="subItem.isMultiple === false">
+                    <el-radio-group v-model="subItem.answer[0]" v-if="subItem.isMultiple === false">
                       <FdpgRadio
                         v-for="(option, index) in subItem.options"
                         :key="index"
                         :label="`proposal.${option.optionValue}`"
                         :value="option.optionValue"
+                        :size="FdpgInputSize.Small"
                       ></FdpgRadio>
                     </el-radio-group>
-                    <el-checkbox-group v-model="subItem.value" v-else>
+                    <el-checkbox-group v-model="subItem.answer" v-else>
                       <FdpgCheckbox
                         v-for="(option, index) in subItem.options"
                         :key="index"
                         :label="`proposal.${option.optionValue}`"
                         :value="option.optionValue"
+                        :size="FdpgInputSize.Small"
                       ></FdpgCheckbox>
                     </el-checkbox-group>
                   </td>
@@ -94,8 +96,9 @@ const handleOptionChange = (row) => {
 }
 </script>
 
-<style scoped>
-.my-table {
+<style lang="scss">
+@use '@/assets/sass/variable' as *;
+.checklist-table {
   border-collapse: collapse;
 
   width: 100%;
@@ -103,14 +106,14 @@ const handleOptionChange = (row) => {
   margin: 1em 0;
   font-size: 14px;
 }
-.my-table th,
-.my-table td {
+.checklist-table th,
+.checklist-table td {
   border-bottom: 1px solid #ccc;
 
   padding: 0.5em;
 }
 
-.my-table th {
+.checklist-table th {
   background: #f4f4f4;
 
   text-align: left;

@@ -27,10 +27,10 @@
     <FdpgCheckList
       v-if="status === ProposalStatus.FdpgCheck"
       v-model="fdpgChecklist"
-      :checklist="proposalStore.currentProposal.fdpgChecklist"
+      :checklist="transformedChecklist"
       :is-disabled="proposalStore.currentProposal.isLocked"
       title="proposal.checklistVerification"
-      @update:listItem="(event: IChecklistItem) => updateChecklistItem(event)"
+      @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
@@ -79,7 +79,7 @@ import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
-import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
@@ -511,13 +511,26 @@ const fetchProposal = async () => {
     console.log(error)
   }
 }
-const updateChecklistItem = (item: Partial<IFdpgChecklist[keyof IFdpgChecklist]>) => {
+const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
   if (!proposalId.value) {
     console.error('Proposal ID is missing')
     return
   }
   proposalStore.updateFdpgChecklist(proposalId.value, item)
 }
+
+const transformedChecklist = computed(() => {
+  if (proposalStore.currentProposal?.userProject.typeOfUse.usage[0] !== ProposalTypeOfUse.Distributed) {
+    return proposalStore.currentProposal?.fdpgChecklist
+  } else {
+    return {
+      ...proposalStore.currentProposal?.fdpgChecklist,
+      ...proposalStore.currentProposal?.fdpgChecklist?.checkListVerification.filter(
+        (item) => item.questionKey !== 'dataDistribution',
+      ),
+    }
+  }
+})
 
 onMounted(async () => {
   await fetchProposal()

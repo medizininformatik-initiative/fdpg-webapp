@@ -316,15 +316,14 @@ export interface IChecklistItem {
   comment: string | null
   isMultiple: boolean
   options: { optionValue: string }[]
-  value: string[] | string
-  isAnswered: boolean
+  answer: string[] | string
   sublist?: {
     _id: string
     questionKey: string
     comment: string | null
     isMultiple: boolean
     options: { optionValue: string }[]
-    value: string[] | string
+    answer: string[] | string
   }[]
 }
 export interface IFdpgChecklist {
