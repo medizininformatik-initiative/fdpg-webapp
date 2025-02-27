@@ -9,7 +9,13 @@
         <el-collapse-item :title="'checkListVerification'" name="checkListVerification">
           <template #title>
             <h3 tabindex="0" role="button">
-              <span class="indicator" :class="'grey'"></span>{{ $t('proposal.checkListVerification') }}
+              <span class="indicator" :class="'grey'"></span
+              >{{
+                $t('proposal.checklistVerification', {
+                  checkedCount: checklist.checkListVerification.filter((item) => item.answer.length > 0).length,
+                  optionsCount: checklist.checkListVerification.length,
+                })
+              }}
             </h3>
           </template>
           <section class="box-wrapper">
@@ -37,10 +43,8 @@
 import { ref, type PropType } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import FdpgCheckbox from './FdpgCheckbox.vue'
 import type { IFdpgChecklist } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
-import { watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
