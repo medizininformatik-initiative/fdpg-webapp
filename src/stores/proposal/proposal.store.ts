@@ -255,15 +255,13 @@ export const useProposalStore = defineStore('Proposal', {
       if ('fdpgInternalCheckNotes' in checklistUpdate && checklistUpdate.fdpgInternalCheckNotes !== undefined) {
         this.currentProposal.fdpgChecklist.fdpgInternalCheckNotes = checklistUpdate.fdpgInternalCheckNotes
       }
-
-      if (!(' _id' in checklistUpdate)) return
-
+      if (!('_id' in checklistUpdate)) return
       const targetFields: (keyof IFdpgChecklist)[] = ['checkListVerification', 'projectProperties']
 
       targetFields.some((field) => {
         const itemIndex = Array.isArray(this.currentProposal?.fdpgChecklist?.[field])
           ? this.currentProposal?.fdpgChecklist?.[field]?.findIndex(
-              (item) => item._id.toString() === checklistUpdate[' _id']?.toString(),
+              (item) => item._id.toString() === checklistUpdate['_id']?.toString(),
             )
           : -1
 
@@ -278,7 +276,6 @@ export const useProposalStore = defineStore('Proposal', {
               }
             }
           })
-
           return true // Stop the loop once an item is found and updated
         }
         return false // Continue if no match is found

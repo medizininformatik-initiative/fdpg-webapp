@@ -1,6 +1,13 @@
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
-import type { IOwner, IProposal, IRequestedData } from '@/types/proposal.types'
+import {
+  ProposalTypeOfUse,
+  type IChecklistItem,
+  type IFdpgChecklist,
+  type IOwner,
+  type IProposal,
+  type IRequestedData,
+} from '@/types/proposal.types'
 import type { IVersion } from '@/types/version.interface'
 import { transformEmptyStringToUndefined } from '../empty-string.util'
 import {
@@ -40,6 +47,32 @@ const transformOwner = (owner?: DeepPartial<IOwner>): DeepPartial<IOwner> => {
   }
 }
 
+const transformChecklist = (
+  usage: (ProposalTypeOfUse | undefined)[] | undefined,
+  checklist: DeepPartial<IFdpgChecklist> | undefined,
+): DeepPartial<IFdpgChecklist> => {
+  if (!checklist) {
+    return {
+      isRegistrationLinkSent: false,
+      checkListVerification: [],
+      fdpgInternalCheckNotes: '',
+      projectProperties: [],
+    }
+  }
+  if (usage && usage.some((item) => item === ProposalTypeOfUse.Distributed)) {
+    return checklist
+  } else {
+    return {
+      ...checklist,
+      checkListVerification: checklist.checkListVerification
+        ? checklist.checkListVerification?.filter(
+            (item) => item?.questionKey !== 'exampleScriptsAttached' && item?.questionKey !== 'distributedAnalysis',
+          )
+        : [],
+    }
+  }
+}
+
 export const transformForm = (
   form?: DeepPartial<IProposal>,
   transformToApi?: boolean,
@@ -74,7 +107,7 @@ export const transformForm = (
     ownerId: form?.ownerId,
     ownerName: form?.ownerName,
     publications: form?.publications ?? [],
-    fdpgChecklist: form?.fdpgChecklist ?? {},
+    fdpgChecklist: transformChecklist(form?.userProject?.typeOfUse?.usage, form?.fdpgChecklist),
     openFdpgTasks: form?.openFdpgTasks ?? [],
     isDoneOverview: form?.isDoneOverview ?? {},
     openDizChecks: form?.openDizChecks ?? [],

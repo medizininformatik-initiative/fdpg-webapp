@@ -561,7 +561,7 @@
     "analysisPlanClear": "clear description of analysis plan",
     "exampleScriptsAttached": "example scripts, algorithms\nattached or available",
     "distributedAnalysis": "distributed analysis ",
-    "testLocations": "distributed analysis ",
+    "testLocations": "Teststandorte",
     "cohortcommentClear": "clear cohort description",
     "technicalDataSelection": "technical description of\ndata/sample selection",
     "uacDataSelectionComprehensible": "uac comprehensible description of\ndata/sample selection",
@@ -574,7 +574,11 @@
     "analysisPlanConsistency": "consistency of analysis\nplan",
     "miiStudyExplanation": "multicentric MII-wide\nstudy explained",
     "requestedLogicalDMST": "requested or logical DMST",
-    "sufficientCoarseningAggregation": "sufficient coarsening/aggregation"
+    "sufficientCoarseningAggregation": "sufficient coarsening/aggregation",
+    "dataPrivacyConceptAttached": "data privacy concept attached",
+    "distributedAnalysisDockerR": "Docker/R scripts",
+    "distributedAnalysisDataSHIELD": "DataSHIELD",
+    "distributedAnalysisOther": "other"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

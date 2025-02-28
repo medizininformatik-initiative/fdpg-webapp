@@ -5,6 +5,7 @@
     :message="$t(messageBoxStore.message)"
     @close="handleCallback('close')"
   >
+    <slot name="info"></slot>
     <template #footer>
       <span>
         <el-button
