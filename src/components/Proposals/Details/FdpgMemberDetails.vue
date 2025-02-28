@@ -27,7 +27,7 @@
     <FdpgCheckList
       v-if="status === ProposalStatus.FdpgCheck"
       v-model="fdpgChecklist"
-      :checklist="transformedChecklist"
+      :checklist="proposalStore.currentProposal.fdpgChecklist"
       :is-disabled="proposalStore.currentProposal.isLocked"
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
@@ -144,11 +144,11 @@ const handleToContractingClick = () => {
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
-  await initContracting(file?.raw, selectedLocations)
+  await initContracting(selectedLocations, file?.raw)
   isSubmitting.value = false
 }
 
-const initContracting = async (file?: File, selectedLocations: MiiLocation[]) => {
+const initContracting = async (selectedLocations: MiiLocation[], file?: File) => {
   if (!file) {
     showErrorMessage(t('general.failedSubmit'))
     return
@@ -295,6 +295,7 @@ const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
         isDone: isDoneCount !== undefined && isDoneCount === fieldCount,
         type: 'info',
         icon: 'bi bi-check-circle',
+        readonly: false,
       },
     ]
   } else {
@@ -416,7 +417,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__toLocationCheck',
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
-    isDisabled: proposalStore.currentProposal?.isLocked,
+    isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
     type: 'primary',
@@ -519,17 +520,12 @@ const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
   proposalStore.updateFdpgChecklist(proposalId.value, item)
 }
 
-const transformedChecklist = computed(() => {
-  if (proposalStore.currentProposal?.userProject.typeOfUse.usage[0] !== ProposalTypeOfUse.Distributed) {
-    return proposalStore.currentProposal?.fdpgChecklist
-  } else {
-    return {
-      ...proposalStore.currentProposal?.fdpgChecklist,
-      ...proposalStore.currentProposal?.fdpgChecklist?.checkListVerification.filter(
-        (item) => item.questionKey !== 'dataDistribution',
-      ),
-    }
-  }
+const isChecklistDone = computed(() => {
+  return (
+    proposalStore.currentProposal?.fdpgChecklist?.checkListVerification.every(
+      (item: IChecklistItem) => item.isAnswered,
+    ) && proposalStore.currentProposal?.fdpgChecklist?.isRegistrationLinkSent
+  )
 })
 
 onMounted(async () => {

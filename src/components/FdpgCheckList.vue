@@ -12,7 +12,7 @@
               <span class="indicator" :class="'grey'"></span
               >{{
                 $t('proposal.checklistVerification', {
-                  checkedCount: checklist.checkListVerification.filter((item) => item.answer.length > 0).length,
+                  checkedCount: checklist.checkListVerification.filter((item) => item.isAnswered).length,
                   optionsCount: checklist.checkListVerification.length,
                 })
               }}
