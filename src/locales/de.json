@@ -553,7 +553,8 @@
     "contractAcceptedLocationCount": "Akzeptiert von {count} Standorten",
     "dueDateNotSet": "Kein Datum wurde festgelegt",
     "deadlinesChange": "Art der Frist",
-    "checklistTitle": "FDPG-Checkliste"
+    "checklistTitle": "FDPG-Checkliste",
+    "projectProperties": "Project Properties ({checkedCount}/{optionsCount})"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

@@ -578,7 +578,19 @@
     "dataPrivacyConceptAttached": "data privacy concept attached",
     "distributedAnalysisDockerR": "Docker/R scripts",
     "distributedAnalysisDataSHIELD": "DataSHIELD",
-    "distributedAnalysisOther": "other"
+    "distributedAnalysisOther": "other",
+    "projectProperties": "Project Properties ({checkedCount}/{optionsCount})",
+    "NonMII-Project": "project from a non-MII location",
+    "NonGDNG-Project": "project from a non-GDNG location",
+    "HealthData-Project": "project with health insurance data",
+    "Intl-Participants": "international participants",
+    "Commercial-Participants": "commercial participants",
+    "PartnerProject-Participants": "participants from partner projects\n(e.g. DigiHub, Modul3)",
+    "LogicalPartner-DIC": "logical partner DIC",
+    "Researcher-Support": "recommended support for researcher",
+    "DataIntegration": "integration with other data resources",
+    "Biosamples-Requested": "biosamples requested ",
+    "External-Lab": "extern laboratory involved"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
