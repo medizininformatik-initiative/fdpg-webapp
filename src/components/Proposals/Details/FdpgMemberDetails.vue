@@ -524,7 +524,9 @@ const isChecklistDone = computed(() => {
   return (
     proposalStore.currentProposal?.fdpgChecklist?.checkListVerification.every(
       (item: IChecklistItem) => item.isAnswered,
-    ) && proposalStore.currentProposal?.fdpgChecklist?.isRegistrationLinkSent
+    ) &&
+    proposalStore.currentProposal?.fdpgChecklist?.isRegistrationLinkSent &&
+    proposalStore.currentProposal?.fdpgChecklist?.projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })
 

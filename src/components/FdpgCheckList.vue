@@ -21,7 +21,26 @@
           <section class="box-wrapper">
             <FdpgCheckListTable
               :tableData="checklist.checkListVerification"
-              @update:listItem="(event) => emit('update:listItem', event)"
+              @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
+            ></FdpgCheckListTable>
+          </section>
+        </el-collapse-item>
+        <el-collapse-item :title="'projectProperties'" name="projectProperties">
+          <template #title>
+            <h3 tabindex="0" role="button">
+              <span class="indicator" :class="'grey'"></span
+              >{{
+                $t('proposal.projectProperties', {
+                  checkedCount: checklist.projectProperties.filter((item) => item.isAnswered).length,
+                  optionsCount: checklist.projectProperties.length,
+                })
+              }}
+            </h3>
+          </template>
+          <section class="box-wrapper">
+            <FdpgCheckListTable
+              :tableData="checklist.projectProperties"
+              @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
             ></FdpgCheckListTable>
           </section>
         </el-collapse-item>
@@ -43,7 +62,7 @@
 import { ref, type PropType } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import type { IFdpgChecklist } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
 
 const props = defineProps({
