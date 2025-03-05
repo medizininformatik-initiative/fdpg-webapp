@@ -24,6 +24,7 @@ import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { setImmediate } from 'timers'
 import type { MiiLocation } from '@/types/location.enum'
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 vi.mock('@/services/proposal/proposal.service')
 
@@ -522,11 +523,24 @@ describe('Proposal Store', () => {
     store.currentProposal = getMockProposal()
 
     const proposalId = '630dd9e8c8a548d21ef4c356'
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, undefined)
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, undefined)
-    vi.advanceTimersByTime(1000)
-    expect(store.currentProposal.fdpgChecklist).toEqual({ ...[{}] })
-    expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith(proposalId, [{}] as IFdpgChecklist)
+    const checklistUpdate = {
+      isRegistrationLinkSent: true,
+      checkListVerification: [],
+      projectProperties: [],
+      fdpgInternalCheckNotes: '',
+    }
+    await store.updateFdpgChecklist(proposalId, checklistUpdate, undefined)
+    await store.updateFdpgChecklist(proposalId, checklistUpdate, undefined)
+
+    // Advance timers to trigger the debounced function
+    vi.advanceTimersByTime(500)
+
+    // Wait for all promises to resolve
+    const flushPromises = () => new Promise(setImmediate)
+    await flushPromises()
+
+    expect(store.currentProposal.fdpgChecklist).toEqual(checklistUpdate)
+    expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith(proposalId, checklistUpdate)
     expect(proposalService.updateFdpgChecklist).toHaveBeenCalledTimes(1)
   })
 
@@ -535,10 +549,16 @@ describe('Proposal Store', () => {
     store.currentProposal = getMockProposal()
 
     const proposalId = '630dd9e8c8a548d21ef4c356'
-    const errorCb = vi.fn().mockImplementation((error) => error)
+    const errorCb = vi.fn().mockImplementation((error: unknown) => error)
     proposalService.updateFdpgChecklist.mockRejectedValueOnce('error')
 
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, errorCb)
+    const checklistUpdate = {
+      isRegistrationLinkSent: false,
+      checkListVerification: [],
+      projectProperties: [],
+      fdpgInternalCheckNotes: '',
+    }
+    await store.updateFdpgChecklist(proposalId, checklistUpdate, errorCb)
     vi.advanceTimersByTime(10000)
 
     const flushPromises = () => new Promise(setImmediate)
