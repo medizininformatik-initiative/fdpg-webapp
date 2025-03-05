@@ -25,8 +25,9 @@
     </div>
 
     <FdpgCheckList
-      v-if="status === ProposalStatus.FdpgCheck"
+      v-if="status === ProposalStatus.FdpgCheck || status === ProposalStatus.LocationCheck"
       v-model="fdpgChecklist"
+      :status="status"
       :checklist="proposalStore.currentProposal.fdpgChecklist"
       :is-disabled="proposalStore.currentProposal.isLocked"
       title="proposal.checklistVerification"
@@ -85,7 +86,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import type { UploadFile, UploadRawFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -96,7 +97,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
-
+import FdpgCheckListTable from './FdpgCheckListTable.vue'
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
 const { t } = useI18n()
@@ -225,12 +226,32 @@ const handleRejectApplicationClick = () => {
 }
 
 const handleToLocationCheckClick = () => {
+  const messageComponent = markRaw(
+    defineComponent({
+      setup(props) {
+        return {}
+      },
+      template: `<h4>{{$t('proposal.listOfNoMarked')}}:</h4><ul v-if="listOfNoMarked"><li v-for="(item,i) in listOfNoMarked" :key="i" >{{item}}</li></ul>`,
+      props: {
+        listOfNoMarked: {
+          type: Array,
+          required: true,
+        },
+      },
+    }),
+  )
   messageBoxStore.setMessageBoxInfo({
     ...messageBoxDefaults,
     title: 'proposal.toLocationCheckModalTitle',
     message: 'proposal.toLocationCheckModalDescription',
     confirmButtonText: 'proposal.toLocationCheck',
     cancelButtonText: 'general.cancel',
+    messageComponent,
+    messageComponentProps: {
+      listOfNoMarked: proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
+        .filter((item: IChecklistItem) => item.answer == 'no')
+        .map((item: IChecklistItem) => item.questionKey),
+    },
     callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
   })

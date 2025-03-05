@@ -554,7 +554,8 @@
     "dueDateNotSet": "Kein Datum wurde festgelegt",
     "deadlinesChange": "Art der Frist",
     "checklistTitle": "FDPG-Checkliste",
-    "projectProperties": "Project Properties ({checkedCount}/{optionsCount})"
+    "projectProperties": "Project Properties ({checkedCount}/{optionsCount})",
+    "listOfNoMarked": "Diese Elemente sind als Nein gekennzeichnet."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
