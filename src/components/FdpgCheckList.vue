@@ -6,14 +6,21 @@
 
     <section role="region" class="section checklist">
       <el-collapse v-model="activeName">
-        <el-collapse-item :title="'checkListVerification'" name="checkListVerification">
+        <el-collapse-item :title="table.title" :name="table.title" v-for="table in tables" :key="table.title">
           <template #title>
             <h3 tabindex="0" role="button">
-              <span class="indicator" :class="'grey'"></span
+              <span
+                class="indicator"
+                :class="[
+                  table.tableData?.filter((item) => item.isAnswered).length === table.tableData?.length
+                    ? 'green'
+                    : table.indicator,
+                ]"
+              ></span
               >{{
-                $t('proposal.checklistVerification', {
-                  checkedCount: checklist.checkListVerification.filter((item) => item.isAnswered).length,
-                  optionsCount: checklist.checkListVerification.length,
+                $t(`proposal.${table.title}`, {
+                  checkedCount: table.tableData?.filter((item) => item.isAnswered).length,
+                  optionsCount: table.tableData?.length,
                 })
               }}
             </h3>
@@ -21,25 +28,6 @@
           <section class="box-wrapper">
             <FdpgCheckListTable
               :tableData="checklist.checkListVerification"
-              @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
-            ></FdpgCheckListTable>
-          </section>
-        </el-collapse-item>
-        <el-collapse-item :title="'projectProperties'" name="projectProperties">
-          <template #title>
-            <h3 tabindex="0" role="button">
-              <span class="indicator" :class="'grey'"></span
-              >{{
-                $t('proposal.projectProperties', {
-                  checkedCount: checklist.projectProperties.filter((item) => item.isAnswered).length,
-                  optionsCount: checklist.projectProperties.length,
-                })
-              }}
-            </h3>
-          </template>
-          <section class="box-wrapper">
-            <FdpgCheckListTable
-              :tableData="checklist.projectProperties"
               @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
             ></FdpgCheckListTable>
           </section>
@@ -59,10 +47,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { computed, onMounted, ref, type PropType } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
+import { ProposalStatus, type IChecklistItem, type IFdpgChecklist } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
 
 const props = defineProps({
@@ -83,16 +71,41 @@ const props = defineProps({
     type: String as PropType<TranslationSchema>,
     required: true,
   },
+  status: {
+    type: String as PropType<ProposalStatus>,
+    required: true,
+  },
 })
-
+const tables = computed(() => {
+  return [
+    {
+      tableData: props.checklist?.checkListVerification,
+      title: 'checklistVerification',
+      indicator: 'gray',
+    },
+    {
+      tableData: props.checklist?.projectProperties,
+      title: 'projectProperties',
+      indicator: 'gray',
+    },
+  ]
+})
 const emit = defineEmits(['update:listItem'])
-const activeName = ref<string>('checkListVerification')
+const activeName = ref<string>('checklistVerification')
 
 const updateChecklist = (key: string, value: any) => {
   if (props.checklist && key in props.checklist) {
     emit('update:listItem', { [key]: value })
   }
 }
+onMounted(() => {
+  if (
+    props.status === ProposalStatus.FdpgCheck &&
+    props.checklist?.checkListVerification.every((item) => item.isAnswered)
+  )
+    activeName.value = 'projectProperties'
+  else if (props.status === ProposalStatus.LocationCheck) activeName.value = ''
+})
 </script>
 
 <style lang="scss" scoped>
@@ -111,21 +124,20 @@ const updateChecklist = (key: string, value: any) => {
     .indicator {
       width: 8px;
       height: 8px;
-      background-color: $gray-900;
       display: inline-block;
       border-radius: 50%;
       margin: 0 0.5rem 0.2rem 0;
 
-      &--green {
+      &.green {
         background-color: $green;
       }
-      &--blue {
+      &.blue {
         background-color: $blue;
       }
-      &--red {
+      &.red {
         background-color: $red-100;
       }
-      &--gray {
+      &.gray {
         background-color: $gray-900;
       }
     }

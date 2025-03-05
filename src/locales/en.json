@@ -590,7 +590,9 @@
     "Researcher-Support": "recommended support for researcher",
     "DataIntegration": "integration with other data resources",
     "Biosamples-Requested": "biosamples requested ",
-    "External-Lab": "extern laboratory involved"
+    "External-Lab": "extern laboratory involved",
+    "out-EU": "outside EU",
+    "listOfNoMarked": "These items are marked as No"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
