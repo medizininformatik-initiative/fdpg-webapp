@@ -427,16 +427,23 @@ export interface IProposal {
   dizApprovedLocations: MiiLocation[]
   openDizConditionChecks: MiiLocation[]
   uacApprovedLocations: MiiLocation[]
+  uacApprovedLocationsCount: number
   dizConditionApprovedLocations: MiiLocation[]
   requestedButExcludedLocations: MiiLocation[]
+  requestedButExcludedLocationsCount: number
   signedContracts: MiiLocation[]
+  signedContractsCount: number
+  signedContractsPendingCount: number
+
   // LOCATION Tasks <----
   additionalLocationInformation: IAdditionalLocationProposalInformation[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
   locationConditionDraft: IConditionalApproval[]
   conditionalApprovals: IConditionalApproval[]
+  conditionalApprovalsCount: number
   uacApprovals: IUacApproval[]
+  uacApprovalsCount: number
   totalPromisedDataAmount?: number
   totalContractedDataAmount?: number
   declineReasons: IDeclineReason[]

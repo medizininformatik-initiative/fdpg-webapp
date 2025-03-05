@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import type { IConditionalApproval } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { computed } from 'vue'
@@ -28,18 +27,10 @@ const proposalStore = useProposalStore()
 
 const progressItems = computed(() => {
   const numberOfRequestedLocations = proposalStore.currentProposal?.numberOfRequestedLocations ?? 0
-  const requestedButExcludedLocations = proposalStore.currentProposal?.requestedButExcludedLocations ?? []
-  const uacApprovedAndSelectedLocations =
-    proposalStore.currentProposal?.uacApprovedLocations.filter(
-      (location) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(location),
-    ) ?? []
+  const requestedButExcludedLocations = proposalStore.currentProposal?.requestedButExcludedLocationsCount ?? 0
+  const uacApprovedAndSelectedLocations = proposalStore.currentProposal?.uacApprovedLocationsCount ?? 0
 
-  const removedLocations =
-    proposalStore.currentProposal?.uacApprovedLocations.filter((location) =>
-      proposalStore.currentProposal?.requestedButExcludedLocations.includes(location),
-    ) ?? []
-
-  const numberOfVotedLocations = requestedButExcludedLocations.length + uacApprovedAndSelectedLocations.length
+  const numberOfVotedLocations = requestedButExcludedLocations + uacApprovedAndSelectedLocations
   const votesCompleted = numberOfVotedLocations >= numberOfRequestedLocations
 
   const desiredDataAmount = proposalStore.currentProposal?.requestedData.desiredDataAmount ?? 0
@@ -49,28 +40,11 @@ const progressItems = computed(() => {
 
   const numberOfApprovedLocationsInContractingStatus = proposalStore.currentProposal?.numberOfApprovedLocations ?? 0
   const numberOfApprovedAndSelectedLocationsInContractingStatus =
-    numberOfApprovedLocationsInContractingStatus - (removedLocations?.length ?? 0)
+    (proposalStore.currentProposal?.signedContractsCount ?? 0) +
+    (proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
 
-  const finalUacApproval =
-    proposalStore.currentProposal?.uacApprovals.filter(
-      (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
-    ) ?? []
-  const finalConditionalApproval =
-    proposalStore.currentProposal?.conditionalApprovals.filter(
-      (condition) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
-    ) ?? []
-
-  const locationsWithSignDecision = [...finalUacApproval, ...finalConditionalApproval].filter((approval) => {
-    // Conditional approval might be declined before
-    const isFullyAccepted =
-      (approval as IConditionalApproval).isAccepted !== undefined
-        ? (approval as IConditionalApproval).isAccepted === true
-        : true
-    const isSignDecisionDone = approval.signedAt !== undefined
-
-    return isFullyAccepted && isSignDecisionDone
-  })
-  const signingComplete = locationsWithSignDecision.length >= numberOfApprovedLocationsInContractingStatus
+  const signingComplete =
+    numberOfApprovedAndSelectedLocationsInContractingStatus >= numberOfApprovedLocationsInContractingStatus
 
   const getParticipants = () => {
     const status = proposalStore.currentProposal?.status
@@ -85,8 +59,8 @@ const progressItems = computed(() => {
       return {
         status: { success: signingComplete },
         title: 'proposal.signedContracts',
-        value: locationsWithSignDecision.length,
-        max: numberOfApprovedAndSelectedLocationsInContractingStatus,
+        value: proposalStore.currentProposal?.signedContractsCount ?? 0,
+        max: numberOfApprovedLocationsInContractingStatus,
       }
     }
   }

@@ -353,8 +353,6 @@ const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
     locationPublicationName: '',
   }
 
-  console.log({ additionalLocationInformation })
-
   return [
     {
       title: t('proposal.updateAdditionalLocationInformationTodoTitle'),
@@ -371,8 +369,6 @@ const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
-
-    console.log({ data })
 
     showPublications.value =
       (data.status ? currentProposalStatus.includes(data.status) : false) ||
