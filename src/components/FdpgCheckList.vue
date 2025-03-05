@@ -27,7 +27,7 @@
           </template>
           <section class="box-wrapper">
             <FdpgCheckListTable
-              :tableData="checklist.checkListVerification"
+              :tableData="table.tableData"
               @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
             ></FdpgCheckListTable>
           </section>
