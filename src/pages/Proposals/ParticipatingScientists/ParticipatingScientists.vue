@@ -43,6 +43,7 @@
         :review-mode="reviewMode"
         :form-ref="formRef"
         :identifier="`participants.${index}`"
+        :ParticipatingScientists="true"
       ></ProjectParticipantCategory>
 
       <section style="display: flex; flex-direction: column; gap: 0.3em">
