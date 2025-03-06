@@ -35,7 +35,7 @@
 
       <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
         <FdpgLabel html-for="proposal.dataPrivacyExtra" />
-        <FdpgtextEditor
+        <FdpgTextEditor
           v-model="typeOfUseForm.dataPrivacyExtra"
           data-testId="typeOfUseForm.dataPrivacyExtra"
           :placeholder="t('proposal.dataPrivacyExtraPlaceholder')"
@@ -63,6 +63,7 @@ import type { PropType } from 'vue'
 import { onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 
 const props = defineProps({
   modelValue: {

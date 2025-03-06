@@ -56,4 +56,8 @@ onBeforeMount(() => {
 .w-full {
   width: 100%;
 }
+
+.ql-editor.ql-blank::before {
+  position: unset;
+}
 </style>
