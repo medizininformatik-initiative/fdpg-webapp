@@ -15,9 +15,33 @@
         :disabled="reviewMode || participantCategory.isDone"
       >
         <FdpgRadio
+          v-if="ParticipatingScientists"
+          :test-id-extension="'__' + identifier"
+          value="DATA_RECEIVER"
+          label="proposal.participantCategory_DATA_RECEIVER"
+        />
+        <FdpgRadio
+          v-if="ParticipatingScientists"
+          :test-id-extension="'__' + identifier"
+          value="BIOSAMPLE_RECEIVER"
+          label="proposal.participantCategory_BIOSAMPLE_RECEIVER"
+        />
+        <FdpgRadio
           :test-id-extension="'__' + identifier"
           value="DATA_AND_BIOSAMPLE_RECEIVER"
           label="proposal.participantCategory_DATA_AND_BIOSAMPLE_RECEIVER"
+        />
+        <FdpgRadio
+          v-if="ParticipatingScientists"
+          :test-id-extension="'__' + identifier"
+          value="PROJECT_LEADER"
+          label="proposal.participantCategory_PROJECT_LEADER"
+        />
+        <FdpgRadio
+          v-if="ParticipatingScientists"
+          :test-id-extension="'__' + identifier"
+          value="ADDITIONAL_PROJECT_LEADER"
+          label="proposal.participantCategory_ADDITIONAL_PROJECT_LEADER"
         />
       </el-radio-group>
     </FdpgFormItem>
@@ -60,6 +84,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  ParticipatingScientists: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -71,7 +99,7 @@ const formRules = {
 }
 
 onMounted(() => {
-  if (props.modelValue.category === undefined) {
+  if (props.modelValue.category === undefined && !props.ParticipatingScientists) {
     participantCategory.value.category = ParticipantType.DataAndBiosampleReceiver
   }
 })
