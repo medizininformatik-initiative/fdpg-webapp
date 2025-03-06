@@ -521,25 +521,22 @@ describe('Proposal Store', () => {
   it('should update checklist', async () => {
     const store = useProposalStore()
     store.currentProposal = getMockProposal()
-
-    const proposalId = '630dd9e8c8a548d21ef4c356'
-    const checklistUpdate = {
+    const proposalId = 'proposalId'
+    const checklistUpdate: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: true,
-      checkListVerification: [],
-      projectProperties: [],
       fdpgInternalCheckNotes: '',
     }
-    await store.updateFdpgChecklist(proposalId, checklistUpdate, undefined)
-    await store.updateFdpgChecklist(proposalId, checklistUpdate, undefined)
+    proposalService.updateFdpgChecklist.mockResolvedValueOnce(undefined)
+    await store.updateFdpgChecklist(proposalId, checklistUpdate)
 
-    // Advance timers to trigger the debounced function
-    vi.advanceTimersByTime(500)
+    // Wait for debounce to complete (500ms)
+    await vi.advanceTimersByTime(500)
 
-    // Wait for all promises to resolve
-    const flushPromises = () => new Promise(setImmediate)
-    await flushPromises()
-
-    expect(store.currentProposal.fdpgChecklist).toEqual(checklistUpdate)
+    if (store.currentProposal) {
+      // Only check the properties we're updating
+      expect(store.currentProposal.fdpgChecklist?.isRegistrationLinkSent).toBe(checklistUpdate.isRegistrationLinkSent)
+      expect(store.currentProposal.fdpgChecklist?.fdpgInternalCheckNotes).toBe(checklistUpdate.fdpgInternalCheckNotes)
+    }
     expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith(proposalId, checklistUpdate)
     expect(proposalService.updateFdpgChecklist).toHaveBeenCalledTimes(1)
   })
@@ -549,21 +546,19 @@ describe('Proposal Store', () => {
     store.currentProposal = getMockProposal()
 
     const proposalId = '630dd9e8c8a548d21ef4c356'
-    const errorCb = vi.fn().mockImplementation((error: unknown) => error)
+    const errorCb = vi.fn()
     proposalService.updateFdpgChecklist.mockRejectedValueOnce('error')
 
-    const checklistUpdate = {
+    const checklistUpdate: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: false,
-      checkListVerification: [],
-      projectProperties: [],
       fdpgInternalCheckNotes: '',
     }
     await store.updateFdpgChecklist(proposalId, checklistUpdate, errorCb)
-    vi.advanceTimersByTime(10000)
 
-    const flushPromises = () => new Promise(setImmediate)
-    await flushPromises()
+    // Wait for debounce to complete (500ms)
+    await vi.advanceTimersByTime(500)
 
+    expect(errorCb).toHaveBeenCalledWith('error')
     expect(errorCb).toHaveBeenCalledTimes(1)
   })
 

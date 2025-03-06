@@ -248,9 +248,10 @@ const handleToLocationCheckClick = () => {
     cancelButtonText: 'general.cancel',
     messageComponent,
     messageComponentProps: {
-      listOfNoMarked: proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
-        .filter((item: IChecklistItem) => item.answer == 'no')
-        .map((item: IChecklistItem) => item.questionKey),
+      listOfNoMarked:
+        proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
+          ?.filter((item: IChecklistItem) => item.answer === 'no')
+          .map((item: IChecklistItem) => item.questionKey) || [],
     },
     callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
@@ -542,12 +543,19 @@ const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
 }
 
 const isChecklistDone = computed(() => {
+  const checklist = proposalStore.currentProposal?.fdpgChecklist
+  if (!checklist) return false
+
+  const verification = checklist.checkListVerification
+  if (!verification || !Array.isArray(verification)) return false
+
+  const projectProperties = checklist.projectProperties
+  if (!projectProperties || !Array.isArray(projectProperties)) return false
+
   return (
-    proposalStore.currentProposal?.fdpgChecklist?.checkListVerification.every(
-      (item: IChecklistItem) => item.isAnswered,
-    ) &&
-    proposalStore.currentProposal?.fdpgChecklist?.isRegistrationLinkSent &&
-    proposalStore.currentProposal?.fdpgChecklist?.projectProperties.every((item: IChecklistItem) => item.isAnswered)
+    verification.every((item: IChecklistItem) => item.isAnswered) &&
+    checklist.isRegistrationLinkSent &&
+    projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })
 

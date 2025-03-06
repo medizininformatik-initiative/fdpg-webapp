@@ -18,6 +18,7 @@ import { useLayoutStore } from '@/stores/layout.store'
 import type { UploadFile } from 'element-plus'
 import type { MiiLocation } from '@/types/location.enum'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { createI18n } from 'vue-i18n'
 
 vi.mock('vue-i18n', () => ({
   createI18n: vi.fn(),
@@ -53,8 +54,21 @@ vi.mock('@/composables/use-notifications', () => ({
   }),
 }))
 
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      proposal: {
+        checkAttachments: 'Check Attachments ({count})',
+        noAttachmentsYet: 'No attachments yet',
+      },
+    },
+  },
+})
+
 const mountComponent = (withPinia = true) => {
-  const plugins: any[] = withPinia ? [createTestingPinia()] : []
+  const plugins: any[] = withPinia ? [createTestingPinia(), i18n] : [i18n]
   return shallowMount(FdpgMemberDetails, {
     global: {
       plugins,

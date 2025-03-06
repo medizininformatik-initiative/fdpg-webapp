@@ -4,7 +4,7 @@
       {{ $t('proposal.checklistTitle') }}
     </h2>
 
-    <section role="region" class="section checklist">
+    <section role="region" class="section checklist" :aria-disabled="isDisabled">
       <el-collapse v-model="activeName">
         <el-collapse-item :title="table.title" :name="table.title" v-for="table in tables" :key="table.title">
           <template #title>
