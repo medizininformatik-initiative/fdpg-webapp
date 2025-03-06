@@ -97,7 +97,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
-import FdpgCheckListTable from './FdpgCheckListTable.vue'
+
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
 const { t } = useI18n()
