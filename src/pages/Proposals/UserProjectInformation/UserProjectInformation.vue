@@ -1,8 +1,12 @@
 <template>
   <div class="form-group-wrapper">
-    <GeneralProjectInformation v-model="userProjectForm.generalProjectInformation" :review-mode="reviewMode" />
+    <GeneralProjectInformation
+      v-model="userProjectForm.generalProjectInformation"
+      :review-mode="reviewMode"
+      :form-ref="formRef"
+    />
     <ProjectFeasibility v-model="userProjectForm.feasibility" :review-mode="reviewMode" />
-    <ProjectDetails v-model="userProjectForm.projectDetails" :review-mode="reviewMode" />
+    <ProjectDetails v-model="userProjectForm.projectDetails" :review-mode="reviewMode" :form-ref="formRef" />
     <EthicVote v-model="userProjectForm.ethicVote" :review-mode="reviewMode" />
     <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" />
     <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" />
