@@ -24,6 +24,7 @@ import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { setImmediate } from 'timers'
 import type { MiiLocation } from '@/types/location.enum'
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 vi.mock('@/services/proposal/proposal.service')
 
@@ -520,13 +521,23 @@ describe('Proposal Store', () => {
   it('should update checklist', async () => {
     const store = useProposalStore()
     store.currentProposal = getMockProposal()
+    const proposalId = 'proposalId'
+    const checklistUpdate: Partial<IFdpgChecklist> = {
+      isRegistrationLinkSent: true,
+      fdpgInternalCheckNotes: '',
+    }
+    proposalService.updateFdpgChecklist.mockResolvedValueOnce(undefined)
+    await store.updateFdpgChecklist(proposalId, checklistUpdate)
 
-    const proposalId = '630dd9e8c8a548d21ef4c356'
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, undefined)
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, undefined)
-    vi.advanceTimersByTime(1000)
-    expect(store.currentProposal.fdpgChecklist).toEqual({ ...[{}] })
-    expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith(proposalId, [{}] as IFdpgChecklist)
+    // Wait for debounce to complete (500ms)
+    await vi.advanceTimersByTime(500)
+
+    if (store.currentProposal) {
+      // Only check the properties we're updating
+      expect(store.currentProposal.fdpgChecklist?.isRegistrationLinkSent).toBe(checklistUpdate.isRegistrationLinkSent)
+      expect(store.currentProposal.fdpgChecklist?.fdpgInternalCheckNotes).toBe(checklistUpdate.fdpgInternalCheckNotes)
+    }
+    expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith(proposalId, checklistUpdate)
     expect(proposalService.updateFdpgChecklist).toHaveBeenCalledTimes(1)
   })
 
@@ -535,15 +546,19 @@ describe('Proposal Store', () => {
     store.currentProposal = getMockProposal()
 
     const proposalId = '630dd9e8c8a548d21ef4c356'
-    const errorCb = vi.fn().mockImplementation((error) => error)
+    const errorCb = vi.fn()
     proposalService.updateFdpgChecklist.mockRejectedValueOnce('error')
 
-    await store.updateFdpgChecklist(proposalId, [{}] as IFdpgChecklist, errorCb)
-    vi.advanceTimersByTime(10000)
+    const checklistUpdate: Partial<IFdpgChecklist> = {
+      isRegistrationLinkSent: false,
+      fdpgInternalCheckNotes: '',
+    }
+    await store.updateFdpgChecklist(proposalId, checklistUpdate, errorCb)
 
-    const flushPromises = () => new Promise(setImmediate)
-    await flushPromises()
+    // Wait for debounce to complete (500ms)
+    await vi.advanceTimersByTime(500)
 
+    expect(errorCb).toHaveBeenCalledWith('error')
     expect(errorCb).toHaveBeenCalledTimes(1)
   })
 

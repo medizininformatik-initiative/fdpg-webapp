@@ -34,7 +34,7 @@ defineProps({
     default: undefined,
   },
   value: {
-    type: String,
+    type: [String, Number, Boolean] as PropType<String | Number | Boolean>,
     required: true,
   },
 })
@@ -58,6 +58,9 @@ defineProps({
         .el-checkbox__label {
           color: $white;
         }
+      }
+      &.el-checkbox--small {
+        padding: 10px 10px 8px;
       }
     }
   }

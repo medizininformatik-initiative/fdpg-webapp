@@ -5,6 +5,7 @@
     :message="$t(messageBoxStore.message)"
     @close="handleCallback('close')"
   >
+    <component v-if="messageComponent" :is="messageComponent" v-bind="messageComponentProps"></component>
     <template #footer>
       <span>
         <el-button
@@ -44,5 +45,11 @@ const cancelButtonText = computed(() => {
 })
 const confirmButtonText = computed(() => {
   return t(messageBoxStore.confirmButtonText || 'general.save')
+})
+const messageComponent = computed(() => {
+  return messageBoxStore.messageComponent
+})
+const messageComponentProps = computed(() => {
+  return messageBoxStore.messageComponentProps
 })
 </script>

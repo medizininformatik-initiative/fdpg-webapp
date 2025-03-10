@@ -309,11 +309,30 @@ export interface IReportCreate extends IReportBase {
 export interface IReportUpdate extends IReportCreate {
   keepUploads: string[]
 }
+
+export interface IChecklistItem {
+  isAnswered: unknown
+  _id: string
+  questionKey: string
+  comment: string | null
+  isMultiple: boolean
+  options: { optionValue: string }[]
+  answer: string[] | string
+  sublist?: {
+    _id: string
+    questionKey: string
+    comment: string | null
+    isMultiple: boolean
+    options: { optionValue: string }[]
+    answer: string[] | string
+    isAnswered: boolean
+  }[]
+}
 export interface IFdpgChecklist {
-  isRegistrationLinkSent?: boolean
-  isUnique?: boolean
-  isAttachmentsChecked?: boolean
-  isChecked?: boolean
+  isRegistrationLinkSent: boolean | undefined
+  checkListVerification: IChecklistItem[]
+  projectProperties: IChecklistItem[]
+  fdpgInternalCheckNotes: string
 }
 
 export interface IsDoneDetail {
