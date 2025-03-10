@@ -45,10 +45,17 @@ const value = computed<string | null>({
     return props.modelValue || null
   },
   set(val) {
-    if (val && val.trim() !== '<p></p>' && val.trim() !== '<p><br></p>') {
-      emit('update:modelValue', val)
-    } else {
+    if (!val) {
       emit('update:modelValue', '')
+      return
+    }
+
+    const cleanContent = val.replace(/<[^>]*>/g, '').replace(/\s/g, '')
+
+    if (cleanContent === '') {
+      emit('update:modelValue', '')
+    } else {
+      emit('update:modelValue', val)
     }
   },
 })
@@ -80,7 +87,7 @@ defineExpose({
 watch(
   () => props.modelValue,
   (newValue) => {
-    if (newValue === '' || newValue === '<p></p>' || newValue === '<p><br></p>') {
+    if (!newValue || newValue.replace(/<[^>]*>/g, '').replace(/\s/g, '') === '') {
       textEditor.value?.setContents(null)
     }
   },

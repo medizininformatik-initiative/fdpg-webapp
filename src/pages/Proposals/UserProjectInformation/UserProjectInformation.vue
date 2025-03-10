@@ -5,7 +5,7 @@
       :review-mode="reviewMode"
       :form-ref="formRef"
     />
-    <ProjectFeasibility v-model="userProjectForm.feasibility" :review-mode="reviewMode" />
+    <ProjectFeasibility v-model="userProjectForm.feasibility" :review-mode="reviewMode" :form-ref="formRef" />
     <ProjectDetails v-model="userProjectForm.projectDetails" :review-mode="reviewMode" :form-ref="formRef" />
     <EthicVote v-model="userProjectForm.ethicVote" :review-mode="reviewMode" />
     <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" />

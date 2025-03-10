@@ -29,6 +29,8 @@
             data-testId="feasibilityForm.details"
             :placeholder="t('proposal.pleaseEnterAssessmentOfFeasibilityDetails')"
             :disabled="reviewMode || feasibilityForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.feasibility.details"
           />
         </FdpgFormItem>
       </el-col>
@@ -51,15 +53,21 @@ import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
+import type { FormInstance } from 'element-plus'
+
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IFeasibility>,
     required: true,
   },
-
   reviewMode: {
     type: Boolean,
     default: false,
+  },
+  formRef: {
+    type: Object as PropType<FormInstance>,
+    required: false,
+    default: () => undefined,
   },
 })
 
