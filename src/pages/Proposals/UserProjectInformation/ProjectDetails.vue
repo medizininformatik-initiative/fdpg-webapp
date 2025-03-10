@@ -10,6 +10,8 @@
             data-testId="projectDetailsForm.simpleProjectDescription"
             :placeholder="t('proposal.describeTheProject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
       </el-col>
@@ -39,6 +41,8 @@
             data-testId="projectDetailsForm.hypothesisAndQuestionProjectGoals"
             :placeholder="t('proposal.indicationOrRepresentationOfAimsObjectives')"
             :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.hypothesisAndQuestionProjectGoals"
           />
         </FdpgFormItem>
         <p class="example">{{ t('proposal.egAccordingToOrFromAbstract') }}</p>
@@ -51,6 +55,8 @@
             data-testId="projectDetailsForm.scientificBackground"
             :placeholder="t('proposal.publicationsOnTheSubject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.scientificBackground"
           />
         </FdpgFormItem>
       </el-col>
@@ -62,6 +68,8 @@
             data-testId="projectDetailsForm.materialAndMethods"
             :placeholder="t('proposal.describeTheMaterialsAndMethods')"
             :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.materialAndMethods"
           />
         </FdpgFormItem>
       </el-col>
@@ -83,6 +91,7 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgtextEditor from '@/components/FdpgTextEditor.vue'
+import type { FormInstance } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -93,6 +102,11 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+  },
+  formRef: {
+    type: Object as PropType<FormInstance>,
+    required: false,
+    default: () => undefined,
   },
 })
 
