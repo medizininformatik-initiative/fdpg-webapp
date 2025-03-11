@@ -10,7 +10,7 @@
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
     <FdpgChangeDeadlines
-      :deadlines="filteredDueDates"
+      :deadlines="deadlines"
       :status="status"
       @saveDeadlines="handleSaveDeadlines"
     ></FdpgChangeDeadlines>
@@ -86,14 +86,14 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist, IProposal } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, reactive, ref, markRaw } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -152,6 +152,27 @@ const isInitiateContractDialogOpen = ref(false)
 const handleToContractingClick = () => {
   isInitiateContractDialogOpen.value = true
 }
+
+const deadlines = ref({})
+
+watch(
+  () => proposalStore.currentProposal as IProposal,
+  () => {
+    const proposalDeadlines = proposalStore.currentProposal?.deadlines || {}
+
+    console.log({ proposalDeadlines })
+
+    deadlines.value = Object.fromEntries(
+      Object.keys(proposalDeadlines).map((key) => [
+        key,
+        (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key],
+      ]),
+    )
+
+    console.log(deadlines.value)
+  },
+  { deep: true },
+)
 
 const filteredDueDates = computed(() => {
   return Object.fromEntries(
