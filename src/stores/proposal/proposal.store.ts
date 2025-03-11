@@ -96,7 +96,6 @@ export const useProposalStore = defineStore('Proposal', {
       }
       this._checkListLastSuccess = Object.assign({}, this.currentProposal.fdpgChecklist)
 
-      console.log({ id, curr: this.currentProposal })
       return transformForm(this.currentProposal) as IProposal
     },
 

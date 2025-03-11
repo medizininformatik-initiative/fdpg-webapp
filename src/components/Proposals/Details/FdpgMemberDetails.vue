@@ -160,16 +160,12 @@ watch(
   () => {
     const proposalDeadlines = proposalStore.currentProposal?.deadlines || {}
 
-    console.log({ proposalDeadlines })
-
     deadlines.value = Object.fromEntries(
       Object.keys(proposalDeadlines).map((key) => [
         key,
         (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key],
       ]),
     )
-
-    console.log(deadlines.value)
   },
   { deep: true },
 )
