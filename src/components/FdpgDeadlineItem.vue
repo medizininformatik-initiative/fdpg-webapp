@@ -20,6 +20,18 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  disabled: {
+    type: Boolean,
+    require: false,
+  },
+  minDate: {
+    type: Date,
+    require: false,
+  },
+  maxDate: {
+    type: Date,
+    require: false,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -42,10 +54,19 @@ const closeDatePicker = () => {
     <div class="deadline-display">
       <span v-if="!isEditing">{{ getLocaleDateString(deadline) || $t('proposal.dueDateNotSet') }}</span>
 
-      <FdpgDatePicker v-else v-model="deadline" :placeholder="placeholder" :min-date="new Date()" />
+      <FdpgDatePicker
+        v-else
+        v-model="deadline"
+        :placeholder="placeholder"
+        :min-date="props.minDate ? new Date(props.minDate) : new Date()"
+        :max-date="props.maxDate ? new Date(props.maxDate) : undefined"
+        :disabled="props.disabled"
+      />
 
-      <el-button v-if="!isEditing" text type="primary" :icon="Edit" @click="openDatePicker"> </el-button>
-      <el-button v-if="isEditing" text type="success" :icon="Check" @click="closeDatePicker"> </el-button>
+      <el-button v-if="!isEditing" text type="primary" :icon="Edit" @click="openDatePicker" :disabled="props.disabled">
+      </el-button>
+      <el-button v-if="isEditing" text type="success" :icon="Check" @click="closeDatePicker" :disabled="props.disabled">
+      </el-button>
     </div>
   </div>
 </template>

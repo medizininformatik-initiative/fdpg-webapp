@@ -9,11 +9,11 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
-    <FdpgChandeDeadlines
+    <FdpgChangeDeadlines
       :deadlines="filteredDueDates"
       :status="status"
       @saveDeadlines="handleSaveDeadlines"
-    ></FdpgChandeDeadlines>
+    ></FdpgChangeDeadlines>
 
     <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
@@ -87,11 +87,11 @@ import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
-import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
-import type { UploadFile, UploadRawFile } from 'element-plus'
+import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
 import { computed, defineComponent, onMounted, reactive, ref, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -104,7 +104,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
-import FdpgChandeDeadlines from '@/components/FdpgChandeDeadlines.vue'
+import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
 
@@ -557,7 +557,12 @@ const fetchProposal = async () => {
   }
 }
 const handleSaveDeadlines = async (deadlines: Deadlines) => {
-  await proposalStore.updateDeadlines(proposalId.value, deadlines)
+  try {
+    await proposalStore.updateDeadlines(proposalId.value, deadlines)
+    showSuccessMessage()
+  } catch (ex) {
+    showErrorMessage()
+  }
 }
 
 const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {

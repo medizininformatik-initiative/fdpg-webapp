@@ -60,6 +60,7 @@ declare module 'vue' {
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FdpgChandeDeadlines: typeof import('./src/components/FdpgChandeDeadlines.vue')['default']
+    FdpgChangeDeadlines: typeof import('./src/components/FdpgChangeDeadlines.vue')['default']
     FdpgCheckbox: typeof import('./src/components/FdpgCheckbox.vue')['default']
     FdpgCheckList: typeof import('./src/components/FdpgCheckList.vue')['default']
     FdpgCheckListTable: typeof import('./src/components/FdpgCheckListTable.vue')['default']

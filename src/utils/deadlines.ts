@@ -1,14 +1,46 @@
 import { DueDateEnum } from '@/types/due-date.enum'
 import { ProposalStatus } from '@/types/proposal.types'
 
+export const beforeDeadlineDateConstrains: Record<DueDateEnum, DueDateEnum | null> = {
+  [DueDateEnum.DUE_DAYS_FDPG_CHECK]: null,
+  [DueDateEnum.DUE_DAYS_LOCATION_CHECK]: DueDateEnum.DUE_DAYS_FDPG_CHECK,
+  [DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING]: DueDateEnum.DUE_DAYS_LOCATION_CHECK,
+  [DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY]: DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING,
+  [DueDateEnum.DUE_DAYS_DATA_CORRUPT]: DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY,
+  [DueDateEnum.DUE_DAYS_FINISHED_PROJECT]: DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY,
+}
+
+export interface DeadlineOrder {
+  isLocked: Boolean
+  order: Number
+  deadlineType: DueDateEnum
+  minDate?: Date
+  maxDate?: Date
+}
+
+export const defaultDeadlineOrderList: DeadlineOrder[] = [
+  DueDateEnum.DUE_DAYS_FDPG_CHECK,
+  DueDateEnum.DUE_DAYS_LOCATION_CHECK,
+  DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING,
+  DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY,
+  DueDateEnum.DUE_DAYS_DATA_CORRUPT,
+  DueDateEnum.DUE_DAYS_FINISHED_PROJECT,
+].map((deadline, i) => {
+  return {
+    isLocked: false,
+    order: i,
+    deadlineType: deadline,
+  }
+})
+
 export const statusToDueDatesMap: Record<ProposalStatus, DueDateEnum[]> = {
   [ProposalStatus.Draft]: [
     DueDateEnum.DUE_DAYS_FDPG_CHECK,
+    DueDateEnum.DUE_DAYS_LOCATION_CHECK,
+    DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING,
+    DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY,
     DueDateEnum.DUE_DAYS_DATA_CORRUPT,
     DueDateEnum.DUE_DAYS_FINISHED_PROJECT,
-    DueDateEnum.DUE_DAYS_LOCATION_CHECK,
-    DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY,
-    DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING,
   ],
   [ProposalStatus.FdpgCheck]: [
     DueDateEnum.DUE_DAYS_FDPG_CHECK,
