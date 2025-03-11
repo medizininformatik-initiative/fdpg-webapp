@@ -32,11 +32,13 @@
     </div>
 
     <FdpgCheckList
-      v-if="status === ProposalStatus.FdpgCheck"
+      v-if="status === ProposalStatus.FdpgCheck || status === ProposalStatus.LocationCheck"
       v-model="fdpgChecklist"
-      :checklist-options="checklistOptions"
+      :status="status"
+      :checklist="proposalStore.currentProposal.fdpgChecklist"
       :is-disabled="proposalStore.currentProposal.isLocked"
       title="proposal.checklistVerification"
+      @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
@@ -84,14 +86,14 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IFdpgChecklist } from '@/types/proposal.types'
-import { ProposalStatus } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import type { UploadFile, UploadRawFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -165,11 +167,11 @@ const filteredDueDates = computed(() => {
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
-  await initContracting(file?.raw, selectedLocations)
+  await initContracting(selectedLocations, file?.raw)
   isSubmitting.value = false
 }
 
-const initContracting = async (file?: File, selectedLocations: MiiLocation[]) => {
+const initContracting = async (selectedLocations: MiiLocation[], file?: File) => {
   if (!file) {
     showErrorMessage(t('general.failedSubmit'))
     return
@@ -246,12 +248,33 @@ const handleRejectApplicationClick = () => {
 }
 
 const handleToLocationCheckClick = () => {
+  const messageComponent = markRaw(
+    defineComponent({
+      setup(props) {
+        return {}
+      },
+      template: `<h4>{{$t('proposal.listOfNoMarked')}}:</h4><ul v-if="listOfNoMarked"><li v-for="(item,i) in listOfNoMarked" :key="i" >{{item}}</li></ul>`,
+      props: {
+        listOfNoMarked: {
+          type: Array,
+          required: true,
+        },
+      },
+    }),
+  )
   messageBoxStore.setMessageBoxInfo({
     ...messageBoxDefaults,
     title: 'proposal.toLocationCheckModalTitle',
     message: 'proposal.toLocationCheckModalDescription',
     confirmButtonText: 'proposal.toLocationCheck',
     cancelButtonText: 'general.cancel',
+    messageComponent,
+    messageComponentProps: {
+      listOfNoMarked:
+        proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
+          ?.filter((item: IChecklistItem) => item.answer === 'no')
+          .map((item: IChecklistItem) => item.questionKey) || [],
+    },
     callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
   })
@@ -301,22 +324,6 @@ const handleExportProposalPdfClick = async () => {
   }
 }
 
-const getIsUniqueTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
-  if (proposalStatus === ProposalStatus.FdpgCheck) {
-    return [
-      {
-        title: t('proposal.checkProjectForUniqueness'),
-        description: t('proposal.uniquenessGivenDescription'),
-        action: () => {},
-        type: 'info',
-        isDone: isChecklistDone.value,
-      },
-    ]
-  } else {
-    return []
-  }
-}
-
 const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
   if (proposalStatus === ProposalStatus.FdpgCheck) {
     const isDoneCount = proposalStore.currentProposal?.isDoneOverview?.isDoneCount
@@ -332,6 +339,7 @@ const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
         isDone: isDoneCount !== undefined && isDoneCount === fieldCount,
         type: 'info',
         icon: 'bi bi-check-circle',
+        readonly: false,
       },
     ]
   } else {
@@ -340,7 +348,7 @@ const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getIsUniqueTodo(status.value), ...getIsCheckedTodo(status.value)]
+  return getIsCheckedTodo(status.value)
 })
 
 const projectDuration = computed(
@@ -453,7 +461,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__toLocationCheck',
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
-    isDisabled: !isChecklistDone.value || proposalStore.currentProposal?.isLocked,
+    isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
     type: 'primary',
@@ -504,31 +512,7 @@ const {
   showErrorMessage,
 )
 
-const fdpgChecklist = computed({
-  get() {
-    return proposalStore.currentProposal?.fdpgChecklist ?? {}
-  },
-  set(checkList: IFdpgChecklist) {
-    if (proposalStore.currentProposal) {
-      const errorCb = (_error: any) => {
-        showErrorMessage(t('proposal.checklistGenericError'))
-      }
-      proposalStore.updateFdpgChecklist(proposalId.value, checkList, errorCb)
-    }
-  },
-})
-
-const checklistOptions: Record<keyof IFdpgChecklist, TranslationSchema> = {
-  isRegistrationLinkSent: 'proposal.isRegistrationLinkSentLabel',
-  isUnique: 'proposal.isUniqueLabel',
-  isAttachmentsChecked: 'proposal.isAttachmentsCheckedLabel',
-  isChecked: 'proposal.isCheckedLabel',
-}
-
-const isChecklistDone = computed(() => {
-  const checked = Object.values(proposalStore.currentProposal?.fdpgChecklist ?? {}).filter((value) => value).length
-  return checked === Object.keys(checklistOptions).length
-})
+const fdpgChecklist = computed(() => proposalStore.currentProposal?.fdpgChecklist ?? {})
 
 const showContractingParticipants = computed(() => {
   return (
@@ -575,6 +559,31 @@ const fetchProposal = async () => {
 const handleSaveDeadlines = async (deadlines: Deadlines) => {
   await proposalStore.updateDeadlines(proposalId.value, deadlines)
 }
+
+const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
+  if (!proposalId.value) {
+    console.error('Proposal ID is missing')
+    return
+  }
+  proposalStore.updateFdpgChecklist(proposalId.value, item)
+}
+
+const isChecklistDone = computed(() => {
+  const checklist = proposalStore.currentProposal?.fdpgChecklist
+  if (!checklist) return false
+
+  const verification = checklist.checkListVerification
+  if (!verification || !Array.isArray(verification)) return false
+
+  const projectProperties = checklist.projectProperties
+  if (!projectProperties || !Array.isArray(projectProperties)) return false
+
+  return (
+    verification.every((item: IChecklistItem) => item.isAnswered) &&
+    checklist.isRegistrationLinkSent &&
+    projectProperties.every((item: IChecklistItem) => item.isAnswered)
+  )
+})
 
 onMounted(async () => {
   await fetchProposal()

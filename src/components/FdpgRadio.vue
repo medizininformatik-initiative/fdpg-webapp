@@ -1,6 +1,12 @@
 <template>
   <div class="fdpg-radio-wrapper" :class="{ 'fdpg-radio__info--visible': info }">
-    <el-radio class="fdpg-radio" :label="value" :data-testId="'radio-option_' + value + testIdExtension" :value="value">
+    <el-radio
+      class="fdpg-radio"
+      :label="value"
+      :data-testId="'radio-option_' + value + testIdExtension"
+      :value="value"
+      :size="size"
+    >
       <template v-if="label">
         {{ $t(label) }}
       </template>
@@ -14,6 +20,7 @@
 import type { TranslationSchema } from '@/plugins/i18n'
 import FdpgInfoPopover from '@/components/FdpgInfoPopover.vue'
 import type { PropType } from 'vue'
+import { FdpgInputSize } from '@/types/component.types'
 
 defineProps({
   testIdExtension: {
@@ -32,6 +39,12 @@ defineProps({
   value: {
     type: [String, Boolean, Number],
     required: true,
+  },
+  size: {
+    type: String as PropType<FdpgInputSize>,
+    default() {
+      return FdpgInputSize.Default
+    },
   },
 })
 </script>
@@ -117,6 +130,12 @@ defineProps({
     .el-radio__label {
       color: $black;
       font-size: 18px;
+    }
+    &.el-radio--small {
+      padding: 10px 10px 8px;
+      .el-radio__label {
+        font-size: 12px;
+      }
     }
   }
 }

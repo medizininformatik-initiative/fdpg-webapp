@@ -62,6 +62,7 @@ declare module 'vue' {
     FdpgChandeDeadlines: typeof import('./src/components/FdpgChandeDeadlines.vue')['default']
     FdpgCheckbox: typeof import('./src/components/FdpgCheckbox.vue')['default']
     FdpgCheckList: typeof import('./src/components/FdpgCheckList.vue')['default']
+    FdpgCheckListTable: typeof import('./src/components/FdpgCheckListTable.vue')['default']
     FdpgCheckNotes: typeof import('./src/components/FdpgCheckNotes.vue')['default']
     FdpgCommentCreator: typeof import('./src/components/FdpgCommentCreator.vue')['default']
     FdpgCommentForm: typeof import('./src/components/FdpgCommentForm.vue')['default']

@@ -1,6 +1,36 @@
 <template>
   <section role="region" class="uac-votes">
-    <el-collapse v-model="activeNames">
+    <section v-if="authStore.singleKnownRole === Role.Researcher">
+      <h3 tabindex="0">
+        <span class="indicator indicator--gray"></span
+        >{{
+          $t('proposal.pendingVotes', {
+            count: pendingVotesCount,
+          })
+        }}
+      </h3>
+
+      <h3 tabindex="1">
+        <span class="indicator indicator--green"></span
+        >{{ $t('proposal.uacAcceptedLocations', { count: uacApprovalsCount }) }}
+      </h3>
+
+      <h3 tabindex="2">
+        <span class="indicator indicator--gray"></span
+        >{{
+          $t('proposal.uacAcceptedUnderConditions', {
+            count: conditionalApprovalsCount,
+          })
+        }}
+      </h3>
+
+      <h3 tabindex="3">
+        <span class="indicator indicator--red"></span
+        >{{ $t('proposal.uacRejected', { count: requestedButExcludedLocationsCount }) }}
+      </h3>
+    </section>
+
+    <el-collapse v-else v-model="activeNames">
       <el-collapse-item v-for="(table, tableIdx) in tables" :key="'table' + tableIdx" :name="tableIdx">
         <template #title>
           <h3 tabindex="0" role="button">
@@ -262,6 +292,23 @@ const handleDownload = async (id: string) => {
   }
 }
 
+const pendingVotesCount = computed(() => {
+  const currentProposal = proposalStore.currentProposal
+
+  return (
+    (currentProposal?.numberOfRequestedLocations ?? 0) -
+    (currentProposal?.uacApprovalsCount ?? 0) -
+    (currentProposal?.conditionalApprovalsCount ?? 0) -
+    (currentProposal?.requestedButExcludedLocationsCount ?? 0)
+  )
+})
+
+const uacApprovalsCount = computed(() => proposalStore.currentProposal?.uacApprovalsCount ?? 0)
+const conditionalApprovalsCount = computed(() => proposalStore.currentProposal?.conditionalApprovalsCount ?? 0)
+const requestedButExcludedLocationsCount = computed(
+  () => proposalStore.currentProposal?.requestedButExcludedLocationsCount ?? 0,
+)
+
 const mapTableData = (
   rowId: number,
   location: MiiLocation,
@@ -300,14 +347,18 @@ const mapConditionalApproval = (conditionalApproval: IConditionalApproval): ICon
 }
 
 const tables = computed<IPanelVoteConfig[]>(() => {
+  const currentProposal = proposalStore.currentProposal
+
   const panels: IPanelVoteConfig[] = []
 
-  if (proposalStore.currentProposal?.status === ProposalStatus.LocationCheck) {
+  if (currentProposal?.status === ProposalStatus.LocationCheck) {
+    const data = [
+      ...(currentProposal?.openDizChecks ?? []),
+      ...(currentProposal?.dizApprovedLocations ?? []),
+      ...(currentProposal?.dizConditionApprovedLocations ?? []),
+    ]
     const pendingLocations: IPanelInputConfig<MiiLocation> = {
-      data: [
-        ...(proposalStore.currentProposal?.openDizChecks ?? []),
-        ...(proposalStore.currentProposal?.dizApprovedLocations ?? []),
-      ],
+      data,
       title: 'proposal.pendingVotes',
       indicator: 'grey',
     }
@@ -324,49 +375,55 @@ const tables = computed<IPanelVoteConfig[]>(() => {
     panels.push(pendingTable)
   }
 
-  const approvedLocations: IPanelInputConfig<IUacApproval> = {
-    data:
-      proposalStore.currentProposal?.uacApprovals.filter(
-        (location) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(location.location),
-      ) ?? [],
-    title: 'proposal.uacAcceptedLocations',
-    indicator: 'green',
-  }
+  const approvedLocations: IPanelInputConfig<IUacApproval> = (() => {
+    const data =
+      currentProposal?.uacApprovals.filter(
+        (location) => !currentProposal?.requestedButExcludedLocations.includes(location.location),
+      ) ?? []
 
-  const approvedWithCondition: IPanelInputConfig<IConditionalApproval> = {
-    data:
-      proposalStore.currentProposal?.conditionalApprovals.filter(
-        (location) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(location.location),
-      ) ?? [],
-    title: 'proposal.uacAcceptedUnderConditions',
-    indicator: 'blue',
-    isConditional: true,
-  }
+    return {
+      data,
+      title: 'proposal.uacAcceptedLocations',
+      indicator: 'green',
+    }
+  })()
+
+  const approvedWithCondition: IPanelInputConfig<IConditionalApproval> = (() => {
+    const data =
+      currentProposal?.conditionalApprovals.filter(
+        (location) => !currentProposal?.requestedButExcludedLocations.includes(location.location),
+      ) ?? []
+    return {
+      data,
+      title: 'proposal.uacAcceptedUnderConditions',
+      indicator: 'blue',
+      isConditional: true,
+    }
+  })()
 
   const tablesWithDataAmount = [approvedLocations, approvedWithCondition].map(
     ({ data, title, indicator, isConditional }) => {
-      const filteredData = isConditional
+      const filteredConditionData = isConditional
         ? (data as IConditionalApproval[]).filter(
             (condition) =>
               condition.isAccepted === true &&
-              !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+              !currentProposal?.requestedButExcludedLocations.includes(condition.location),
           )
         : (data as IUacApproval[]).filter(
-            (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
+            (approval) => !currentProposal?.requestedButExcludedLocations.includes(approval.location),
           )
       return {
         title,
         tableId: TableId.WithDataAmount,
         hideDataVolume: false,
-        hideRevert: proposalStore.currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
+        hideRevert: currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
         indicator: `indicator--${indicator}`,
-        content: filteredData.map(({ location, dataAmount }, index) => mapTableData(index, location, dataAmount)),
+        content: filteredConditionData.map(({ location, dataAmount }, index) =>
+          mapTableData(index, location, dataAmount),
+        ),
         conditionalApprovals: isConditional
-          ? (proposalStore.currentProposal?.conditionalApprovals
-              ?.filter(
-                (condition) =>
-                  !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
-              )
+          ? (currentProposal?.conditionalApprovals
+              ?.filter((condition) => !currentProposal?.requestedButExcludedLocations.includes(condition.location))
               .map((condition) => mapConditionalApproval(condition)) ?? [])
           : undefined,
       } as IPanelVoteConfig
@@ -375,21 +432,23 @@ const tables = computed<IPanelVoteConfig[]>(() => {
 
   panels.push(...tablesWithDataAmount)
 
-  const excludedLocations: IPanelInputConfig<MiiLocation> = {
-    data: proposalStore.currentProposal?.requestedButExcludedLocations ?? [],
-    title: 'proposal.uacRejected',
-    indicator: 'red',
-  }
+  const excludedLocations: IPanelInputConfig<MiiLocation> = (() => {
+    const data = currentProposal?.requestedButExcludedLocations ?? []
+    return {
+      data,
+      title: 'proposal.uacRejected',
+      indicator: 'red',
+      dataAmount: currentProposal?.requestedButExcludedLocationsCount ?? 0,
+    }
+  })()
   const rejectedTable: IPanelVoteConfig = {
     title: excludedLocations.title,
     tableId: TableId.Excluded,
     hideDataVolume: true,
-    hideRevert: proposalStore.currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
+    hideRevert: currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
     indicator: `indicator--${excludedLocations.indicator}`,
     content: excludedLocations.data.map((location, index) => {
-      const declineReason = proposalStore.currentProposal?.declineReasons.find(
-        (reasonItem) => reasonItem.location === location,
-      )
+      const declineReason = currentProposal?.declineReasons.find((reasonItem) => reasonItem.location === location)
       return mapTableData(index, location, undefined, declineReason)
     }),
   }

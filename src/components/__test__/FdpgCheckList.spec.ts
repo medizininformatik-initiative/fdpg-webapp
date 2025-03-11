@@ -2,34 +2,69 @@ import FdpgCheckList from '../FdpgCheckList.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import { beforeEach, describe, expect, it } from 'vitest'
+import { ProposalStatus } from '@/types/proposal.types'
+import { createI18n } from 'vue-i18n'
+import type { ComponentPublicInstance } from 'vue'
+
+declare module 'vue' {
+  interface ComponentCustomProperties {
+    $t: (key: string, values?: Record<string, any>) => string
+  }
+}
 
 describe('FdpgCheckList.vue', () => {
   let wrapper: any
+  let i18n: any
+
   beforeEach(() => {
+    i18n = createI18n({
+      legacy: false,
+      locale: 'en',
+      messages: {
+        en: {
+          proposal: {
+            checklistTitle: 'title',
+            isRegistrationLinkSentLabel: 'Registration Link Sent',
+          },
+        },
+      },
+    })
+
     wrapper = mount(FdpgCheckList, {
       props: {
         modelValue: {},
-        checklistOptions: {},
+        checklist: {
+          checkListVerification: [],
+          projectProperties: [],
+          isRegistrationLinkSent: false,
+          fdpgInternalCheckNotes: '',
+        },
         isDisabled: false,
-        title: 'title',
+        title: 'proposal.checklistTitle',
+        status: ProposalStatus.FdpgCheck,
       },
       global: {
-        plugins: [createTestingPinia()],
+        plugins: [createTestingPinia(), i18n],
         stubs: ['el-checkbox-group'],
       },
     })
   })
+
   it('renders', () => {
     expect(wrapper).toBeTruthy()
   })
 
   it('should have h2 element filled by t func values', async () => {
-    expect(wrapper.find('.section-title').text()).toContain('title{"checkedCount":0,"optionsCount"')
+    const title = wrapper.find('.section-title')
+    expect(title.exists()).toBe(true)
+    expect(title.text()).toBe('proposal.checklistTitle')
   })
 
   it('should be disabled', async () => {
-    expect(wrapper.find('.checklist').attributes().disabled).toBe('false')
-    await wrapper.setProps({ isDisabled: true, modelValue: {} })
-    expect(wrapper.find('.checklist').attributes().disabled).toBe('true')
+    const checklist = wrapper.find('.checklist')
+    expect(checklist.exists()).toBe(true)
+    expect(checklist.attributes('aria-disabled')).toBe('false')
+    await wrapper.setProps({ isDisabled: true })
+    expect(checklist.attributes('aria-disabled')).toBe('true')
   })
 })

@@ -44,9 +44,12 @@
           <FdpgLabel required html-for="proposal.projectFunding" />
 
           <FdpgTextEditor
+            ref="projectFundingEditor"
             v-model="generalProjectInformationForm.projectFunding"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
             data-testId="generalProjectInformation.projectFunding"
+            :form-ref="formRef"
+            field-path="userProject.generalProjectInformation.projectFunding"
           />
         </FdpgFormItem>
       </el-col>
@@ -76,14 +79,20 @@ import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IGeneralProjectInformation } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
+import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IGeneralProjectInformation>,
     required: true,
   },
-
+  formRef: {
+    type: Object as PropType<FormInstance>,
+    required: false,
+    default: () => undefined,
+  },
   reviewMode: {
     type: Boolean,
     default: false,
@@ -92,4 +101,5 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
+const projectFundingEditor = ref()
 </script>

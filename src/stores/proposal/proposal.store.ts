@@ -12,8 +12,8 @@ import type {
   IPublicationCreateAndUpdate,
   IReportCreate,
   IReportUpdate,
-  IAdditionalLocationProposalInformation,
   IEditAdditionalLocationProposalInformation,
+  IChecklistItem,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -46,7 +46,12 @@ export const useProposalStore = defineStore('Proposal', {
     currentSortField: 'submittedAt',
     currentSortDirection: SortDirection.DESC,
     counts: {},
-    _checkListLastSuccess: {},
+    _checkListLastSuccess: {
+      isRegistrationLinkSent: false,
+      checkListVerification: [],
+      fdpgInternalCheckNotes: '',
+      projectProperties: [],
+    },
     search: undefined,
   }),
 
@@ -208,7 +213,7 @@ export const useProposalStore = defineStore('Proposal', {
 
     _updateFdpgChecklistDebounced: debounce(async function (
       id: string,
-      checklist: IFdpgChecklist,
+      checklist: Partial<IFdpgChecklist>,
       store: unknown,
       errorCb?: (...args: any) => void,
     ) {
@@ -216,23 +221,65 @@ export const useProposalStore = defineStore('Proposal', {
 
       try {
         await typedStore.apiService.updateFdpgChecklist(id, checklist)
-        typedStore._checkListLastSuccess = checklist
+        // typedStore._checkListLastSuccess = checklist
       } catch (error) {
         if (errorCb) {
           errorCb(error)
         }
 
-        if (typedStore.currentProposal) {
-          typedStore.currentProposal.fdpgChecklist = { ...typedStore._checkListLastSuccess }
-        }
+        // if (typedStore.currentProposal) {
+        //   typedStore.currentProposal.fdpgChecklist = { ...typedStore._checkListLastSuccess }
+        // }
       }
     }, 500),
 
-    async updateFdpgChecklist(id: string, checklist: IFdpgChecklist, errorCb?: (...args: any) => void): Promise<void> {
+    async updateFdpgChecklist(
+      id: string,
+      checklist: Partial<IFdpgChecklist>,
+      errorCb?: (...args: any) => void,
+    ): Promise<void> {
       if (this.currentProposal) {
-        this.currentProposal.fdpgChecklist = { ...checklist }
+        this.updateProposalChecklist(checklist)
       }
       return this._updateFdpgChecklistDebounced(id, checklist, this, errorCb)
+    },
+
+    updateProposalChecklist(checklistUpdate: Partial<IFdpgChecklist> | IChecklistItem): void {
+      if (!this.currentProposal || !this.currentProposal.fdpgChecklist) return
+      if ('isRegistrationLinkSent' in checklistUpdate && checklistUpdate.isRegistrationLinkSent !== undefined) {
+        if (this.currentProposal && this.currentProposal.fdpgChecklist) {
+          this.currentProposal.fdpgChecklist.isRegistrationLinkSent = checklistUpdate.isRegistrationLinkSent
+        }
+      }
+
+      if ('fdpgInternalCheckNotes' in checklistUpdate && checklistUpdate.fdpgInternalCheckNotes !== undefined) {
+        this.currentProposal.fdpgChecklist.fdpgInternalCheckNotes = checklistUpdate.fdpgInternalCheckNotes
+      }
+      if (!('_id' in checklistUpdate)) return
+      const targetFields: (keyof IFdpgChecklist)[] = ['checkListVerification', 'projectProperties']
+
+      targetFields.some((field) => {
+        const itemIndex = Array.isArray(this.currentProposal?.fdpgChecklist?.[field])
+          ? this.currentProposal?.fdpgChecklist?.[field]?.findIndex(
+              (item) => item._id.toString() === checklistUpdate['_id']?.toString(),
+            )
+          : -1
+
+        if (itemIndex !== -1 && itemIndex !== undefined) {
+          Object.keys(checklistUpdate).forEach((key) => {
+            if (!['_id', 'isRegistrationLinkSent', 'fdpgInternalCheckNotes'].includes(key)) {
+              if (this.currentProposal?.fdpgChecklist && Array.isArray(this.currentProposal.fdpgChecklist[field])) {
+                const checklistField = this.currentProposal.fdpgChecklist[field] as { [key: string]: any }[]
+                if (checklistField[itemIndex]) {
+                  checklistField[itemIndex][key] = (checklistUpdate as any)[key]
+                }
+              }
+            }
+          })
+          return true // Stop the loop once an item is found and updated
+        }
+        return false // Continue if no match is found
+      })
     },
 
     async markSectionAsDone(proposalId: string, sectionId: string, value: boolean): Promise<void> {

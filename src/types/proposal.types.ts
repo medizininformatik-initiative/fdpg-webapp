@@ -310,11 +310,30 @@ export interface IReportCreate extends IReportBase {
 export interface IReportUpdate extends IReportCreate {
   keepUploads: string[]
 }
+
+export interface IChecklistItem {
+  isAnswered: unknown
+  _id: string
+  questionKey: string
+  comment: string | null
+  isMultiple: boolean
+  options: { optionValue: string }[]
+  answer: string[] | string
+  sublist?: {
+    _id: string
+    questionKey: string
+    comment: string | null
+    isMultiple: boolean
+    options: { optionValue: string }[]
+    answer: string[] | string
+    isAnswered: boolean
+  }[]
+}
 export interface IFdpgChecklist {
-  isRegistrationLinkSent?: boolean
-  isUnique?: boolean
-  isAttachmentsChecked?: boolean
-  isChecked?: boolean
+  isRegistrationLinkSent: boolean | undefined
+  checkListVerification: IChecklistItem[]
+  projectProperties: IChecklistItem[]
+  fdpgInternalCheckNotes: string
 }
 
 export interface IsDoneDetail {
@@ -428,16 +447,23 @@ export interface IProposal {
   dizApprovedLocations: MiiLocation[]
   openDizConditionChecks: MiiLocation[]
   uacApprovedLocations: MiiLocation[]
+  uacApprovedLocationsCount: number
   dizConditionApprovedLocations: MiiLocation[]
   requestedButExcludedLocations: MiiLocation[]
+  requestedButExcludedLocationsCount: number
   signedContracts: MiiLocation[]
+  signedContractsCount: number
+  signedContractsPendingCount: number
+
   // LOCATION Tasks <----
   additionalLocationInformation: IAdditionalLocationProposalInformation[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
   locationConditionDraft: IConditionalApproval[]
   conditionalApprovals: IConditionalApproval[]
+  conditionalApprovalsCount: number
   uacApprovals: IUacApproval[]
+  uacApprovalsCount: number
   totalPromisedDataAmount?: number
   totalContractedDataAmount?: number
   declineReasons: IDeclineReason[]

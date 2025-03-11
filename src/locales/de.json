@@ -186,7 +186,6 @@
     "pleaseEnterTheEmailAddress": "Bitte geben Sie die E-Mail Adresse an",
     "informationAboutTheUserProject": "Angaben zum Nutzer-Projekt",
     "generalProjectInformation": "Allgemeine Projektangaben",
-    "projectTitle": "Projekttitel",
     "projectTitleInfo": "Der Projekttitel (Langer Titel) dient der Identifikation des Projekts. Er wird außerdem im Projektregister gelistet. Patienten können in den Projekttiteln über Schlagworte interessante Inhalte finden. Im Projektregister wird den Projekttiteln ein geeigneter Kurztitel zugeordnet, der für die Präsentation auf der Webseite benötigt wird.",
     "pleaseEnterTheProjectTitle": "Bitte geben Sie den Projekttitel an",
     "desiredStartTime": "Gewünschter Startzeitpunkt",
@@ -553,7 +552,10 @@
     "contractPendingLocationCount": "Ausstehend für {count} Standorte",
     "contractAcceptedLocationCount": "Akzeptiert von {count} Standorten",
     "dueDateNotSet": "Kein Datum wurde festgelegt",
-    "deadlinesChange": "Art der Frist"
+    "deadlinesChange": "Art der Frist",
+    "checklistTitle": "FDPG-Checkliste",
+    "projectProperties": "Project Properties ({checkedCount}/{optionsCount})",
+    "listOfNoMarked": "Diese Elemente sind als Nein gekennzeichnet."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
