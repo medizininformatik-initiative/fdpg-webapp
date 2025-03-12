@@ -75,6 +75,8 @@ declare module 'vue' {
     FdpgHeaderRole: typeof import('./src/components/FdpgHeaderRole.vue')['default']
     FdpgInfoPopover: typeof import('./src/components/FdpgInfoPopover.vue')['default']
     FdpgInput: typeof import('./src/components/FdpgInput.vue')['default']
+    FdpgInternalCheckNore: typeof import('./src/components/FdpgInternalCheckNore.vue')['default']
+    FdpgInternalCheckNote: typeof import('./src/components/FdpgInternalCheckNote.vue')['default']
     FdpgLabel: typeof import('./src/components/FdpgLabel.vue')['default']
     FdpgMemberDashboard: typeof import('./src/components/Dashboard/FdpgMemberDashboard.vue')['default']
     FdpgMemberDetails: typeof import('./src/components/Proposals/Details/FdpgMemberDetails.vue')['default']

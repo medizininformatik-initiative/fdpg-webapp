@@ -61,7 +61,7 @@ describe('FdpgCheckList.vue', () => {
   })
 
   it('should be disabled', async () => {
-    const checklist = wrapper.find('.checklist')
+    const checklist = wrapper.find('.section__checklist')
     expect(checklist.exists()).toBe(true)
     expect(checklist.attributes('aria-disabled')).toBe('false')
     await wrapper.setProps({ isDisabled: true })

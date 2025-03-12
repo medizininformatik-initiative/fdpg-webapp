@@ -3,36 +3,51 @@
     <h2 class="section-title">
       {{ $t('proposal.checklistTitle') }}
     </h2>
+    <ElCard>
+      <ElRow>
+        <ElCol :span="24">
+          <FdpgInternalCheckNote
+            :currentNote="props.checklist?.fdpgInternalCheckNotes"
+            :isDisabled="isDisabled"
+            @update:listItem="($event: InternalCheckNote) => emit('update:listItem', $event)"
+          ></FdpgInternalCheckNote>
+        </ElCol>
+      </ElRow>
+    </ElCard>
 
-    <section role="region" class="section checklist" :aria-disabled="isDisabled">
-      <el-collapse v-model="activeName">
-        <el-collapse-item :title="table.title" :name="table.title" v-for="table in tables" :key="table.title">
-          <template #title>
-            <h3 tabindex="0" role="button">
-              <span
-                class="indicator"
-                :class="[
-                  table.tableData?.filter((item) => item.isAnswered).length === table.tableData?.length
-                    ? 'green'
-                    : table.indicator,
-                ]"
-              ></span
-              >{{
-                $t(`proposal.${table.title}`, {
-                  checkedCount: table.tableData?.filter((item) => item.isAnswered).length,
-                  optionsCount: table.tableData?.length,
-                })
-              }}
-            </h3>
-          </template>
-          <section class="box-wrapper">
-            <FdpgCheckListTable
-              :tableData="table.tableData"
-              @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
-            ></FdpgCheckListTable>
-          </section>
-        </el-collapse-item>
-      </el-collapse>
+    <section role="region" class="section__checklist" :aria-disabled="isDisabled">
+      <ElCard>
+        <div class="checklist">
+          <el-collapse v-model="activeName">
+            <el-collapse-item :title="table.title" :name="table.title" v-for="table in tables" :key="table.title">
+              <template #title>
+                <h3 tabindex="0" role="button">
+                  <span
+                    class="indicator"
+                    :class="[
+                      table.tableData?.filter((item) => item.isAnswered).length === table.tableData?.length
+                        ? 'green'
+                        : table.indicator,
+                    ]"
+                  ></span
+                  >{{
+                    $t(`proposal.${table.title}`, {
+                      checkedCount: table.tableData?.filter((item) => item.isAnswered).length,
+                      optionsCount: table.tableData?.length,
+                    })
+                  }}
+                </h3>
+              </template>
+              <section class="box-wrapper">
+                <FdpgCheckListTable
+                  :tableData="table.tableData"
+                  @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
+                ></FdpgCheckListTable>
+              </section>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+      </ElCard>
     </section>
 
     <el-checkbox
@@ -50,8 +65,14 @@
 import { computed, onMounted, ref, type PropType } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import { ProposalStatus, type IChecklistItem, type IFdpgChecklist } from '@/types/proposal.types'
+import {
+  ProposalStatus,
+  type IChecklistItem,
+  type IFdpgChecklist,
+  type InternalCheckNote,
+} from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
+import { ElCard, ElCol, ElRow, ElCheckbox, ElCollapse, ElCollapseItem } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -90,7 +111,9 @@ const tables = computed(() => {
     },
   ]
 })
+
 const emit = defineEmits(['update:listItem'])
+
 const activeName = ref<string>('checklistVerification')
 
 const updateChecklist = (key: string, value: any) => {
@@ -98,6 +121,7 @@ const updateChecklist = (key: string, value: any) => {
     emit('update:listItem', { [key]: value })
   }
 }
+
 onMounted(() => {
   if (
     props.status === ProposalStatus.FdpgCheck &&
@@ -111,11 +135,14 @@ onMounted(() => {
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
 @use 'sass:color';
-
+.section {
+  &__checklist {
+    margin: 2rem 0;
+  }
+}
 .checklist {
   padding: 20px;
   border-radius: 10px;
-  margin-bottom: 52px;
   background-color: $gray-200;
 
   h3 {

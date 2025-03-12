@@ -115,7 +115,6 @@ const handleOptionChange = (row) => {
   } else {
     item.isAnswered = false
   }
-
   emit('update:listItem', { ...item })
 }
 </script>

@@ -311,28 +311,27 @@ export interface IReportUpdate extends IReportCreate {
 }
 
 export interface IChecklistItem {
-  isAnswered: unknown
+  isAnswered: boolean
   _id: string
   questionKey: string
   comment: string | null
   isMultiple: boolean
   options: { optionValue: string }[]
-  answer: string[] | string
-  sublist?: {
-    _id: string
-    questionKey: string
-    comment: string | null
-    isMultiple: boolean
-    options: { optionValue: string }[]
-    answer: string[] | string
-    isAnswered: boolean
-  }[]
+  answer: string[]
+  sublist?: IChecklistItem[]
 }
+
+export interface InternalCheckNote {
+  note: string
+  date: Date
+  user: string
+}
+
 export interface IFdpgChecklist {
-  isRegistrationLinkSent: boolean | undefined
+  isRegistrationLinkSent: boolean
   checkListVerification: IChecklistItem[]
+  fdpgInternalCheckNotes: InternalCheckNote
   projectProperties: IChecklistItem[]
-  fdpgInternalCheckNotes: string
 }
 
 export interface IsDoneDetail {

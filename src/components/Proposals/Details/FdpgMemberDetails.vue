@@ -250,7 +250,7 @@ const handleToLocationCheckClick = () => {
     messageComponentProps: {
       listOfNoMarked:
         proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
-          ?.filter((item: IChecklistItem) => item.answer === 'no')
+          ?.filter((item: IChecklistItem) => item.answer.some((a) => a === 'no'))
           .map((item: IChecklistItem) => item.questionKey) || [],
     },
     callback: async (decision: DecisionType) =>
