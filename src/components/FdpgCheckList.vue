@@ -42,6 +42,7 @@
                 <FdpgCheckListTable
                   :tableData="table.tableData"
                   @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
+                  :isDisabled="isDisabled"
                 ></FdpgCheckListTable>
               </section>
             </el-collapse-item>
@@ -55,6 +56,7 @@
       @change="updateChecklist('isRegistrationLinkSent', $event)"
       class="fdpg-checkbox"
       :size="FdpgInputSize.Small"
+      :disabled="isDisabled"
     >
       {{ $t('proposal.isRegistrationLinkSentLabel') }}
     </el-checkbox>
