@@ -11,7 +11,7 @@ import type { IDeclineUacApproval, IUacApproval } from '@/types/uac-approval.typ
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IDeclineContract, ISignContract } from '@/types/sign-contract.types'
 import { DirectUpload } from '@/types/upload.types'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import type { MiiLocation } from '@/types/location.enum'
 
 vi.mock('@/httpClients/api/api.client')
@@ -270,16 +270,22 @@ describe('ProposalService', () => {
   })
 
   it('should call the api client to update fdpg checklist proposal', async () => {
-    apiClient.put.mockResolvedValueOnce(undefined)
+    const mockResponse = {
+      data: {
+        checkListVerification: [],
+        projectProperties: [],
+        isRegistrationLinkSent: true,
+        fdpgInternalCheckNotes: '',
+      },
+    }
+    apiClient.put.mockResolvedValueOnce(mockResponse)
     const proposalId = 'proposalId'
-    const checklist = {
+    const checklist: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: true,
-      isUnique: true,
-      isAttachmentsChecked: true,
-      isChecked: true,
-    } as IFdpgChecklist
-    await service.updateFdpgChecklist(proposalId, checklist)
+    }
+    const response = await service.updateFdpgChecklist(proposalId, checklist)
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/fdpg-checklist`, checklist)
+    expect(response).toEqual(mockResponse.data)
   })
 
   it('should call the api client to mark section as done proposal', async () => {
