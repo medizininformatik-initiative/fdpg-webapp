@@ -272,9 +272,8 @@ export class ProposalService {
       ...additionalLocationInformation,
     })
   }
-  async updateDeadlines(id: string, deadlines: Deadlines): Promise<void> {
-    await this.apiClient.put(`${this.basePath}/${id}/deadlines`, {
-      deadlines,
-    })
+
+  async updateDeadlines(proposalId: string, deadlines: Deadlines): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${proposalId}/deadlines`, deadlines)
   }
 }

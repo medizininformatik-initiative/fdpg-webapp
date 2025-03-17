@@ -100,7 +100,7 @@ const getMinDate = (deadlineType, deadlines) => {
   const date = deadlines[beforeConstraint] ? new Date(deadlines[beforeConstraint]) : null
 
   if (!date) {
-    getMinDate(beforeConstraint, deadlines)
+    return getMinDate(beforeConstraint, deadlines)
   }
 
   return date
@@ -129,12 +129,10 @@ const deadlineOrderList = computed(() => {
     return []
   }
 
-  console.log(proposalDeadlines.value)
-
   return defaultDeadlineOrderList
     .map((deadlineOrder) => ({
       ...deadlineOrder,
-      isLocked: !statusToDueDatesMap[props.status]?.includes?.(deadlineOrder.deadlineType) ?? true,
+      isLocked: !statusToDueDatesMap[props.status]?.includes(deadlineOrder.deadlineType),
       minDate: getMinDate(deadlineOrder.deadlineType, proposalDeadlines.value),
       maxDate: getMaxDate(deadlineOrder.deadlineType, proposalDeadlines.value),
     }))

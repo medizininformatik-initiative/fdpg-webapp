@@ -25,6 +25,7 @@ import { setImmediate } from 'timers'
 import type { MiiLocation } from '@/types/location.enum'
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { DueDateEnum, type Deadlines } from '@/types/due-date.enum'
 
 vi.mock('@/services/proposal/proposal.service')
 
@@ -588,5 +589,69 @@ describe('Proposal Store', () => {
     const proposalId = 'proposalId'
     await store.getProposalPdfFile(proposalId)
     expect(proposalService.getProposalPdfFile).toHaveBeenCalledWith(proposalId)
+  })
+
+  it('should call the service to update deadlines and refresh current proposal', async () => {
+    const store = useProposalStore()
+
+    // Create a mock proposal with initial deadlines
+    const initialProposal = getMockProposal()
+    initialProposal.deadlines = {
+      [DueDateEnum.DUE_DAYS_FDPG_CHECK]: '2024-01-01T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CHECK]: '2024-01-10T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING]: null,
+      [DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY]: null,
+      [DueDateEnum.DUE_DAYS_DATA_CORRUPT]: null,
+      [DueDateEnum.DUE_DAYS_FINISHED_PROJECT]: null,
+    } as Deadlines
+    store.currentProposal = initialProposal
+
+    // New deadlines to update
+    const newDeadlines: Deadlines = {
+      [DueDateEnum.DUE_DAYS_FDPG_CHECK]: '2024-03-20T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CHECK]: '2024-03-25T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING]: '2024-03-30T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY]: '2024-04-05T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_DATA_CORRUPT]: '2024-04-10T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_FINISHED_PROJECT]: '2024-04-15T08:00:00.000Z',
+    }
+
+    // Create an updated proposal that will be returned by the API
+    const updatedProposal = { ...mockProposal }
+    updatedProposal.deadlines = newDeadlines
+
+    // Mock the API responses
+    store.apiService.updateDeadlines = vi.fn().mockResolvedValue(undefined)
+    store.apiService.get = vi.fn().mockResolvedValue(updatedProposal)
+
+    const proposalId = 'test-proposal-id'
+
+    // Call the method we're testing
+    await store.updateDeadlines(proposalId, newDeadlines)
+
+    // Verify API calls
+    expect(store.apiService.updateDeadlines).toHaveBeenCalledWith(proposalId, newDeadlines)
+    expect(store.apiService.get).toHaveBeenCalledWith(proposalId)
+
+    // Verify that the current proposal was refreshed with new deadlines
+    expect(store.currentProposal).toEqual(transformForm(updatedProposal) as IProposal)
+
+    // Specifically check the deadlines
+    if (store.currentProposal && updatedProposal.deadlines) {
+      expect(store.currentProposal.deadlines).toEqual(updatedProposal.deadlines)
+
+      // Check individual deadline values
+      expect(store.currentProposal.deadlines[DueDateEnum.DUE_DAYS_FDPG_CHECK]).toBe(
+        newDeadlines[DueDateEnum.DUE_DAYS_FDPG_CHECK],
+      )
+
+      expect(store.currentProposal.deadlines[DueDateEnum.DUE_DAYS_LOCATION_CHECK]).toBe(
+        newDeadlines[DueDateEnum.DUE_DAYS_LOCATION_CHECK],
+      )
+
+      expect(store.currentProposal.deadlines[DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING]).toBe(
+        newDeadlines[DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING],
+      )
+    }
   })
 })

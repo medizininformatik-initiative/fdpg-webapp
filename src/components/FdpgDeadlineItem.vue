@@ -9,7 +9,7 @@ import { cleanDueDateKey } from '@/utils/deadlines.ts'
 
 const props = defineProps({
   modelValue: {
-    type: String,
+    type: Date,
     required: true,
   },
   placeholder: {
