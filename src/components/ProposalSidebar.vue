@@ -3,17 +3,19 @@
     <img :src="logoSrc" alt="" class="logo" />
     <div class="proposal-menu">
       <div class="proposal-menu__top">
-        <div style="height: calc(100vh - 180px); max-width: 600px">
+        <div style="height: calc(100vh - 200px); max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
               v-for="(step, i) in steps"
               :key="step"
-              :title="$t(`sidebar.${step}`)"
               :status="getStepStatus(step)"
               @click="setActiveTab(CreatPrposalSteps[step as keyof typeof CreatPrposalSteps])"
             >
-              <template #description>
+              <template #title>
                 <span class="step-status">{{ getStepStatusText(step) }}</span>
+              </template>
+              <template #description>
+                <span class="step-title">{{ $t(`sidebar.${step}`) }}</span>
               </template>
             </el-step>
           </el-steps>
@@ -91,6 +93,7 @@ defineExpose({
   width: $sidebar-width !important;
   transition-timing-function: ease;
 }
+
 .el-step__head {
   .el-step__line {
     border-color: $blue !important;
@@ -106,12 +109,23 @@ defineExpose({
     }
   }
 }
+.el-step.is-vertical {
+  padding: 0 16px;
+  .el-step__main {
+    .el-step__title.is-process {
+      font-weight: normal;
+    }
+  }
+}
+.el-step.is-vertical:has(.el-step__head.is-process) {
+  background-color: $gray-200;
+}
 
 .proposal-sidebar {
   height: 100%;
   display: flex;
   position: fixed;
-  padding: 24px 10px;
+  padding: 24px 0px;
   background: $white;
   flex-direction: column;
   z-index: $sidebar-z-index;
@@ -126,32 +140,25 @@ defineExpose({
   }
 
   .proposal-menu {
+    border-top: $gray-100 1px solid;
     width: 100%;
     height: 100%;
-    margin-top: 15px;
+    padding-top: 15px;
     border-right: none;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
     .step-status {
-      font-size: 12px;
-      color: $gray-600;
+      font-size: 16px;
+      color: $gray-900;
       margin-left: 8px;
-
-      .el-step__title.is-success & {
-        color: $green;
-      }
-
-      .el-step__title.is-process & {
-        color: $blue;
-      }
-
-      .el-step__title.is-wait & {
-        color: $gray-400;
-      }
     }
-
+    .step-title {
+      font-size: 18px;
+      color: $gray-900;
+      font-weight: 900;
+    }
     .proposal-menu__item {
       height: 44px;
       margin: 8px 0;

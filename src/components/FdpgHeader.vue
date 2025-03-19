@@ -4,7 +4,7 @@
       <i class="fa fa-bars" aria-hidden="true"></i>
     </el-button>
     <el-breadcrumb
-      v-if="layoutStore.breadcrumbs.length > 0"
+      v-if="layoutStore.breadcrumbs.length > 0 && route.name !== RouteName.CreateProposal"
       class="fdpg-header-breadcrumb"
       separator-class="el-icon-arrow-right"
     >
@@ -43,6 +43,9 @@
         data-testId="header.profileButton"
       ></FdpgDropdown>
     </el-space>
+    <el-button link class="fdpg-header-breadcrumb" @click="openSidebar" v-if="RouteName.CreateProposal">
+      to dashboard
+    </el-button>
   </el-header>
 </template>
 
