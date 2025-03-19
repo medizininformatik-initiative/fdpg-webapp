@@ -91,12 +91,20 @@ defineExpose({
   width: $sidebar-width !important;
   transition-timing-function: ease;
 }
-.el-step__line {
-  border-color: $blue !important;
-  background-color: $blue !important;
-}
-.el-step__icon {
-  border-color: $blue !important;
+.el-step__head {
+  .el-step__line {
+    border-color: $blue !important;
+    background-color: $blue !important;
+  }
+  .el-step__icon {
+    border-color: $blue !important;
+  }
+  &.is-process {
+    .el-step__icon {
+      background-color: $blue !important;
+      color: $white !important;
+    }
+  }
 }
 
 .proposal-sidebar {
