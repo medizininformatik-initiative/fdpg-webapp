@@ -1,0 +1,247 @@
+<template>
+  <el-aside class="proposal-sidebar">
+    <img :src="logoSrc" alt="" class="logo" />
+    <div class="proposal-menu">
+      <div class="proposal-menu__top">
+        <div style="height: calc(100vh - 180px); max-width: 600px">
+          <el-steps direction="vertical" :active="activeTab" finish-status="success">
+            <el-step
+              v-for="(step, i) in steps"
+              :key="step"
+              :title="$t(`sidebar.${step}`)"
+              :status="getStepStatus(step)"
+              @click="setActiveTab(CreatPrposalSteps[step as keyof typeof CreatPrposalSteps])"
+            >
+              <template #description>
+                <span class="step-status">{{ getStepStatusText(step) }}</span>
+              </template>
+            </el-step>
+          </el-steps>
+        </div>
+      </div>
+    </div>
+  </el-aside>
+</template>
+
+<script setup lang="ts">
+import { useLayoutStore } from '@/stores/layout.store'
+import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
+import { computed, ref } from 'vue'
+
+const layoutStore = useLayoutStore()
+const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
+const activeTab = ref<CreatPrposalSteps>(CreatPrposalSteps.DataSources)
+
+// Track completion status for each step
+const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
+
+const setActiveTab = (tab: CreatPrposalSteps) => {
+  activeTab.value = tab
+}
+
+const steps = computed(() => {
+  return Object.keys(CreatPrposalSteps).filter((key) => isNaN(Number(key)))
+})
+
+// Method to mark a step as completed
+const markStepCompleted = (step: CreatPrposalSteps) => {
+  completedSteps.value.add(step)
+}
+
+// Method to check if a step is completed
+const isStepCompleted = (step: CreatPrposalSteps): boolean => {
+  return completedSteps.value.has(step)
+}
+
+// Method to get the status of a step
+const getStepStatus = (step: string): 'success' | 'process' | 'wait' => {
+  const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+  if (isStepCompleted(stepEnum)) {
+    return 'success'
+  }
+  if (activeTab.value === stepEnum) {
+    return 'process'
+  }
+  return 'wait'
+}
+
+// Method to get the status text for a step
+const getStepStatusText = (step: string): string => {
+  const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+  if (isStepCompleted(stepEnum)) {
+    return 'Completed'
+  }
+  if (activeTab.value === stepEnum) {
+    return 'In Progress'
+  }
+  return 'Pending'
+}
+
+// Expose methods to parent components
+defineExpose({
+  markStepCompleted,
+})
+</script>
+
+<style lang="scss">
+@use '@/assets/sass/variable' as *;
+@use 'sass:color';
+
+@mixin sidebar-block {
+  width: $sidebar-width !important;
+  transition-timing-function: ease;
+}
+.el-step__line {
+  border-color: $blue !important;
+  background-color: $blue !important;
+}
+.el-step__icon {
+  border-color: $blue !important;
+}
+
+.proposal-sidebar {
+  height: 100%;
+  display: flex;
+  position: fixed;
+  padding: 24px 10px;
+  background: $white;
+  flex-direction: column;
+  z-index: $sidebar-z-index;
+  border-right: 1px solid $gray-400;
+  transition-duration: $sidebar-transition-duration;
+  @include sidebar-block;
+
+  .logo {
+    width: 179px;
+    margin-left: 29px;
+    height: $header-height;
+  }
+
+  .proposal-menu {
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+    border-right: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .step-status {
+      font-size: 12px;
+      color: $gray-600;
+      margin-left: 8px;
+
+      .el-step__title.is-success & {
+        color: $green;
+      }
+
+      .el-step__title.is-process & {
+        color: $blue;
+      }
+
+      .el-step__title.is-wait & {
+        color: $gray-400;
+      }
+    }
+
+    .proposal-menu__item {
+      height: 44px;
+      margin: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: $gray-900;
+      line-height: 45px;
+      border-radius: 4px;
+      padding: 0 20px !important;
+      text-decoration-line: none;
+
+      &.proposal-menu__item--exact-active,
+      &:focus,
+      &:hover {
+        background-color: $gray-200;
+      }
+
+      i {
+        color: $gray-900;
+        width: 20px;
+        text-align: center;
+        font-size: 20px;
+        margin-right: 12px;
+        margin-left: 2px;
+      }
+
+      &.proposal-menu__item--exact-active {
+        i {
+          color: $blue;
+        }
+      }
+
+      .proposal-menu__wrapper {
+        display: flex;
+        align-items: center;
+      }
+      .proposal-sidebar__url {
+        color: $gray-900;
+        text-decoration: none;
+      }
+
+      .proposal-menu__icons {
+        float: right;
+
+        .proposal-menu__icon {
+          border-radius: 8px;
+          padding: 0 8px;
+          line-height: 24px;
+          margin-left: 4px;
+          border: 1px solid;
+
+          &--critical {
+            background: $red-100;
+            border-color: $red-100;
+            color: $white;
+          }
+
+          &--high {
+            background: $blue;
+            border-color: $blue;
+            color: $white;
+          }
+
+          &--medium {
+            background: $white;
+            border-color: $white;
+            color: $black;
+          }
+
+          &--low {
+            background: rgba(106, 116, 132, 0.1);
+            border-color: rgba(106, 116, 132, 0.1);
+            color: $gray-900;
+          }
+        }
+      }
+    }
+
+    .el-divider {
+      background-color: $gray-300;
+
+      &.el-divider--horizontal {
+        height: 2px;
+        margin: 23px 0;
+      }
+    }
+  }
+
+  @media (max-width: $md) {
+    padding: 46px 0;
+    width: 0 !important;
+    transition-timing-function: cubic-bezier(0.99, 0.01, 0.25, 1);
+  }
+
+  &.block {
+    @include sidebar-block;
+  }
+}
+</style>

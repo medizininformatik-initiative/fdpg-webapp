@@ -126,6 +126,7 @@ declare module 'vue' {
     ProjectTodos: typeof import('./src/components/ProjectTodos.vue')['default']
     ProjectTodosAdditionalLocationInformation: typeof import('./src/components/ProjectTodosAdditionalLocationInformation.vue')['default']
     ProjectTodosConditionReview: typeof import('./src/components/ProjectTodosConditionReview.vue')['default']
+    ProposalSidebar: typeof import('./src/components/ProposalSidebar.vue')['default']
     PublicationDialog: typeof import('./src/components/PublicationDialog.vue')['default']
     QuickInfo: typeof import('./src/components/QuickInfo.vue')['default']
     ReportDialog: typeof import('./src/components/ReportDialog.vue')['default']

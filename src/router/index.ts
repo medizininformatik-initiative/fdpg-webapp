@@ -70,15 +70,6 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: '/create-proposal',
-        name: RouteName.CreateProposal,
-        component: () => import('@/pages/Proposals/NewPage.vue'),
-        meta: {
-          resetBreadcrumbs: true,
-          roles: [Role.Researcher],
-        },
-      },
-      {
         path: '/proposals/:id',
         name: RouteName.EditProposal,
         component: () => import('@/pages/Proposals/NewPage.vue'),
@@ -104,7 +95,24 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-
+  {
+    path: '/proposals',
+    meta: {
+      authName: 'main',
+    },
+    component: () => import('@/layouts/ProposalLayout.vue'),
+    children: [
+      {
+        path: 'create',
+        name: RouteName.CreateProposal,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          roles: [Role.Researcher],
+        },
+      },
+    ],
+  },
   {
     path: '/no-permission',
     name: RouteName.NoPermission,
