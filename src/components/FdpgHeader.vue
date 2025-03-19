@@ -28,6 +28,13 @@
         <el-icon class="bi-search"></el-icon>
       </template>
     </el-input>
+    <router-link
+      class="fdpg-menu__item"
+      :to="{ name: RouteName.Dashboard }"
+      v-if="route.name === RouteName.CreateProposal"
+    >
+      <i class="bi bi-chevron-left"></i> {{ $t('header.toDashboard') }}
+    </router-link>
     <el-space direction="horizontal" :size="12">
       <FdpgDropdown
         :button="languageButton"
@@ -43,9 +50,6 @@
         data-testId="header.profileButton"
       ></FdpgDropdown>
     </el-space>
-    <el-button link class="fdpg-header-breadcrumb" @click="openSidebar" v-if="RouteName.CreateProposal">
-      to dashboard
-    </el-button>
   </el-header>
 </template>
 
@@ -200,7 +204,10 @@ const goToProfile = () => {
   .fdpg-header__menu-button {
     display: none;
   }
-
+  .fdpg-menu__item {
+    text-decoration: none;
+    color: $gray-900;
+  }
   .fdpg-header-breadcrumb {
     font-size: 16px;
 
