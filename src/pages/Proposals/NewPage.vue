@@ -8,7 +8,144 @@
         }}</el-button>
       </div>
     </div>
+    <div class="form-container">
+      <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
+        <template v-if="activeStep === CreatPrposalSteps.DataSources">
+          <el-row class="abbreviation">
+            <el-col :sm="18" :md="12" :lg="6">
+              <FdpgFormItem prop="projectAbbreviation">
+                <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
+                <FdpgInput
+                  v-model="proposalForm.projectAbbreviation"
+                  data-testId="proposalForm.projectAbbreviation"
+                  placeholder="proposal.egWestStorm"
+                  :disabled="isReviewMode"
+                />
+              </FdpgFormItem>
+            </el-col>
+          </el-row>
+        </template>
+
+        <template v-if="activeStep === CreatPrposalSteps.ProjectParticipants">
+          <FdpgLabel size="large" html-for="proposal.applicant" />
+          <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
+
+          <FdpgLabel
+            required
+            size="large"
+            html-for="proposal.projectResponsible"
+            info="proposal.projectResponsibleInfo"
+          />
+          <ProjectResponsibility
+            v-model="proposalForm.projectResponsible"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+          />
+          <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
+          <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
+
+          <FdpgLabel
+            info="proposal.participatingScientistsInfo"
+            size="large"
+            html-for="proposal.participatingScientists"
+          />
+          <ParticipatingScientists
+            v-model="proposalForm.participants"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+          />
+        </template>
+
+        <template v-if="activeStep === CreatPrposalSteps.ProjectDetails">
+          <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
+          <UserProjectInformation
+            v-model="proposalForm.userProject"
+            :form-ref="formRef"
+            :file-list="fileList"
+            :review-mode="isReviewMode"
+            :platform="platform"
+          />
+        </template>
+
+        <template v-if="activeStep === CreatPrposalSteps.DataUsage">
+          <TypeOfUse v-model="proposalForm.userProject.typeOfUse" :review-mode="isReviewMode" :platform="platform" />
+        </template>
+
+        <template v-if="activeStep === CreatPrposalSteps.Variables">
+          <FdpgLabel
+            required
+            info="proposal.informationOnTheRequestedDataInfo"
+            size="large"
+            html-for="proposal.informationOnTheRequestedData"
+          />
+          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
+        </template>
+
+        <template v-if="activeStep === CreatPrposalSteps.ResearchProject">
+          <ProjectDetails
+            v-model="proposalForm.userProject.projectDetails"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
+          />
+          <EthicVote v-model="proposalForm.userProject.ethicVote" :review-mode="isReviewMode" :form-ref="formRef" />
+          <FdpgLabel html-for="" size="large">{{
+            $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+          }}</FdpgLabel>
+          <p class="desc">
+            {{
+              proposalId
+                ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
+                : $t('proposal.attachmentsOnlyAfterSavingHint')
+            }}
+          </p>
+
+          <FdpgUpload
+            v-if="proposalId"
+            data-test-id="general-appendix__upload"
+            :accept="SupportedMimetype"
+            :file-list="uploadsForType"
+            :is-loading="isAppendixLoading"
+            :is-disabled="isReviewMode"
+            :proposal-id="proposalId"
+            @change="handleUploadFile"
+            @remove="handleRemoveFile"
+          >
+            <el-button
+              class="upload-button"
+              link
+              :disabled="isAppendixLoading || isReviewMode"
+              data-test-id="general-appendix__upload__button"
+            >
+              {{ $t('proposal.chooseAFile') }}
+              <template #icon>
+                <el-icon class="bi-paperclip"></el-icon>
+              </template>
+            </el-button>
+          </FdpgUpload>
+        </template>
+      </el-form>
+    </div>
+
+    <el-row
+      v-if="!proposalStore.currentProposal || !isReviewMode"
+      type="flex"
+      justify="space-between"
+      class="action-wrapper"
+    >
+      <el-col :sm="24" :md="12" :lg="6">
+        <el-button type="primary" plain data-test-id="handleSaveDraft" @click="handleSaveDraft">{{
+          $t('proposal.saveDraft')
+        }}</el-button>
+      </el-col>
+      <el-col :sm="24" :md="12" :lg="6" style="display: flex; justify-content: flex-end">
+        <el-button :disabled="!isValidToSubmit" type="primary" data-test-id="handleSubmit" @click="handleSubmit">{{
+          $t('proposal.submitApplication')
+        }}</el-button>
+      </el-col>
+    </el-row>
   </el-container>
+
+  <TermsDialog v-model="isTermsDialogOpen" :platform="platform" @confirm="handleTermsConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -46,7 +183,7 @@ import {
   startDateInPastValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
-import { ElForm, type FormInstance, type FormItemProp } from 'element-plus'
+import { ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -56,6 +193,11 @@ import ProjectResponsibility from './ProjectResponsibility.vue'
 import ProjectUser from './ProjectUser.vue'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import { CommentType, type ICommentDetail } from '@/types/comment.interface'
+import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
+import TypeOfUse from './DataUsage/TypeOfUse.vue'
+import ProjectDetails from './ResearchProject/ProjectDetails.vue'
+import EthicVote from './ResearchProject/EthicVote.vue'
+
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -92,6 +234,10 @@ const bypassDebounce = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
+
+const activeStep = computed(() => {
+  return layoutStore.activeStep
+})
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
@@ -493,11 +639,6 @@ onMounted(async () => {
 
 .fdpg-new-proposal-page {
   counter-reset: large-label;
-
-  .fdpg-label--large span::before {
-    counter-increment: large-label;
-    content: counter(large-label) '. ';
-  }
 
   flex-direction: column;
   padding-bottom: 100px;

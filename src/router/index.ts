@@ -69,15 +69,7 @@ const routes: RouteRecordRaw[] = [
           roles: [Role.FdpgMember, Role.Researcher, Role.DizMember, Role.UacMember],
         },
       },
-      {
-        path: '/proposals/:id',
-        name: RouteName.EditProposal,
-        component: () => import('@/pages/Proposals/NewPage.vue'),
-        props: true,
-        meta: {
-          roles: [Role.Researcher],
-        },
-      },
+
       {
         path: '/proposals/:id/details',
         name: RouteName.ProposalDetails,
@@ -108,6 +100,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Proposals/NewPage.vue'),
         meta: {
           resetBreadcrumbs: true,
+          roles: [Role.Researcher],
+        },
+      },
+      {
+        path: '/:id',
+        name: RouteName.EditProposal,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        props: true,
+        meta: {
           roles: [Role.Researcher],
         },
       },

@@ -6,13 +6,10 @@
       :form-ref="formRef"
     />
     <ProjectFeasibility v-model="userProjectForm.feasibility" :review-mode="reviewMode" :form-ref="formRef" />
-    <ProjectDetails v-model="userProjectForm.projectDetails" :review-mode="reviewMode" :form-ref="formRef" />
-    <EthicVote v-model="userProjectForm.ethicVote" :review-mode="reviewMode" />
     <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" />
     <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" />
     <PlannedPublications v-model="userProjectForm.plannedPublication" :review-mode="reviewMode" :form-ref="formRef" />
     <ProjectAddresses v-model="userProjectForm.addressees" :review-mode="reviewMode" />
-    <TypeOfUse v-model="userProjectForm.typeOfUse" :review-mode="reviewMode" :platform="platform" />
     <InformationOnBioSample
       v-if="hasBiosamples"
       v-model="userProjectForm.informationOnRequestedBioSamples"
@@ -33,14 +30,11 @@ import type { PropType } from 'vue'
 import { computed } from 'vue'
 import InformationOnBioSample from '../InformationOnBioSample/InformationOnBioSample.vue'
 import PlannedPublications from '../PlannedPublications/PlannedPublications.vue'
-import EthicVote from './EthicVote.vue'
 import GeneralProjectInformation from './GeneralProjectInformation.vue'
 import ProjectAddresses from './ProjectAddresses.vue'
-import ProjectDetails from './ProjectDetails.vue'
 import ProjectFeasibility from './ProjectFeasibility.vue'
 import ProjectResources from './ProjectResources.vue'
 import PropertyRights from './PropertyRights.vue'
-import TypeOfUse from './TypeOfUse.vue'
 
 const props = defineProps({
   modelValue: {

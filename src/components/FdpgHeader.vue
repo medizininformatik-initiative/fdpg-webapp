@@ -4,7 +4,11 @@
       <i class="fa fa-bars" aria-hidden="true"></i>
     </el-button>
     <el-breadcrumb
-      v-if="layoutStore.breadcrumbs.length > 0 && route.name !== RouteName.CreateProposal"
+      v-if="
+        layoutStore.breadcrumbs.length > 0 &&
+        route.name !== RouteName.CreateProposal &&
+        route.name !== RouteName.EditProposal
+      "
       class="fdpg-header-breadcrumb"
       separator-class="el-icon-arrow-right"
     >
@@ -31,7 +35,7 @@
     <router-link
       class="fdpg-menu__item"
       :to="{ name: RouteName.Dashboard }"
-      v-if="route.name === RouteName.CreateProposal"
+      v-if="route.name === RouteName.CreateProposal || route.name === RouteName.EditProposal"
     >
       <i class="bi bi-chevron-left"></i> {{ $t('header.toDashboard') }}
     </router-link>

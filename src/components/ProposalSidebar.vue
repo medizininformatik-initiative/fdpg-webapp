@@ -6,16 +6,16 @@
         <div style="height: calc(100vh - 200px); max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
-              v-for="(step, i) in steps"
-              :key="step"
-              :status="getStepStatus(step)"
-              @click="setActiveTab(CreatPrposalSteps[step as keyof typeof CreatPrposalSteps])"
+              v-for="step in layoutStore.createProposalSteps"
+              :key="step.step"
+              :status="getStepStatus(getStepKey(step.step))"
+              @click="setActiveTab(step.step)"
             >
               <template #title>
-                <span class="step-status">{{ getStepStatusText(step) }}</span>
+                <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
               </template>
               <template #description>
-                <span class="step-title">{{ $t(`sidebar.${step}`) }}</span>
+                <span class="step-status">{{ step.status }}</span>
               </template>
             </el-step>
           </el-steps>
@@ -29,20 +29,29 @@
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const layoutStore = useLayoutStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = ref<CreatPrposalSteps>(CreatPrposalSteps.DataSources)
 
-// Track completion status for each step
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
 const setActiveTab = (tab: CreatPrposalSteps) => {
   activeTab.value = tab
+  layoutStore.setActiveStep(tab)
+}
+
+const getStepKey = (step: CreatPrposalSteps): string => {
+  return (
+    Object.keys(CreatPrposalSteps).find((key) => CreatPrposalSteps[key as keyof typeof CreatPrposalSteps] === step) ||
+    ''
+  )
 }
 
 const steps = computed(() => {
-  return Object.keys(CreatPrposalSteps).filter((key) => isNaN(Number(key)))
+  return layoutStore.createProposalSteps
 })
 
 // Method to mark a step as completed
@@ -66,23 +75,6 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' => {
   }
   return 'wait'
 }
-
-// Method to get the status text for a step
-const getStepStatusText = (step: string): string => {
-  const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-  if (isStepCompleted(stepEnum)) {
-    return 'Completed'
-  }
-  if (activeTab.value === stepEnum) {
-    return 'In Progress'
-  }
-  return 'Pending'
-}
-
-// Expose methods to parent components
-defineExpose({
-  markStepCompleted,
-})
 </script>
 
 <style lang="scss">
@@ -100,7 +92,8 @@ defineExpose({
     background-color: $blue !important;
   }
   .el-step__icon {
-    border-color: $blue !important;
+    border: $blue 2px solid !important;
+    color: $gray-900 !important;
   }
   &.is-process {
     .el-step__icon {
