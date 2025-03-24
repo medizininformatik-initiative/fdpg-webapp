@@ -8,7 +8,12 @@
           <td>{{ $t(`proposal.${row.questionKey}`) }}</td>
 
           <td>
-            <el-radio-group v-model="row.answer[0]" @change="handleOptionChange(row)" v-if="row.isMultiple === false">
+            <el-radio-group
+              v-model="row.answer[0]"
+              @change="handleOptionChange(row)"
+              v-if="row.isMultiple === false"
+              :disabled="isDisabled"
+            >
               <FdpgRadio
                 v-for="(option, index) in row.options"
                 :key="index"
@@ -17,7 +22,7 @@
                 :size="FdpgInputSize.Small"
               ></FdpgRadio>
             </el-radio-group>
-            <el-checkbox-group v-model="row.answer" v-else @change="handleOptionChange(row)">
+            <el-checkbox-group v-model="row.answer" v-else @change="handleOptionChange(row)" :disabled="isDisabled">
               <FdpgCheckbox
                 v-for="(option, index) in row.options"
                 :key="index"
@@ -29,7 +34,11 @@
           </td>
 
           <td>
-            <FdpgTextEditor v-model="row.comment" @blur="handleOptionChange(row)"></FdpgTextEditor>
+            <FdpgTextEditor
+              v-model="row.comment"
+              @blur="handleOptionChange(row)"
+              :disabled="isDisabled"
+            ></FdpgTextEditor>
           </td>
         </tr>
 
@@ -47,6 +56,7 @@
                       v-model="subItem.answer[0]"
                       v-if="subItem.isMultiple === false"
                       @change="handleOptionChange(row)"
+                      :disabled="isDisabled"
                     >
                       <FdpgRadio
                         v-for="(option, index) in subItem.options"
@@ -56,7 +66,12 @@
                         :size="FdpgInputSize.Small"
                       ></FdpgRadio>
                     </el-radio-group>
-                    <el-checkbox-group v-model="subItem.answer" v-else @change="handleOptionChange(row)">
+                    <el-checkbox-group
+                      v-model="subItem.answer"
+                      v-else
+                      @change="handleOptionChange(row)"
+                      :disabled="isDisabled"
+                    >
                       <FdpgCheckbox
                         v-for="(option, index) in subItem.options"
                         :key="index"
@@ -68,7 +83,11 @@
                   </td>
 
                   <td>
-                    <FdpgTextEditor v-model="subItem.comment" @blur="handleOptionChange(row)"></FdpgTextEditor>
+                    <FdpgTextEditor
+                      v-model="subItem.comment"
+                      @blur="handleOptionChange(row)"
+                      :disabled="isDisabled"
+                    ></FdpgTextEditor>
                   </td>
                 </tr>
               </tbody>
@@ -94,6 +113,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emit = defineEmits(['update:listItem'])
 
@@ -115,7 +138,6 @@ const handleOptionChange = (row) => {
   } else {
     item.isAnswered = false
   }
-
   emit('update:listItem', { ...item })
 }
 </script>

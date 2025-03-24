@@ -54,7 +54,8 @@
     "date": "Date",
     "title": "Title",
     "additionalInformation": "Additional information",
-    "selectAll": "Select all"
+    "selectAll": "Select all",
+    "editor": "Editor"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -561,7 +562,7 @@
     "analysisPlanClear": "clear description of analysis plan",
     "exampleScriptsAttached": "example scripts, algorithms\nattached or available",
     "distributedAnalysis": "distributed analysis ",
-    "testLocations": "Teststandorte",
+    "testLocations": "Test location",
     "cohortcommentClear": "clear cohort description",
     "technicalDataSelection": "technical description of\ndata/sample selection",
     "uacDataSelectionComprehensible": "uac comprehensible description of\ndata/sample selection",
@@ -592,7 +593,8 @@
     "Biosamples-Requested": "biosamples requested ",
     "External-Lab": "extern laboratory involved",
     "out-EU": "outside EU",
-    "listOfNoMarked": "These items are marked as No"
+    "listOfNoMarked": "These items are marked as No",
+    "internalCheckNotes": "Internal Check Notes"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

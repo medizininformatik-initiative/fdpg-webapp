@@ -271,16 +271,22 @@ describe('ProposalService', () => {
   })
 
   it('should call the api client to update fdpg checklist proposal', async () => {
-    apiClient.put.mockResolvedValueOnce(undefined)
+    const mockResponse = {
+      data: {
+        checkListVerification: [],
+        projectProperties: [],
+        isRegistrationLinkSent: true,
+        fdpgInternalCheckNotes: '',
+      },
+    }
+    apiClient.put.mockResolvedValueOnce(mockResponse)
     const proposalId = 'proposalId'
-    const checklist = {
+    const checklist: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: true,
-      fdpgInternalCheckNotes: 'string',
-      checkListVerification: [],
-      projectProperties: [],
-    } as IFdpgChecklist
-    await service.updateFdpgChecklist(proposalId, checklist)
+    }
+    const response = await service.updateFdpgChecklist(proposalId, checklist)
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/fdpg-checklist`, checklist)
+    expect(response).toEqual(mockResponse.data)
   })
 
   it('should call the api client to mark section as done proposal', async () => {

@@ -175,8 +175,9 @@ export class ProposalService {
     return response.data
   }
 
-  async updateFdpgChecklist(id: string, checklist: Partial<IFdpgChecklist>): Promise<void> {
-    await this.apiClient.put(`${this.basePath}/${id}/fdpg-checklist`, checklist)
+  async updateFdpgChecklist(id: string, checklist: Partial<IFdpgChecklist>): Promise<IFdpgChecklist> {
+    const response = await this.apiClient.put(`${this.basePath}/${id}/fdpg-checklist`, checklist)
+    return response.data
   }
 
   async markSectionAsDone(proposalId: string, sectionId: string, value: boolean): Promise<void> {

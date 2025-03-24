@@ -49,7 +49,11 @@ export const useProposalStore = defineStore('Proposal', {
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
       checkListVerification: [],
-      fdpgInternalCheckNotes: '',
+      fdpgInternalCheckNotes: {
+        note: '',
+        date: new Date(),
+        user: '',
+      },
       projectProperties: [],
     },
     search: undefined,
@@ -221,16 +225,13 @@ export const useProposalStore = defineStore('Proposal', {
       const typedStore = store as IProposalState
 
       try {
-        await typedStore.apiService.updateFdpgChecklist(id, checklist)
-        // typedStore._checkListLastSuccess = checklist
+        const updatedChecklist = await typedStore.apiService.updateFdpgChecklist(id, checklist)
+        const currentProposal = typedStore.currentProposal
+        if (currentProposal) currentProposal.fdpgChecklist = updatedChecklist
       } catch (error) {
         if (errorCb) {
           errorCb(error)
         }
-
-        // if (typedStore.currentProposal) {
-        //   typedStore.currentProposal.fdpgChecklist = { ...typedStore._checkListLastSuccess }
-        // }
       }
     }, 500),
 
@@ -239,48 +240,7 @@ export const useProposalStore = defineStore('Proposal', {
       checklist: Partial<IFdpgChecklist>,
       errorCb?: (...args: any) => void,
     ): Promise<void> {
-      if (this.currentProposal) {
-        this.updateProposalChecklist(checklist)
-      }
       return this._updateFdpgChecklistDebounced(id, checklist, this, errorCb)
-    },
-
-    updateProposalChecklist(checklistUpdate: Partial<IFdpgChecklist> | IChecklistItem): void {
-      if (!this.currentProposal || !this.currentProposal.fdpgChecklist) return
-      if ('isRegistrationLinkSent' in checklistUpdate && checklistUpdate.isRegistrationLinkSent !== undefined) {
-        if (this.currentProposal && this.currentProposal.fdpgChecklist) {
-          this.currentProposal.fdpgChecklist.isRegistrationLinkSent = checklistUpdate.isRegistrationLinkSent
-        }
-      }
-
-      if ('fdpgInternalCheckNotes' in checklistUpdate && checklistUpdate.fdpgInternalCheckNotes !== undefined) {
-        this.currentProposal.fdpgChecklist.fdpgInternalCheckNotes = checklistUpdate.fdpgInternalCheckNotes
-      }
-      if (!('_id' in checklistUpdate)) return
-      const targetFields: (keyof IFdpgChecklist)[] = ['checkListVerification', 'projectProperties']
-
-      targetFields.some((field) => {
-        const itemIndex = Array.isArray(this.currentProposal?.fdpgChecklist?.[field])
-          ? this.currentProposal?.fdpgChecklist?.[field]?.findIndex(
-              (item) => item._id.toString() === checklistUpdate['_id']?.toString(),
-            )
-          : -1
-
-        if (itemIndex !== -1 && itemIndex !== undefined) {
-          Object.keys(checklistUpdate).forEach((key) => {
-            if (!['_id', 'isRegistrationLinkSent', 'fdpgInternalCheckNotes'].includes(key)) {
-              if (this.currentProposal?.fdpgChecklist && Array.isArray(this.currentProposal.fdpgChecklist[field])) {
-                const checklistField = this.currentProposal.fdpgChecklist[field] as { [key: string]: any }[]
-                if (checklistField[itemIndex]) {
-                  checklistField[itemIndex][key] = (checklistUpdate as any)[key]
-                }
-              }
-            }
-          })
-          return true // Stop the loop once an item is found and updated
-        }
-        return false // Continue if no match is found
-      })
     },
 
     async markSectionAsDone(proposalId: string, sectionId: string, value: boolean): Promise<void> {

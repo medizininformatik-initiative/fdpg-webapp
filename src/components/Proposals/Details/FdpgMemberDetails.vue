@@ -36,7 +36,7 @@
       v-model="fdpgChecklist"
       :status="status"
       :checklist="proposalStore.currentProposal.fdpgChecklist"
-      :is-disabled="proposalStore.currentProposal.isLocked"
+      :is-disabled="proposalStore.currentProposal.isLocked || status === ProposalStatus.LocationCheck"
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
@@ -289,7 +289,7 @@ const handleToLocationCheckClick = () => {
     messageComponentProps: {
       listOfNoMarked:
         proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
-          ?.filter((item: IChecklistItem) => item.answer === 'no')
+          ?.filter((item: IChecklistItem) => item.answer.some((a) => a === 'no'))
           .map((item: IChecklistItem) => item.questionKey) || [],
     },
     callback: async (decision: DecisionType) =>
