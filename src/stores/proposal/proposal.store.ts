@@ -26,6 +26,7 @@ import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
+import type { Deadlines } from '@/types/due-date.enum'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -98,6 +99,7 @@ export const useProposalStore = defineStore('Proposal', {
         this.currentProposal = transformForm() as IProposal
       }
       this._checkListLastSuccess = Object.assign({}, this.currentProposal.fdpgChecklist)
+
       return transformForm(this.currentProposal) as IProposal
     },
 
@@ -327,6 +329,10 @@ export const useProposalStore = defineStore('Proposal', {
 
     isCurrentUserParticipatingScientist(): boolean {
       return !!this.currentProposal?.isParticipatingScientist
+    },
+    async updateDeadlines(id: string, deadlines: Deadlines): Promise<void> {
+      await this.apiService.updateDeadlines(id, deadlines)
+      await this.setCurrentProposal(id)
     },
   },
 

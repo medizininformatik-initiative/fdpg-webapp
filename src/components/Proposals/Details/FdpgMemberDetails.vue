@@ -8,6 +8,13 @@
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
+
+    <FdpgChangeDeadlines
+      :deadlines="deadlines"
+      :status="status"
+      @saveDeadlines="handleSaveDeadlines"
+    ></FdpgChangeDeadlines>
+
     <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
@@ -79,14 +86,14 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist } from '@/types/proposal.types'
-import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist, IProposal } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
-import type { UploadFile, UploadRawFile } from 'element-plus'
+import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, ref, markRaw } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -97,6 +104,9 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
+import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
+import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
+import { statusToDueDatesMap } from '@/utils/deadlines'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -142,6 +152,35 @@ const isInitiateContractDialogOpen = ref(false)
 const handleToContractingClick = () => {
   isInitiateContractDialogOpen.value = true
 }
+
+const deadlines = ref({})
+
+watch(
+  () => proposalStore.currentProposal as IProposal,
+  () => {
+    const proposalDeadlines = proposalStore.currentProposal?.deadlines || {}
+
+    deadlines.value = Object.fromEntries(
+      Object.keys(proposalDeadlines).map((key) => [
+        key,
+        (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key],
+      ]),
+    )
+  },
+  { deep: true },
+)
+
+const filteredDueDates = computed(() => {
+  return Object.fromEntries(
+    Object.keys(proposalStore.currentProposal?.deadlines || {})
+      .filter(
+        (dueDateKey) =>
+          proposalStore.currentProposal?.status &&
+          statusToDueDatesMap[proposalStore.currentProposal.status]?.includes(dueDateKey as DueDateEnum),
+      )
+      .map((key) => [key, (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key]]),
+  )
+})
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
@@ -534,6 +573,15 @@ const fetchProposal = async () => {
     console.log(error)
   }
 }
+const handleSaveDeadlines = async (deadlines: Deadlines) => {
+  try {
+    await proposalStore.updateDeadlines(proposalId.value, deadlines)
+    showSuccessMessage()
+  } catch (ex) {
+    showErrorMessage()
+  }
+}
+
 const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
   if (!proposalId.value) {
     console.error('Proposal ID is missing')

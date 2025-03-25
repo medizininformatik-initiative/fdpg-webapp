@@ -13,6 +13,7 @@ import type { IDeclineContract, ISignContract } from '@/types/sign-contract.type
 import { DirectUpload } from '@/types/upload.types'
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import type { MiiLocation } from '@/types/location.enum'
+import { DueDateEnum } from '@/types/due-date.enum'
 
 vi.mock('@/httpClients/api/api.client')
 
@@ -429,5 +430,20 @@ describe('ProposalService', () => {
       responseType: 'arraybuffer',
     })
     expect(response).toEqual(mockGetAllResponse.data)
+  })
+
+  it('should call the api client to update deadlines in proposal', async () => {
+    apiClient.put.mockResolvedValueOnce(mockGetAllResponse)
+    const proposalId = 'proposalId'
+    const newDeadlines = {
+      [DueDateEnum.DUE_DAYS_FDPG_CHECK]: '2024-03-20T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CHECK]: '2024-03-25T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_LOCATION_CONTRACTING]: '2024-03-30T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_EXPECT_DATA_DELIVERY]: '2024-04-05T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_DATA_CORRUPT]: '2024-04-10T08:00:00.000Z',
+      [DueDateEnum.DUE_DAYS_FINISHED_PROJECT]: '2024-04-15T08:00:00.000Z',
+    }
+    await service.updateDeadlines(proposalId, newDeadlines)
+    expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/deadlines`, newDeadlines)
   })
 })

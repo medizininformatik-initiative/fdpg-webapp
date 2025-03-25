@@ -18,10 +18,18 @@ const props = defineProps({
     type: Date,
     default: () => undefined,
   },
+  maxDate: {
+    type: Date,
+    default: () => undefined,
+  },
 })
 const disabledDate = (time: Date) => {
-  if (props.minDate) {
+  if (props.minDate && props.maxDate) {
+    return time <= props.minDate || time >= props.maxDate
+  } else if (props.minDate) {
     return time <= props.minDate
+  } else if (props.maxDate) {
+    return time >= props.maxDate
   } else {
     return false
   }
