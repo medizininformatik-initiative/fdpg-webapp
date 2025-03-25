@@ -79,6 +79,13 @@
             html-for="proposal.informationOnTheRequestedData"
           />
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
+          <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
+          <InformationOnBioSample
+            v-if="hasBiosamples"
+            v-model="proposalForm.userProject.informationOnRequestedBioSamples"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
+          />
         </template>
 
         <template v-if="activeStep === CreatPrposalSteps.ResearchProject">
@@ -126,21 +133,28 @@
       </el-form>
     </div>
 
-    <el-row
-      v-if="!proposalStore.currentProposal || !isReviewMode"
-      type="flex"
-      justify="space-between"
-      class="action-wrapper"
-    >
-      <el-col :sm="24" :md="12" :lg="6">
-        <el-button type="primary" plain data-test-id="handleSaveDraft" @click="handleSaveDraft">{{
-          $t('proposal.saveDraft')
+    <el-row v-if="!proposalStore.currentProposal || !isReviewMode" class="action-wrapper">
+      <el-col :span="12">
+        <el-button type="primary" plain data-test-id="prevStep" @click="prevStep">{{
+          $t('proposal.prevStep')
         }}</el-button>
       </el-col>
-      <el-col :sm="24" :md="12" :lg="6" style="display: flex; justify-content: flex-end">
-        <el-button :disabled="!isValidToSubmit" type="primary" data-test-id="handleSubmit" @click="handleSubmit">{{
-          $t('proposal.submitApplication')
-        }}</el-button>
+      <el-col :span="12" class="text-right">
+        <el-button
+          type="primary"
+          data-test-id="nextStep"
+          @click="nextStep"
+          v-if="activeStep !== CreatPrposalSteps.ResearchProject"
+          >{{ $t('proposal.nextStep') }}</el-button
+        >
+        <el-button
+          :disabled="!isValidToSubmit"
+          type="primary"
+          data-test-id="handleSubmit"
+          @click="handleSubmit"
+          v-else
+          >{{ $t('proposal.submitApplication') }}</el-button
+        >
       </el-col>
     </el-row>
   </el-container>
@@ -166,7 +180,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal } from '@/types/proposal.types'
-import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
@@ -197,6 +211,8 @@ import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import TypeOfUse from './DataUsage/TypeOfUse.vue'
 import ProjectDetails from './ResearchProject/ProjectDetails.vue'
 import EthicVote from './ResearchProject/EthicVote.vue'
+import ProjectAddresses from './Variables/ProjectAddresses.vue'
+import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
 
 defineProps({
   userRole: {
@@ -332,6 +348,9 @@ const OpenProposalTasks = computed(() => {
     .filter((comment: ICommentDetail) => comment.type === CommentType.PROPOSAL_TASK)
     .filter((task: ICommentDetail) => !task.isDone)
 })
+const hasBiosamples = computed(() => {
+  return proposalForm.value?.userProject.typeOfUse.usage?.includes(ProposalTypeOfUse.Biosample)
+})
 
 const openDetails = () => {
   if (proposalId.value) {
@@ -360,6 +379,7 @@ const raiseErrors = (invalidFields: ValidateFieldsError) => {
 }
 
 const isTermsDialogOpen = ref(false)
+
 const handleTermsConfirm = async () => {
   isTermsDialogOpen.value = false
   try {
@@ -377,7 +397,12 @@ const handleTermsConfirm = async () => {
     showErrorMessage(error.message)
   }
 }
-
+const prevStep = () => {
+  layoutStore.prevStep()
+}
+const nextStep = () => {
+  layoutStore.nextStep()
+}
 const handleSubmit = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -727,6 +752,17 @@ onMounted(async () => {
 
   .action-wrapper {
     margin-top: 25px;
+
+    .text-right {
+      text-align: right;
+    }
+
+    @media (max-width: $sm) {
+      .el-button {
+        width: 100%;
+        margin: 0 0 20px 0;
+      }
+    }
   }
 
   p {
@@ -753,15 +789,6 @@ onMounted(async () => {
   .upload-button {
     i::before {
       transform: rotate(90deg);
-    }
-  }
-
-  @media (max-width: $sm) {
-    .action-wrapper {
-      .el-button {
-        width: 100%;
-        margin: 0 0 20px 0;
-      }
     }
   }
 }

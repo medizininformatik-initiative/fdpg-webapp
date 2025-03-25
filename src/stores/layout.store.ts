@@ -47,5 +47,17 @@ export const useLayoutStore = defineStore('layout', {
     setActiveStep(step: CreatPrposalSteps) {
       this.activeStep = step
     },
+    nextStep() {
+      const nextStep = this.createProposalSteps.find((s) => s.step === this.activeStep + 1)
+      if (nextStep) {
+        this.activeStep = nextStep.step
+      }
+    },
+    prevStep() {
+      const prevStep = this.createProposalSteps.find((s) => s.step === this.activeStep - 1)
+      if (prevStep) {
+        this.activeStep = prevStep.step
+      }
+    },
   },
 })

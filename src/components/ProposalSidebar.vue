@@ -10,6 +10,9 @@
               :key="step.step"
               :status="getStepStatus(getStepKey(step.step))"
               @click="setActiveTab(step.step)"
+              :class="{
+                'is-process': activeTab === step.step,
+              }"
             >
               <template #title>
                 <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
@@ -34,12 +37,11 @@ import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 const layoutStore = useLayoutStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
-const activeTab = ref<CreatPrposalSteps>(CreatPrposalSteps.DataSources)
+const activeTab = computed(() => layoutStore.activeStep)
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
 const setActiveTab = (tab: CreatPrposalSteps) => {
-  activeTab.value = tab
   layoutStore.setActiveStep(tab)
 }
 
@@ -53,11 +55,6 @@ const getStepKey = (step: CreatPrposalSteps): string => {
 const steps = computed(() => {
   return layoutStore.createProposalSteps
 })
-
-// Method to mark a step as completed
-const markStepCompleted = (step: CreatPrposalSteps) => {
-  completedSteps.value.add(step)
-}
 
 // Method to check if a step is completed
 const isStepCompleted = (step: CreatPrposalSteps): boolean => {
