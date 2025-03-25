@@ -3,9 +3,18 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button v-if="proposalId" type="primary" size="large" @click="openDetails">{{
-          $t('proposal.projectDetails')
-        }}</el-button>
+        <el-button v-if="proposalId" type="primary" size="large" link @click="openDetails">
+          <i class="bi bi-info-square"></i>
+        </el-button>
+        <el-button
+          v-if="!proposalStore.currentProposal || !isReviewMode"
+          @click="handleSaveDraft"
+          type="primary"
+          size="large"
+          link
+        >
+          <i class="bi bi-floppy"></i>
+        </el-button>
       </div>
     </div>
     <div class="form-container">
@@ -133,7 +142,7 @@
       </el-form>
     </div>
 
-    <el-row v-if="!proposalStore.currentProposal || !isReviewMode" class="action-wrapper">
+    <el-row class="action-wrapper">
       <el-col :span="12">
         <el-button type="primary" plain data-test-id="prevStep" @click="prevStep">{{
           $t('proposal.prevStep')
@@ -152,7 +161,7 @@
           type="primary"
           data-test-id="handleSubmit"
           @click="handleSubmit"
-          v-else
+          v-else-if="!proposalStore.currentProposal || !isReviewMode"
           >{{ $t('proposal.submitApplication') }}</el-button
         >
       </el-col>
