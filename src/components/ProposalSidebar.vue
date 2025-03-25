@@ -18,7 +18,7 @@
                 <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
               </template>
               <template #description>
-                <span class="step-status">{{ step.status }}</span>
+                <span class="step-status">{{ step.validation }}</span>
               </template>
             </el-step>
           </el-steps>

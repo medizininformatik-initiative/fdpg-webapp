@@ -12,7 +12,7 @@ interface ILayoutStore {
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
-  status: 'success' | 'process' | 'wait'
+  validation: 'success' | 'process' | 'wait' | 'not-complete'
 }
 
 export const useLayoutStore = defineStore('layout', {
@@ -21,13 +21,13 @@ export const useLayoutStore = defineStore('layout', {
     isSidebarVisible: false,
     lastDashboard: RouteName.Dashboard,
     createProposalSteps: [
-      { step: CreatPrposalSteps.DataSources, status: 'wait' },
-      { step: CreatPrposalSteps.Variables, status: 'wait' },
-      { step: CreatPrposalSteps.Casesohort, status: 'wait' },
-      { step: CreatPrposalSteps.DataUsage, status: 'wait' },
-      { step: CreatPrposalSteps.ProjectDetails, status: 'wait' },
-      { step: CreatPrposalSteps.ProjectParticipants, status: 'wait' },
-      { step: CreatPrposalSteps.ResearchProject, status: 'wait' },
+      { step: CreatPrposalSteps.DataSources, validation: 'wait' },
+      { step: CreatPrposalSteps.Variables, validation: 'wait' },
+      { step: CreatPrposalSteps.Casesohort, validation: 'wait' },
+      { step: CreatPrposalSteps.DataUsage, validation: 'wait' },
+      { step: CreatPrposalSteps.ProjectDetails, validation: 'wait' },
+      { step: CreatPrposalSteps.ProjectParticipants, validation: 'wait' },
+      { step: CreatPrposalSteps.ResearchProject, validation: 'wait' },
     ],
     activeStep: CreatPrposalSteps.DataSources,
   }),
@@ -57,6 +57,20 @@ export const useLayoutStore = defineStore('layout', {
       const prevStep = this.createProposalSteps.find((s) => s.step === this.activeStep - 1)
       if (prevStep) {
         this.activeStep = prevStep.step
+      }
+    },
+    updateStepStatus(step: keyof typeof CreatPrposalSteps, valid: boolean, isAttempted: boolean = false) {
+      const currentStep = this.createProposalSteps.find((s) => s.step === CreatPrposalSteps[step])
+      if (currentStep) {
+        if (valid) {
+          currentStep.validation = 'success'
+        } else if (isAttempted) {
+          currentStep.validation = 'not-complete'
+        } else {
+          currentStep.validation = 'process'
+        }
+      } else {
+        console.error('Step not found')
       }
     },
   },

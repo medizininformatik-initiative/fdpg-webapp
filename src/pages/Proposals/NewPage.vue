@@ -223,6 +223,16 @@ import EthicVote from './ResearchProject/EthicVote.vue'
 import ProjectAddresses from './Variables/ProjectAddresses.vue'
 import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
 
+// Map each step to its corresponding form fields
+const stepFieldsMap = {
+  [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
+  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
+  [CreatPrposalSteps.ProjectDetails]: ['userProject.generalProjectInformation', 'userProject.feasibility'],
+  [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
+  [CreatPrposalSteps.Variables]: ['requestedData'],
+  [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
+}
+
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -429,6 +439,42 @@ const handleSubmit = async () => {
   })
 }
 
+const stepAttempted = ref<Set<CreatPrposalSteps>>(new Set())
+
+const updateStepStatus = async () => {
+  if (!formRef.value) return
+
+  // Get all form fields
+  const allFields = formRef.value.fields || []
+
+  // Check each step's fields
+  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
+    // Get all fields that belong to this step
+    const stepFields = allFields.filter((field) =>
+      fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+    )
+
+    // Check if all fields in this step are valid
+    const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
+    const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+    const isAttempted = stepAttempted.value.has(stepEnum)
+
+    // Update the step status in layout store
+    layoutStore.updateStepStatus(stepEnum, isStepValid, isAttempted)
+  })
+}
+
+// Watch form validation state
+watch(
+  () => formRef.value?.fields,
+  async (newFields) => {
+    if (newFields) {
+      await updateStepStatus()
+    }
+  },
+  { deep: true },
+)
+
 const handleSaveDraft = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -438,6 +484,9 @@ const handleSaveDraft = async () => {
     return
   }
   bypassDebounce.value = true
+
+  // Mark current step as attempted
+  stepAttempted.value.add(layoutStore.activeStep)
 
   let invalidFields: ValidateFieldsError | undefined
   await formRef.value?.validateField(
@@ -760,6 +809,8 @@ onMounted(async () => {
   }
 
   .action-wrapper {
+    display: flex;
+    justify-content: space-between;
     margin-top: 25px;
 
     .text-right {
