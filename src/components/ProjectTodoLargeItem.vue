@@ -39,7 +39,7 @@
     </div>
     <div v-if="projectTodo.type === 'additional-location-information' && projectTodo.additionalInformation">
       <ProjectTodosAdditionalLocationInformation
-        :is-disabled="isDisabled || projectTodo.readonly"
+        :is-disabled="isDisabled"
         :additional-information="projectTodo.additionalInformation"
         @submit="projectTodo.action"
       />
@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { computed, ref, type PropType } from 'vue'
+import { computed, onMounted, ref, watch, type PropType } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
 
@@ -74,6 +74,7 @@ const positiveChildDisableButton = ref<boolean>(props.isDisabled)
 const negativeChildDisableButton = ref<boolean>(props.isDisabled)
 
 const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; button: 'positive' | 'negative' }) => {
+  console.log({ value, button })
   if (button === 'positive') {
     positiveChildDisableButton.value = value
   } else {

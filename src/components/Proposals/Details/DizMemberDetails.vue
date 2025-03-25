@@ -73,11 +73,6 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
-const uacCondition = computed(
-  () =>
-    proposalStore.currentProposal?.conditionalApprovals[0] ??
-    proposalStore.currentProposal?.locationConditionDraft?.[0],
-)
 
 const showContractingParticipants = computed(() => {
   return (
@@ -370,13 +365,14 @@ const getApproveTodo = (): IProjectTodo[] => {
   }
 }
 
-const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo(), ...getSignTodo(), ...getAdditionalLocationInformationTodo(), ...getCheckContractTodo()]
-})
-
 const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
-  const isLocationCheckStatus = proposalStore.currentProposal?.status === ProposalStatus.LocationCheck
-  const additionalLocationInformation = proposalStore.currentProposal?.additionalLocationInformation[0] ?? {
+  const proposal = proposalStore.currentProposal
+  if (!proposal) {
+    return []
+  }
+
+  const isLocationCheckStatus = proposal.status === ProposalStatus.LocationCheck
+  const additionalLocationInformation = proposal.additionalLocationInformation[0] ?? {
     legalBasis: false,
     locationPublicationName: '',
   }
@@ -420,6 +416,20 @@ const fetchProposal = async () => {
     console.log(error)
   }
 }
+
+const projectTodos = ref<IProjectTodo[]>([])
+
+watch(
+  () => proposalStore.currentProposal,
+  () => {
+    projectTodos.value = [
+      ...getApproveTodo(),
+      ...getSignTodo(),
+      ...getCheckContractTodo(),
+      ...getAdditionalLocationInformationTodo(),
+    ]
+  },
+)
 
 onMounted(async () => {
   await fetchProposal()

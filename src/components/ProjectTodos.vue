@@ -25,7 +25,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { PropType } from 'vue'
+import { type PropType } from 'vue'
 import ProjectTodoItem from './ProjectTodoItem.vue'
 import ProjectTodoLargeItem from './ProjectTodoLargeItem.vue'
 
@@ -36,6 +36,7 @@ defineProps({
   },
   isDisabled: {
     type: Boolean,
+    required: false,
     default: false,
   },
 })
