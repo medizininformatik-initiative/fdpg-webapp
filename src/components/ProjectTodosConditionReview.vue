@@ -43,6 +43,7 @@
             v-model="form.dataVolume"
             placeholder="proposal.acceptContractDataVolumePlaceholder"
             data-testId="input__dataVolume"
+            :readonly="isDisabled"
           />
         </FdpgFormItem>
       </el-form>

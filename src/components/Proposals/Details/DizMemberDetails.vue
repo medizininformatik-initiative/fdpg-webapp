@@ -57,12 +57,7 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import {
-  LocationState,
-  ProposalStatus,
-  type IAdditionalLocationProposalInformation,
-  type IEditAdditionalLocationProposalInformation,
-} from '@/types/proposal.types'
+import { LocationState, ProposalStatus, type IEditAdditionalLocationProposalInformation } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -78,7 +73,11 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
-const uacCondition = computed(() => proposalStore.currentProposal?.locationConditionDraft?.[0])
+const uacCondition = computed(
+  () =>
+    proposalStore.currentProposal?.conditionalApprovals[0] ??
+    proposalStore.currentProposal?.locationConditionDraft?.[0],
+)
 
 const showContractingParticipants = computed(() => {
   return (
@@ -127,18 +126,11 @@ const rejectConditionCheck = async (declineReason: string) => {
   }
 }
 
-const acceptConditionCheck = async (conditionReasoning?: string) => {
-  const uacConditionVal = uacCondition.value
-
-  if (!uacConditionVal) {
-    showErrorMessage(t('general.failedSubmit'))
-    return
-  }
-
+const acceptConditionCheck = async (dataAmount: number, conditionReasoning?: string) => {
   try {
     await proposalStore.setDizConditionApproval(proposalId.value, {
       value: true,
-      dataAmount: uacConditionVal.dataAmount,
+      dataAmount,
       conditionReasoning,
     })
     showSuccessMessage(t('general.submitted'))
@@ -249,13 +241,39 @@ const getSignTodo = (): IProjectTodo[] => {
 
 const getCheckContractTodo = (): IProjectTodo[] => {
   const currentProposal = proposalStore.currentProposal
-  const isLocationCheckStatus = currentProposal?.status === ProposalStatus.LocationCheck
-  const isConditionCheckStatus = currentProposal?.locationStatus === LocationState.DizConditionCheck
 
-  if (isLocationCheckStatus && isConditionCheckStatus) {
-    const [condition] = currentProposal.locationConditionDraft
+  if (!currentProposal) {
+    return []
+  }
 
-    if (!condition) {
+  const hasLocationCheckStats = (status?: LocationState) =>
+    status && ![LocationState.IsDizCheck, LocationState.DizApproved].includes(status)
+  const hasConditionViewStats = (status?: ProposalStatus) =>
+    status &&
+    ![ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.Rejected, ProposalStatus.FdpgCheck].includes(status)
+
+  const locationCheckEditStats = [
+    LocationState.DizConditionCheck,
+    LocationState.UacApproved,
+    LocationState.ConditionalApprovalPending,
+    LocationState.ConditionalApprovalDeclined,
+  ]
+
+  const [conditionalApproval] = currentProposal.conditionalApprovals
+  const isConditionFdpgAccepted = conditionalApproval?.isAccepted && conditionalApproval?.reviewedAt
+
+  const isEditable =
+    !isConditionFdpgAccepted &&
+    currentProposal.locationStatus &&
+    locationCheckEditStats.includes(currentProposal.locationStatus)
+  const isViewable =
+    hasConditionViewStats(currentProposal.status) && hasLocationCheckStats(currentProposal.locationStatus)
+
+  if (isViewable) {
+    const [conditionDraft] = currentProposal.locationConditionDraft
+    const [uacVote] = currentProposal.uacApprovals
+
+    if (!conditionDraft && !conditionalApproval && !uacVote) {
       showErrorMessage()
       return []
     }
@@ -264,12 +282,18 @@ const getCheckContractTodo = (): IProjectTodo[] => {
       {
         title: t('proposal.reviewUacConditionTitle'),
         description: t('proposal.reviewUacConditionDescription'),
-        action: (decision: boolean, updatedConditionReasoning?: string) =>
-          handleConditionDecision(decision, updatedConditionReasoning),
+        action: (decision: boolean, dataAmount?: number, updatedConditionReasoning?: string) =>
+          handleConditionDecision(decision, dataAmount, updatedConditionReasoning),
         type: 'condition-check',
         testId: 'todo__button__review__uac__condition',
-        condition: condition,
-        readonly: false,
+        condition: (conditionalApproval
+          ? {
+              ...conditionDraft,
+              dataAmount: conditionalApproval.dataAmount,
+              conditionReasoning: conditionalApproval.conditionReasoning,
+            }
+          : conditionDraft) ?? { conditionReasoning: '', dataAmount: uacVote.dataAmount },
+        readonly: !isEditable,
       },
     ]
   }
@@ -287,9 +311,13 @@ const updateAdditionalInformation = async (additionalInformation: IEditAdditiona
   }
 }
 
-const handleConditionDecision = async (decision: boolean, updatedConditionReasoning?: string) => {
+const handleConditionDecision = async (decision: boolean, dataAmount?: number, updatedConditionReasoning?: string) => {
   if (decision === true) {
-    await acceptConditionCheck(updatedConditionReasoning)
+    if (!dataAmount) {
+      showErrorMessage(t('general.failedSubmit'))
+      return
+    }
+    await acceptConditionCheck(dataAmount, updatedConditionReasoning)
   } else {
     isDeclineDialogOpen.value = true
   }
