@@ -19,7 +19,7 @@
     </div>
     <div class="form-container">
       <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
-        <template v-if="activeStep === CreatPrposalSteps.DataSources">
+        <div v-show="activeStep === CreatPrposalSteps.DataSources">
           <el-row class="abbreviation">
             <el-col :sm="18" :md="12" :lg="6">
               <FdpgFormItem prop="projectAbbreviation">
@@ -33,9 +33,8 @@
               </FdpgFormItem>
             </el-col>
           </el-row>
-        </template>
-
-        <template v-if="activeStep === CreatPrposalSteps.ProjectParticipants">
+        </div>
+        <div v-show="activeStep === CreatPrposalSteps.ProjectParticipants">
           <FdpgLabel size="large" html-for="proposal.applicant" />
           <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
 
@@ -63,9 +62,8 @@
             :form-ref="formRef"
             :review-mode="isReviewMode"
           />
-        </template>
-
-        <template v-if="activeStep === CreatPrposalSteps.ProjectDetails">
+        </div>
+        <div v-show="activeStep === CreatPrposalSteps.ProjectDetails">
           <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
           <UserProjectInformation
             v-model="proposalForm.userProject"
@@ -74,13 +72,11 @@
             :review-mode="isReviewMode"
             :platform="platform"
           />
-        </template>
-
-        <template v-if="activeStep === CreatPrposalSteps.DataUsage">
+        </div>
+        <div v-show="activeStep === CreatPrposalSteps.DataUsage">
           <TypeOfUse v-model="proposalForm.userProject.typeOfUse" :review-mode="isReviewMode" :platform="platform" />
-        </template>
-
-        <template v-if="activeStep === CreatPrposalSteps.Variables">
+        </div>
+        <div v-show="activeStep === CreatPrposalSteps.Variables">
           <FdpgLabel
             required
             info="proposal.informationOnTheRequestedDataInfo"
@@ -95,9 +91,8 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
           />
-        </template>
-
-        <template v-if="activeStep === CreatPrposalSteps.ResearchProject">
+        </div>
+        <div v-show="activeStep === CreatPrposalSteps.ResearchProject">
           <ProjectDetails
             v-model="proposalForm.userProject.projectDetails"
             :review-mode="isReviewMode"
@@ -138,7 +133,7 @@
               </template>
             </el-button>
           </FdpgUpload>
-        </template>
+        </div>
       </el-form>
     </div>
 
@@ -460,11 +455,11 @@ const updateStepStatus = async () => {
     const isAttempted = stepAttempted.value.has(stepEnum)
 
     // Update the step status in layout store
-    layoutStore.updateStepStatus(stepEnum, isStepValid, isAttempted)
+    layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid, isAttempted)
   })
 }
 
-// Watch form validation state
+// Watch form validation state and invalid fields
 watch(
   () => formRef.value?.fields,
   async (newFields) => {
@@ -475,6 +470,25 @@ watch(
   { deep: true },
 )
 
+// Add validation on form validate event
+const onValidate = async (prop: FormItemProp, isValid: boolean) => {
+  await waitForValidation()
+
+  // Check which step the validated field belongs to
+  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
+    if (fields.some((fieldPath) => prop.toString().startsWith(fieldPath))) {
+      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+      const field = formRef.value?.fields.find((f) => f.prop === prop)
+      if (field) {
+        const isStepValid = field.validateState === 'success'
+        const isAttempted = stepAttempted.value.has(stepEnum)
+        layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid, isAttempted)
+      }
+    }
+  })
+}
+
+// Update handleSaveDraft to check all fields
 const handleSaveDraft = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -489,12 +503,26 @@ const handleSaveDraft = async () => {
   stepAttempted.value.add(layoutStore.activeStep)
 
   let invalidFields: ValidateFieldsError | undefined
-  await formRef.value?.validateField(
-    ['projectAbbreviation'],
-    (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-      invalidFields = invalidFieldsResult
-    },
-  )
+  await formRef.value?.validate((isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+    invalidFields = invalidFieldsResult
+  })
+
+  // Update step statuses based on validation results
+  if (invalidFields) {
+    Object.entries(stepFieldsMap).forEach(([step, fields]) => {
+      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+      const hasInvalidFields = fields.some((fieldPath) =>
+        Object.keys(invalidFields || {}).some((invalidField) => invalidField.startsWith(fieldPath)),
+      )
+      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, !hasInvalidFields, true)
+    })
+  } else {
+    // If no invalid fields, mark all steps as valid
+    Object.entries(stepFieldsMap).forEach(([step]) => {
+      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, true, true)
+    })
+  }
 
   if (invalidFields && Object.keys(invalidFields).length > 0) {
     raiseErrors(invalidFields)
@@ -523,10 +551,6 @@ const handleSaveDraft = async () => {
 
   await setUpPage()
   bypassDebounce.value = false
-}
-
-const onValidate = async () => {
-  await waitForValidation()
 }
 
 const authStore = useAuthStore()

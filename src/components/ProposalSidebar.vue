@@ -18,7 +18,7 @@
                 <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
               </template>
               <template #description>
-                <span class="step-status">{{ step.validation }}</span>
+                <span class="step-status">{{ JSON.stringify(step.validation) }}</span>
               </template>
             </el-step>
           </el-steps>
@@ -62,12 +62,15 @@ const isStepCompleted = (step: CreatPrposalSteps): boolean => {
 }
 
 // Method to get the status of a step
-const getStepStatus = (step: string): 'success' | 'process' | 'wait' => {
+const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' => {
   const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-  if (isStepCompleted(stepEnum)) {
+  const stepData = layoutStore.createProposalSteps.find((s) => s.step === stepEnum)
+
+  if (stepData?.validation === true) {
     return 'success'
-  }
-  if (activeTab.value === stepEnum) {
+  } else if (stepData?.validation === false) {
+    return 'error'
+  } else if (activeTab.value === stepEnum) {
     return 'process'
   }
   return 'wait'
@@ -85,17 +88,37 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' => {
 
 .el-step__head {
   .el-step__line {
-    border-color: $blue !important;
-    background-color: $blue !important;
+    border-color: $blue;
+    background-color: $blue;
+    color: $blue;
+    &.is-error {
+      background-color: $red-100 !important;
+      border-color: $red-100 !important;
+    }
   }
   .el-step__icon {
-    border: $blue 2px solid !important;
+    border: $blue 2px solid;
     color: $gray-900 !important;
   }
   &.is-process {
     .el-step__icon {
       background-color: $blue !important;
       color: $white !important;
+      /* border-color: $blue !important; */
+    }
+  }
+  &.is-error {
+    .el-step__icon {
+      background-color: $red-100 !important;
+      color: $white !important;
+      border-color: $red-100 !important;
+    }
+  }
+  &.is-success {
+    .el-step__icon {
+      background-color: $green !important;
+      color: $white !important;
+      border-color: $green !important;
     }
   }
 }
@@ -107,7 +130,7 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' => {
     }
   }
 }
-.el-step.is-vertical:has(.el-step__head.is-process) {
+.el-step.is-vertical.is-process {
   background-color: $gray-200;
 }
 

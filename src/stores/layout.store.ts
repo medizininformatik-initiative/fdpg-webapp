@@ -12,7 +12,7 @@ interface ILayoutStore {
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
-  validation: 'success' | 'process' | 'wait' | 'not-complete'
+  validation: boolean | null
 }
 
 export const useLayoutStore = defineStore('layout', {
@@ -21,13 +21,13 @@ export const useLayoutStore = defineStore('layout', {
     isSidebarVisible: false,
     lastDashboard: RouteName.Dashboard,
     createProposalSteps: [
-      { step: CreatPrposalSteps.DataSources, validation: 'wait' },
-      { step: CreatPrposalSteps.Variables, validation: 'wait' },
-      { step: CreatPrposalSteps.Casesohort, validation: 'wait' },
-      { step: CreatPrposalSteps.DataUsage, validation: 'wait' },
-      { step: CreatPrposalSteps.ProjectDetails, validation: 'wait' },
-      { step: CreatPrposalSteps.ProjectParticipants, validation: 'wait' },
-      { step: CreatPrposalSteps.ResearchProject, validation: 'wait' },
+      { step: CreatPrposalSteps.DataSources, validation: null },
+      { step: CreatPrposalSteps.Variables, validation: null },
+      { step: CreatPrposalSteps.Casesohort, validation: null },
+      { step: CreatPrposalSteps.DataUsage, validation: null },
+      { step: CreatPrposalSteps.ProjectDetails, validation: null },
+      { step: CreatPrposalSteps.ProjectParticipants, validation: null },
+      { step: CreatPrposalSteps.ResearchProject, validation: null },
     ],
     activeStep: CreatPrposalSteps.DataSources,
   }),
@@ -63,11 +63,11 @@ export const useLayoutStore = defineStore('layout', {
       const currentStep = this.createProposalSteps.find((s) => s.step === CreatPrposalSteps[step])
       if (currentStep) {
         if (valid) {
-          currentStep.validation = 'success'
+          currentStep.validation = true
         } else if (isAttempted) {
-          currentStep.validation = 'not-complete'
+          currentStep.validation = false
         } else {
-          currentStep.validation = 'process'
+          currentStep.validation = null
         }
       } else {
         console.error('Step not found')
