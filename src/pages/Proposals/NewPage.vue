@@ -226,6 +226,7 @@ const stepFieldsMap = {
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: ['requestedData'],
   [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
+  [CreatPrposalSteps.Casesohort]: [],
 }
 
 defineProps({
@@ -434,8 +435,6 @@ const handleSubmit = async () => {
   })
 }
 
-const stepAttempted = ref<Set<CreatPrposalSteps>>(new Set())
-
 const updateStepStatus = async () => {
   if (!formRef.value) return
 
@@ -452,23 +451,11 @@ const updateStepStatus = async () => {
     // Check if all fields in this step are valid
     const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
     const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-    const isAttempted = stepAttempted.value.has(stepEnum)
 
     // Update the step status in layout store
-    layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid, isAttempted)
+    layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
   })
 }
-
-// Watch form validation state and invalid fields
-watch(
-  () => formRef.value?.fields,
-  async (newFields) => {
-    if (newFields) {
-      await updateStepStatus()
-    }
-  },
-  { deep: true },
-)
 
 // Add validation on form validate event
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
@@ -481,8 +468,7 @@ const onValidate = async (prop: FormItemProp, isValid: boolean) => {
       const field = formRef.value?.fields.find((f) => f.prop === prop)
       if (field) {
         const isStepValid = field.validateState === 'success'
-        const isAttempted = stepAttempted.value.has(stepEnum)
-        layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid, isAttempted)
+        layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
       }
     }
   })
@@ -499,36 +485,26 @@ const handleSaveDraft = async () => {
   }
   bypassDebounce.value = true
 
-  // Mark current step as attempted
-  stepAttempted.value.add(layoutStore.activeStep)
+  // Validate all fields to update step statuses
+  await formRef.value?.validate(() => {})
+  await waitForValidation()
+  await updateStepStatus()
 
+  // First validate projectAbbreviation
   let invalidFields: ValidateFieldsError | undefined
-  await formRef.value?.validate((isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-    invalidFields = invalidFieldsResult
-  })
-
-  // Update step statuses based on validation results
-  if (invalidFields) {
-    Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-      const hasInvalidFields = fields.some((fieldPath) =>
-        Object.keys(invalidFields || {}).some((invalidField) => invalidField.startsWith(fieldPath)),
-      )
-      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, !hasInvalidFields, true)
-    })
-  } else {
-    // If no invalid fields, mark all steps as valid
-    Object.entries(stepFieldsMap).forEach(([step]) => {
-      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, true, true)
-    })
-  }
+  await formRef.value?.validateField(
+    ['projectAbbreviation'],
+    (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+      invalidFields = invalidFieldsResult
+    },
+  )
 
   if (invalidFields && Object.keys(invalidFields).length > 0) {
     raiseErrors(invalidFields)
     return
   }
 
+  // Only proceed with saving if projectAbbreviation is valid
   if (proposalId.value) {
     try {
       const saveResult = await proposalStore.updateProposal(proposalId.value, {

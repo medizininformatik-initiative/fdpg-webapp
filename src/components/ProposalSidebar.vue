@@ -97,7 +97,7 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
     }
   }
   .el-step__icon {
-    border: $blue 2px solid;
+    border: $blue 2px solid !important;
     color: $gray-900 !important;
   }
   &.is-process {

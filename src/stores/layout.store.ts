@@ -59,18 +59,10 @@ export const useLayoutStore = defineStore('layout', {
         this.activeStep = prevStep.step
       }
     },
-    updateStepStatus(step: keyof typeof CreatPrposalSteps, valid: boolean, isAttempted: boolean = false) {
+    updateStepStatus(step: keyof typeof CreatPrposalSteps, valid: boolean | null) {
       const currentStep = this.createProposalSteps.find((s) => s.step === CreatPrposalSteps[step])
       if (currentStep) {
-        if (valid) {
-          currentStep.validation = true
-        } else if (isAttempted) {
-          currentStep.validation = false
-        } else {
-          currentStep.validation = null
-        }
-      } else {
-        console.error('Step not found')
+        currentStep.validation = valid
       }
     },
   },
