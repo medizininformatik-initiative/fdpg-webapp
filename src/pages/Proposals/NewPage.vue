@@ -470,11 +470,17 @@ const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   Object.entries(stepFieldsMap).forEach(([step, fields]) => {
     if (fields.some((fieldPath) => prop.toString().startsWith(fieldPath))) {
       const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-      const field = formRef.value?.fields.find((f) => f.prop === prop)
-      if (field) {
-        const isStepValid = field.validateState === 'success'
-        layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
-      }
+
+      // Get all fields that belong to this step
+      const stepFields =
+        formRef.value?.fields.filter((field) =>
+          fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+        ) || []
+
+      // Check if all fields in this step are valid
+      const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
+
+      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
     }
   })
 }
