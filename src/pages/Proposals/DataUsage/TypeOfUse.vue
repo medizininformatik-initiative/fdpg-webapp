@@ -1,7 +1,7 @@
 <template>
-  <FdpgLabel required html-for="proposal.typeOfUse" size="medium" />
+  <FdpgLabel required html-for="proposal.typeOfUse" size="medium" :class="{ 'invalid-form': !isValid }" />
   <el-card class="form-group">
-    <FdpgFormItem prop="userProject.typeOfUse.usage">
+    <FdpgFormItem prop="typeOfUse.usage">
       <el-checkbox-group
         v-model="typeOfUseForm.usage"
         data-testId="typeOfUseForm.usage"
@@ -30,7 +30,7 @@
         />
       </dl>
 
-      <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
+      <FdpgFormItem prop="typeOfUse.dataPrivacyExtra">
         <FdpgLabel html-for="proposal.dataPrivacyExtra" />
         <FdpgTextEditor
           v-model="typeOfUseForm.dataPrivacyExtra"
@@ -56,11 +56,13 @@ import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { ITypeOfUse } from '@/types/proposal.types'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
+import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
+import type { ValidateFieldsError } from 'async-validator'
 
 const props = defineProps({
   modelValue: {
@@ -74,6 +76,11 @@ const props = defineProps({
   platform: {
     type: String as PropType<PlatformIdentifier>,
     required: true,
+  },
+  formRef: {
+    type: Object as PropType<FormInstance>,
+    required: false,
+    default: () => undefined,
   },
 })
 
@@ -111,6 +118,30 @@ const typeOfUseForm = useVModel(props, 'modelValue', emit)
 const { locale, t } = useI18n()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
+
+const checkIsFormValid = (invalidFields?: ValidateFieldsError): boolean => {
+  return Object.entries(invalidFields ?? {}).length === 0
+}
+
+const isValid = computed(() => {
+  let isValidForm = false
+  props.formRef?.validateField(['typeOfUse.usage', 'typeOfUse.dataPrivacyExtra'], (_, invalidFields) => {
+    isValidForm = checkIsFormValid(invalidFields)
+  })
+  return isValidForm
+})
+
+// Watch for changes in the form values to trigger validation
+watch(
+  () => typeOfUseForm.value,
+  () => {
+    if (props.formRef) {
+      props.formRef.validateField(['typeOfUse.usage', 'typeOfUse.dataPrivacyExtra'])
+    }
+  },
+  { deep: true },
+)
+
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {
@@ -124,6 +155,7 @@ onMounted(async () => {
   isInitialized.value = true
 })
 </script>
+
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
 
@@ -135,5 +167,9 @@ onMounted(async () => {
   border-style: solid;
   border-width: 1px;
   border-color: $gray-400;
+}
+
+.invalid-form {
+  color: var(--el-color-danger);
 }
 </style>

@@ -74,7 +74,12 @@
           />
         </div>
         <div v-show="activeStep === CreatPrposalSteps.DataUsage">
-          <TypeOfUse v-model="proposalForm.userProject.typeOfUse" :review-mode="isReviewMode" :platform="platform" />
+          <TypeOfUse
+            v-model="proposalForm.userProject.typeOfUse"
+            :review-mode="isReviewMode"
+            :platform="platform"
+            :form-ref="formRef"
+          />
         </div>
         <div v-show="activeStep === CreatPrposalSteps.Variables">
           <FdpgLabel
