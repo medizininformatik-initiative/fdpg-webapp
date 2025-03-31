@@ -15,10 +15,10 @@
               }"
             >
               <template #title>
-                <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
+                <span class="step-title">{{ $t(`sidebar.${getStepKey(step.step)}`) }}</span>
               </template>
               <template #description>
-                <span class="step-status">{{ JSON.stringify(step.validation) }}</span>
+                <span class="step-status">{{ $t(`sidebar.${getStepStatus(getStepKey(step.step))}`) }}</span>
               </template>
             </el-step>
           </el-steps>
@@ -32,9 +32,7 @@
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import { computed, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
 const layoutStore = useLayoutStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)

@@ -68,7 +68,11 @@
     "DataUsage": "Planned Data use",
     "ProjectDetails": "General Project Detail",
     "ProjectParticipants": "Project Participants",
-    "ResearchProject": "Details of the research project"
+    "ResearchProject": "Details of the research project",
+    "success": "FINISH",
+    "error": "OPEN REQUIRED FIELDS",
+    "wait": "PENDING",
+    "process": "PENDING"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",

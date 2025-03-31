@@ -7,7 +7,10 @@
     info="proposal.involvedCategoryInfo"
   />
   <el-card class="form-group">
-    <FdpgFormItem :prop="`${identifier}.participantCategory.category`" :rules="formRules.category">
+    <FdpgFormItem
+      :prop="`${identifier}.participantCategory.category`"
+      :rules="ParticipatingScientists ? formRules.category : undefined"
+    >
       <el-radio-group
         v-model="participantCategory.category"
         :data-testId="`${identifier}.participantCategory.category`"

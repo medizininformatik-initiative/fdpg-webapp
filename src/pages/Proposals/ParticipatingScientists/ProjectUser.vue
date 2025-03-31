@@ -4,6 +4,8 @@
       <el-row :gutter="20">
         <el-col :sm="24" :md="24">
           <FdpgFormItem prop="projectUser.projectUserType">
+            <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
+
             <el-radio-group
               v-model="projectUser.projectUserType"
               data-testId="projectUser.projectUserType"

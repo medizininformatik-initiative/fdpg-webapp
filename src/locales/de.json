@@ -68,7 +68,11 @@
     "DataUsage": "Geplante Datennutzung",
     "ProjectDetails": "Allgemeine Projektangaben",
     "ProjectParticipants": "Projektbeteiligte",
-    "ResearchProject": "Details zum Forschungsprojekt"
+    "ResearchProject": "Details zum Forschungsprojekt",
+    "success": "FERTIG",
+    "error": "OFFENE PFLICHTFELDER",
+    "wait": "AUSSTEHEND",
+    "process": "AUSSTEHEND"
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",

@@ -47,6 +47,9 @@ const value = computed<string | null>({
   set(val) {
     if (!val) {
       emit('update:modelValue', '')
+      if (props.formRef && props.fieldPath) {
+        props.formRef.validateField(props.fieldPath)
+      }
       return
     }
 
@@ -54,6 +57,9 @@ const value = computed<string | null>({
 
     if (cleanContent === '') {
       emit('update:modelValue', '')
+      if (props.formRef && props.fieldPath) {
+        props.formRef.validateField(props.fieldPath)
+      }
     } else {
       emit('update:modelValue', val)
     }

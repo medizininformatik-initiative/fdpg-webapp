@@ -3,7 +3,7 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button v-if="proposalId" type="primary" size="large" link @click="openDetails">
+        <el-button v-if="params.id" type="primary" size="large" link @click="openDetails">
           <i class="bi bi-info-square"></i>
         </el-button>
         <el-button
@@ -49,7 +49,6 @@
             :form-ref="formRef"
             :review-mode="isReviewMode"
           />
-          <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
           <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
 
           <FdpgLabel
@@ -213,7 +212,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ProjectApplicant from './ProjectApplicant.vue'
 import ProjectResponsibility from './ProjectResponsibility.vue'
-import ProjectUser from './ProjectUser.vue'
+import ProjectUser from './ParticipatingScientists/ProjectUser.vue'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import { CommentType, type ICommentDetail } from '@/types/comment.interface'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
@@ -292,16 +291,18 @@ const rules = ref<Record<string, any>>({
   participants: [
     /** Handled in component */
   ],
+  projectUser: {
+    projectUserType: [requiredValidationFunc('string')],
+  },
   userProject: {
     generalProjectInformation: {
       projectTitle: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-      desiredStartTime: [requiredValidationFunc(), startDateInPastValidationFunc()],
+      desiredStartTime: [requiredValidationFunc('date'), startDateInPastValidationFunc()],
       projectDuration: [requiredValidationFunc('number'), numberValidationFunc()],
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
     },
     feasibility: {
-      id: null,
       details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
     },
     projectDetails: {
@@ -334,7 +335,7 @@ const rules = ref<Record<string, any>>({
       desiredLocations: requiredValidationFunc(),
     },
     typeOfUse: {
-      usage: requiredValidationFunc(),
+      usage: requiredValidationFunc('array'),
       dataPrivacyExtra: [maxLengthValidationFunc(10000)],
     },
     informationOnRequestedBioSamples: {
@@ -477,8 +478,14 @@ const onValidate = async (prop: FormItemProp, isValid: boolean) => {
           fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
         ) || []
 
-      // Check if all fields in this step are valid
-      const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
+      const isStepValid =
+        stepFields.length > 0 &&
+        stepFields.every((field) => {
+          let validity
+          if (field.rules) validity = field.validateState == 'success'
+          else validity = field.validateState !== 'error'
+          return validity
+        })
 
       layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
     }
@@ -507,6 +514,9 @@ const handleSaveDraft = async () => {
     ['projectAbbreviation'],
     (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
       invalidFields = invalidFieldsResult
+      if (invalidFields) {
+        console.log('Invalid projectAbbreviation:', invalidFields)
+      }
     },
   )
 
@@ -700,6 +710,7 @@ onMounted(async () => {
       showErrorMessage()
     }
   }
+  layoutStore.resetSteps()
 
   const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
   const isEditable =

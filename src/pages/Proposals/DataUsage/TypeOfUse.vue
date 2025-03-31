@@ -1,7 +1,8 @@
 <template>
-  <FdpgLabel required html-for="proposal.typeOfUse" size="medium" :class="{ 'invalid-form': !isValid }" />
   <el-card class="form-group">
-    <FdpgFormItem prop="typeOfUse.usage">
+    <FdpgFormItem prop="userProject.typeOfUse.usage">
+      <FdpgLabel required html-for="proposal.typeOfUse" size="medium" />
+
       <el-checkbox-group
         v-model="typeOfUseForm.usage"
         data-testId="typeOfUseForm.usage"
@@ -30,7 +31,7 @@
         />
       </dl>
 
-      <FdpgFormItem prop="typeOfUse.dataPrivacyExtra">
+      <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
         <FdpgLabel html-for="proposal.dataPrivacyExtra" />
         <FdpgTextEditor
           v-model="typeOfUseForm.dataPrivacyExtra"
@@ -119,27 +120,15 @@ const { locale, t } = useI18n()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 
-const checkIsFormValid = (invalidFields?: ValidateFieldsError): boolean => {
-  return Object.entries(invalidFields ?? {}).length === 0
-}
-
-const isValid = computed(() => {
-  let isValidForm = false
-  props.formRef?.validateField(['typeOfUse.usage', 'typeOfUse.dataPrivacyExtra'], (_, invalidFields) => {
-    isValidForm = checkIsFormValid(invalidFields)
-  })
-  return isValidForm
-})
-
-// Watch for changes in the form values to trigger validation
+// Add watcher for usage changes
 watch(
-  () => typeOfUseForm.value,
+  () => typeOfUseForm.value.usage,
   () => {
     if (props.formRef) {
-      props.formRef.validateField(['typeOfUse.usage', 'typeOfUse.dataPrivacyExtra'])
+      props.formRef.validateField('userProject.typeOfUse.usage')
     }
   },
-  { deep: true },
+  { immediate: true },
 )
 
 onMounted(async () => {

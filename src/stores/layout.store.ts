@@ -65,5 +65,11 @@ export const useLayoutStore = defineStore('layout', {
         currentStep.validation = valid
       }
     },
+    resetSteps() {
+      this.createProposalSteps.forEach((step) => {
+        step.validation = null
+      })
+      this.activeStep = CreatPrposalSteps.DataSources
+    },
   },
 })
