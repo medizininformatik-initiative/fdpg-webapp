@@ -3,10 +3,14 @@
     <h2 class="section-title">{{ $t('proposal.todosInTheProject') }} {{ `(${projectTodos.length})` }}</h2>
     <div v-if="projectTodos.length > 0" class="todos">
       <template v-for="(projectTodo, index) in projectTodos" :key="`todo-${index}`">
-        <ProjectTodoItem v-if="projectTodo.type === 'comment'" :is-disabled="isDisabled" :project-todo="projectTodo" />
+        <ProjectTodoItem
+          v-if="projectTodo.type === 'comment'"
+          :is-disabled="isDisabled || projectTodo.readonly"
+          :project-todo="projectTodo"
+        />
         <ProjectTodoLargeItem
           v-else
-          :is-disabled="isDisabled"
+          :is-disabled="isDisabled || projectTodo.readonly"
           :has-actions="projectTodo.type === 'decision' || projectTodo.type === 'condition-check'"
           :project-todo="projectTodo"
         ></ProjectTodoLargeItem>
@@ -21,7 +25,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { PropType } from 'vue'
+import { type PropType } from 'vue'
 import ProjectTodoItem from './ProjectTodoItem.vue'
 import ProjectTodoLargeItem from './ProjectTodoLargeItem.vue'
 
@@ -32,6 +36,7 @@ defineProps({
   },
   isDisabled: {
     type: Boolean,
+    required: false,
     default: false,
   },
 })

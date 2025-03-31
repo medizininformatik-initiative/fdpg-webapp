@@ -5,6 +5,7 @@
     :placeholder="$t(placeholder)"
     @blur="handleBlur"
     @focus="handleFocus"
+    :disabled="readonly"
   />
 </template>
 
@@ -13,6 +14,11 @@ defineProps({
   placeholder: {
     type: String,
     default: '',
+  },
+  readonly: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 })
 

@@ -61,7 +61,14 @@
     "dashboard": "Dashboard",
     "contact": "Kontakt",
     "privacyNotice": "Datenschutz",
-    "terms": "Nutzungsbedingungen"
+    "terms": "Nutzungsbedingungen",
+    "DataSources": "Auswahl der Datenquelle",
+    "Variables": "Auswahl der Variablen",
+    "Casesohort": "Auswahl der Fälle/Kohorte/Patienten",
+    "DataUsage": "Geplante Datennutzung",
+    "ProjectDetails": "Allgemeine Projektangaben",
+    "ProjectParticipants": "Projektbeteiligte",
+    "ResearchProject": "Details zum Forschungsprojekt"
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
@@ -93,7 +100,13 @@
     "PROPOSAL_LOCK_FALSE": "Forschungsprojekt wurde vom FDPG entsperrt",
     "FDPG_LOCATION_VOTE_REVERTED": "Votum vom Standort {location} wurde vom FDPG zurückgesetzt",
     "DIZ_ACCEPT_WITH_CONDITIONS": "Forschungsprojekt wurde vom DIZ unter Auflagen genehmigt",
-    "DIZ_ACCEPT_WITHOUT_CONDITIONS": "Forschungsprojekt wurde vom DIZ genehmigt"
+    "DIZ_ACCEPT_WITHOUT_CONDITIONS": "Forschungsprojekt wurde vom DIZ genehmigt",
+    "FDPG_DEADLINE_CHANGE": "Frist für den FDPG-Check wurde verändert",
+    "LOCATION_CHECK_DEADLINE_CHANGE": "Frist für Location Check wurde verändert",
+    "LOCATION_CONTRACTING_DEADLINE_CHANGE": "Frist für Location Contracting wurde verändert",
+    "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Frist für Datenlieferung wurde verändert",
+    "DATA_CORRUPTED_DEADLINE_CHANGE": "Frist für Corrupted Data wurde verändert",
+    "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert"
   },
   "header": {
     "login": "Anmelden",
@@ -102,7 +115,8 @@
     "searchForProposalsProjectsScientists": "Suche nach Anträgen/Projekten/Antragsteller",
     "goToProfile": "Profil",
     "english": "EN",
-    "german": "DE"
+    "german": "DE",
+    "toDashboard": "Zurück zum Dashboard"
   },
   "dashboard": {
     "researchRequestForDataDelivery": "Forschungsantrag auf Datenlieferung",
@@ -257,7 +271,7 @@
     "dataPrivacy": "Datenschutzhinweise",
     "typeOfUse_dataPrivacy": "Datenschutzhinweise je Nutzungstyp",
     "dataPrivacyExtra": "Ergänzende Hinweise der Antragstellenden und Angaben zur gewünschten Pseudonymisierung der Datensätze",
-    "dataPrivacyExtraPlaceholder": "Bitte fügen Sie ergänzende Datenschutzhinweise hinzu. Für die Pseudonymisierung ist anzugeben: Sollten Datensätze ein und derselben PatientIn unabhängig von der behandelnden Einrichtung dasselbe Pseudonym bekommen? Sollen Datensätze eines Standorts immer als zusammengehörig erkennbar sein (pseudonyme Standortvariable benötigt)? Soll die Herkunftsstandorte der Datensätze namentlich erkennbar sein (namentliche Standortvariable benötigt)?",
+    "dataPrivacyExtraPlaceholder": "Zugriff auf die Daten, auf benötigte Personen einschränken, sicherstellen, dass Daten nur zu beantragten\nZwecken verwendet werden, wie werden die Daten nach Widerruf oder nach Projektabschluss sicher\ngelöscht?",
     "typeOfUse": "Art der Nutzung",
     "typeOfUse_DISTRIBUTED": "Analysen finden verteilt statt",
     "typeOfUse_DISTRIBUTED_Info": "Analysen finden verteilt statt",
@@ -594,7 +608,16 @@
     "External-Lab": "Externes Labor eingebunden",
     "out-EU": "Internationale Beteiligte (non-EU)",
     "listOfNoMarked": "Diese Elemente sind als Nein gekennzeichnet.",
-    "internalCheckNotes": "Interne Kontrollnotizen"
+    "internalCheckNotes": "Interne Kontrollnotizen",
+    "ASAP": "so schnell wie möglich",
+    "otherTime": "ein andermal",
+    "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",
+    "literature": "Literatur",
+    "literaturePlaceholder": "Angabe aller in 5 Projektdetails gemachten Literaturreferenzen",
+    "biometricPlaceholder": "Analyseplan (Vorgehen bei der Fallzahlschätzung und benötigte Effektstärke (Power))",
+    "biometric": "Biometrie",
+    "nextStep": "Nächster Schritt",
+    "prevStep": "Vorheriger Schritt"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

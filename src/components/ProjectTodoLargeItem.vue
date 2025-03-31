@@ -21,7 +21,7 @@
           :disabled="isDisabled || positiveChildDisableButton"
           class="positive"
           :data-testId="projectTodo.testId + '__true'"
-          @click="projectTodo.action(true, uacCondition?.conditionReasoning)"
+          @click="projectTodo.action(true, uacCondition?.dataAmount, uacCondition?.conditionReasoning)"
         >
           <i class="el-icon-check" aria-hidden="true" />
         </el-button>
@@ -39,7 +39,7 @@
     </div>
     <div v-if="projectTodo.type === 'additional-location-information' && projectTodo.additionalInformation">
       <ProjectTodosAdditionalLocationInformation
-        :is-disabled="isDisabled || projectTodo.readonly"
+        :is-disabled="isDisabled"
         :additional-information="projectTodo.additionalInformation"
         @submit="projectTodo.action"
       />
@@ -52,8 +52,6 @@ import type { IProjectTodo } from '@/types/project-todo.interface'
 import { computed, ref, type PropType } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
-
-const uacCondition = computed(() => props.projectTodo.condition)
 
 const props = defineProps({
   projectTodo: {
@@ -69,6 +67,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const uacCondition = computed(() => props.projectTodo.condition)
 
 const positiveChildDisableButton = ref<boolean>(props.isDisabled)
 const negativeChildDisableButton = ref<boolean>(props.isDisabled)

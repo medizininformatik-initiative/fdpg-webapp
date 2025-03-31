@@ -61,7 +61,14 @@
     "dashboard": "Dashboard",
     "contact": "Contact",
     "privacyNotice": "Privacy",
-    "terms": "TERMS"
+    "terms": "TERMS",
+    "DataSources": "Select Data sources",
+    "Variables": "Select the Variables",
+    "Casesohort": "Select the Cases/Cohorts/Patient",
+    "DataUsage": "Planned Data use",
+    "ProjectDetails": "General Project Detail",
+    "ProjectParticipants": "Project Participants",
+    "ResearchProject": "Details of the research project"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -93,7 +100,13 @@
     "PROPOSAL_LOCK_FALSE": "Research project was unlocked by FDPG",
     "FDPG_LOCATION_VOTE_REVERTED": "Vote from location {location} was reset by FDPG",
     "DIZ_ACCEPT_WITH_CONDITIONS": "Research project approved by DIZ under conditions",
-    "DIZ_ACCEPT_WITHOUT_CONDITIONS": "Research project approved by DIZ"
+    "DIZ_ACCEPT_WITHOUT_CONDITIONS": "Research project approved by DIZ",
+    "FDPG_DEADLINE_CHANGE": "Deadline for FDPG-Check was changed",
+    "LOCATION_CHECK_DEADLINE_CHANGE": "Deadline for Location Check was changed",
+    "LOCATION_CONTRACTING_DEADLINE_CHANGE": "Deadline for Location Contracting  was changed",
+    "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Deadline for data delivery was changed",
+    "DATA_CORRUPTED_DEADLINE_CHANGE": "Deadline for Corrupted Data was changed",
+    "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed"
   },
   "header": {
     "login": "Login",
@@ -102,7 +115,8 @@
     "searchForProposalsProjectsScientists": "Search for proposals/projects/scientists",
     "goToProfile": "Profile",
     "english": "EN",
-    "german": "DE"
+    "german": "DE",
+    "toDashboard": "To Dashboard"
   },
   "dashboard": {
     "researchRequestForDataDelivery": "Research request for data delivery",
@@ -257,7 +271,7 @@
     "dataPrivacy": "Privacy notices",
     "typeOfUse_dataPrivacy": "Privacy notices per type of use",
     "dataPrivacyExtra": "Supplementary information from the applicants and information on the desired pseudonymisation of the data records",
-    "dataPrivacyExtraPlaceholder": "Please add additional data protection information. For pseudonymisation, please specify: Should data records of one and the same patient be given the same pseudonym regardless of the treating institution? Should data records of a site always be recognisable as belonging together (pseudonymous site variable required)? Should the location of origin of the data records be recognisable by name (named location variable required)?",
+    "dataPrivacyExtraPlaceholder": "Restrict access to the data to required persons, ensure that data is only used for requested purposes, how is the data securely deleted after revocation or after project completion?",
     "typeOfUse": "Type of use",
     "typeOfUse_DISTRIBUTED": "Analyzes are distributed",
     "typeOfUse_DISTRIBUTED_Info": "Analyzes are distributed",
@@ -594,7 +608,16 @@
     "External-Lab": "extern laboratory involved",
     "out-EU": "outside EU",
     "listOfNoMarked": "These items are marked as No",
-    "internalCheckNotes": "Internal Check Notes"
+    "internalCheckNotes": "Internal Check Notes",
+    "ASAP": "As soon as possible",
+    "otherTime": "other time",
+    "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",
+    "literature": "Literatur",
+    "literaturePlaceholder": "Specification of all literature references made in 5 project details.",
+    "biometricPlaceholder": "Analysis plan (procedure for case number estimation and required effect size (power))",
+    "biometric": "biometric",
+    "nextStep": "Next Page",
+    "prevStep": "Previous Page"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

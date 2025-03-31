@@ -38,6 +38,7 @@ const props = defineProps({
   },
   isDisabled: {
     type: Boolean,
+    required: false,
     default: false,
   },
 })
