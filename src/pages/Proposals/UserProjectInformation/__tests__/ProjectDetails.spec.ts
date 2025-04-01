@@ -2,7 +2,7 @@ import { mockProposal } from '@/mocks/proposal.mock'
 import type { IProjectDetails } from '@/types/proposal.types'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
-import ProjectDetails from '../ProjectDetails.vue'
+import ProjectDetails from '../../ResearchProject/ProjectDetails.vue'
 import { Department } from '@/types/department.enum'
 
 vi.mock('vue-i18n', () => ({

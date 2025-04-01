@@ -150,7 +150,7 @@ describe('UserProjectInformation.vue', () => {
 
     it('navigates to the detail page on detail button press', async () => {
       const router = useRouter()
-      const button = getButtonByText('proposal.projectDetails')
+      const button = wrapper.find('[data-test-id="proposal.projectDetails"]')
       await button.trigger('click')
       expect(router.push).toHaveBeenCalledWith({ name: RouteName.ProposalDetails, params: { id: proposal._id } })
     })
@@ -190,7 +190,7 @@ describe('UserProjectInformation.vue', () => {
             ...proposal,
             projectAbbreviation: 'newProjectAbbreviation',
           })
-          const button = getButtonByText('proposal.saveDraft')
+          const button = wrapper.find('[data-test-id="proposal.saveDraft"]')
           await button.trigger('click')
         })
 

@@ -3,12 +3,20 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button v-if="params.id" type="primary" size="large" link @click="openDetails">
+        <el-button
+          v-if="params.id"
+          type="primary"
+          size="large"
+          data-test-id="proposal.projectDetails"
+          link
+          @click="openDetails"
+        >
           <i class="bi bi-info-square"></i>
         </el-button>
         <el-button
           v-if="!proposalStore.currentProposal || !isReviewMode"
           @click="handleSaveDraft"
+          data-test-id="proposal.saveDraft"
           type="primary"
           size="large"
           link
