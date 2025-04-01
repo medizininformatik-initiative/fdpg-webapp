@@ -18,10 +18,7 @@
       </el-checkbox-group>
     </FdpgFormItem>
 
-    <div
-      v-if="modelValue.usage && modelValue.usage.length > 0 && configStore.dataPrivacy[props.platform]"
-      class="data-privacy-wrapper"
-    >
+    <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
       <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
       <dl>
         <TypeOfUseDataPrivacyItem
@@ -60,7 +57,7 @@ import type { ITypeOfUse } from '@/types/proposal.types'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
-import { onMounted } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
@@ -78,6 +75,24 @@ const props = defineProps({
     type: String as PropType<PlatformIdentifier>,
     required: true,
   },
+})
+
+const isInitialized = ref(false)
+
+const shouldDisplayDataPrivacyTextField = computed(() => {
+  if (!isInitialized.value) {
+    return false
+  }
+
+  return (
+    !!props.modelValue?.usage && props.modelValue?.usage?.length > 0 && !!configStore?.dataPrivacy?.[props.platform]
+  )
+})
+
+watch(shouldDisplayDataPrivacyTextField, (newValue) => {
+  if (!newValue && isInitialized.value) {
+    typeOfUseForm.value.dataPrivacyExtra = undefined
+  }
 })
 
 const options = Object.keys(ProposalTypeOfUse).map(function (option) {
@@ -105,6 +120,8 @@ onMounted(async () => {
       console.log(error)
     }
   }
+
+  isInitialized.value = true
 })
 </script>
 <style lang="scss" scoped>
