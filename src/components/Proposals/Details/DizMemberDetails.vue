@@ -269,7 +269,6 @@ const getCheckContractTodo = (): IProjectTodo[] => {
     const [uacVote] = currentProposal.uacApprovals
 
     if (!conditionDraft && !conditionalApproval && !uacVote) {
-      showErrorMessage()
       return []
     }
 
@@ -368,6 +367,10 @@ const getApproveTodo = (): IProjectTodo[] => {
 const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
   const proposal = proposalStore.currentProposal
   if (!proposal) {
+    return []
+  }
+
+  if (proposal.requestedButExcludedLocations.length > 0) {
     return []
   }
 
