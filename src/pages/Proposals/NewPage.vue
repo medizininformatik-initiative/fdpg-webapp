@@ -3,20 +3,13 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button
-          v-if="params.id"
-          type="primary"
-          size="large"
-          data-test-id="proposal.projectDetails"
-          link
-          @click="openDetails"
-        >
+        <el-button type="primary" size="large" data-test-id="projectDetails" link @click="openDetails">
           <i class="bi bi-info-square"></i>
         </el-button>
         <el-button
           v-if="!proposalStore.currentProposal || !isReviewMode"
           @click="handleSaveDraft"
-          data-test-id="proposal.saveDraft"
+          data-test-id="saveDraft"
           type="primary"
           size="large"
           link
@@ -34,7 +27,7 @@
                 <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
                 <FdpgInput
                   v-model="proposalForm.projectAbbreviation"
-                  data-testId="proposalForm.projectAbbreviation"
+                  data-test-id="proposalForm.projectAbbreviation"
                   placeholder="proposal.egWestStorm"
                   :disabled="isReviewMode"
                 />
