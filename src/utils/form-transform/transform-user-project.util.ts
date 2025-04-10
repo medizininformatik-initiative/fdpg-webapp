@@ -24,6 +24,7 @@ const transformProjectDetails = (projectDetails?: DeepPartial<IProjectDetails>):
     _id: projectDetails?._id,
     isDone: projectDetails?.isDone ?? false,
     simpleProjectDescription: transformEmptyStringToUndefined(projectDetails?.simpleProjectDescription),
+    executiveSummaryUac: transformEmptyStringToUndefined(projectDetails?.executiveSummaryUac),
     department: projectDetails?.department ?? [],
     scientificBackground: transformEmptyStringToUndefined(projectDetails?.scientificBackground),
     hypothesisAndQuestionProjectGoals: transformEmptyStringToUndefined(
@@ -61,6 +62,7 @@ const transformGeneralProjectInformation = (
     isDone: generalProjectInformation?.isDone ?? false,
     projectTitle: transformEmptyStringToUndefined(generalProjectInformation?.projectTitle),
     desiredStartTime: transformEmptyStringToUndefined(generalProjectInformation?.desiredStartTime),
+    desiredStartTimeType: generalProjectInformation?.desiredStartTimeType,
     projectDuration: generalProjectInformation?.projectDuration,
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),

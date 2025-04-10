@@ -35,6 +35,46 @@
             </el-col>
           </el-row>
         </div>
+
+        <div v-show="activeStep === CreatPrposalSteps.Variables">
+          <FdpgLabel
+            required
+            info="proposal.informationOnTheRequestedDataInfo"
+            size="large"
+            html-for="proposal.informationOnTheRequestedData"
+          />
+          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
+          <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
+          <InformationOnBioSample
+            v-if="hasBiosamples"
+            v-model="proposalForm.userProject.informationOnRequestedBioSamples"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
+          />
+        </div>
+
+        <div v-show="activeStep === CreatPrposalSteps.Casesohort"></div>
+
+        <div v-show="activeStep === CreatPrposalSteps.DataUsage">
+          <TypeOfUse
+            v-model="proposalForm.userProject.typeOfUse"
+            :review-mode="isReviewMode"
+            :platform="platform"
+            :form-ref="formRef"
+          />
+        </div>
+
+        <div v-show="activeStep === CreatPrposalSteps.ProjectDetails">
+          <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
+          <UserProjectInformation
+            v-model="proposalForm.userProject"
+            :form-ref="formRef"
+            :file-list="fileList"
+            :review-mode="isReviewMode"
+            :platform="platform"
+          />
+        </div>
+
         <div v-show="activeStep === CreatPrposalSteps.ProjectParticipants">
           <FdpgLabel size="large" html-for="proposal.applicant" />
           <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
@@ -63,40 +103,7 @@
             :review-mode="isReviewMode"
           />
         </div>
-        <div v-show="activeStep === CreatPrposalSteps.ProjectDetails">
-          <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
-          <UserProjectInformation
-            v-model="proposalForm.userProject"
-            :form-ref="formRef"
-            :file-list="fileList"
-            :review-mode="isReviewMode"
-            :platform="platform"
-          />
-        </div>
-        <div v-show="activeStep === CreatPrposalSteps.DataUsage">
-          <TypeOfUse
-            v-model="proposalForm.userProject.typeOfUse"
-            :review-mode="isReviewMode"
-            :platform="platform"
-            :form-ref="formRef"
-          />
-        </div>
-        <div v-show="activeStep === CreatPrposalSteps.Variables">
-          <FdpgLabel
-            required
-            info="proposal.informationOnTheRequestedDataInfo"
-            size="large"
-            html-for="proposal.informationOnTheRequestedData"
-          />
-          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
-          <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
-          <InformationOnBioSample
-            v-if="hasBiosamples"
-            v-model="proposalForm.userProject.informationOnRequestedBioSamples"
-            :review-mode="isReviewMode"
-            :form-ref="formRef"
-          />
-        </div>
+
         <div v-show="activeStep === CreatPrposalSteps.ResearchProject">
           <ProjectDetails
             v-model="proposalForm.userProject.projectDetails"
@@ -257,6 +264,10 @@ const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
 )
 const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
+const desiredStartTimeType = computed(
+  () => proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later',
+)
+
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
@@ -298,10 +309,35 @@ const rules = ref<Record<string, any>>({
   userProject: {
     generalProjectInformation: {
       projectTitle: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-      desiredStartTime: [requiredValidationFunc('date'), startDateInPastValidationFunc()],
+      desiredStartTime: [
+        {
+          validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+            const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
+            if (isLater) {
+              if (!value) {
+                callback(new Error(t('general.requiredField')))
+              } else {
+                // Check if date is in the past
+                const selectedDate = new Date(value)
+                const today = new Date()
+                today.setHours(0, 0, 0, 0)
+                if (selectedDate < today) {
+                  callback(new Error(t('general.startDateInPast')))
+                } else {
+                  callback()
+                }
+              }
+            } else {
+              callback()
+            }
+          },
+          trigger: ['blur', 'change'],
+        },
+      ],
       projectDuration: [requiredValidationFunc('number'), numberValidationFunc()],
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
+      desiredStartTimeType: [requiredValidationFunc('string')],
     },
     feasibility: {
       details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
@@ -515,9 +551,6 @@ const handleSaveDraft = async () => {
     ['projectAbbreviation'],
     (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
       invalidFields = invalidFieldsResult
-      if (invalidFields) {
-        console.log('Invalid projectAbbreviation:', invalidFields)
-      }
     },
   )
 
@@ -713,7 +746,10 @@ onMounted(async () => {
   }
   layoutStore.resetSteps()
 
-  const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
+  const isDateDefined =
+    proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
+      ? proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
+      : true
   const isEditable =
     proposalStore.currentProposal?.status === ProposalStatus.Draft ||
     proposalStore.currentProposal?.status === ProposalStatus.Rework

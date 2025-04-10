@@ -110,6 +110,7 @@ export interface IGeneralProjectInformation extends WithIdAndIsDone {
   projectDuration: number | undefined
   projectFunding: string
   fundingReferenceNumber: string
+  desiredStartTimeType: string | undefined
 }
 
 export interface IProjectDetails extends WithIdAndIsDone {
@@ -118,6 +119,7 @@ export interface IProjectDetails extends WithIdAndIsDone {
   scientificBackground: string
   hypothesisAndQuestionProjectGoals: string
   materialAndMethods: string
+  executiveSummaryUac: string
 }
 
 export interface IEthicVote extends WithIdAndIsDone {

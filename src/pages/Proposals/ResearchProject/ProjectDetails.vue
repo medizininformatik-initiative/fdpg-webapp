@@ -14,6 +14,17 @@
             field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
+        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
+          <FdpgLabel html-for="proposal.executiveSummaryUac" />
+          <FdpgtextEditor
+            v-model="projectDetailsForm.executiveSummaryUac"
+            data-testId="projectDetailsForm.executiveSummaryUac"
+            :placeholder="t('proposal.describeTheProject')"
+            :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.executiveSummaryUac"
+          />
+        </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.department">
