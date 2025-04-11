@@ -45,6 +45,23 @@
           />
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
           <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
+
+          <FdpgFormItem class="form-label-mb-6">
+            <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
+
+            <el-checkbox-group
+              v-model="proposalForm.userProject.typeOfUse.usage"
+              data-testId="typeOfUseForm.usage"
+              :disabled="isReviewMode"
+            >
+              <FdpgCheckbox
+                value="BIOSAMPLE"
+                label="proposal.typeOfUse_BIOSAMPLE"
+                info="proposal.typeOfUse_BIOSAMPLE_Info"
+              />
+            </el-checkbox-group>
+          </FdpgFormItem>
+
           <InformationOnBioSample
             v-if="hasBiosamples"
             v-model="proposalForm.userProject.informationOnRequestedBioSamples"
@@ -109,6 +126,7 @@
             v-model="proposalForm.userProject.projectDetails"
             :review-mode="isReviewMode"
             :form-ref="formRef"
+            :proposalId="proposalId"
           />
           <EthicVote v-model="proposalForm.userProject.ethicVote" :review-mode="isReviewMode" :form-ref="formRef" />
           <FdpgLabel html-for="" size="large">{{
@@ -234,7 +252,11 @@ import InformationOnBioSample from './Variables/InformationOnBioSample/Informati
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
-  [CreatPrposalSteps.ProjectDetails]: ['userProject.generalProjectInformation', 'userProject.feasibility'],
+  [CreatPrposalSteps.ProjectDetails]: [
+    'userProject.generalProjectInformation',
+    'userProject.feasibility',
+    'userProject.plannedPublication',
+  ],
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: ['requestedData'],
   [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
@@ -800,7 +822,9 @@ onMounted(async () => {
   .abbreviation {
     margin-bottom: 53px;
   }
-
+  .form-label-mb-6 {
+    margin-bottom: 6rem;
+  }
   .form-group-wrapper {
     padding: 20px;
     border-radius: 10px;

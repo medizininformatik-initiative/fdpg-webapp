@@ -1,46 +1,80 @@
 <template>
   <el-card class="form-group">
-    <FdpgFormItem prop="userProject.typeOfUse.usage">
-      <FdpgLabel required html-for="proposal.typeOfUse" size="medium" />
+    <el-row>
+      <el-col :sm="24">
+        <FdpgFormItem prop="userProject.typeOfUse.usage">
+          <FdpgLabel required html-for="proposal.typeOfUse" size="medium" />
 
-      <el-checkbox-group
-        v-model="typeOfUseForm.usage"
-        data-testId="typeOfUseForm.usage"
-        :disabled="reviewMode || typeOfUseForm.isDone"
-      >
-        <FdpgCheckbox
-          v-for="option in options"
-          :key="`checklist-option-${option.value}`"
-          :value="option.value"
-          :label="'proposal.typeOfUse_' + option.value"
-          :info="option.info"
-          test-id-extension="__typeOfUseForm.usage"
-        />
-      </el-checkbox-group>
-    </FdpgFormItem>
+          <el-checkbox-group
+            v-model="typeOfUseForm.usage"
+            data-testId="typeOfUseForm.usage"
+            :disabled="reviewMode || typeOfUseForm.isDone"
+          >
+            <FdpgCheckbox
+              v-for="option in options"
+              :key="`checklist-option-${option.value}`"
+              :value="option.value"
+              :label="'proposal.typeOfUse_' + option.value"
+              :info="option.info"
+              test-id-extension="__typeOfUseForm.usage"
+              :disabled="option.value === ProposalTypeOfUse.Biosample"
+            />
+          </el-checkbox-group>
+        </FdpgFormItem>
 
-    <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
-      <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
-      <dl>
-        <TypeOfUseDataPrivacyItem
-          v-for="usage in modelValue.usage"
-          :key="usage"
-          class="privacy-note"
-          :text="configStore.dataPrivacy[props.platform]?.messages[usage].text[locale]"
-          :headline="configStore.dataPrivacy[props.platform]?.messages[usage].headline[locale]"
-        />
-      </dl>
+        <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
+          <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
+          <dl>
+            <TypeOfUseDataPrivacyItem
+              v-for="usage in modelValue.usage"
+              :key="usage"
+              class="privacy-note"
+              :text="configStore.dataPrivacy[props.platform]?.messages[usage].text[locale as 'en' | 'de'] ?? ''"
+              :headline="configStore.dataPrivacy[props.platform]?.messages[usage].headline[locale as 'en' | 'de'] ?? ''"
+            />
+          </dl>
 
-      <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
-        <FdpgLabel html-for="proposal.dataPrivacyExtra" />
-        <FdpgTextEditor
-          v-model="typeOfUseForm.dataPrivacyExtra"
-          data-testId="typeOfUseForm.dataPrivacyExtra"
-          :placeholder="t('proposal.dataPrivacyExtraPlaceholder')"
-          :disabled="reviewMode || typeOfUseForm.isDone"
-        />
-      </FdpgFormItem>
-    </div>
+          <FdpgFormItem prop="userProject.typeOfUse.dataPrivacyExtra">
+            <FdpgLabel html-for="proposal.dataPrivacyExtra" />
+            <FdpgTextEditor
+              v-model="typeOfUseForm.dataPrivacyExtra"
+              data-testId="typeOfUseForm.dataPrivacyExtra"
+              :placeholder="t('proposal.dataPrivacyExtraPlaceholder')"
+              :disabled="reviewMode || typeOfUseForm.isDone"
+            />
+          </FdpgFormItem>
+        </div>
+      </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem :prop="`userProject.typeOfUse.targetFormat`" :disabled="reviewMode || typeOfUseForm.isDone">
+          <FdpgLabel html-for="proposal.targetFormat" size="medium" />
+          <el-radio-group
+            v-model="typeOfUseForm.targetFormat"
+            data-testId="typeOfUseForm.usage"
+            :disabled="reviewMode || typeOfUseForm.isDone"
+          >
+            <FdpgRadio
+              v-for="option in ['CSV', 'FHIR']"
+              :value="option"
+              :label="option"
+              test-id-extension="__typeOfUseForm.targetFormat"
+            />
+          </el-radio-group>
+        </FdpgFormItem>
+
+        <FdpgFormItem :prop="`userProject.typeOfUse.targetFormatOther`" :disabled="reviewMode || typeOfUseForm.isDone">
+          <FdpgLabel html-for="proposal.targetFormatOther" size="small" />
+          <FdpgInput
+            v-model="typeOfUseForm.targetFormatOther"
+            data-testId="typeOfUseForm.targetFormatOther"
+            placeholder="proposal.targetFormatOtherPlaceholder"
+            :disabled="reviewMode || typeOfUseForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.typeOfUse.targetFormatDetails"
+          />
+        </FdpgFormItem>
+      </el-col>
+    </el-row>
   </el-card>
 
   <TaskViewer :object-id="typeOfUseForm._id" />
@@ -63,8 +97,7 @@ import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import TypeOfUseDataPrivacyItem from './TypeOfUseDataPrivacyItem.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
-import type { ValidateFieldsError } from 'async-validator'
-
+import FdpgInput from '@/components/FdpgInput.vue'
 const props = defineProps({
   modelValue: {
     type: Object as PropType<ITypeOfUse>,
@@ -116,7 +149,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const typeOfUseForm = useVModel(props, 'modelValue', emit)
 
-const { locale, t } = useI18n()
+const { locale, t } = useI18n<{ locale: 'en' | 'de' }>()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 

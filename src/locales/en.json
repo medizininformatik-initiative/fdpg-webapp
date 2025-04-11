@@ -621,7 +621,11 @@
     "biometricPlaceholder": "Analysis plan (procedure for case number estimation and required effect size (power))",
     "biometric": "biometric",
     "nextStep": "Next Page",
-    "prevStep": "Previous Page"
+    "prevStep": "Previous Page",
+    "additionalDocument": "Additional Information",
+    "targetFormatOtherPlaceholder": "Click or tap here to enter text.",
+    "targetFormatOther": "More information",
+    "targetFormat": "Information about the target format"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

@@ -120,6 +120,8 @@ export interface IProjectDetails extends WithIdAndIsDone {
   hypothesisAndQuestionProjectGoals: string
   materialAndMethods: string
   executiveSummaryUac: string
+  literature: string
+  biometric: string
 }
 
 export interface IEthicVote extends WithIdAndIsDone {
@@ -184,6 +186,8 @@ export interface IAddressees extends WithIdAndIsDone {
 export interface ITypeOfUse extends WithIdAndIsDone {
   usage: ProposalTypeOfUse[]
   dataPrivacyExtra?: string
+  targetFormat: string
+  targetFormatOther: string
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {

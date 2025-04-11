@@ -621,7 +621,11 @@
     "biometricPlaceholder": "Analyseplan (Vorgehen bei der Fallzahlschätzung und benötigte Effektstärke (Power))",
     "biometric": "Biometrie",
     "nextStep": "Nächster Schritt",
-    "prevStep": "Vorheriger Schritt"
+    "prevStep": "Vorheriger Schritt",
+    "additionalDocument": "Zusätzliche Informationen",
+    "targetFormatOtherPlaceholder": "Klicken oder tippen Sie hier, um Text einzugeben.",
+    "targetFormatOther": "Weitere Angaben",
+    "targetFormat": "Angaben zum Zielformat"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

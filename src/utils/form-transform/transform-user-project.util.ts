@@ -31,6 +31,8 @@ const transformProjectDetails = (projectDetails?: DeepPartial<IProjectDetails>):
       projectDetails?.hypothesisAndQuestionProjectGoals,
     ),
     materialAndMethods: transformEmptyStringToUndefined(projectDetails?.materialAndMethods),
+    literature: transformEmptyStringToUndefined(projectDetails?.literature),
+    biometric: transformEmptyStringToUndefined(projectDetails?.biometric),
   }
 }
 
@@ -149,6 +151,8 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
     isDone: typeOfUse?.isDone ?? false,
     usage: typeOfUse?.usage ?? [],
     dataPrivacyExtra: transformEmptyStringToUndefined(typeOfUse?.dataPrivacyExtra),
+    targetFormat: transformEmptyStringToUndefined(typeOfUse?.targetFormat),
+    targetFormatOther: transformEmptyStringToUndefined(typeOfUse?.targetFormatOther),
   }
 }
 
