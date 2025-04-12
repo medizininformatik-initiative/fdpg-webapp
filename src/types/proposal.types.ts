@@ -135,6 +135,12 @@ export interface IEthicVote extends WithIdAndIsDone {
 export interface IResourceAndRecontact extends WithIdAndIsDone {
   hasEnoughResources: boolean
   isRecontactingIntended: boolean
+  suppSurveyReContacting: boolean
+  suppSurveyReContactingText: string
+  reContactIncidental: boolean
+  reContactIncidentalText: string
+  urgentIncidentalReContacting: boolean
+  urgentIncidentalReContactingText: string
 }
 
 export interface IAppendix {

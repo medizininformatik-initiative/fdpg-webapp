@@ -46,7 +46,7 @@
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
           <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
 
-          <FdpgFormItem class="form-label-mb-6">
+          <FdpgFormItem class="form-label-mb-3">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -822,8 +822,8 @@ onMounted(async () => {
   .abbreviation {
     margin-bottom: 53px;
   }
-  .form-label-mb-6 {
-    margin-bottom: 6rem;
+  .form-label-mb-3 {
+    margin-bottom: 3rem;
   }
   .form-group-wrapper {
     padding: 20px;

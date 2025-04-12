@@ -79,6 +79,14 @@ const transformResourceAndRecontact = (
     isDone: resourceAndRecontact?.isDone ?? false,
     hasEnoughResources: resourceAndRecontact?.hasEnoughResources ?? false,
     isRecontactingIntended: resourceAndRecontact?.isRecontactingIntended ?? false,
+    suppSurveyReContacting: resourceAndRecontact?.suppSurveyReContacting ?? false,
+    suppSurveyReContactingText: transformEmptyStringToUndefined(resourceAndRecontact?.suppSurveyReContactingText),
+    reContactIncidental: resourceAndRecontact?.reContactIncidental ?? false,
+    reContactIncidentalText: transformEmptyStringToUndefined(resourceAndRecontact?.reContactIncidentalText),
+    urgentIncidentalReContacting: resourceAndRecontact?.urgentIncidentalReContacting ?? false,
+    urgentIncidentalReContactingText: transformEmptyStringToUndefined(
+      resourceAndRecontact?.urgentIncidentalReContactingText,
+    ),
   }
 }
 const transformPropertyRights = (propertyRights?: DeepPartial<IPropertyRights>): DeepPartial<IPropertyRights> => {

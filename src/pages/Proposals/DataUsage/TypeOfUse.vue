@@ -67,7 +67,7 @@
           <FdpgInput
             v-model="typeOfUseForm.targetFormatOther"
             data-testId="typeOfUseForm.targetFormatOther"
-            placeholder="proposal.targetFormatOtherPlaceholder"
+            placeholder="proposal.textPlaceholder"
             :disabled="reviewMode || typeOfUseForm.isDone"
             :form-ref="formRef"
             field-path="userProject.typeOfUse.targetFormatDetails"

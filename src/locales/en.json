@@ -623,9 +623,15 @@
     "nextStep": "Next Page",
     "prevStep": "Previous Page",
     "additionalDocument": "Additional Information",
-    "targetFormatOtherPlaceholder": "Click or tap here to enter text.",
+    "textPlaceholder": "Click or tap here to enter text.",
     "targetFormatOther": "More information",
-    "targetFormat": "Information about the target format"
+    "targetFormat": "Information about the target format",
+    "suppSurveyReContacting": "Re-contact for additional survey (recruitment)",
+    "suppSurveyReContactingText": "Justification for selection (How many patients are affected? What criteria must the patients meet?\nWhat type of additional survey is planned?)",
+    "reContactIncidental": "Re-contact due to incidental findings",
+    "reContactIncidentalText": "Justification for the selection (What incidental findings and with what frequency can be expected?)",
+    "urgentIncidentalReContacting": "Re-contact in the event of extremely important incidental findings, regardless of the option chosen by the patient when consenting to broad consent",
+    "urgentIncidentalReContactingText": "Justification for selection (What important incidental findings do you anticipate that could lead to patients having to be informed even though they have stated that they do not wish to be contacted?)"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
