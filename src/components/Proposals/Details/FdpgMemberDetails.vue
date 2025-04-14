@@ -32,11 +32,9 @@
     </div>
 
     <FdpgCheckList
-      v-if="status === ProposalStatus.FdpgCheck || status === ProposalStatus.LocationCheck"
       v-model="fdpgChecklist"
       :status="status"
       :checklist="proposalStore.currentProposal.fdpgChecklist"
-      :is-disabled="proposalStore.currentProposal.isLocked || status === ProposalStatus.LocationCheck"
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
