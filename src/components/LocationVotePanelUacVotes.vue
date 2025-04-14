@@ -313,7 +313,6 @@ const mapTableData = (
   dataAmount?: number,
   declineReason?: IDeclineReason,
 ): ITableData => {
-  console.log({ location })
   return {
     rowId,
     fullName: MII_LOCATIONS[location]?.display ?? 'unknown',
@@ -384,6 +383,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       data,
       title: 'proposal.uacAcceptedLocations',
       indicator: 'green',
+      isConditional: false,
     }
   })()
 
@@ -411,6 +411,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         : (data as IUacApproval[]).filter(
             (approval) => !currentProposal?.requestedButExcludedLocations.includes(approval.location),
           )
+
       return {
         title,
         tableId: TableId.WithDataAmount,
