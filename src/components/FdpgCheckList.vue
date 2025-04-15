@@ -8,14 +8,13 @@
         <ElCol :span="24">
           <FdpgInternalCheckNote
             :currentNote="props.checklist?.fdpgInternalCheckNotes"
-            :isDisabled="isDisabled"
             @update:listItem="($event: InternalCheckNote) => emit('update:listItem', $event)"
           ></FdpgInternalCheckNote>
         </ElCol>
       </ElRow>
     </ElCard>
 
-    <section role="region" class="section__checklist" :aria-disabled="isDisabled">
+    <section role="region" class="section__checklist">
       <ElCard>
         <div class="checklist">
           <el-collapse v-model="activeName">
@@ -42,7 +41,6 @@
                 <FdpgCheckListTable
                   :tableData="table.tableData"
                   @update:listItem="(event: IChecklistItem) => emit('update:listItem', event)"
-                  :isDisabled="isDisabled"
                 ></FdpgCheckListTable>
               </section>
             </el-collapse-item>
@@ -56,7 +54,6 @@
       @change="updateChecklist('isRegistrationLinkSent', $event)"
       class="fdpg-checkbox"
       :size="FdpgInputSize.Small"
-      :disabled="isDisabled"
     >
       {{ $t('proposal.isRegistrationLinkSentLabel') }}
     </el-checkbox>
@@ -86,10 +83,7 @@ const props = defineProps({
     type: Object as PropType<IFdpgChecklist | undefined>,
     required: true,
   },
-  isDisabled: {
-    type: Boolean,
-    default: false,
-  },
+
   title: {
     type: String as PropType<TranslationSchema>,
     required: true,

@@ -60,11 +60,8 @@ describe('FdpgCheckList.vue', () => {
     expect(title.text()).toBe('proposal.checklistTitle')
   })
 
-  it('should be disabled', async () => {
+  it('should be always visible', async () => {
     const checklist = wrapper.find('.section__checklist')
     expect(checklist.exists()).toBe(true)
-    expect(checklist.attributes('aria-disabled')).toBe('false')
-    await wrapper.setProps({ isDisabled: true })
-    expect(checklist.attributes('aria-disabled')).toBe('true')
   })
 })
