@@ -37,6 +37,8 @@
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
+          <VariableSelection :model-value="proposalForm" :review-mode="isReviewMode" />
+
           <FdpgLabel
             required
             info="proposal.informationOnTheRequestedDataInfo"
@@ -68,6 +70,22 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
           />
+
+          <FdpgFormItem class="form-label-mb-3">
+            <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
+
+            <el-checkbox-group
+              v-model="proposalForm.userProject.typeOfUse.usage"
+              data-testId="typeOfUseForm.usage"
+              :disabled="isReviewMode"
+            >
+              <FdpgCheckbox
+                value="BIOSAMPLE"
+                label="proposal.typeOfUse_BIOSAMPLE"
+                info="proposal.typeOfUse_BIOSAMPLE_Info"
+              />
+            </el-checkbox-group>
+          </FdpgFormItem>
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Casesohort"></div>
@@ -247,6 +265,7 @@ import ProjectDetails from './ResearchProject/ProjectDetails.vue'
 import EthicVote from './ResearchProject/EthicVote.vue'
 import ProjectAddresses from './Variables/ProjectAddresses.vue'
 import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
+import VariableSelection from './Variables/VariableSelection.vue'
 
 // Map each step to its corresponding form fields
 const stepFieldsMap = {

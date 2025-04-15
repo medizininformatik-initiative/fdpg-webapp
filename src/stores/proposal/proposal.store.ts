@@ -13,7 +13,6 @@ import type {
   IReportCreate,
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
-  IChecklistItem,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'

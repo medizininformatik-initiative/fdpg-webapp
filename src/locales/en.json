@@ -631,7 +631,17 @@
     "reContactIncidental": "Re-contact due to incidental findings",
     "reContactIncidentalText": "Justification for the selection (What incidental findings and with what frequency can be expected?)",
     "urgentIncidentalReContacting": "Re-contact in the event of extremely important incidental findings, regardless of the option chosen by the patient when consenting to broad consent",
-    "urgentIncidentalReContactingText": "Justification for selection (What important incidental findings do you anticipate that could lead to patients having to be informed even though they have stated that they do not wish to be contacted?)"
+    "urgentIncidentalReContactingText": "Justification for selection (What important incidental findings do you anticipate that could lead to patients having to be informed even though they have stated that they do not wish to be contacted?)",
+    "TNZ": "TNZ",
+    "selectionOfVariablesHeader": "Selection of variables",
+    "informationOnMiiSelectionForVariableSelectionStepHeader": "MII",
+    "informationOnMiiSelectionForVariableSelectionStepBody": "Your variable selection will be saved together with your cohort. Please proceed with Cohort selection",
+    "informationOnDifeSelectionForVariableSelectionStepHeader": "DIFE",
+    "difeTypeOfUse_MORBIDITY_ANALYSIS": "Morbidity analysis including follow-up round (please specify)",
+    "difeTypeOfUse_MORTALITY_ANALYSIS": "Mortality analysis including follow-up round (please specify)",
+    "difeTypeOfUse_OTHER": "Other analysis (please specify accodingly)",
+    "difeTypeOfUseExplanationPlaceholder": "Please specify your selection",
+    "difeTypeOfUseSelectionPlaceholder": "Please select"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
