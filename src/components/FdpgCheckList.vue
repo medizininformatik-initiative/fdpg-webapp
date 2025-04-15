@@ -96,13 +96,13 @@ const props = defineProps({
 const tables = computed(() => {
   return [
     {
-      tableData: props.checklist?.checkListVerification,
-      title: 'checklistVerification',
+      tableData: props.checklist?.projectProperties,
+      title: 'projectProperties',
       indicator: 'gray',
     },
     {
-      tableData: props.checklist?.projectProperties,
-      title: 'projectProperties',
+      tableData: props.checklist?.checkListVerification,
+      title: 'checklistVerification',
       indicator: 'gray',
     },
   ]
@@ -110,7 +110,7 @@ const tables = computed(() => {
 
 const emit = defineEmits(['update:listItem'])
 
-const activeName = ref<string>('checklistVerification')
+const activeName = ref<string>('projectProperties')
 
 const updateChecklist = (key: string, value: any) => {
   if (props.checklist && key in props.checklist) {
@@ -123,7 +123,7 @@ onMounted(() => {
     props.status === ProposalStatus.FdpgCheck &&
     props.checklist?.checkListVerification.every((item) => item.isAnswered)
   )
-    activeName.value = 'projectProperties'
+    activeName.value = 'checklistVerification'
   else if (props.status === ProposalStatus.LocationCheck) activeName.value = ''
 })
 </script>
