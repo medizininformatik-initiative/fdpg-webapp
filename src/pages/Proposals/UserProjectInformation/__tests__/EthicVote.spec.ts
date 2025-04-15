@@ -3,7 +3,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IEthicVote, IUpload } from '@/types/proposal.types'
 import { createTestingPinia } from '@pinia/testing'
 import { VueWrapper, mount } from '@vue/test-utils'
-import EthicVote from '../EthicVote.vue'
+import EthicVote from '@/pages/Proposals/ResearchProject/EthicVote.vue'
 import useUpload from '@/composables/use-upload'
 import { DirectUpload, type UploadType } from '@/types/upload.types'
 import { ref } from 'vue'
@@ -97,7 +97,7 @@ describe('EthicVote.vue', () => {
       fileSize: 123,
       type: 'ETHIC_VOTE',
       createdAt: '',
-      _id: 'ethicVoteId'
+      _id: 'ethicVoteId',
     })
   })
 
@@ -138,7 +138,7 @@ describe('EthicVote.vue', () => {
         fileSize: 123,
         type: 'ETHIC_VOTE_DECLARATION_OF_NON_RESPONSIBILITY',
         createdAt: '',
-        _id: 'nonResponsibilityId'
+        _id: 'nonResponsibilityId',
       })
     })
 

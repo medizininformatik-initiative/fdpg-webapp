@@ -24,12 +24,15 @@ const transformProjectDetails = (projectDetails?: DeepPartial<IProjectDetails>):
     _id: projectDetails?._id,
     isDone: projectDetails?.isDone ?? false,
     simpleProjectDescription: transformEmptyStringToUndefined(projectDetails?.simpleProjectDescription),
+    executiveSummaryUac: transformEmptyStringToUndefined(projectDetails?.executiveSummaryUac),
     department: projectDetails?.department ?? [],
     scientificBackground: transformEmptyStringToUndefined(projectDetails?.scientificBackground),
     hypothesisAndQuestionProjectGoals: transformEmptyStringToUndefined(
       projectDetails?.hypothesisAndQuestionProjectGoals,
     ),
     materialAndMethods: transformEmptyStringToUndefined(projectDetails?.materialAndMethods),
+    literature: transformEmptyStringToUndefined(projectDetails?.literature),
+    biometric: transformEmptyStringToUndefined(projectDetails?.biometric),
   }
 }
 
@@ -61,6 +64,7 @@ const transformGeneralProjectInformation = (
     isDone: generalProjectInformation?.isDone ?? false,
     projectTitle: transformEmptyStringToUndefined(generalProjectInformation?.projectTitle),
     desiredStartTime: transformEmptyStringToUndefined(generalProjectInformation?.desiredStartTime),
+    desiredStartTimeType: generalProjectInformation?.desiredStartTimeType,
     projectDuration: generalProjectInformation?.projectDuration,
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),
@@ -75,6 +79,14 @@ const transformResourceAndRecontact = (
     isDone: resourceAndRecontact?.isDone ?? false,
     hasEnoughResources: resourceAndRecontact?.hasEnoughResources ?? false,
     isRecontactingIntended: resourceAndRecontact?.isRecontactingIntended ?? false,
+    suppSurveyReContacting: resourceAndRecontact?.suppSurveyReContacting ?? false,
+    suppSurveyReContactingText: transformEmptyStringToUndefined(resourceAndRecontact?.suppSurveyReContactingText),
+    reContactIncidental: resourceAndRecontact?.reContactIncidental ?? false,
+    reContactIncidentalText: transformEmptyStringToUndefined(resourceAndRecontact?.reContactIncidentalText),
+    urgentIncidentalReContacting: resourceAndRecontact?.urgentIncidentalReContacting ?? false,
+    urgentIncidentalReContactingText: transformEmptyStringToUndefined(
+      resourceAndRecontact?.urgentIncidentalReContactingText,
+    ),
   }
 }
 const transformPropertyRights = (propertyRights?: DeepPartial<IPropertyRights>): DeepPartial<IPropertyRights> => {
@@ -147,6 +159,8 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
     isDone: typeOfUse?.isDone ?? false,
     usage: typeOfUse?.usage ?? [],
     dataPrivacyExtra: transformEmptyStringToUndefined(typeOfUse?.dataPrivacyExtra),
+    targetFormat: transformEmptyStringToUndefined(typeOfUse?.targetFormat),
+    targetFormatOther: transformEmptyStringToUndefined(typeOfUse?.targetFormatOther),
   }
 }
 

@@ -3,193 +3,103 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" data-test-id="projectDetails" link @click="openDetails">
-          <i class="bi bi-info-square"></i>
-        </el-button>
-        <el-button
-          v-if="!proposalStore.currentProposal || !isReviewMode"
-          @click="handleSaveDraft"
-          data-test-id="saveDraft"
-          type="primary"
-          size="large"
-          link
-        >
-          <i class="bi bi-floppy"></i>
-        </el-button>
+        <el-button v-if="proposalId" type="primary" size="large" @click="openDetails">{{
+          $t('proposal.projectDetails')
+        }}</el-button>
       </div>
     </div>
-    <div class="form-container">
-      <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
-        <div v-show="activeStep === CreatPrposalSteps.DataSources">
-          <el-row class="abbreviation">
-            <el-col :sm="18" :md="12" :lg="6">
-              <FdpgFormItem prop="projectAbbreviation">
-                <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
-                <FdpgInput
-                  v-model="proposalForm.projectAbbreviation"
-                  data-test-id="proposalForm.projectAbbreviation"
-                  placeholder="proposal.egWestStorm"
-                  :disabled="isReviewMode"
-                />
-              </FdpgFormItem>
-            </el-col>
-          </el-row>
-        </div>
 
-        <div v-show="activeStep === CreatPrposalSteps.Variables">
-          <FdpgLabel
-            required
-            info="proposal.informationOnTheRequestedDataInfo"
-            size="large"
-            html-for="proposal.informationOnTheRequestedData"
-          />
-          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
-          <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
-
-          <FdpgFormItem class="form-label-mb-3">
-            <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
-
-            <el-checkbox-group
-              v-model="proposalForm.userProject.typeOfUse.usage"
-              data-testId="typeOfUseForm.usage"
+    <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
+      <el-row class="abbreviation">
+        <el-col :sm="18" :md="12" :lg="6">
+          <FdpgFormItem prop="projectAbbreviation">
+            <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
+            <FdpgInput
+              v-model="proposalForm.projectAbbreviation"
+              data-testId="proposalForm.projectAbbreviation"
+              placeholder="proposal.egWestStorm"
               :disabled="isReviewMode"
-            >
-              <FdpgCheckbox
-                value="BIOSAMPLE"
-                label="proposal.typeOfUse_BIOSAMPLE"
-                info="proposal.typeOfUse_BIOSAMPLE_Info"
-              />
-            </el-checkbox-group>
+            />
           </FdpgFormItem>
+        </el-col>
+      </el-row>
 
-          <InformationOnBioSample
-            v-if="hasBiosamples"
-            v-model="proposalForm.userProject.informationOnRequestedBioSamples"
-            :review-mode="isReviewMode"
-            :form-ref="formRef"
-          />
-        </div>
+      <FdpgLabel size="large" html-for="proposal.applicant" />
+      <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
 
-        <div v-show="activeStep === CreatPrposalSteps.Casesohort"></div>
+      <FdpgLabel required size="large" html-for="proposal.projectResponsible" info="proposal.projectResponsibleInfo" />
+      <ProjectResponsibility
+        v-model="proposalForm.projectResponsible"
+        :form-ref="formRef"
+        :review-mode="isReviewMode"
+      />
 
-        <div v-show="activeStep === CreatPrposalSteps.DataUsage">
-          <TypeOfUse
-            v-model="proposalForm.userProject.typeOfUse"
-            :review-mode="isReviewMode"
-            :platform="platform"
-            :form-ref="formRef"
-          />
-        </div>
+      <FdpgLabel required size="large" html-for="proposal.projectUser" info="proposal.projectUserInfo" />
+      <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
 
-        <div v-show="activeStep === CreatPrposalSteps.ProjectDetails">
-          <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
-          <UserProjectInformation
-            v-model="proposalForm.userProject"
-            :form-ref="formRef"
-            :file-list="fileList"
-            :review-mode="isReviewMode"
-            :platform="platform"
-          />
-        </div>
+      <FdpgLabel info="proposal.participatingScientistsInfo" size="large" html-for="proposal.participatingScientists" />
+      <ParticipatingScientists v-model="proposalForm.participants" :form-ref="formRef" :review-mode="isReviewMode" />
 
-        <div v-show="activeStep === CreatPrposalSteps.ProjectParticipants">
-          <FdpgLabel size="large" html-for="proposal.applicant" />
-          <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
+      <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
+      <UserProjectInformation
+        v-model="proposalForm.userProject"
+        :form-ref="formRef"
+        :file-list="fileList"
+        :review-mode="isReviewMode"
+        :platform="platform"
+      />
 
-          <FdpgLabel
-            required
-            size="large"
-            html-for="proposal.projectResponsible"
-            info="proposal.projectResponsibleInfo"
-          />
-          <ProjectResponsibility
-            v-model="proposalForm.projectResponsible"
-            :form-ref="formRef"
-            :review-mode="isReviewMode"
-          />
-          <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
+      <FdpgLabel
+        required
+        info="proposal.informationOnTheRequestedDataInfo"
+        size="large"
+        html-for="proposal.informationOnTheRequestedData"
+      />
+      <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
 
-          <FdpgLabel
-            info="proposal.participatingScientistsInfo"
-            size="large"
-            html-for="proposal.participatingScientists"
-          />
-          <ParticipatingScientists
-            v-model="proposalForm.participants"
-            :form-ref="formRef"
-            :review-mode="isReviewMode"
-          />
-        </div>
+      <FdpgLabel html-for="" size="large">{{
+        $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+      }}</FdpgLabel>
+      <p class="desc">
+        {{
+          proposalId
+            ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
+            : $t('proposal.attachmentsOnlyAfterSavingHint')
+        }}
+      </p>
 
-        <div v-show="activeStep === CreatPrposalSteps.ResearchProject">
-          <ProjectDetails
-            v-model="proposalForm.userProject.projectDetails"
-            :review-mode="isReviewMode"
-            :form-ref="formRef"
-            :proposalId="proposalId"
-          />
-          <EthicVote v-model="proposalForm.userProject.ethicVote" :review-mode="isReviewMode" :form-ref="formRef" />
-          <FdpgLabel html-for="" size="large">{{
-            $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
-          }}</FdpgLabel>
-          <p class="desc">
-            {{
-              proposalId
-                ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
-                : $t('proposal.attachmentsOnlyAfterSavingHint')
-            }}
-          </p>
-
-          <FdpgUpload
-            v-if="proposalId"
-            data-test-id="general-appendix__upload"
-            :accept="SupportedMimetype"
-            :file-list="uploadsForType"
-            :is-loading="isAppendixLoading"
-            :is-disabled="isReviewMode"
-            :proposal-id="proposalId"
-            @change="handleUploadFile"
-            @remove="handleRemoveFile"
-          >
-            <el-button
-              class="upload-button"
-              link
-              :disabled="isAppendixLoading || isReviewMode"
-              data-test-id="general-appendix__upload__button"
-            >
-              {{ $t('proposal.chooseAFile') }}
-              <template #icon>
-                <el-icon class="bi-paperclip"></el-icon>
-              </template>
-            </el-button>
-          </FdpgUpload>
-        </div>
-      </el-form>
-    </div>
-
-    <el-row class="action-wrapper">
-      <el-col :span="12">
-        <el-button type="primary" plain data-test-id="prevStep" @click="prevStep">{{
-          $t('proposal.prevStep')
-        }}</el-button>
-      </el-col>
-      <el-col :span="12" class="text-right">
+      <FdpgUpload
+        v-if="proposalId"
+        data-test-id="general-appendix__upload"
+        :accept="SupportedMimetype"
+        :file-list="uploadsForType"
+        :is-loading="isAppendixLoading"
+        :is-disabled="isReviewMode"
+        :proposal-id="proposalId"
+        @change="handleUploadFile"
+        @remove="handleRemoveFile"
+      >
         <el-button
-          type="primary"
-          data-test-id="nextStep"
-          @click="nextStep"
-          v-if="activeStep !== CreatPrposalSteps.ResearchProject"
-          >{{ $t('proposal.nextStep') }}</el-button
+          class="upload-button"
+          link
+          :disabled="isAppendixLoading || isReviewMode"
+          data-test-id="general-appendix__upload__button"
         >
-        <el-button
-          :disabled="!isValidToSubmit"
-          type="primary"
-          data-test-id="handleSubmit"
-          @click="handleSubmit"
-          v-else-if="!proposalStore.currentProposal || !isReviewMode"
-          >{{ $t('proposal.submitApplication') }}</el-button
-        >
-      </el-col>
+          {{ $t('proposal.chooseAFile') }}
+          <template #icon>
+            <el-icon class="bi-paperclip"></el-icon>
+          </template>
+        </el-button>
+      </FdpgUpload>
+    </el-form>
+
+    <el-row v-if="!proposalStore.currentProposal || !isReviewMode" type="flex" justify="end" class="action-wrapper">
+      <el-button type="primary" plain data-test-id="handleSaveDraft" @click="handleSaveDraft">{{
+        $t('proposal.saveDraft')
+      }}</el-button>
+      <el-button :disabled="!isValidToSubmit" type="primary" data-test-id="handleSubmit" @click="handleSubmit">{{
+        $t('proposal.submitApplication')
+      }}</el-button>
     </el-row>
   </el-container>
 
@@ -214,7 +124,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal } from '@/types/proposal.types'
-import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
@@ -231,38 +141,16 @@ import {
   startDateInPastValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
-import { ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
+import { ElForm, type FormInstance, type FormItemProp } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ProjectApplicant from './ProjectApplicant.vue'
 import ProjectResponsibility from './ProjectResponsibility.vue'
-import ProjectUser from './ParticipatingScientists/ProjectUser.vue'
+import ProjectUser from './ProjectUser.vue'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import { CommentType, type ICommentDetail } from '@/types/comment.interface'
-import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
-import TypeOfUse from './DataUsage/TypeOfUse.vue'
-import ProjectDetails from './ResearchProject/ProjectDetails.vue'
-import EthicVote from './ResearchProject/EthicVote.vue'
-import ProjectAddresses from './Variables/ProjectAddresses.vue'
-import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
-
-// Map each step to its corresponding form fields
-const stepFieldsMap = {
-  [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
-  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
-  [CreatPrposalSteps.ProjectDetails]: [
-    'userProject.generalProjectInformation',
-    'userProject.feasibility',
-    'userProject.plannedPublication',
-  ],
-  [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
-  [CreatPrposalSteps.Variables]: ['requestedData'],
-  [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
-  [CreatPrposalSteps.Casesohort]: [],
-}
-
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -286,10 +174,6 @@ const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
 )
 const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
-const desiredStartTimeType = computed(
-  () => proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later',
-)
-
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
@@ -303,10 +187,6 @@ const bypassDebounce = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
-
-const activeStep = computed(() => {
-  return layoutStore.activeStep
-})
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
@@ -325,43 +205,16 @@ const rules = ref<Record<string, any>>({
   participants: [
     /** Handled in component */
   ],
-  projectUser: {
-    projectUserType: [requiredValidationFunc('string')],
-  },
   userProject: {
     generalProjectInformation: {
       projectTitle: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-      desiredStartTime: [
-        {
-          validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
-            const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
-            if (isLater) {
-              if (!value) {
-                callback(new Error(t('general.requiredField')))
-              } else {
-                // Check if date is in the past
-                const selectedDate = new Date(value)
-                const today = new Date()
-                today.setHours(0, 0, 0, 0)
-                if (selectedDate < today) {
-                  callback(new Error(t('general.startDateInPast')))
-                } else {
-                  callback()
-                }
-              }
-            } else {
-              callback()
-            }
-          },
-          trigger: ['blur', 'change'],
-        },
-      ],
+      desiredStartTime: [requiredValidationFunc(), startDateInPastValidationFunc()],
       projectDuration: [requiredValidationFunc('number'), numberValidationFunc()],
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
-      desiredStartTimeType: [requiredValidationFunc('string')],
     },
     feasibility: {
+      id: null,
       details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
     },
     projectDetails: {
@@ -394,7 +247,7 @@ const rules = ref<Record<string, any>>({
       desiredLocations: requiredValidationFunc(),
     },
     typeOfUse: {
-      usage: requiredValidationFunc('array'),
+      usage: requiredValidationFunc(),
       dataPrivacyExtra: [maxLengthValidationFunc(10000)],
     },
     informationOnRequestedBioSamples: {
@@ -428,9 +281,6 @@ const OpenProposalTasks = computed(() => {
     .filter((comment: ICommentDetail) => comment.type === CommentType.PROPOSAL_TASK)
     .filter((task: ICommentDetail) => !task.isDone)
 })
-const hasBiosamples = computed(() => {
-  return proposalForm.value?.userProject.typeOfUse.usage?.includes(ProposalTypeOfUse.Biosample)
-})
 
 const openDetails = () => {
   if (proposalId.value) {
@@ -459,7 +309,6 @@ const raiseErrors = (invalidFields: ValidateFieldsError) => {
 }
 
 const isTermsDialogOpen = ref(false)
-
 const handleTermsConfirm = async () => {
   isTermsDialogOpen.value = false
   try {
@@ -477,12 +326,7 @@ const handleTermsConfirm = async () => {
     showErrorMessage(error.message)
   }
 }
-const prevStep = () => {
-  layoutStore.prevStep()
-}
-const nextStep = () => {
-  layoutStore.nextStep()
-}
+
 const handleSubmit = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -500,58 +344,6 @@ const handleSubmit = async () => {
   })
 }
 
-const updateStepStatus = async () => {
-  if (!formRef.value) return
-
-  // Get all form fields
-  const allFields = formRef.value.fields || []
-
-  // Check each step's fields
-  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-    // Get all fields that belong to this step
-    const stepFields = allFields.filter((field) =>
-      fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-    )
-
-    // Check if all fields in this step are valid
-    const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
-    const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-
-    // Update the step status in layout store
-    layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
-  })
-}
-
-// Add validation on form validate event
-const onValidate = async (prop: FormItemProp, isValid: boolean) => {
-  await waitForValidation()
-
-  // Check which step the validated field belongs to
-  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-    if (fields.some((fieldPath) => prop.toString().startsWith(fieldPath))) {
-      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-
-      // Get all fields that belong to this step
-      const stepFields =
-        formRef.value?.fields.filter((field) =>
-          fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-        ) || []
-
-      const isStepValid =
-        stepFields.length > 0 &&
-        stepFields.every((field) => {
-          let validity
-          if (field.rules) validity = field.validateState == 'success'
-          else validity = field.validateState !== 'error'
-          return validity
-        })
-
-      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
-    }
-  })
-}
-
-// Update handleSaveDraft to check all fields
 const handleSaveDraft = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -562,12 +354,6 @@ const handleSaveDraft = async () => {
   }
   bypassDebounce.value = true
 
-  // Validate all fields to update step statuses
-  await formRef.value?.validate(() => {})
-  await waitForValidation()
-  await updateStepStatus()
-
-  // First validate projectAbbreviation
   let invalidFields: ValidateFieldsError | undefined
   await formRef.value?.validateField(
     ['projectAbbreviation'],
@@ -581,7 +367,6 @@ const handleSaveDraft = async () => {
     return
   }
 
-  // Only proceed with saving if projectAbbreviation is valid
   if (proposalId.value) {
     try {
       const saveResult = await proposalStore.updateProposal(proposalId.value, {
@@ -604,6 +389,10 @@ const handleSaveDraft = async () => {
 
   await setUpPage()
   bypassDebounce.value = false
+}
+
+const onValidate = async () => {
+  await waitForValidation()
 }
 
 const authStore = useAuthStore()
@@ -766,12 +555,8 @@ onMounted(async () => {
       showErrorMessage()
     }
   }
-  layoutStore.resetSteps()
 
-  const isDateDefined =
-    proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
-      ? proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
-      : true
+  const isDateDefined = proposalForm.value?.userProject.generalProjectInformation.desiredStartTime
   const isEditable =
     proposalStore.currentProposal?.status === ProposalStatus.Draft ||
     proposalStore.currentProposal?.status === ProposalStatus.Rework
@@ -804,6 +589,11 @@ onMounted(async () => {
 .fdpg-new-proposal-page {
   counter-reset: large-label;
 
+  .fdpg-label--large span::before {
+    counter-increment: large-label;
+    content: counter(large-label) '. ';
+  }
+
   flex-direction: column;
   padding-bottom: 100px;
 
@@ -822,9 +612,7 @@ onMounted(async () => {
   .abbreviation {
     margin-bottom: 53px;
   }
-  .form-label-mb-3 {
-    margin-bottom: 3rem;
-  }
+
   .form-group-wrapper {
     padding: 20px;
     border-radius: 10px;
@@ -892,20 +680,7 @@ onMounted(async () => {
   }
 
   .action-wrapper {
-    display: flex;
-    justify-content: space-between;
     margin-top: 25px;
-
-    .text-right {
-      text-align: right;
-    }
-
-    @media (max-width: $sm) {
-      .el-button {
-        width: 100%;
-        margin: 0 0 20px 0;
-      }
-    }
   }
 
   p {
@@ -932,6 +707,15 @@ onMounted(async () => {
   .upload-button {
     i::before {
       transform: rotate(90deg);
+    }
+  }
+
+  @media (max-width: $sm) {
+    .action-wrapper {
+      .el-button {
+        width: 100%;
+        margin: 0 0 20px 0;
+      }
     }
   }
 }

@@ -15,11 +15,30 @@
       </el-col>
       <el-col :sm="24" :md="12">
         <FdpgFormItem
+          prop="userProject.generalProjectInformation.desiredStartTimeType"
+          data-testId="generalProjectInformationForm.desiredStartTimeType"
+        >
+          <FdpgLabel required html-for="proposal.desiredStartTime" />
+          <el-radio-group
+            v-model="generalProjectInformationForm.desiredStartTimeType"
+            data-testId="generalProjectInformationForm.desiredStartTimeType"
+            :disabled="reviewMode || generalProjectInformationForm.isDone"
+          >
+            <FdpgRadio
+              v-for="option in ['immediate', 'later']"
+              :key="`checklist-option-${option}`"
+              :value="option"
+              :label="'proposal.desiredStartTime_' + option"
+            />
+          </el-radio-group>
+        </FdpgFormItem>
+
+        <FdpgFormItem
           prop="userProject.generalProjectInformation.desiredStartTime"
           data-testId="generalProjectInformationForm.desiredStartTime"
         >
-          <FdpgLabel required html-for="proposal.desiredStartTime" />
           <FdpgDatePicker
+            v-if="generalProjectInformationForm.desiredStartTimeType === 'later'"
             v-model="generalProjectInformationForm.desiredStartTime"
             data-testId="generalProjectInformationForm.desiredStartTime"
             placeholder="proposal.pleaseEnterTheStartTime"

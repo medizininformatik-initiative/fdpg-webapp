@@ -110,6 +110,7 @@ export interface IGeneralProjectInformation extends WithIdAndIsDone {
   projectDuration: number | undefined
   projectFunding: string
   fundingReferenceNumber: string
+  desiredStartTimeType: string | undefined
 }
 
 export interface IProjectDetails extends WithIdAndIsDone {
@@ -118,6 +119,9 @@ export interface IProjectDetails extends WithIdAndIsDone {
   scientificBackground: string
   hypothesisAndQuestionProjectGoals: string
   materialAndMethods: string
+  executiveSummaryUac: string
+  literature: string
+  biometric: string
 }
 
 export interface IEthicVote extends WithIdAndIsDone {
@@ -131,6 +135,12 @@ export interface IEthicVote extends WithIdAndIsDone {
 export interface IResourceAndRecontact extends WithIdAndIsDone {
   hasEnoughResources: boolean
   isRecontactingIntended: boolean
+  suppSurveyReContacting: boolean
+  suppSurveyReContactingText: string
+  reContactIncidental: boolean
+  reContactIncidentalText: string
+  urgentIncidentalReContacting: boolean
+  urgentIncidentalReContactingText: string
 }
 
 export interface IAppendix {
@@ -182,6 +192,8 @@ export interface IAddressees extends WithIdAndIsDone {
 export interface ITypeOfUse extends WithIdAndIsDone {
   usage: ProposalTypeOfUse[]
   dataPrivacyExtra?: string
+  targetFormat: string
+  targetFormatOther: string
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {

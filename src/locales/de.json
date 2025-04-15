@@ -68,7 +68,11 @@
     "DataUsage": "Geplante Datennutzung",
     "ProjectDetails": "Allgemeine Projektangaben",
     "ProjectParticipants": "Projektbeteiligte",
-    "ResearchProject": "Details zum Forschungsprojekt"
+    "ResearchProject": "Details zum Forschungsprojekt",
+    "success": "FERTIG",
+    "error": "OFFENE PFLICHTFELDER",
+    "wait": "AUSSTEHEND",
+    "process": "AUSSTEHEND"
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
@@ -609,15 +613,25 @@
     "out-EU": "Internationale Beteiligte (non-EU)",
     "listOfNoMarked": "Diese Elemente sind als Nein gekennzeichnet.",
     "internalCheckNotes": "Interne Kontrollnotizen",
-    "ASAP": "so schnell wie möglich",
-    "otherTime": "ein andermal",
+    "desiredStartTime_immediate": "sobald wie möglich",
+    "desiredStartTime_later": "anderer Zeitpunkt",
     "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",
     "literature": "Literatur",
     "literaturePlaceholder": "Angabe aller in 5 Projektdetails gemachten Literaturreferenzen",
     "biometricPlaceholder": "Analyseplan (Vorgehen bei der Fallzahlschätzung und benötigte Effektstärke (Power))",
     "biometric": "Biometrie",
     "nextStep": "Nächster Schritt",
-    "prevStep": "Vorheriger Schritt"
+    "prevStep": "Vorheriger Schritt",
+    "additionalDocument": "Zusätzliche Informationen",
+    "textPlaceholder": "Klicken oder tippen Sie hier, um Text einzugeben.",
+    "targetFormatOther": "Weitere Angaben",
+    "targetFormat": "Angaben zum Zielformat",
+    "suppSurveyReContacting": "Re-Kontaktierung wegen einer Zusatzerhebung (Rekrutierung) ",
+    "suppSurveyReContactingText": "Begründung der Auswahl (Wie viele Patienten sind betroffen? Welche Kriterien müssen die Patienten erfüllen?\nWelcher Art ist die geplante Zusatzerhebung?)",
+    "reContactIncidental": "Re-Kontaktierung wegen Zufallsbefunden ",
+    "reContactIncidentalText": "Begründung der Auswahl (Mit welchen Zufallsbefunden und mit welcher Häufigkeit ist zu rechnen?)",
+    "urgentIncidentalReContacting": "Re-Kontaktierung bei extrem wichtigen Zufallsbefunden, auch unabhängig von der durch den\nPatienten/die Patientin gewählten Option bei der Einwilligung in den Broad Consent",
+    "urgentIncidentalReContactingText": "Begründung der Auswahl (Mit welchen wichtigen Zufallsbefunden rechnen Sie, die dazu führen könnten, dass\nPatienten oder Patientinnen darüber informiert werden müssen, obwohl sie angegeben haben, keine Kontaktierung zu\nwünschen?)"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

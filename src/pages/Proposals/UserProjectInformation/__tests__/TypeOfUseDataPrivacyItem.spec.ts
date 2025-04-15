@@ -1,6 +1,6 @@
 import { createTestingPinia } from '@pinia/testing'
 import { flushPromises, mount } from '@vue/test-utils'
-import TypeOfUseDataPrivacyItem from '../TypeOfUseDataPrivacyItem.vue'
+import TypeOfUseDataPrivacyItem from '../../DataUsage/TypeOfUseDataPrivacyItem.vue'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

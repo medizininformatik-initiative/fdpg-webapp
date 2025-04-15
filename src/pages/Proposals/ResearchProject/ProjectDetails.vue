@@ -14,6 +14,17 @@
             field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
+        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
+          <FdpgLabel html-for="proposal.executiveSummaryUac" />
+          <FdpgtextEditor
+            v-model="projectDetailsForm.executiveSummaryUac"
+            data-testId="projectDetailsForm.executiveSummaryUac"
+            :placeholder="t('proposal.describeTheProject')"
+            :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.executiveSummaryUac"
+          />
+        </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.department">
@@ -73,6 +84,64 @@
           />
         </FdpgFormItem>
       </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem prop="userProject.projectDetails.literature">
+          <FdpgLabel html-for="proposal.literature" />
+          <FdpgtextEditor
+            v-model="projectDetailsForm.literature"
+            data-testId="projectDetailsForm.literature"
+            :placeholder="t('proposal.literaturePlaceholder')"
+            :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.literature"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem prop="userProject.projectDetails.biometric">
+          <FdpgLabel html-for="proposal.biometric" />
+          <FdpgtextEditor
+            v-model="projectDetailsForm.biometric"
+            data-testId="projectDetailsForm.biometric"
+            :placeholder="t('proposal.biometricPlaceholder')"
+            :disabled="reviewMode || projectDetailsForm.isDone"
+            :form-ref="formRef"
+            field-path="userProject.projectDetails.biometric"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem prop="userProject.projectDetails.additionalDocument">
+          <FdpgLabel html-for="" size="large" class="form__item--width">{{
+            $t('proposal.additionalDocument') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+          }}</FdpgLabel>
+
+          <FdpgUpload
+            v-if="proposalId"
+            data-test-id="additional-document__upload"
+            :accept="SupportedMimetype"
+            :file-list="uploadsForType"
+            :is-loading="isAdditionalLoading"
+            :is-disabled="reviewMode"
+            :proposal-id="proposalId"
+            @change="handleUploadFile"
+            @remove="handleRemoveFile"
+            class="form__item--width"
+          >
+            <el-button
+              class="upload-button"
+              link
+              :disabled="isAdditionalLoading || reviewMode || projectDetailsForm.isDone"
+              data-test-id="additional-document__upload__button"
+            >
+              {{ $t('proposal.chooseAFile') }}
+              <template #icon>
+                <el-icon class="bi-paperclip"></el-icon>
+              </template>
+            </el-button>
+          </FdpgUpload>
+        </FdpgFormItem>
+      </el-col>
     </el-row>
   </el-card>
 
@@ -92,13 +161,16 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgtextEditor from '@/components/FdpgTextEditor.vue'
 import type { FormInstance } from 'element-plus'
+import ESupportedMimetype from '@/types/supported-mimetype.enum'
+import useUpload from '@/composables/use-upload'
+import { DirectUpload } from '@/types/upload.types'
+import useNotifications from '@/composables/use-notifications'
 
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IProjectDetails>,
     required: true,
   },
-
   reviewMode: {
     type: Boolean,
     default: false,
@@ -108,14 +180,36 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  proposalId: {
+    type: String,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
 
 const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
+
 const departments = computed(() =>
   Object.values(Department).map((value) => ({ label: t(`departments.${value}`), value })),
 )
+const SupportedMimetype = computed(() => {
+  return Object.values(ESupportedMimetype).join(',')
+})
+
+const proposalIdRef = computed(() => props.proposalId || '')
+
+const {
+  uploadsForType,
+  handleUploadFile,
+  handleRemoveFile,
+  isAppendixLoading: isAdditionalLoading,
+} = useUpload(proposalIdRef, [DirectUpload.AdditionalDocument], showErrorMessage)
 
 const projectDetailsForm = useVModel(props, 'modelValue', emit)
 </script>
+<style scoped lang="scss">
+.form__item--width {
+  width: 100%;
+}
+</style>

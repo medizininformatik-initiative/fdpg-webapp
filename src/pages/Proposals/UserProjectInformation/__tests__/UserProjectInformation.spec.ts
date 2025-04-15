@@ -48,10 +48,4 @@ describe('UserProjectInformation.vue', () => {
   it('renders', () => {
     expect(wrapper).toBeTruthy()
   })
-
-  it('checks for biosamples', () => {
-    const biosampleComponent = wrapper.findComponent({ name: 'InformationOnBioSample' })
-    expect(biosampleComponent.exists()).toBeTruthy()
-    expect(biosampleComponent.props('modelValue')).toEqual(mockProposal.userProject.informationOnRequestedBioSamples)
-  })
 })

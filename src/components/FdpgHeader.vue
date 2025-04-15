@@ -4,7 +4,11 @@
       <i class="fa fa-bars" aria-hidden="true"></i>
     </el-button>
     <el-breadcrumb
-      v-if="layoutStore.breadcrumbs.length > 0"
+      v-if="
+        layoutStore.breadcrumbs.length > 0 &&
+        route.name !== RouteName.CreateProposal &&
+        route.name !== RouteName.EditProposal
+      "
       class="fdpg-header-breadcrumb"
       separator-class="el-icon-arrow-right"
     >
@@ -28,6 +32,13 @@
         <el-icon class="bi-search"></el-icon>
       </template>
     </el-input>
+    <router-link
+      class="fdpg-menu__item"
+      :to="{ name: RouteName.Dashboard }"
+      v-if="route.name === RouteName.CreateProposal || route.name === RouteName.EditProposal"
+    >
+      <i class="bi bi-chevron-left"></i> {{ $t('header.toDashboard') }}
+    </router-link>
     <el-space direction="horizontal" :size="12">
       <FdpgDropdown
         :button="languageButton"
@@ -197,7 +208,10 @@ const goToProfile = () => {
   .fdpg-header__menu-button {
     display: none;
   }
-
+  .fdpg-menu__item {
+    text-decoration: none;
+    color: $gray-900;
+  }
   .fdpg-header-breadcrumb {
     font-size: 16px;
 
