@@ -13,13 +13,14 @@
               @change="handleOptionChange(row)"
               v-if="row.isMultiple === false"
               :disabled="isDisabled"
+              class="el-radio-group"
             >
               <FdpgRadio
                 v-for="(option, index) in row.options"
                 :key="index"
                 :label="`proposal.${option.optionValue}`"
                 :value="option.optionValue"
-                :size="FdpgInputSize.Small"
+                size="small"
               ></FdpgRadio>
             </el-radio-group>
             <el-checkbox-group v-model="row.answer" v-else @change="handleOptionChange(row)" :disabled="isDisabled">
@@ -37,6 +38,7 @@
             <FdpgTextEditor
               v-model="row.comment"
               @blur="handleOptionChange(row)"
+              @input="debouncedHandleOptionChange(row)"
               :disabled="isDisabled"
             ></FdpgTextEditor>
           </td>
@@ -86,6 +88,7 @@
                     <FdpgTextEditor
                       v-model="subItem.comment"
                       @blur="handleOptionChange(row)"
+                      @input="debouncedHandleOptionChange(row)"
                       :disabled="isDisabled"
                     ></FdpgTextEditor>
                   </td>
@@ -107,18 +110,24 @@ import FdpgRadio from './FdpgRadio.vue'
 import { FdpgInputSize } from '@/types/component.types'
 import FdpgCheckbox from './FdpgCheckbox.vue'
 import { defineProps, defineEmits } from 'vue'
+import { debounce } from 'lodash-es'
 
 const props = defineProps({
   tableData: {
     type: Array,
     required: true,
   },
+
   isDisabled: {
     type: Boolean,
     default: false,
   },
 })
 const emit = defineEmits(['update:listItem'])
+
+const debouncedHandleOptionChange = debounce((row) => {
+  handleOptionChange(row)
+}, 500)
 
 const haveActualText = (htmlContent) => {
   const strippedContent = htmlContent.replace(/<[^>]*>/g, '').trim()
@@ -157,13 +166,16 @@ const handleOptionChange = (row) => {
 .checklist-table th,
 .checklist-table td {
   border-bottom: 1px solid #ccc;
-  padding: 0.5em;
-  overflow: hidden;
+  padding: 0.5em 1em;
   text-overflow: ellipsis;
-  /* white-space: break-spaces; */
   .el-checkbox-group {
     display: flex;
     flex-direction: column;
+  }
+  .el-radio-group {
+    display: flex;
+    flex-direction: column;
+    float: left;
   }
 }
 

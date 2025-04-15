@@ -227,7 +227,12 @@ export const useProposalStore = defineStore('Proposal', {
       try {
         const updatedChecklist = await typedStore.apiService.updateFdpgChecklist(id, checklist)
         const currentProposal = typedStore.currentProposal
-        if (currentProposal) currentProposal.fdpgChecklist = updatedChecklist
+        if (currentProposal) {
+          typedStore.currentProposal = {
+            ...currentProposal,
+            fdpgChecklist: updatedChecklist,
+          }
+        }
       } catch (error) {
         if (errorCb) {
           errorCb(error)
