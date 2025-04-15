@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div :class="['w-full', props.disabled ? 'readonly-view' : '']">
     <QuillEditor
       theme="snow"
       v-model:content="value"
@@ -100,6 +100,15 @@ onBeforeMount(() => {
 <style>
 .w-full {
   width: 100%;
+}
+
+.readonly-view {
+  .ql-container {
+    border: unset;
+  }
+  .ql-toolbar {
+    display: none;
+  }
 }
 
 .ql-editor.ql-blank::before {

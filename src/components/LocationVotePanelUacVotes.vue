@@ -184,10 +184,7 @@
                 >
                   {{ conditionalApproval.upload.fileName }}
                 </div>
-                <div
-                  v-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.conditionReasoning"
-                  v-html="conditionalApproval.conditionReasoning"
-                ></div>
+                <FdpgTextEditor v-model:model-value="conditionalApproval.conditionReasoning" disabled />
               </el-collapse-item>
             </el-collapse>
           </section>
@@ -216,6 +213,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
+import FdpgTextEditor from './FdpgTextEditor.vue'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -317,8 +315,8 @@ const mapTableData = (
 ): ITableData => {
   return {
     rowId,
-    fullName: MII_LOCATIONS[location].display,
-    city: MII_LOCATIONS[location].city,
+    fullName: MII_LOCATIONS[location]?.display ?? 'unknown',
+    city: MII_LOCATIONS[location]?.city ?? 'unknown',
     dataAmount,
     declineReason,
     location,
@@ -385,6 +383,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       data,
       title: 'proposal.uacAcceptedLocations',
       indicator: 'green',
+      isConditional: false,
     }
   })()
 
@@ -412,6 +411,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         : (data as IUacApproval[]).filter(
             (approval) => !currentProposal?.requestedButExcludedLocations.includes(approval.location),
           )
+
       return {
         title,
         tableId: TableId.WithDataAmount,
