@@ -70,22 +70,6 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
           />
-
-          <FdpgFormItem class="form-label-mb-3">
-            <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
-
-            <el-checkbox-group
-              v-model="proposalForm.userProject.typeOfUse.usage"
-              data-testId="typeOfUseForm.usage"
-              :disabled="isReviewMode"
-            >
-              <FdpgCheckbox
-                value="BIOSAMPLE"
-                label="proposal.typeOfUse_BIOSAMPLE"
-                info="proposal.typeOfUse_BIOSAMPLE_Info"
-              />
-            </el-checkbox-group>
-          </FdpgFormItem>
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Casesohort"></div>
@@ -277,7 +261,7 @@ const stepFieldsMap = {
     'userProject.plannedPublication',
   ],
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
-  [CreatPrposalSteps.Variables]: ['requestedData'],
+  [CreatPrposalSteps.Variables]: ['requestedData', 'userProject.variableSelection.DIFE'],
   [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
   [CreatPrposalSteps.Casesohort]: [],
 }
@@ -379,6 +363,12 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
+      variableSelection: {
+        [PlatformIdentifier.DIFE]: {
+          typeOfUse: [requiredValidationFunc('string')],
+          typeOfUseExplanation: [maxLengthValidationFunc(10000)],
+        },
+      },
     },
     feasibility: {
       details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
