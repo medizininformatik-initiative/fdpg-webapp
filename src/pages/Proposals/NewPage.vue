@@ -3,7 +3,14 @@
     <div class="lead">
       <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
-        <el-button type="primary" size="large" data-test-id="projectDetails" link @click="openDetails">
+        <el-button
+          type="primary"
+          size="large"
+          data-test-id="projectDetails"
+          link
+          @click="openDetails"
+          v-if="proposalId"
+        >
           <i class="bi bi-info-square"></i>
         </el-button>
         <el-button
@@ -14,26 +21,31 @@
           size="large"
           link
         >
-          <i class="bi bi-floppy"></i>
+          <img src="@/assets/img/proposal/save.svg" alt="save btn" />
         </el-button>
       </div>
     </div>
     <div class="form-container">
       <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
         <div v-show="activeStep === CreatPrposalSteps.DataSources">
-          <el-row class="abbreviation">
-            <el-col :sm="18" :md="12" :lg="6">
-              <FdpgFormItem prop="projectAbbreviation">
-                <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
-                <FdpgInput
-                  v-model="proposalForm.projectAbbreviation"
-                  data-test-id="proposalForm.projectAbbreviation"
-                  placeholder="proposal.egWestStorm"
-                  :disabled="isReviewMode"
-                />
-              </FdpgFormItem>
-            </el-col>
-          </el-row>
+          <div class="form-group">
+            <el-row>
+              <el-col :sm="18" :md="12" :lg="6">
+                <FdpgFormItem prop="projectAbbreviation">
+                  <FdpgLabel required info="proposal.projectAbbreviationInfo" html-for="proposal.projectAbbreviation" />
+                  <FdpgInput
+                    v-model="proposalForm.projectAbbreviation"
+                    data-test-id="proposalForm.projectAbbreviation"
+                    placeholder="proposal.egWestStorm"
+                    :disabled="isReviewMode"
+                  />
+                </FdpgFormItem>
+              </el-col>
+              <el-col :sm="24">
+                <DataSourceSelection></DataSourceSelection>
+              </el-col>
+            </el-row>
+          </div>
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
@@ -250,7 +262,7 @@ import EthicVote from './ResearchProject/EthicVote.vue'
 import ProjectAddresses from './Variables/ProjectAddresses.vue'
 import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
 import VariableSelection from './Variables/VariableSelection.vue'
-
+import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],

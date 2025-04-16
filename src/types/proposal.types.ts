@@ -575,3 +575,10 @@ export interface IProposalCount {
   medium?: number
   low?: number
 }
+
+export interface IDataSource {
+  id: string
+  title: string
+  description: string
+  externalLink: string
+}
