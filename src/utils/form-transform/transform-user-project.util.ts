@@ -226,5 +226,6 @@ export const transformUserProject = (
       userProject?.typeOfUse,
       transformToApi,
     ),
+    variableSelection: userProject?.variableSelection,
   }
 }

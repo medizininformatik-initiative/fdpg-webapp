@@ -6,6 +6,7 @@
     :loading="isLoading"
     :loading-text="loadingText ? $t(loadingText) : loadingText"
     :no-data-text="noDataText ? $t(noDataText) : noDataText"
+    :disabled="disabled"
   >
     <template #header v-if="shouldDisplayCheckAll">
       <el-checkbox v-model="checkAll" @change="handleCheckAll">
@@ -77,6 +78,10 @@ const props = defineProps({
     },
   },
   shouldDisplayCheckAll: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
     type: Boolean,
     default: false,
   },

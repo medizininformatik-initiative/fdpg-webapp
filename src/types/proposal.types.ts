@@ -6,7 +6,9 @@ import type { PanelQuery } from './sort-filter.types'
 import type { UploadType } from './upload.types'
 import type { IVersion } from './version.interface'
 import type { PublicationType } from './publication-type.enum'
-import type { Deadlines, DueDateEnum } from './due-date.enum'
+import type { Deadlines } from './due-date.enum'
+import type { DifeTypeOfUse } from './dife-type-of-use.enum'
+import type { PlatformIdentifier } from './platform-identifier.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -199,7 +201,6 @@ export interface ITypeOfUse extends WithIdAndIsDone {
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
   biosamples: IBiosample[]
 }
-
 export interface IUserProject {
   generalProjectInformation: IGeneralProjectInformation
   feasibility: IFeasibility
@@ -211,12 +212,20 @@ export interface IUserProject {
   addressees: IAddressees
   typeOfUse: ITypeOfUse
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
+  variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>
 }
 
 export interface IRequestedData extends WithIdAndIsDone {
   patientInfo: string
   dataInfo: string
   desiredDataAmount?: number
+}
+
+export interface IVariableSelectionData {}
+
+export interface IDifeVariableSelectionData {
+  typeOfUse?: DifeTypeOfUse
+  typeOfUseExplanation?: string
 }
 
 export enum ProjectHistoryType {

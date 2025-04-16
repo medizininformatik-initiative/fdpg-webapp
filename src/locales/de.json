@@ -632,7 +632,16 @@
     "reContactIncidentalText": "Begründung der Auswahl (Mit welchen Zufallsbefunden und mit welcher Häufigkeit ist zu rechnen?)",
     "urgentIncidentalReContacting": "Re-Kontaktierung bei extrem wichtigen Zufallsbefunden, auch unabhängig von der durch den\nPatienten/die Patientin gewählten Option bei der Einwilligung in den Broad Consent",
     "urgentIncidentalReContactingText": "Begründung der Auswahl (Mit welchen wichtigen Zufallsbefunden rechnen Sie, die dazu führen könnten, dass\nPatienten oder Patientinnen darüber informiert werden müssen, obwohl sie angegeben haben, keine Kontaktierung zu\nwünschen?)",
-    "TNZ": "TNZ"
+    "TNZ": "TNZ",
+    "selectionOfVariablesHeader": "Auswahl der Variablen",
+    "informationOnMiiSelectionForVariableSelectionStepHeader": "MII",
+    "informationOnMiiSelectionForVariableSelectionStepBody": "Ihre Variablenauswahl wird zusammen mit Ihrer Kohorte gespeichert. Bitte fahren Sie mit der Kohortenauswahl fort",
+    "informationOnDifeSelectionForVariableSelectionStepHeader": "DIFE",
+    "difeTypeOfUse_MORBIDITY_ANALYSIS": "Morbiditätsanalyse einschließlich Follow-up-Runde (bitte angeben)",
+    "difeTypeOfUse_MORTALITY_ANALYSIS": "Mortalitätsanalyse einschließlich Follow-up-Runde (bitte angeben)",
+    "difeTypeOfUse_OTHER": "Sonstige Analysen (bitte entsprechend angeben)",
+    "difeTypeOfUseExplanationPlaceholder": "Bitte spezifizieren Sie Ihre Auswahl",
+    "difeTypeOfUseSelectionPlaceholder": "Bitte Auswählen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
