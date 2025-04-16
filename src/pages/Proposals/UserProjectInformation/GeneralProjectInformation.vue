@@ -23,6 +23,7 @@
             v-model="generalProjectInformationForm.desiredStartTimeType"
             data-testId="generalProjectInformationForm.desiredStartTimeType"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
+            @change="handleStartTimeTypeChange"
           >
             <FdpgRadio
               v-for="option in ['immediate', 'later']"
@@ -119,6 +120,17 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
+const generalProjectInformationForm = useVModel(props, 'modelValue', emit) as unknown as IGeneralProjectInformation
 const projectFundingEditor = ref()
+
+const handleStartTimeTypeChange = (newValue: string) => {
+  if (newValue === 'immediate') {
+    generalProjectInformationForm.desiredStartTime = ''
+    setTimeout(() => {
+      if (props.formRef) {
+        props.formRef.validateField('userProject.generalProjectInformation.desiredStartTime')
+      }
+    }, 0)
+  }
+}
 </script>
