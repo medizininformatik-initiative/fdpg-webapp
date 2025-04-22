@@ -42,7 +42,7 @@
                 </FdpgFormItem>
               </el-col>
               <el-col :sm="24">
-                <DataSourceSelection></DataSourceSelection>
+                <DataSourceSelection v-model="proposalForm.selectedDataSources"></DataSourceSelection>
               </el-col>
             </el-row>
           </div>

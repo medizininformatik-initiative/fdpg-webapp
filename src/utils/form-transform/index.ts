@@ -133,5 +133,6 @@ export const transformForm = (
     requestedButExcludedLocationsCount: form?.requestedButExcludedLocationsCount,
     conditionalApprovalsCount: form?.conditionalApprovalsCount,
     uacApprovalsCount: form?.uacApprovalsCount,
+    selectedDataSources: form?.selectedDataSources ?? [],
   }
 }
