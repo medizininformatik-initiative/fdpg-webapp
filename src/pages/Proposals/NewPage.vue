@@ -192,6 +192,7 @@
           type="primary"
           data-test-id="nextStep"
           @click="nextStep"
+          :disabled="!proposalForm?.selectedDataSources?.length"
           v-if="activeStep !== CreatPrposalSteps.ResearchProject"
           >{{ $t('proposal.nextStep') }}</el-button
         >
