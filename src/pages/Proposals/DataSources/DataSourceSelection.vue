@@ -17,8 +17,8 @@
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import DataSourceItem from './DataSourceItem.vue'
 import type { IDataSource } from '@/types/proposal.types'
-import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import { ref, watch } from 'vue'
+import { onMounted, ref, defineExpose } from 'vue'
+import { useConfigStore } from '@/stores/config/config.store'
 
 const props = defineProps({
   modelValue: {
@@ -29,45 +29,19 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const selectedSources = ref<IDataSource[]>([])
-
-function initializeSelectedSources() {
-  const validSources = Array.isArray(props.modelValue) ? props.modelValue.filter((ds) => ds && ds._id) : []
-
-  selectedSources.value = validSources.map((ds) => ({
-    ...ds,
-    _id: typeof ds._id === 'string' ? ds._id : String(ds._id),
-  }))
-}
-
-initializeSelectedSources()
+const configStore = useConfigStore()
+const dataSources = ref<IDataSource[]>([])
 
 const isDataSourceSelected = (item: IDataSource) => {
   if (!item || !item._id) return false
   return selectedSources.value.some((ds) => ds._id === item._id)
 }
 
-watch(
-  () => props.modelValue,
-  () => {
-    initializeSelectedSources()
-  },
-  { deep: true },
-)
-
-const handleDataSourceChange = (event: { dataSource: IDataSource }) => {
-  const { dataSource } = event
-
-  // Safety check
-  if (!dataSource || !dataSource._id) {
-    console.warn('Received data source without ID', dataSource)
-    return
-  }
-
+const handleDataSourceChange = (dataSource: IDataSource) => {
   if (!isDataSourceSelected(dataSource)) {
     const newSelectedSources = [...selectedSources.value]
     newSelectedSources.push({
       ...dataSource,
-      _id: typeof dataSource._id === 'string' ? dataSource._id : String(dataSource._id),
     })
 
     selectedSources.value = newSelectedSources
@@ -76,22 +50,18 @@ const handleDataSourceChange = (event: { dataSource: IDataSource }) => {
   }
 }
 
-const dataSources: IDataSource[] = [
-  {
-    _id: '1',
-    tag: PlatformIdentifier.DIFE,
-    title: 'proposal.dife_title',
-    description: 'proposal.dife_description',
-    externalLink: 'proposal.dife_link',
-  },
-  {
-    _id: '2',
-    tag: PlatformIdentifier.Mii,
-    title: 'proposal.mii_title',
-    description: 'proposal.mii_description',
-    externalLink: 'proposal.mii_link',
-  },
-]
+const loadDataSources = async () => {
+  dataSources.value = await configStore.getDataSources()
+}
+
+onMounted(async () => {
+  await loadDataSources()
+})
+
+// Expose method for testing
+defineExpose({
+  loadDataSources,
+})
 </script>
 
 <style scoped lang="scss">

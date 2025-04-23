@@ -3,6 +3,8 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { AxiosInstance } from 'axios'
 import { ConfigService } from './config.service'
 import type { MockedObject } from 'vitest'
+import type { IDataSource } from '@/types/proposal.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/httpClients/api/api.client')
 
@@ -35,5 +37,14 @@ describe('ConfigService', () => {
     const response = await service.getDataPrivacy(PlatformIdentifier.Mii)
     expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/${PlatformIdentifier.Mii}/type-of-use-data-privacy`)
     expect(response).toEqual(mockGetAllResponse.data)
+  })
+
+  describe('GetDataSources', () => {
+    it('should call the api client to get available data sources', async () => {
+      apiClient.get.mockResolvedValueOnce(mockGetAllResponse)
+      const response = await service.getDataSources()
+      expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/data-sources`)
+      expect(response).toEqual(mockGetAllResponse.data)
+    })
   })
 })

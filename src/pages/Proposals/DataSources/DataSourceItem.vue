@@ -10,7 +10,7 @@
         <a :href="$t(dataSource.externalLink)" target="_blank" class="info-link">More info</a>
 
         <div class="data-source-footer">
-          <el-button type="primary" class="action-button" @click="addSelection">
+          <el-button type="primary" class="action-button" @click="addSelection(dataSource)">
             <i class="bi bi-plus"></i>
             Data Source
           </el-button>
@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
+import type { IDataSource } from '@/types/proposal.types'
 
 const props = defineProps({
   dataSource: {
@@ -36,21 +37,8 @@ const props = defineProps({
 
 const emit = defineEmits(['change'])
 
-const addSelection = () => {
-  const dataSourceCopy = JSON.parse(JSON.stringify(props.dataSource))
-
-  if (!dataSourceCopy._id) {
-    console.warn('DataSource is missing _id property, which could cause issues with selection')
-    return
-  }
-
-  if (typeof dataSourceCopy._id !== 'string') {
-    dataSourceCopy._id = String(dataSourceCopy._id)
-  }
-
-  emit('change', {
-    dataSource: dataSourceCopy,
-  })
+const addSelection = (dataSource: IDataSource) => {
+  emit('change', dataSource)
 }
 </script>
 

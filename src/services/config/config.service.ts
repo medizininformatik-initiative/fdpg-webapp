@@ -1,6 +1,7 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import type { IDataSource } from '@/types/proposal.types'
 import type { ITermsConfigGet } from '@/types/terms.types'
 
 export class ConfigService {
@@ -14,6 +15,10 @@ export class ConfigService {
 
   async getDataPrivacy(platform: PlatformIdentifier): Promise<IDataPrivacyConfigGet> {
     const response = await this.apiClient.get(`${this.basePath}/${platform}/type-of-use-data-privacy`)
+    return response.data
+  }
+  async getDataSources(): Promise<IDataSource[]> {
+    const response = await this.apiClient.get(`${this.basePath}/data-sources`)
     return response.data
   }
 }

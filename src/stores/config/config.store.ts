@@ -1,6 +1,7 @@
 import { ConfigService } from '@/services/config/config.service'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import type { IDataSource } from '@/types/proposal.types'
 import type { ITermsConfigGet } from '@/types/terms.types'
 import { defineStore } from 'pinia'
 
@@ -26,6 +27,10 @@ export const useConfigStore = defineStore('Config', {
     async getDataPrivacy(platform: PlatformIdentifier): Promise<void> {
       const data = await this.apiService.getDataPrivacy(platform)
       this.dataPrivacy[platform] = data
+    },
+    async getDataSources(): Promise<IDataSource[]> {
+      const result = await this.apiService.getDataSources()
+      return result as IDataSource[]
     },
   },
 })

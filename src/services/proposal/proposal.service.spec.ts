@@ -5,7 +5,13 @@ import { ProposalService } from './proposal.service'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
-import type { IFdpgChecklist, IPublicationCreateAndUpdate, IReportCreate, IReportUpdate } from '@/types/proposal.types'
+import type {
+  IDataSource,
+  IFdpgChecklist,
+  IPublicationCreateAndUpdate,
+  IReportCreate,
+  IReportUpdate,
+} from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IDeclineUacApproval, IUacApproval } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
@@ -14,6 +20,7 @@ import { DirectUpload } from '@/types/upload.types'
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import type { MiiLocation } from '@/types/location.enum'
 import { DueDateEnum } from '@/types/due-date.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 vi.mock('@/httpClients/api/api.client')
 
@@ -63,11 +70,63 @@ describe('ProposalService', () => {
     expect(response).toEqual(mockGetAllResponse.data)
   })
 
+  it('should call the api client to create proposal with selected data sources', async () => {
+    apiClient.post.mockResolvedValueOnce(mockGetAllResponse)
+    const selectedDataSources: IDataSource[] = [
+      {
+        _id: 'source1',
+        tag: PlatformIdentifier.DIFE,
+        title: 'proposal.dife_title',
+        description: 'proposal.dife_description',
+        externalLink: 'proposal.dife_link',
+      },
+    ]
+
+    const proposalWithDataSources = {
+      ...proposalStore.currentProposal,
+      selectedDataSources,
+    }
+
+    const response = await service.create(proposalWithDataSources)
+    expect(apiClient.post).toHaveBeenCalledWith(`${basePath}`, proposalWithDataSources)
+    expect(response).toEqual(mockGetAllResponse.data)
+  })
+
   it('should call the api client to update proposal', async () => {
     apiClient.put.mockResolvedValueOnce(mockGetAllResponse)
     const proposalId = 'proposalId'
     const response = await service.update(proposalId, { ...proposalStore.currentProposal })
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}`, { ...proposalStore.currentProposal })
+    expect(response).toEqual(mockGetAllResponse.data)
+  })
+
+  it('should call the api client to update proposal with selected data sources', async () => {
+    apiClient.put.mockResolvedValueOnce(mockGetAllResponse)
+    const proposalId = 'proposalId'
+    const selectedDataSources: IDataSource[] = [
+      {
+        _id: 'source1',
+        tag: PlatformIdentifier.DIFE,
+        title: 'proposal.dife_title',
+        description: 'proposal.dife_description',
+        externalLink: 'proposal.dife_link',
+      },
+      {
+        _id: 'source2',
+        tag: PlatformIdentifier.Mii,
+        title: 'proposal.mii_title',
+        description: 'proposal.mii_description',
+        externalLink: 'proposal.mii_link',
+      },
+    ]
+
+    const proposalWithDataSources = {
+      ...proposalStore.currentProposal,
+      selectedDataSources,
+    }
+
+    const response = await service.update(proposalId, proposalWithDataSources)
+    expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}`, proposalWithDataSources)
     expect(response).toEqual(mockGetAllResponse.data)
   })
 
