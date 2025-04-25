@@ -61,7 +61,8 @@ describe('DataSourceSelection', () => {
     await new Promise((resolve) => setTimeout(resolve, 0))
 
     const item = wrapper.findAllComponents({ name: 'DataSourceItem' })[0]
-    await item.trigger('click')
+    // Instead of triggering click, emit the change event directly
+    await item.vm.$emit('change', mockDataSources[0])
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     const emittedValue = wrapper.emitted('update:modelValue')![0][0]

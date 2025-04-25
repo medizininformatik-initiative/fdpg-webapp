@@ -3,7 +3,7 @@
     <ProposalSidebar />
     <el-container>
       <FdpgHeader />
-      <el-main id="main-scroll-top">
+      <el-main id="main-scroll-top" :class="{ 'shopping-list-open': layoutStore.isShoppingListOpen }">
         <router-view :user-role="userRole" />
       </el-main>
       <div
@@ -102,5 +102,11 @@ const setSidebarVisiblity = (isVisible: boolean) => {
       }
     }
   }
+}
+#main-scroll-top {
+  position: relative;
+}
+.shopping-list-open {
+  overflow: hidden;
 }
 </style>

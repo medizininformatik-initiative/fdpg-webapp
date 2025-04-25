@@ -9,6 +9,7 @@ interface ILayoutStore {
   lastDashboard: RouteName
   createProposalSteps: ICreateProposalStep[]
   activeStep: CreatPrposalSteps
+  isShoppingListOpen: boolean
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
@@ -30,6 +31,7 @@ export const useLayoutStore = defineStore('layout', {
       { step: CreatPrposalSteps.ResearchProject, validation: null },
     ],
     activeStep: CreatPrposalSteps.DataSources,
+    isShoppingListOpen: false,
   }),
 
   actions: {
@@ -59,6 +61,12 @@ export const useLayoutStore = defineStore('layout', {
         this.activeStep = prevStep.step
       }
     },
+    goToStep(step: CreatPrposalSteps) {
+      const targetStep = this.createProposalSteps.find((s) => s.step === step)
+      if (targetStep) {
+        this.activeStep = targetStep.step
+      }
+    },
     updateStepStatus(step: keyof typeof CreatPrposalSteps, valid: boolean | null) {
       const currentStep = this.createProposalSteps.find((s) => s.step === CreatPrposalSteps[step])
       if (currentStep) {
@@ -70,6 +78,9 @@ export const useLayoutStore = defineStore('layout', {
         step.validation = null
       })
       this.activeStep = CreatPrposalSteps.DataSources
+    },
+    toggleShoppingList() {
+      this.isShoppingListOpen = !this.isShoppingListOpen
     },
   },
 })

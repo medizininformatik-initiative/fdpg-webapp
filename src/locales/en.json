@@ -64,7 +64,7 @@
     "terms": "TERMS",
     "DataSources": "Select Data sources",
     "Variables": "Select the Variables",
-    "Casesohort": "Select the Cases/Cohorts/Patient",
+    "Casesohort": "Select the Cases/Cohorts/Patients",
     "DataUsage": "Planned Data use",
     "ProjectDetails": "General Project Detail",
     "ProjectParticipants": "Project Participants",
@@ -647,7 +647,11 @@
     "dife_description": "In the year 2016, the World Health Organization announced the strategy to eliminate chronic hepatitis C virus (HCV) infection by the year 2030  In Germany, the political will to eradicate the infection was defined by the BIS2030 strategy. \nIn Germany, screening is a major task of primary care physicians, for example within the preventive medical examination named “Gesundheitsuntersuchung”, formerly “Check-Up 35+”.  ",
     "mii_description": "In the year 2016, the World Health Organization announced the strategy to eliminate chronic hepatitis C virus (HCV) infection by the year 2030  In Germany, the political will to eradicate the infection was defined by the BIS2030 strategy. \nIn Germany, screening is a major task of primary care physicians, for example within the preventive medical examination named “Gesundheitsuntersuchung”, formerly “Check-Up 35+”.  ",
     "dife_link": "https://health-study-hub.de/resource/nfdi4health-9",
-    "mii_link": "https://feasibility.forschen-fuer-gesundheit.de/"
+    "mii_link": "https://feasibility.forschen-fuer-gesundheit.de/",
+    "addDataSource": "Add",
+    "continueWithDataSource": "Add more Data sources",
+    "toSelectVariable": "Search for associated variables",
+    "noDataSourcesSelected": "No Data source selected"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

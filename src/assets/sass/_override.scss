@@ -97,7 +97,11 @@
       }
     }
   }
-
+  &.el-button--primary{
+    &:active:not(.is-disabled) {
+      box-shadow: none
+    }
+  }
   /*
     button size override
   */
@@ -372,4 +376,10 @@
 }
 .ql-editor h1 {
   font-size: 2rem;
+}
+.data-source-list-drawer-content-item{
+  .el-collapse-item__header {
+    height: auto !important;
+    padding: 10px 0 !important;
+  }
 }

@@ -11,8 +11,7 @@
 
         <div class="data-source-footer">
           <el-button type="primary" class="action-button" @click="addSelection(dataSource)">
-            <i class="bi bi-plus"></i>
-            Data Source
+            <i class="fa-solid fa-plus"></i> {{ $t('proposal.addDataSource') }}
           </el-button>
         </div>
       </div>
@@ -26,7 +25,7 @@ import type { IDataSource } from '@/types/proposal.types'
 
 const props = defineProps({
   dataSource: {
-    type: Object,
+    type: Object as () => IDataSource,
     required: true,
   },
   isSelected: {
@@ -57,7 +56,7 @@ const addSelection = (dataSource: IDataSource) => {
 }
 
 .data-source {
-  .data-source-header {
+  &-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
