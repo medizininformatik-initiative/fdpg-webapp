@@ -50,13 +50,13 @@ describe('Config Store', () => {
     it('should call the service to get available data sources', async () => {
       const store = useConfigStore()
       configService.getDataSources.mockResolvedValueOnce(mockDataSources)
-      const result = await store.getDataSources()
+      await store.getDataSources()
 
       expect(configService.getDataSources).toHaveBeenCalled()
-      expect(result).toEqual(mockDataSources)
-      expect(result.length).toBe(2)
-      expect(result[0].tag).toBe(PlatformIdentifier.DIFE)
-      expect(result[1].tag).toBe(PlatformIdentifier.Mii)
+      expect(store.dataSources).toEqual(mockDataSources)
+      expect(Object.keys(store.dataSources)).toHaveLength(2)
+      expect(store.dataSources[PlatformIdentifier.DIFE]).toBeDefined()
+      expect(store.dataSources[PlatformIdentifier.Mii]).toBeDefined()
     })
   })
 })

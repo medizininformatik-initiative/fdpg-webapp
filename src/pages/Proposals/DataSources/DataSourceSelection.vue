@@ -3,11 +3,12 @@
     <FdpgLabel htmlFor="sidebar.DataSources" :required="true" size="large"> </FdpgLabel>
     <div class="data-source-container">
       <DataSourceItem
-        v-for="item in dataSources"
-        :key="item._id"
+        v-for="(item, i) in dataSources"
+        :key="i"
         :dataSource="item"
-        :isSelected="isDataSourceSelected(item)"
-        @change="handleDataSourceChange"
+        :platformIdentifier="i"
+        :isSelected="isDataSourceSelected(i)"
+        @change="handleDataSourceChange(i)"
       />
     </div>
   </div>
@@ -16,42 +17,39 @@
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import DataSourceItem from './DataSourceItem.vue'
-import type { IDataSource } from '@/types/proposal.types'
-import { onMounted, ref, defineExpose } from 'vue'
+import type { IDataSourceDto } from '@/types/proposal.types'
+import { onMounted, ref, defineExpose, computed } from 'vue'
 import { useConfigStore } from '@/stores/config/config.store'
+import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const props = defineProps({
   modelValue: {
-    type: Array as () => IDataSource[],
+    type: Array as () => PlatformIdentifier[],
     required: true,
   },
 })
 const emit = defineEmits(['update:modelValue'])
 
-const selectedSources = ref<IDataSource[]>([])
+const selectedSources = ref<PlatformIdentifier[]>([])
 const configStore = useConfigStore()
-const dataSources = ref<IDataSource[]>([])
+const dataSources = computed<IDataSourceDto>(() => {
+  return configStore.dataSources
+})
 
-const isDataSourceSelected = (item: IDataSource) => {
-  if (!item || !item._id) return false
-  return selectedSources.value.some((ds) => ds._id === item._id)
+const isDataSourceSelected = (dataSource: PlatformIdentifier) => {
+  return selectedSources.value.includes(dataSource)
 }
 
-const handleDataSourceChange = (dataSource: IDataSource) => {
+const handleDataSourceChange = (dataSource: PlatformIdentifier) => {
   if (!isDataSourceSelected(dataSource)) {
-    const newSelectedSources = [...selectedSources.value]
-    newSelectedSources.push({
-      ...dataSource,
-    })
+    selectedSources.value.push(dataSource)
 
-    selectedSources.value = newSelectedSources
-
-    emit('update:modelValue', newSelectedSources)
+    emit('update:modelValue', selectedSources.value)
   }
 }
 
 const loadDataSources = async () => {
-  dataSources.value = await configStore.getDataSources()
+  await configStore.getDataSources()
 }
 
 onMounted(async () => {

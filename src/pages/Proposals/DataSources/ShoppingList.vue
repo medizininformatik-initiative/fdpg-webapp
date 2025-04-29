@@ -18,18 +18,16 @@
       </div>
       <div class="data-source-list-drawer-content">
         <el-collapse v-if="selectedSources.length > 0">
-          <el-collapse-item
-            v-for="item in selectedSources"
-            :key="item._id"
-            class="data-source-list-drawer-content-item"
-          >
+          <el-collapse-item v-for="item in selectedSources" :key="item" class="data-source-list-drawer-content-item">
             <template #title>
               <div class="header">
                 <div class="data-source-header">
-                  <h5 class="identifier">{{ item.tag }}</h5>
+                  <h5 class="identifier">{{ item }}</h5>
                 </div>
                 <div class="data-source-title">
-                  <FdpgLabel size="small" :html-for="item.title"> {{ t(item.title) }} </FdpgLabel>
+                  <FdpgLabel size="small" :html-for="dataSources[item].title">
+                    {{ t(dataSources[item].title) }}
+                  </FdpgLabel>
                   <el-button
                     type="primary"
                     link
@@ -44,7 +42,7 @@
             </template>
 
             <div>
-              <p>{{ t(item.description) }}</p>
+              <p>{{ t(dataSources[item].description) }}</p>
               <div class="data-source-footer">
                 <el-button
                   type="primary"
@@ -83,13 +81,13 @@ import type { IDataSource } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { computed, onMounted, ref } from 'vue'
-import type { PropType } from 'vue'
-
+import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { useConfigStore } from '@/stores/config/config.store'
 const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {
-    type: Array as PropType<IDataSource[]>,
+    type: Array as () => PlatformIdentifier[],
     required: true,
     default: () => [],
   },
@@ -98,13 +96,16 @@ const emit = defineEmits(['update:modelValue'])
 const selectedSources = useVModel(props, 'modelValue', emit)
 
 const layoutStore = useLayoutStore()
+const configStore = useConfigStore()
 const isOpen = computed(() => layoutStore.isShoppingListOpen)
+const dataSources = computed(() => configStore.dataSources)
 
-const removeSource = (item: IDataSource) => {
-  const index = selectedSources.value.findIndex((source) => source._id === item._id)
-  if (index !== -1) {
-    selectedSources.value.splice(index, 1)
+const removeSource = (item: PlatformIdentifier) => {
+  const index = selectedSources.value.indexOf(item)
+  if (index === -1) {
+    return
   }
+  selectedSources.value.splice(index, 1)
 }
 
 const goToStep = (CreatPrposalSteps: CreatPrposalSteps) => {
@@ -121,6 +122,7 @@ onMounted(() => {
   if (layoutStore.isShoppingListOpen) {
     layoutStore.toggleShoppingList()
   }
+  configStore.getDataSources()
 })
 
 const closeDrawer = () => {

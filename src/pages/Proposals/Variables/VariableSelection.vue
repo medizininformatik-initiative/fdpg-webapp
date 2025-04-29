@@ -55,12 +55,8 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isMiiSelected = computed(() =>
-  props.modelValue?.selectedDataSources.some((item: IDataSource) => item.tag == PlatformIdentifier.Mii),
-)
-const isDifeSelected = computed(() =>
-  props.modelValue?.selectedDataSources.some((item: IDataSource) => item.tag == PlatformIdentifier.DIFE),
-)
+const isMiiSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.Mii))
+const isDifeSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.DIFE))
 
 const difeTypeOfUseOptions = computed(() =>
   Object.keys(DifeTypeOfUse).map((value) => ({ label: t(`proposal.difeTypeOfUse_${value}`), value })),

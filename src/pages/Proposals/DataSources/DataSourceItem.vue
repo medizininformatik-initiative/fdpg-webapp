@@ -3,14 +3,14 @@
     <el-card class="data-source-card">
       <div class="data-source">
         <div class="data-source-header">
-          <h5 class="identifier">{{ dataSource.tag }}</h5>
+          <h5 class="identifier">{{ platformIdentifier }}</h5>
         </div>
         <FdpgLabel :htmlFor="dataSource.title" size="medium" />
         <p>{{ $t(dataSource.description) }}</p>
         <a :href="$t(dataSource.externalLink)" target="_blank" class="info-link">More info</a>
 
         <div class="data-source-footer">
-          <el-button type="primary" class="action-button" @click="addSelection(dataSource)">
+          <el-button type="primary" class="action-button" @click="addSelection(platformIdentifier)">
             <i class="fa-solid fa-plus"></i> {{ $t('proposal.addDataSource') }}
           </el-button>
         </div>
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IDataSource } from '@/types/proposal.types'
 
 const props = defineProps({
@@ -32,11 +33,15 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  platformIdentifier: {
+    type: String as () => PlatformIdentifier,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['change'])
 
-const addSelection = (dataSource: IDataSource) => {
+const addSelection = (dataSource: PlatformIdentifier) => {
   emit('change', dataSource)
 }
 </script>

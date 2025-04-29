@@ -1,6 +1,6 @@
 import { ConfigService } from '@/services/config/config.service'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
-import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IDataSource } from '@/types/proposal.types'
 import type { ITermsConfigGet } from '@/types/terms.types'
 import { defineStore } from 'pinia'
@@ -9,6 +9,7 @@ export interface IConfigState {
   apiService: ConfigService
   termsAndConditions: Partial<Record<PlatformIdentifier, ITermsConfigGet>>
   dataPrivacy: Partial<Record<PlatformIdentifier, IDataPrivacyConfigGet>>
+  dataSources: Record<PlatformIdentifier, IDataSource>
 }
 
 export const useConfigStore = defineStore('Config', {
@@ -16,6 +17,18 @@ export const useConfigStore = defineStore('Config', {
     apiService: new ConfigService(),
     termsAndConditions: {},
     dataPrivacy: {},
+    dataSources: {
+      [PlatformIdentifier.Mii]: {
+        title: '',
+        description: '',
+        externalLink: '',
+      },
+      [PlatformIdentifier.DIFE]: {
+        title: '',
+        description: '',
+        externalLink: '',
+      },
+    },
   }),
 
   actions: {
@@ -28,9 +41,9 @@ export const useConfigStore = defineStore('Config', {
       const data = await this.apiService.getDataPrivacy(platform)
       this.dataPrivacy[platform] = data
     },
-    async getDataSources(): Promise<IDataSource[]> {
+    async getDataSources(): Promise<void> {
       const result = await this.apiService.getDataSources()
-      return result as IDataSource[]
+      this.dataSources = result as unknown as Record<PlatformIdentifier, IDataSource>
     },
   },
 })

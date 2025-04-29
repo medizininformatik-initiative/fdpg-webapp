@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import DataSourceSelection from '@/pages/Proposals/DataSources/DataSourceSelection.vue'
 import { useConfigStore } from '@/stores/config/config.store'
 import { mockDataSources } from '@/mocks/data-sources'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 vi.mock('@/components/FdpgLabel.vue', () => ({
   default: {
@@ -14,9 +15,10 @@ vi.mock('@/components/FdpgLabel.vue', () => ({
 vi.mock('./DataSourceItem.vue', () => ({
   default: {
     name: 'DataSourceItem',
-    props: ['dataSource', 'isSelected'],
+    props: ['dataSource', 'isSelected', 'platformIdentifier'],
     emits: ['change'],
-    template: '<div class="data-source-item" @click="$emit(\'change\', dataSource)">{{ dataSource.name }}</div>',
+    template:
+      '<div class="data-source-item" @click="$emit(\'change\', platformIdentifier)">{{ dataSource.title }}</div>',
   },
 }))
 
@@ -31,6 +33,7 @@ describe('DataSourceSelection', () => {
     // Reset and setup store mock
     ;(useConfigStore as any).mockReturnValue({
       getDataSources: getDataSourcesMock,
+      dataSources: mockDataSources,
     })
   })
 
@@ -46,7 +49,7 @@ describe('DataSourceSelection', () => {
     await new Promise((resolve) => setTimeout(resolve, 0))
 
     expect(getDataSourcesMock).toHaveBeenCalled()
-    const items = wrapper.findAll('.data-source-item')
+    const items = wrapper.findAllComponents({ name: 'DataSourceItem' })
     expect(items).toHaveLength(2)
   })
 
@@ -62,10 +65,10 @@ describe('DataSourceSelection', () => {
 
     const item = wrapper.findAllComponents({ name: 'DataSourceItem' })[0]
     // Instead of triggering click, emit the change event directly
-    await item.vm.$emit('change', mockDataSources[0])
+    await item.vm.$emit('change', PlatformIdentifier.DIFE)
 
     expect(wrapper.emitted('update:modelValue')).toBeTruthy()
     const emittedValue = wrapper.emitted('update:modelValue')![0][0]
-    expect(emittedValue).toEqual([mockDataSources[0]])
+    expect(emittedValue).toEqual([PlatformIdentifier.DIFE])
   })
 })

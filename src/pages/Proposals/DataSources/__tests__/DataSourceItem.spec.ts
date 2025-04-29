@@ -14,8 +14,6 @@ vi.mock('@/components/FdpgLabel.vue', () => ({
 
 describe('DataSourceItem', () => {
   const mockDataSource: IDataSource = {
-    _id: 'source1',
-    tag: PlatformIdentifier.DIFE,
     title: 'proposal.dife_title',
     description: 'proposal.dife_description',
     externalLink: 'proposal.dife_link',
@@ -26,6 +24,7 @@ describe('DataSourceItem', () => {
       props: {
         dataSource: mockDataSource,
         isSelected: false,
+        platformIdentifier: PlatformIdentifier.DIFE,
       },
       global: {
         mocks: {
@@ -36,7 +35,7 @@ describe('DataSourceItem', () => {
 
     expect(wrapper.exists()).toBe(true)
     expect(wrapper.find('.data-source-card').exists()).toBe(true)
-    expect(wrapper.find('.identifier').text()).toBe(mockDataSource.tag)
+    expect(wrapper.find('.identifier').text()).toBe(PlatformIdentifier.DIFE)
     expect(wrapper.find('.mock-fdpg-label').exists()).toBe(true)
     expect(wrapper.find('p').text()).toBe(mockDataSource.description)
     expect(wrapper.find('.info-link').attributes('href')).toBe(mockDataSource.externalLink)
@@ -64,6 +63,7 @@ describe('DataSourceItem', () => {
       props: {
         dataSource: mockDataSource,
         isSelected: false,
+        platformIdentifier: PlatformIdentifier.DIFE,
       },
       global: {
         mocks: {
@@ -75,6 +75,6 @@ describe('DataSourceItem', () => {
     await wrapper.find('.action-button').trigger('click')
 
     expect(wrapper.emitted('change')).toBeTruthy()
-    expect(wrapper.emitted('change')![0][0]).toEqual(mockDataSource)
+    expect(wrapper.emitted('change')![0][0]).toEqual(PlatformIdentifier.DIFE)
   })
 })
