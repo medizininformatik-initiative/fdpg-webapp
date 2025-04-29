@@ -5,7 +5,8 @@
       v-model="localNote"
       :placeholder="$t('proposal.internalCheckNotes')"
       :disabled="isDisabled"
-      @blur="handleBlur"
+      @blur="handleBlur(localNote)"
+      @input="debouncedHandleChange(localNote)"
     ></FdpgTextEditor>
   </div>
   <div v-if="currentNote?.note" class="note-meta">
@@ -32,6 +33,7 @@ import FdpgLabel from './FdpgLabel.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import { defineProps, defineEmits } from '@vue/runtime-core'
 import type { InternalCheckNote } from '@/types/proposal.types'
+import { debounce } from 'lodash-es'
 
 const props = defineProps({
   isDisabled: Boolean,
@@ -52,13 +54,20 @@ watch(
   },
 )
 
-const handleBlur = () => {
+const handleBlur = (value: string) => {
   emit('update:listItem', {
     fdpgInternalCheckNotes: {
-      note: localNote.value,
+      note: value,
     },
   })
 }
+const debouncedHandleChange = debounce((value: string) => {
+  emit('update:listItem', {
+    fdpgInternalCheckNotes: {
+      note: value,
+    },
+  })
+}, 500)
 </script>
 
 <style lang="scss" scoped>

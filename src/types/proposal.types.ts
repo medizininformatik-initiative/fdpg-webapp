@@ -356,6 +356,11 @@ export interface IFdpgChecklist {
   projectProperties: IChecklistItem[]
 }
 
+export type FdpgChecklistItemUpdateResponse =
+  | IChecklistItem
+  | { _id: 'isRegistrationLinkSent'; isRegistrationLinkSent: boolean }
+  | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: InternalCheckNote | null }
+
 export interface IsDoneDetail {
   path: string
   value: boolean
