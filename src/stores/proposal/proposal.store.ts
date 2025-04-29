@@ -224,13 +224,37 @@ export const useProposalStore = defineStore('Proposal', {
       const typedStore = store as IProposalState
 
       try {
-        const updatedChecklist = await typedStore.apiService.updateFdpgChecklist(id, checklist)
+        const updatedItem = await typedStore.apiService.updateFdpgChecklist(id, checklist)
         const currentProposal = typedStore.currentProposal
-        if (currentProposal) {
-          typedStore.currentProposal = {
-            ...currentProposal,
-            fdpgChecklist: updatedChecklist,
+
+        if (!currentProposal || !updatedItem || !currentProposal.fdpgChecklist) return
+
+        const checklistData = currentProposal.fdpgChecklist
+
+        if ('isRegistrationLinkSent' in updatedItem) {
+          checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('fdpgInternalCheckNotes' in updatedItem) {
+          checklistData.fdpgInternalCheckNotes =
+            updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
+        } else if ('_id' in updatedItem) {
+          const targetFields = ['checkListVerification', 'projectProperties'] as const
+
+          for (const field of targetFields) {
+            const list = checklistData[field]
+            const index = list?.findIndex((item) => item._id === updatedItem._id)
+            if (index !== -1 && list) {
+              list[index] = {
+                ...list[index],
+                ...updatedItem,
+              }
+              break
+            }
           }
+        }
+
+        typedStore.currentProposal = {
+          ...currentProposal,
+          fdpgChecklist: checklistData,
         }
       } catch (error) {
         if (errorCb) {

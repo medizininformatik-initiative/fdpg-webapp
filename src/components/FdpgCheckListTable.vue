@@ -174,8 +174,6 @@ const handleOptionChange = (row) => {
   }
   .el-radio-group {
     display: flex;
-    flex-direction: column;
-    float: left;
   }
 }
 
