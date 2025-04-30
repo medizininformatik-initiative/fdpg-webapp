@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import type { IDifeVariableSelectionData, IProposal } from '@/types/proposal.types'
+import type { IDataSource, IDifeVariableSelectionData, IProposal } from '@/types/proposal.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
@@ -55,8 +55,8 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isMiiSelected = computed(() => true) //props.modelValue.selectedDataSources.includes(PlatformIdentifier.Mii))
-const isDifeSelected = computed(() => true) //props.modelValue.selectedDataSources.includes(PlatformIdentifier.DIFE))
+const isMiiSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.Mii))
+const isDifeSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.DIFE))
 
 const difeTypeOfUseOptions = computed(() =>
   Object.keys(DifeTypeOfUse).map((value) => ({ label: t(`proposal.difeTypeOfUse_${value}`), value })),

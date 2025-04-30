@@ -465,6 +465,8 @@ export interface IProposal {
   fdpgChecklist?: IFdpgChecklist
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
+  selectedDataSources: PlatformIdentifier[]
+
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
@@ -579,4 +581,13 @@ export interface IProposalCount {
   high?: number
   medium?: number
   low?: number
+}
+
+export type IDataSource = {
+  title: string
+  description: string
+  externalLink: string
+}
+export type IDataSourceDto = {
+  [key in PlatformIdentifier]: IDataSource
 }

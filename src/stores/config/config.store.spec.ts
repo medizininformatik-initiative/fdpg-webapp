@@ -4,6 +4,8 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { createPinia, setActivePinia } from 'pinia'
 import { useConfigStore } from './config.store'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockDataSources } from '@/mocks/data-sources'
 
 vi.mock('@/services/config/config.service')
 
@@ -42,5 +44,19 @@ describe('Config Store', () => {
     } as unknown as IDataPrivacyConfigGet)
     await store.getDataPrivacy(PlatformIdentifier.Mii)
     expect(configService.getDataPrivacy).toHaveBeenCalledWith(PlatformIdentifier.Mii)
+  })
+
+  describe('GetDataSources', () => {
+    it('should call the service to get available data sources', async () => {
+      const store = useConfigStore()
+      configService.getDataSources.mockResolvedValueOnce(mockDataSources)
+      await store.getDataSources()
+
+      expect(configService.getDataSources).toHaveBeenCalled()
+      expect(store.dataSources).toEqual(mockDataSources)
+      expect(Object.keys(store.dataSources)).toHaveLength(2)
+      expect(store.dataSources[PlatformIdentifier.DIFE]).toBeDefined()
+      expect(store.dataSources[PlatformIdentifier.Mii]).toBeDefined()
+    })
   })
 })
