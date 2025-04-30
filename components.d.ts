@@ -22,6 +22,7 @@ declare module 'vue' {
     DocumentList: typeof import('./src/components/Proposals/Details/DocumentList.vue')['default']
     EditProfileDialog: typeof import('./src/components/EditProfileDialog.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElBadge: typeof import('element-plus/es')['ElBadge']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']

@@ -14,6 +14,7 @@ import type {
   IReportCreate,
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
+  FdpgChecklistItemUpdateResponse,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -175,7 +176,7 @@ export class ProposalService {
     return response.data
   }
 
-  async updateFdpgChecklist(id: string, checklist: Partial<IFdpgChecklist>): Promise<IFdpgChecklist> {
+  async updateFdpgChecklist(id: string, checklist: Partial<IFdpgChecklist>): Promise<FdpgChecklistItemUpdateResponse> {
     const response = await this.apiClient.put(`${this.basePath}/${id}/fdpg-checklist`, checklist)
     return response.data
   }

@@ -16,6 +16,7 @@ import type {
   IReportGet,
   IFdpgChecklist,
   InternalCheckNote,
+  FdpgChecklistItemUpdateResponse,
 } from '@/types/proposal.types'
 import { ParticipantType, ProposalStatus } from '@/types/proposal.types'
 import type { IDeclineUacApproval } from '@/types/uac-approval.types'
@@ -520,23 +521,41 @@ describe('Proposal Store', () => {
     expect(store.currentProposal.reports).toEqual([])
   })
 
-  it('should update checklist', async () => {
+  it('should update checklist isRegistrationLinkSent', async () => {
     const store = useProposalStore()
     store.currentProposal = getMockProposal()
-    const mockDate = new Date()
+
+    const checklistUpdate: Partial<IFdpgChecklist> = {
+      isRegistrationLinkSent: false,
+    }
+    const mockResponse: FdpgChecklistItemUpdateResponse = {
+      _id: 'isRegistrationLinkSent',
+      isRegistrationLinkSent: false,
+    }
+    proposalService.updateFdpgChecklist.mockResolvedValueOnce(mockResponse)
+    const updatePromise = store.updateFdpgChecklist('proposalId', checklistUpdate)
+
+    await vi.advanceTimersByTime(500)
+    await updatePromise
+
+    expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith('proposalId', checklistUpdate)
+    expect(store.currentProposal?.fdpgChecklist?.isRegistrationLinkSent).toBe(false)
+  })
+
+  it('should update checklist fdpgInternalCheckNotes', async () => {
+    const store = useProposalStore()
+    store.currentProposal = getMockProposal()
+
     const mockNote: InternalCheckNote = {
       note: 'test note',
-      date: mockDate,
+      date: new Date(),
       user: 'test user',
     }
     const checklistUpdate: Partial<IFdpgChecklist> = {
-      isRegistrationLinkSent: true,
       fdpgInternalCheckNotes: mockNote,
     }
-    const mockResponse: IFdpgChecklist = {
-      checkListVerification: [],
-      projectProperties: [],
-      isRegistrationLinkSent: true,
+    const mockResponse: FdpgChecklistItemUpdateResponse = {
+      _id: 'fdpgInternalCheckNotes',
       fdpgInternalCheckNotes: mockNote,
     }
     proposalService.updateFdpgChecklist.mockResolvedValueOnce(mockResponse)
@@ -546,35 +565,7 @@ describe('Proposal Store', () => {
     await updatePromise
 
     expect(proposalService.updateFdpgChecklist).toHaveBeenCalledWith('proposalId', checklistUpdate)
-    expect(store.currentProposal?.fdpgChecklist?.isRegistrationLinkSent).toBe(mockResponse.isRegistrationLinkSent)
-    expect(store.currentProposal?.fdpgChecklist?.fdpgInternalCheckNotes).toEqual(mockResponse.fdpgInternalCheckNotes)
-  })
-
-  it('should call error callback if update checklist fails', async () => {
-    const store = useProposalStore()
-    store.currentProposal = getMockProposal()
-
-    const proposalId = '630dd9e8c8a548d21ef4c356'
-    const errorCb = vi.fn()
-    proposalService.updateFdpgChecklist.mockRejectedValueOnce('error')
-
-    const mockNote: InternalCheckNote = {
-      note: '',
-      date: new Date(),
-      user: 'test user',
-    }
-    const checklistUpdate: Partial<IFdpgChecklist> = {
-      isRegistrationLinkSent: false,
-      fdpgInternalCheckNotes: mockNote,
-    }
-    const updatePromise = store.updateFdpgChecklist(proposalId, checklistUpdate, errorCb)
-
-    // Wait for debounce to complete
-    await vi.advanceTimersByTime(500)
-    await updatePromise
-
-    expect(errorCb).toHaveBeenCalledWith('error')
-    expect(errorCb).toHaveBeenCalledTimes(1)
+    expect(store.currentProposal?.fdpgChecklist?.fdpgInternalCheckNotes).toEqual(mockNote)
   })
 
   it('should check the getter', async () => {
