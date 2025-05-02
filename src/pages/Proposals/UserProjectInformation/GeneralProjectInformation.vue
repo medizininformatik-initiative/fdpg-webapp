@@ -18,7 +18,7 @@
           prop="userProject.generalProjectInformation.desiredStartTimeType"
           data-testId="generalProjectInformationForm.desiredStartTimeType"
         >
-          <FdpgLabel required html-for="proposal.desiredStartTime" />
+          <FdpgLabel html-for="proposal.desiredStartTime" />
           <el-radio-group
             v-model="generalProjectInformationForm.desiredStartTimeType"
             data-testId="generalProjectInformationForm.desiredStartTimeType"
@@ -33,18 +33,34 @@
             />
           </el-radio-group>
         </FdpgFormItem>
-
+      </el-col>
+      <el-col :sm="24" :md="12">
         <FdpgFormItem
+          v-if="generalProjectInformationForm.desiredStartTimeType === 'later'"
           prop="userProject.generalProjectInformation.desiredStartTime"
           data-testId="generalProjectInformationForm.desiredStartTime"
         >
+          <FdpgLabel required html-for="proposal.desiredStartTime" />
+
           <FdpgDatePicker
-            v-if="generalProjectInformationForm.desiredStartTimeType === 'later'"
             v-model="generalProjectInformationForm.desiredStartTime"
             data-testId="generalProjectInformationForm.desiredStartTime"
             placeholder="proposal.pleaseEnterTheStartTime"
             :min-date="new Date()"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24" :md="12">
+        <FdpgFormItem prop="userProject.generalProjectInformation.keywords">
+          <FdpgLabel required html-for="proposal.keywords" />
+          <el-input-tag
+            v-model="generalProjectInformationForm.keywords"
+            class="fdpg-input__tag"
+            data-testId="generalProjectInformationForm.keywords"
+            :disabled="reviewMode || generalProjectInformationForm.isDone"
+            :placeholder="$t('proposal.pleaseEnterTheKeywords')"
+            aria-label="Please click the Enter key after input"
           />
         </FdpgFormItem>
       </el-col>
@@ -134,3 +150,17 @@ const handleStartTimeTypeChange = (newValue: string) => {
   }
 }
 </script>
+<style lang="scss" scoped>
+@use '@/assets/sass/variable' as *;
+.fdpg-input__tag {
+  height: 59px;
+  color: $black;
+  padding: 0 11px;
+  font-size: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: 'Titillium Web', serif;
+  border: 0.5px solid $gray-700;
+}
+</style>

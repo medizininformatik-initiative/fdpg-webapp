@@ -68,6 +68,7 @@ const transformGeneralProjectInformation = (
     projectDuration: generalProjectInformation?.projectDuration,
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),
+    keywords: generalProjectInformation?.keywords ?? [],
   }
 }
 
