@@ -61,17 +61,29 @@ describe('FdpgChangeDeadlines.vue', () => {
     })
   })
 
-  it('renders the component with the correct title', () => {
+  it('renders the component with the correct title', async () => {
     expect(wrapper.find('.section-title').text()).toBe('proposal.deadlinesChange')
 
-    wrapper.vm.saveDeadlines()
+    await wrapper.setProps({ status: ProposalStatus.FdpgCheck })
+
+    wrapper.vm.proposalDeadlines[DueDateEnum.DUE_DAYS_FDPG_CHECK] = '2024-03-21T08:00:00.000Z'
+    await wrapper.vm.$nextTick()
+
+    await wrapper.vm.saveDeadlines()
+    await wrapper.vm.$nextTick()
 
     const events = wrapper.emitted('saveDeadlines')
     expect(events).toHaveLength(1)
   })
 
   it('emits saveDeadlines event when the save method is called', async () => {
+    await wrapper.setProps({ status: ProposalStatus.FdpgCheck })
+
+    wrapper.vm.proposalDeadlines[DueDateEnum.DUE_DAYS_FDPG_CHECK] = '2024-03-21T08:00:00.000Z'
+    await wrapper.vm.$nextTick()
+
     await wrapper.vm.saveDeadlines()
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted('saveDeadlines')).toBeTruthy()
 
