@@ -57,8 +57,43 @@ const emit = defineEmits(['saveDeadlines'])
 
 const proposalDeadlines = ref({})
 
+const normalizeDate = (date) => {
+  if (!date) return null
+  const d = new Date(date)
+  return d.toISOString().split('T')[0] // Only compare the date part
+}
+
+const modifiedDeadlines = computed(() => {
+  const changes = {}
+  Object.keys(proposalDeadlines.value).forEach((key) => {
+    const currentValue = proposalDeadlines.value[key]
+    const originalValue = props.deadlines[key]
+
+    if (normalizeDate(currentValue) !== normalizeDate(originalValue)) {
+      changes[key] = currentValue
+    }
+  })
+  return changes
+})
+
 const saveDeadlines = () => {
-  emit('saveDeadlines', { ...proposalDeadlines.value })
+  const allowedDeadlines = statusToDueDatesMap[props.status] || []
+
+  const validChanges = Object.entries(modifiedDeadlines.value).reduce((acc, [key, value]) => {
+    const originalValue = props.deadlines[key]
+    if (allowedDeadlines.includes(key) && normalizeDate(value) !== normalizeDate(originalValue)) {
+      acc[key] = value
+    }
+    return acc
+  }, {})
+
+  if (Object.keys(validChanges).length > 0) {
+    const allDeadlines = {
+      ...props.deadlines,
+      ...validChanges,
+    }
+    emit('saveDeadlines', allDeadlines)
+  }
 }
 
 onMounted(() => (proposalDeadlines.value = { ...props.deadlines }))
