@@ -67,17 +67,7 @@
                         }}
                       </dd>
                       <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
-                      <dd>
-                        <FdpgTextEditor
-                          :model-value="props.row.declineReason?.reason"
-                          @update:modelValue="
-                            (val) => {
-                              if (props.row.declineReason) props.row.declineReason.reason = val
-                            }
-                          "
-                          disabled
-                        />
-                      </dd>
+                      <dd><div class="ql-editor" v-html="props.row.declineReason?.reason"></div></dd>
                     </dl>
 
                     <p v-else>--</p>
@@ -190,7 +180,7 @@
                 >
                   {{ conditionalApproval.upload.fileName }}
                 </div>
-                <FdpgTextEditor v-model:model-value="conditionalApproval.conditionReasoning" disabled />
+                <div v-html="conditionalApproval.conditionReasoning" class="ql-editor"></div>
               </el-collapse-item>
             </el-collapse>
           </section>
