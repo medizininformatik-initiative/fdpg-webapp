@@ -2,6 +2,7 @@ import { useFeasibilityStore } from './feasibility.store'
 import { FeasibilityService } from '@/services/feasibility/feasibility.service'
 import { createPinia, setActivePinia } from 'pinia'
 import type { IFeasibilityDetail } from '@/types/feasibility-detail.interface'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('@/services/feasibility/feasibility.service')
 
@@ -25,7 +26,11 @@ describe('Feasibility Store', () => {
         {
           id: 2,
           label: 'string',
-          createdAt: 'string',
+          comment: 'string',
+          lastModified: 'string',
+          resultSize: 1,
+          ccdl: { exists: true, isValid: true },
+          dataSelection: { exists: true, isValid: true },
         },
       ] as IFeasibilityDetail[])
       await store.getAll()
@@ -34,7 +39,11 @@ describe('Feasibility Store', () => {
         {
           id: 2,
           label: 'string',
-          createdAt: 'string',
+          comment: 'string',
+          lastModified: 'string',
+          resultSize: 1,
+          ccdl: { exists: true, isValid: true },
+          dataSelection: { exists: true, isValid: true },
         },
       ] as IFeasibilityDetail[])
     })
