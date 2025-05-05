@@ -67,7 +67,17 @@
                         }}
                       </dd>
                       <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
-                      <dd>{{ props.row.declineReason?.reason || '-' }}</dd>
+                      <dd>
+                        <FdpgTextEditor
+                          :model-value="props.row.declineReason?.reason"
+                          @update:modelValue="
+                            (val) => {
+                              if (props.row.declineReason) props.row.declineReason.reason = val
+                            }
+                          "
+                          disabled
+                        />
+                      </dd>
                     </dl>
 
                     <p v-else>--</p>
@@ -84,7 +94,7 @@
                   :min-width="column.minWidth"
                 />
                 <el-table-column
-                  v-if="column.prop === 'revert' && !table.hideRevert"
+                  v-if="column.prop === 'revert' && !table.hideRevert && authStore.singleKnownRole === Role.FdpgMember"
                   :label="$t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
@@ -134,11 +144,7 @@
               }}
             </h3>
             <el-collapse class="contract-condition-row contract-condition-collapse-parent">
-              <el-collapse-item
-                v-for="conditionalApproval in table.conditionalApprovals"
-                :disabled="authStore.singleKnownRole !== Role.FdpgMember"
-                class="condition-row"
-              >
+              <el-collapse-item v-for="conditionalApproval in table.conditionalApprovals" class="condition-row">
                 <template #title>
                   <div class="el-collapse-item-title">
                     {{ MII_LOCATIONS[conditionalApproval.location].display }}
