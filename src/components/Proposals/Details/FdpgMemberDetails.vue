@@ -18,7 +18,7 @@
     <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
-    <div v-if="status === ProposalStatus.FdpgCheck" class="section">
+    <div class="section">
       <h3 info="general.info" size="large">{{ $t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
         :documents="documents"
@@ -88,7 +88,7 @@ import type { IChecklistItem, IFdpgChecklist, IProposal } from '@/types/proposal
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
-import { DirectUpload } from '@/types/upload.types'
+import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
 import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
@@ -523,7 +523,13 @@ const {
   isAppendixLoading: isDocumentsLoading,
 } = useUpload(
   proposalId,
-  [DirectUpload.GeneralAppendix, DirectUpload.EthicVote, DirectUpload.EthicVoteDeclarationOfNonResponsibility],
+  [
+    DirectUpload.GeneralAppendix,
+    DirectUpload.EthicVote,
+    DirectUpload.EthicVoteDeclarationOfNonResponsibility,
+    UseCaseUpload.FeasibilityQuery,
+    UseCaseUpload.ProposalPDF,
+  ],
   showErrorMessage,
 )
 
@@ -552,6 +558,8 @@ const fetchProposal = async () => {
     showPublicationsAndReports.value =
       (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
+
+    console.log({ va: showPublicationsAndReports.value })
 
     const lastDashboard = layoutStore.lastDashboard
     layoutStore.setBreadcrumbs([

@@ -110,8 +110,9 @@ const {
     DirectUpload.GeneralAppendix,
     DirectUpload.EthicVote,
     DirectUpload.EthicVoteDeclarationOfNonResponsibility,
-    UseCaseUpload.FeasibilityQuery,
+    DirectUpload.AdditionalDocument,
     UseCaseUpload.ProposalPDF,
+    UseCaseUpload.FeasibilityQuery,
   ],
   showErrorMessage,
 )
