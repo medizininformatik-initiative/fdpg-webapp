@@ -672,7 +672,12 @@
     "submitApplicationContent": "You have completed the form completely. You can submit it directly, download the information as a PDF, or return to the application form to make changes.",
     "submitApplicationErrorTitle": "You have not yet completed the form completely.",
     "submitApplicationErrorContent": "You haven't completed all required fields yet. You can save the application as a draft or return to the application form and enter the missing information.",
-    "backToForm": "Back to the application form"
+    "backToForm": "Back to the application form",
+    "cohortSelection": "Cohort selection",
+    "addCohortAutomatic": "Add cohort automatically",
+    "addCohortManual": "Add cohort manual",
+    "selectFeasibilityQuery": "Select feasibility query",
+    "viewQuery": "Show query"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
