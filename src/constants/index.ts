@@ -12,6 +12,13 @@ interface IMiiLocationInfo {
 }
 
 export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
+  [MiiLocation.BHC]: {
+    city: 'Berlin',
+    display: 'Bosch Health Campus',
+    definition: 'HiGHmed',
+    email: 'some.todo@af-universität.de',
+  },
+
   [MiiLocation.MRI]: {
     // Actual new identifier: 'TUM'
     city: 'München',
@@ -273,19 +280,25 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
     email: 'some.todo@af-universität.de',
   },
 
-
   [MiiLocation.UKOWL]: {
     display: 'Universitätsklinikum OWL',
     definition: 'HiGHmed',
     city: 'Bielefeld',
-    email: ''
+    email: '',
   },
 
   [MiiLocation.UOL]: {
     display: 'Carl von Ossietzky Universität Oldenburg',
     definition: 'HiGHmed',
     city: 'Oldenburg',
-    email: ''
+    email: '',
+  },
+
+  [MiiLocation.VIV]: {
+    city: 'Stuttgart',
+    display: 'Vivantes Netzwerk für Gesundheit GmbH',
+    definition: 'HiGHmed',
+    email: 'some.todo@af-universität.de',
   },
 
   [MiiLocation.VirtualAll]: {
