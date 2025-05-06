@@ -67,7 +67,7 @@
                         }}
                       </dd>
                       <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
-                      <dd>{{ props.row.declineReason?.reason || '-' }}</dd>
+                      <dd><div class="ql-editor" v-html="props.row.declineReason?.reason"></div></dd>
                     </dl>
 
                     <p v-else>--</p>
@@ -84,7 +84,7 @@
                   :min-width="column.minWidth"
                 />
                 <el-table-column
-                  v-if="column.prop === 'revert' && !table.hideRevert"
+                  v-if="column.prop === 'revert' && !table.hideRevert && authStore.singleKnownRole === Role.FdpgMember"
                   :label="$t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
@@ -134,11 +134,7 @@
               }}
             </h3>
             <el-collapse class="contract-condition-row contract-condition-collapse-parent">
-              <el-collapse-item
-                v-for="conditionalApproval in table.conditionalApprovals"
-                :disabled="authStore.singleKnownRole !== Role.FdpgMember"
-                class="condition-row"
-              >
+              <el-collapse-item v-for="conditionalApproval in table.conditionalApprovals" class="condition-row">
                 <template #title>
                   <div class="el-collapse-item-title">
                     {{ MII_LOCATIONS[conditionalApproval.location].display }}
@@ -184,7 +180,7 @@
                 >
                   {{ conditionalApproval.upload.fileName }}
                 </div>
-                <FdpgTextEditor v-model:model-value="conditionalApproval.conditionReasoning" disabled />
+                <div v-html="conditionalApproval.conditionReasoning" class="ql-editor"></div>
               </el-collapse-item>
             </el-collapse>
           </section>
