@@ -13,7 +13,7 @@ interface IMiiLocationInfo {
 
 export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   [MiiLocation.BHC]: {
-    city: 'Berlin',
+    city: 'Stuttgart',
     display: 'Bosch Health Campus',
     definition: 'HiGHmed',
     email: 'some.todo@af-universität.de',
@@ -295,7 +295,7 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
   },
 
   [MiiLocation.VIV]: {
-    city: 'Stuttgart',
+    city: 'Berlin',
     display: 'Vivantes Netzwerk für Gesundheit GmbH',
     definition: 'HiGHmed',
     email: 'some.todo@af-universität.de',
