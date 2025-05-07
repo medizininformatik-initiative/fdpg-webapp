@@ -3,7 +3,7 @@
     <img :src="logoSrc" alt="" class="logo" />
     <div class="proposal-menu">
       <div class="proposal-menu__top">
-        <div style="height: 630px; max-width: 600px">
+        <div style="height: 590px; max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
               v-for="step in layoutStore.createProposalSteps"
@@ -40,6 +40,7 @@ const activeTab = computed(() => layoutStore.activeStep)
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
 const setActiveTab = (tab: CreatPrposalSteps) => {
+  if (!layoutStore.isDatasourceSelected) return
   layoutStore.setActiveStep(tab)
 }
 

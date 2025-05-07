@@ -62,7 +62,12 @@
         </div>
       </div>
       <div class="data-source-list-drawer-footer">
-        <el-button type="primary" @click="nextStep" aria-label="Go to Next Step">
+        <el-button
+          type="primary"
+          @click="nextStep"
+          aria-label="Go to Next Step"
+          :disabled="selectedSources.length === 0"
+        >
           {{ t('proposal.nextStep') }}
         </el-button>
         <el-button plain @click="goToStep(CreatPrposalSteps.DataSources)" aria-label="Continue with data source">

@@ -774,6 +774,7 @@ const toggleShoppingList = () => {
   }
   layoutStore.toggleShoppingList()
 }
+
 watch(
   ethicVoteUploads,
   (newEthicVoteUploads) => {
@@ -792,6 +793,14 @@ watch(
   },
   { deep: true, immediate: true },
 )
+watch(
+  () => proposalForm.value?.selectedDataSources,
+  (newSelectedDataSources) => {
+    layoutStore.setDatasourceSelected(!!newSelectedDataSources?.length)
+  },
+  { immediate: true, deep: true },
+)
+
 onMounted(async () => {
   try {
     await proposalStore.setCurrentProposal(params.id as string)
