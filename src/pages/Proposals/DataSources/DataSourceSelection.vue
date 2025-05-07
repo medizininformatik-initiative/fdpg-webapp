@@ -32,6 +32,7 @@ const emit = defineEmits(['update:modelValue'])
 
 const selectedSources = ref<PlatformIdentifier[]>([])
 const configStore = useConfigStore()
+
 const dataSources = computed<IDataSourceDto>(() => {
   return configStore.dataSources
 })

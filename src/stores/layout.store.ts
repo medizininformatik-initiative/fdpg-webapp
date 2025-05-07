@@ -10,6 +10,7 @@ interface ILayoutStore {
   createProposalSteps: ICreateProposalStep[]
   activeStep: CreatPrposalSteps
   isShoppingListOpen: boolean
+  isDatasourceSelected: boolean
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
@@ -32,6 +33,7 @@ export const useLayoutStore = defineStore('layout', {
     ],
     activeStep: CreatPrposalSteps.DataSources,
     isShoppingListOpen: false,
+    isDatasourceSelected: false,
   }),
 
   actions: {
@@ -81,6 +83,9 @@ export const useLayoutStore = defineStore('layout', {
     },
     toggleShoppingList() {
       this.isShoppingListOpen = !this.isShoppingListOpen
+    },
+    setDatasourceSelected(isSelected: boolean) {
+      this.isDatasourceSelected = isSelected
     },
   },
 })
