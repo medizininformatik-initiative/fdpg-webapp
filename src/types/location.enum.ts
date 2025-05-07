@@ -1,4 +1,5 @@
 export enum MiiLocation {
+  BHC = 'BHC',
   MRI = 'MRI',
   KUM = 'KUM',
   UKT = 'UKT',
@@ -38,6 +39,7 @@ export enum MiiLocation {
   CTK = 'CTK',
   UKOWL = 'UKOWL',
   UOL = 'UOL',
+  VIV = 'VIV',
   VirtualAll = 'VIRTUAL_ALL',
 }
 
