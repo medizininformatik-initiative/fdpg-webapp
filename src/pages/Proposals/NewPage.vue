@@ -105,6 +105,13 @@
             :review-mode="isReviewMode"
             :platform="platform"
             :form-ref="formRef"
+            :selectedDataSources="proposalForm.selectedDataSources"
+          />
+          <TargetFormat
+            :platform="platform"
+            v-model="proposalForm.userProject.typeOfUse"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
           />
         </div>
 
@@ -277,6 +284,7 @@ import InformationOnBioSample from './Variables/InformationOnBioSample/Informati
 import VariableSelection from './Variables/VariableSelection.vue'
 import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 import ShoppingList from './DataSources/ShoppingList.vue'
+import TargetFormat from './DataUsage/TargetFormat.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -430,6 +438,7 @@ const rules = ref<Record<string, any>>({
     typeOfUse: {
       usage: requiredValidationFunc('array'),
       dataPrivacyExtra: [maxLengthValidationFunc(10000)],
+      difeUsage: requiredValidationFunc('array'),
     },
     informationOnRequestedBioSamples: {
       // Handled in component

@@ -165,6 +165,12 @@ export enum ProposalTypeOfUse {
   Biosample = 'BIOSAMPLE',
 }
 
+export enum DIFEProposalTypeOfUse {
+  DATA_SHIELD = 'DATA_SHIELD',
+  EXTERNAL_SR = 'EXTERNAL_SR',
+  INTERNAL_SR = 'INTERNAL_SR',
+}
+
 export interface IBiosample {
   _id?: string
   type?: string
@@ -197,6 +203,7 @@ export interface ITypeOfUse extends WithIdAndIsDone {
   dataPrivacyExtra?: string
   targetFormat: string
   targetFormatOther: string
+  difeUsage: DIFEProposalTypeOfUse[]
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
