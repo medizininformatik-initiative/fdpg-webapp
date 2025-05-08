@@ -58,7 +58,11 @@
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
-          <VariableSelection :model-value="proposalForm" :review-mode="isReviewMode" />
+          <VariableSelection
+            v-model:modelValue="proposalForm.userProject.variableSelection"
+            :selected-data-sources="proposalForm.selectedDataSources"
+            :review-mode="isReviewMode"
+          />
 
           <FdpgLabel
             required
@@ -386,10 +390,9 @@ const rules = ref<Record<string, any>>({
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
       variableSelection: {
-        [PlatformIdentifier.DIFE]: {
-          typeOfUse: [requiredValidationFunc('string')],
-          typeOfUseExplanation: [maxLengthValidationFunc(10000)],
-        },
+        /*
+          handled in component
+        */
       },
     },
     feasibility: {

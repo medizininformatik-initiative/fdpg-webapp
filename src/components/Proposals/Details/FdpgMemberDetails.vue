@@ -559,8 +559,6 @@ const fetchProposal = async () => {
       (data.status ? currentProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
-    console.log({ va: showPublicationsAndReports.value })
-
     const lastDashboard = layoutStore.lastDashboard
     layoutStore.setBreadcrumbs([
       {
