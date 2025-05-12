@@ -8,7 +8,7 @@
       :options="options"
       :enable="!props.disabled"
       :readOnly="props.disabled"
-      :placeholder="placeholder"
+      :placeholder="props.placeholder"
       @blur="handleBlur"
     />
   </div>
@@ -39,6 +39,14 @@ const emit = defineEmits(['update:modelValue', 'blur'])
 
 const textEditor = ref()
 const isBlurred = ref(false)
+
+watch(
+  () => props.placeholder,
+  () => {
+    const editorInstance = textEditor.value.getQuill()
+    editorInstance.root.dataset.placeholder = props.placeholder
+  },
+)
 
 const value = computed<string | null>({
   get() {
