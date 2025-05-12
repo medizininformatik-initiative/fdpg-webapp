@@ -1,50 +1,92 @@
 <template>
   <h2>{{ t('proposal.selectionOfVariablesHeader') }}</h2>
 
-  <template v-if="isMiiSelected">
-    <el-card class="form-group">
-      <FdpgLabel html-for="proposal.informationOnMiiSelectionForVariableSelectionStepHeader"></FdpgLabel>
-      <p>{{ t('proposal.informationOnMiiSelectionForVariableSelectionStepBody') }}</p>
-    </el-card>
+  <template v-if="isDifeSelected && difeSet">
+    <div class="form-group-wrapper">
+      <el-card class="form-group">
+        <el-row>
+          <el-col :sm="24">
+            <FdpgLabel
+              html-for="proposal.informationOnDifeSelectionForVariableSelectionStepHeader"
+              required
+            ></FdpgLabel>
+
+            <FdpgFormItem
+              class="form-label-mb-3"
+              prop="userProject.variableSelection.DIFE.typeOfUse"
+              :rules="variableSelectionRules.DIFE.typeOfUse"
+            >
+              <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUse"></FdpgLabel>
+              <FdpgSelect
+                v-model="variableSelectionDataForm.DIFE.typeOfUse"
+                placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
+                :disabled="reviewMode"
+                :options="difeTypeOfUseOptions"
+              />
+            </FdpgFormItem>
+          </el-col>
+
+          <el-col :sm="24">
+            <FdpgFormItem
+              class="form-label-mb-3"
+              prop="userProject.variableSelection.DIFE.typeOfUseExplanation"
+              :rules="variableSelectionRules.DIFE.typeOfUseExplanation"
+            >
+              <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUseExplanation"></FdpgLabel>
+              <FdpgTextEditor
+                v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
+                :disabled="reviewMode"
+                :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
+              />
+            </FdpgFormItem>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
   </template>
 
-  <template v-if="isDifeSelected">
-    <el-card class="form-group">
-      <FdpgLabel html-for="proposal.informationOnDifeSelectionForVariableSelectionStepHeader" required></FdpgLabel>
-
-      <FdpgFormItem prop="userProject.variableSelection.DIFE">
-        <FdpgSelect
-          v-model="difeRef.typeOfUse"
-          placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
-          :disabled="reviewMode"
-          :options="difeTypeOfUseOptions"
-        />
-        <FdpgTextEditor
-          v-model="difeRef.typeOfUseExplanation"
-          :disabled="reviewMode"
-          :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
-        />
-      </FdpgFormItem>
-    </el-card>
+  <template v-if="isMiiSelected">
+    <div class="form-group-wrapper">
+      <el-card class="form-group">
+        <el-row>
+          <el-col :sm="24">
+            <FdpgLabel html-for="proposal.informationOnMiiSelectionForVariableSelectionStepHeader"></FdpgLabel>
+            <p>{{ t('proposal.informationOnMiiSelectionForVariableSelectionStepBody') }}</p>
+          </el-col>
+        </el-row>
+      </el-card>
+    </div>
   </template>
 </template>
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import type { IDataSource, IDifeVariableSelectionData, IProposal } from '@/types/proposal.types'
+import type { IDifeVariableSelectionData, IVariableSelectionData } from '@/types/proposal.types'
 import type { PropType } from 'vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
 import { DifeTypeOfUse } from '@/types/dife-type-of-use.enum'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useI18n } from 'vue-i18n'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import FdpgFormItem from '@/components/FdpgFormItem.vue'
+import { useVModel } from '@vueuse/core'
+import { maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<IProposal | undefined>,
-    required: false,
-    default: () => undefined,
+    type: Object as PropType<
+      Partial<Record<PlatformIdentifier, IDifeVariableSelectionData | IVariableSelectionData>> | undefined
+    >,
+    required: true,
+    default: () => {
+      return {}
+    },
+  },
+
+  selectedDataSources: {
+    type: Array<PlatformIdentifier>,
+    required: true,
   },
 
   reviewMode: {
@@ -55,36 +97,73 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isMiiSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.Mii))
-const isDifeSelected = computed(() => props.modelValue?.selectedDataSources.includes(PlatformIdentifier.DIFE))
+const isMiiSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.Mii))
+const isDifeSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.DIFE))
 
 const difeTypeOfUseOptions = computed(() =>
   Object.keys(DifeTypeOfUse).map((value) => ({ label: t(`proposal.difeTypeOfUse_${value}`), value })),
 )
 
-const difeRef = ref({ typeOfUse: undefined, typeOfUseExplanation: undefined } as IDifeVariableSelectionData)
+const variableSelectionRules = {
+  DIFE: {
+    typeOfUse: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+    typeOfUseExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+  },
+}
+
+const difeSet = computed(() => !!variableSelectionDataForm?.value?.DIFE)
+
+const emit = defineEmits(['update:modelValue'])
+
+const variableSelectionDataForm = useVModel(props, 'modelValue', emit)
 
 watch(
-  () => difeRef,
-  (newValue) => {
-    if (!props.modelValue) {
-      return
+  () => props.selectedDataSources,
+  () => {
+    if (!variableSelectionDataForm.value) {
+      variableSelectionDataForm.value = {}
     }
-    props.modelValue.userProject.variableSelection = {
-      ...(props.modelValue.userProject.variableSelection ?? {}),
-      [PlatformIdentifier.DIFE]: newValue.value,
+
+    if (isDifeSelected.value) {
+      const previousValue: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE || {
+        typeOfUse: undefined,
+        typeOfUseExplanation: undefined,
+      }
+
+      variableSelectionDataForm.value = {
+        ...variableSelectionDataForm.value,
+        [PlatformIdentifier.DIFE]: {
+          typeOfUse: previousValue.typeOfUse,
+          typeOfUseExplanation: previousValue.typeOfUseExplanation,
+        },
+      }
+    } else {
+      variableSelectionDataForm.value = { ...variableSelectionDataForm.value, DIFE: undefined }
     }
   },
-  { deep: true },
 )
 
 onMounted(() => {
-  const difeValue: IDifeVariableSelectionData | undefined =
-    props.modelValue?.userProject?.variableSelection?.[PlatformIdentifier.DIFE]
+  if (!variableSelectionDataForm.value) {
+    variableSelectionDataForm.value = {}
+  }
 
-  if (!!difeValue) {
-    difeRef.value.typeOfUse = difeValue.typeOfUse
-    difeRef.value.typeOfUseExplanation = difeValue.typeOfUseExplanation
+  if (isDifeSelected.value) {
+    const defaultDife: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE ?? {
+      typeOfUse: undefined,
+      typeOfUseExplanation: undefined,
+    }
+
+    variableSelectionDataForm.value.DIFE = {
+      typeOfUse: defaultDife.typeOfUse,
+      typeOfUseExplanation: defaultDife.typeOfUseExplanation,
+    }
   }
 })
 </script>
+
+<style scoped lang="scss">
+.fdpg-new-proposal-page .form-label-mb-3 {
+  margin-bottom: 0;
+}
+</style>
