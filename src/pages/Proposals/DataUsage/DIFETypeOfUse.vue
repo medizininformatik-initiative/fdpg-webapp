@@ -25,11 +25,9 @@
           <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
           <dl>
             <TypeOfUseDataPrivacyItem
-              v-for="usage in modelValue.usage"
-              :key="usage"
               class="privacy-note"
-              :text="configStore.dataPrivacy[props.platform]?.messages[usage].text[locale as 'en' | 'de'] ?? ''"
-              :headline="configStore.dataPrivacy[props.platform]?.messages[usage].headline[locale as 'en' | 'de'] ?? ''"
+              :text="configStore.dataPrivacy[props.platform]?.messages.all?.text[locale as 'en' | 'de'] ?? ''"
+              :headline="configStore.dataPrivacy[props.platform]?.messages.all?.headline[locale as 'en' | 'de'] ?? ''"
             />
           </dl>
         </div>
@@ -85,7 +83,9 @@ const shouldDisplayDataPrivacyTextField = computed(() => {
   }
 
   return (
-    !!props.modelValue?.usage && props.modelValue?.usage?.length > 0 && !!configStore?.dataPrivacy?.[props.platform]
+    !!props.modelValue?.difeUsage &&
+    props.modelValue?.difeUsage?.length > 0 &&
+    !!configStore?.dataPrivacy?.[props.platform]
   )
 })
 

@@ -1,14 +1,14 @@
 <template>
   <MIITypeOfUse
     :reviewMode="reviewMode"
-    :platform="platform"
+    :platform="PlatformIdentifier.Mii"
     :formRef="formRef"
     v-model="typeOfUseForm"
     v-if="isMiiSelected"
   />
   <DIFETypeOfUse
     :reviewMode="reviewMode"
-    :platform="platform"
+    :platform="PlatformIdentifier.DIFE"
     :formRef="formRef"
     v-model="typeOfUseForm"
     v-if="isDifeSelected"
@@ -33,18 +33,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  platform: {
-    type: String as PropType<PlatformIdentifier>,
+  selectedDataSources: {
+    type: [String] as unknown as PropType<PlatformIdentifier[]>,
     required: true,
   },
   formRef: {
     type: Object as PropType<FormInstance>,
     required: false,
     default: () => undefined,
-  },
-  selectedDataSources: {
-    type: Array as PropType<PlatformIdentifier[]>,
-    required: true,
   },
 })
 

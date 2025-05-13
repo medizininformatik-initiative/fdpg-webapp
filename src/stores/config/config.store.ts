@@ -37,10 +37,12 @@ export const useConfigStore = defineStore('Config', {
       this.termsAndConditions[platform] = data
     },
 
-    async getDataPrivacy(platform: PlatformIdentifier): Promise<void> {
+    async getDataPrivacy(platform: PlatformIdentifier | PlatformIdentifier[]): Promise<void> {
       const data = await this.apiService.getDataPrivacy(platform)
-      this.dataPrivacy[platform] = data
+      // Store the configuration for the platform
+      this.dataPrivacy[data.platform] = data
     },
+
     async getDataSources(): Promise<void> {
       const result = await this.apiService.getDataSources()
       this.dataSources = result as unknown as Record<PlatformIdentifier, IDataSource>

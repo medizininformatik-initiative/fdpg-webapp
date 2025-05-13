@@ -103,7 +103,6 @@
           <TypeOfUse
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
-            :platform="platform"
             :form-ref="formRef"
             :selectedDataSources="proposalForm.selectedDataSources"
           />
