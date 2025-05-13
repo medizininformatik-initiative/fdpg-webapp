@@ -53,7 +53,7 @@
       </el-col>
       <el-col :sm="24" :md="12">
         <FdpgFormItem prop="userProject.generalProjectInformation.keywords">
-          <FdpgLabel required html-for="proposal.keywords" />
+          <FdpgLabel html-for="proposal.keywords" />
           <el-input-tag
             v-model="generalProjectInformationForm.keywords"
             class="fdpg-input__tag"

@@ -59,9 +59,10 @@
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
           <VariableSelection
-            v-model:modelValue="proposalForm.userProject.variableSelection"
-            :selected-data-sources="proposalForm.selectedDataSources"
+            v-model="proposalForm.userProject.variableSelection"
+            :platform="platform"
             :review-mode="isReviewMode"
+            :form-ref="formRef"
           />
 
           <FdpgLabel
@@ -73,7 +74,7 @@
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
           <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
 
-          <FdpgFormItem class="form-label-mb-3">
+          <FdpgFormItem class="form-label-mb-3" v-if="platform.includes(PlatformIdentifier.Mii)">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -450,6 +451,12 @@ const rules = ref<Record<string, any>>({
     },
     informationOnRequestedBioSamples: {
       // Handled in component
+    },
+    variableSelection: {
+      DIFE: {
+        typeOfUse: requiredValidationFunc('string'),
+        typeOfUseExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+      },
     },
   },
   requestedData: {
