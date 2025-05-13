@@ -38,7 +38,7 @@ export interface SelectOption {
 
 const props = defineProps({
   modelValue: {
-    type: [Array, String, Number],
+    type: [Array, String, Number] as PropType<Array<unknown> | string | number | undefined>,
     default: undefined,
     required: true,
   },

@@ -59,7 +59,7 @@
             class="fdpg-input__tag"
             data-testId="generalProjectInformationForm.keywords"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
-            :placeholder="$t('proposal.pleaseEnterTheKeywords')"
+            :placeholder="$t('proposal.keywordsPlaceholder')"
             aria-label="Please click the Enter key after input"
           />
         </FdpgFormItem>
