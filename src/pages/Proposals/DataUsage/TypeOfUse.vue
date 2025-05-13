@@ -33,8 +33,8 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  selectedDataSources: {
-    type: [String] as unknown as PropType<PlatformIdentifier[]>,
+  platform: {
+    type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
   formRef: {
@@ -48,6 +48,6 @@ const emit = defineEmits(['update:modelValue'])
 
 const typeOfUseForm = useVModel(props, 'modelValue', emit)
 
-const isMiiSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.Mii))
-const isDifeSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.DIFE))
+const isMiiSelected = computed(() => props.platform.includes(PlatformIdentifier.Mii))
+const isDifeSelected = computed(() => props.platform.includes(PlatformIdentifier.DIFE))
 </script>

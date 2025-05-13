@@ -54,7 +54,7 @@ const props = defineProps({
     default: false,
   },
   platform: {
-    type: String as PropType<PlatformIdentifier>,
+    type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
   formRef: {

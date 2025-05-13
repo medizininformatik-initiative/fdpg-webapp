@@ -104,7 +104,7 @@
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            :selectedDataSources="proposalForm.selectedDataSources"
+            :platform="platform"
           />
           <TargetFormat
             :platform="platform"
@@ -160,8 +160,14 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :proposalId="proposalId"
+            :platform="platform"
           />
-          <EthicVote v-model="proposalForm.userProject.ethicVote" :review-mode="isReviewMode" :form-ref="formRef" />
+          <EthicVote
+            v-model="proposalForm.userProject.ethicVote"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
+            v-if="platform.includes(PlatformIdentifier.Mii)"
+          />
           <FdpgLabel html-for="" size="large">{{
             $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
           }}</FdpgLabel>
@@ -228,7 +234,7 @@
     </el-row>
   </el-container>
 
-  <TermsDialog v-model="isTermsDialogOpen" :platform="platform" @confirm="handleTermsConfirm" />
+  <TermsDialog v-model="isTermsDialogOpen" :platform="PlatformIdentifier.Mii" @confirm="handleTermsConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -307,7 +313,6 @@ defineProps({
 })
 
 // Currently only one platform supported
-const platform = PlatformIdentifier.Mii
 
 const { t } = useI18n()
 
@@ -317,6 +322,10 @@ const { params, query } = useRoute()
 const commentStore = useCommentStore()
 
 const proposalForm = ref<IProposal>()
+const platform = computed(() => {
+  return proposalForm.value?.selectedDataSources ?? [PlatformIdentifier.Mii]
+})
+
 const proposalId = computed(() => proposalForm.value?._id as string)
 const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
