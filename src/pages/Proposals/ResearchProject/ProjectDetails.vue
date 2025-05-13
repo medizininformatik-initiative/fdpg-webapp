@@ -165,8 +165,6 @@ import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import useUpload from '@/composables/use-upload'
 import { DirectUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
-import { pl } from 'element-plus/es/locale'
-import { platform } from 'os'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const props = defineProps({
@@ -207,7 +205,7 @@ const SupportedMimetype = computed(() => {
 const proposalIdRef = computed(() => props.proposalId || '')
 
 const isMIISelected = computed(() => {
-  return props.platform.includes(PlatformIdentifier.Mii)
+  return props.platform?.includes(PlatformIdentifier.Mii)
 })
 
 const {
