@@ -1,14 +1,14 @@
 <template>
-  <div :class="['w-full', props.disabled ? 'readonly-view' : '']">
+  <div :class="['w-full', disabled ? 'readonly-view' : '']">
     <QuillEditor
       theme="snow"
       v-model:content="value"
       contentType="html"
       ref="textEditor"
       :options="options"
-      :enable="!props.disabled"
-      :readOnly="props.disabled"
-      :placeholder="props.placeholder"
+      :enable="!disabled"
+      :readOnly="disabled"
+      :placeholder="placeholder"
       @blur="handleBlur"
     />
   </div>
