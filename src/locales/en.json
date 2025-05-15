@@ -247,7 +247,7 @@
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Please attach proof of the ethics vote to the application",
     "chooseAFile": "Choose a file",
     "foundation": "Foundation",
-    "projectResourcesAndRecontact": "Project resources* and recontact",
+    "projectResources": "Project resources* ",
     "areSufficientProfessionalAndFinancialResourcesAvailable": "Are sufficient professional and financial resources available",
     "areSufficientProfessionalAndFinancialResourcesAvailableInfo": "Can you assure to have sufficient professional and financial ressources for the execution of the project?",
     "yes": "Yes",
@@ -658,7 +658,9 @@
     "typeOfUse_EXTERNAL_SR": "External Server",
     "typeOfUse_INTERNAL_SR": "Internal SAS/R server",
     "keywordsPlaceholder": "Please enter any keywords related to the proposal",
-    "keywords": "Keywords"
+    "keywords": "Keywords",
+    "informationOnDesiredControlDataAmount": "Information on the minimum amount of data required per location (relative to the control group)",
+    "projectRecontact": "Recontacting"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

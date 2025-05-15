@@ -111,8 +111,30 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
+        <FdpgFormItem prop="requestedData.desiredDataAmount">
+          <FdpgLabel html-for="proposal.informationOnDesiredDataAmount" />
+          <FdpgNumberInput
+            v-model="requestedDataForm.desiredDataAmount"
+            data-testId="requestedData.desiredDataAmount"
+            placeholder="proposal.desiredDataAmountPlaceholder"
+            :disabled="reviewMode || requestedDataForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem prop="requestedData.desiredControlDataAmount">
+          <FdpgLabel html-for="proposal.informationOnDesiredControlDataAmount" />
+          <FdpgNumberInput
+            v-model="requestedDataForm.desiredControlDataAmount"
+            data-testId="requestedData.desiredControlDataAmount"
+            placeholder="proposal.desiredDataAmountPlaceholder"
+            :disabled="reviewMode || requestedDataForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.additionalDocument">
-          <FdpgLabel html-for="" size="large" class="form__item--width">{{
+          <FdpgLabel html-for="" size="medium" class="form__item--width">{{
             $t('proposal.additionalDocument') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
           }}</FdpgLabel>
 
@@ -154,7 +176,7 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import { Department } from '@/types/department.enum'
-import type { IProjectDetails } from '@/types/proposal.types'
+import type { IProjectDetails, IRequestedData } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
@@ -188,9 +210,13 @@ const props = defineProps({
     type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
+  requestedData: {
+    type: Object as PropType<IRequestedData>,
+    required: true,
+  },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:requestedDataForm'])
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -216,6 +242,7 @@ const {
 } = useUpload(proposalIdRef, [DirectUpload.AdditionalDocument], showErrorMessage)
 
 const projectDetailsForm = useVModel(props, 'modelValue', emit)
+const requestedDataForm = useVModel(props, 'requestedData', emit)
 </script>
 <style scoped lang="scss">
 .form__item--width {

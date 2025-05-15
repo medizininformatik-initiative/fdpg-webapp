@@ -24,17 +24,6 @@
             />
           </FdpgFormItem>
         </el-col>
-        <el-col :sm="24">
-          <FdpgFormItem prop="requestedData.desiredDataAmount">
-            <FdpgLabel html-for="proposal.informationOnDesiredDataAmount" />
-            <FdpgNumberInput
-              v-model="requestedDataForm.desiredDataAmount"
-              data-testId="requestedData.desiredDataAmount"
-              placeholder="proposal.desiredDataAmountPlaceholder"
-              :disabled="reviewMode || requestedDataForm.isDone"
-            />
-          </FdpgFormItem>
-        </el-col>
       </el-row>
     </el-card>
 
@@ -46,7 +35,6 @@
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IRequestedData } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'

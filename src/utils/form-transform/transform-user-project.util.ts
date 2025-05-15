@@ -163,6 +163,7 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
     targetFormat: transformEmptyStringToUndefined(typeOfUse?.targetFormat),
     targetFormatOther: transformEmptyStringToUndefined(typeOfUse?.targetFormatOther),
     difeUsage: typeOfUse?.difeUsage ?? [],
+    pseudonymizationInfo: typeOfUse?.pseudonymizationInfo ?? [],
   }
 }
 
