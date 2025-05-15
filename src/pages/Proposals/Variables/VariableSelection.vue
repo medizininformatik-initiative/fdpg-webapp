@@ -11,11 +11,7 @@
               required
             ></FdpgLabel>
 
-            <FdpgFormItem
-              class="form-label-mb-3"
-              prop="userProject.variableSelection.DIFE.typeOfUse"
-              :rules="variableSelectionRules.DIFE.typeOfUse"
-            >
+            <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUse">
               <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUse"></FdpgLabel>
               <FdpgSelect
                 v-model="variableSelectionDataForm.DIFE.typeOfUse"
@@ -27,16 +23,14 @@
           </el-col>
 
           <el-col :sm="24">
-            <FdpgFormItem
-              class="form-label-mb-3"
-              prop="userProject.variableSelection.DIFE.typeOfUseExplanation"
-              :rules="variableSelectionRules.DIFE.typeOfUseExplanation"
-            >
+            <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUseExplanation">
               <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUseExplanation"></FdpgLabel>
               <FdpgTextEditor
                 v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
                 :disabled="reviewMode"
                 :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
+                :form-ref="formRef"
+                field-path="userProject.variableSelection.DIFE.typeOfUseExplanation"
               />
             </FdpgFormItem>
           </el-col>
@@ -71,7 +65,7 @@ import { useI18n } from 'vue-i18n'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import { useVModel } from '@vueuse/core'
-import { maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
+import type { FormInstance } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -79,13 +73,11 @@ const props = defineProps({
       Partial<Record<PlatformIdentifier, IDifeVariableSelectionData | IVariableSelectionData>> | undefined
     >,
     required: true,
-    default: () => {
-      return {}
-    },
+    default: () => ({}),
   },
 
-  selectedDataSources: {
-    type: Array<PlatformIdentifier>,
+  platform: {
+    type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
 
@@ -93,24 +85,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  formRef: {
+    type: Object as PropType<FormInstance>,
+    required: false,
+    default: () => undefined,
+  },
 })
 
 const { t } = useI18n()
 
-const isMiiSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.Mii))
-const isDifeSelected = computed(() => props.selectedDataSources.includes(PlatformIdentifier.DIFE))
+const isMiiSelected = computed(() => props.platform.includes(PlatformIdentifier.Mii))
+const isDifeSelected = computed(() => props.platform.includes(PlatformIdentifier.DIFE))
 
 const difeTypeOfUseOptions = computed(() =>
   Object.keys(DifeTypeOfUse).map((value) => ({ label: t(`proposal.difeTypeOfUse_${value}`), value })),
 )
-
-const variableSelectionRules = {
-  DIFE: {
-    typeOfUse: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-    typeOfUseExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-  },
-}
-
 const difeSet = computed(() => !!variableSelectionDataForm?.value?.DIFE)
 
 const emit = defineEmits(['update:modelValue'])
@@ -118,7 +108,7 @@ const emit = defineEmits(['update:modelValue'])
 const variableSelectionDataForm = useVModel(props, 'modelValue', emit)
 
 watch(
-  () => props.selectedDataSources,
+  () => props.platform,
   () => {
     if (!variableSelectionDataForm.value) {
       variableSelectionDataForm.value = {}

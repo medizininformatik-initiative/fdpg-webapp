@@ -68,6 +68,7 @@ const transformGeneralProjectInformation = (
     projectDuration: generalProjectInformation?.projectDuration,
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),
+    keywords: generalProjectInformation?.keywords ?? [],
   }
 }
 
@@ -161,6 +162,7 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
     dataPrivacyExtra: transformEmptyStringToUndefined(typeOfUse?.dataPrivacyExtra),
     targetFormat: transformEmptyStringToUndefined(typeOfUse?.targetFormat),
     targetFormatOther: transformEmptyStringToUndefined(typeOfUse?.targetFormatOther),
+    difeUsage: typeOfUse?.difeUsage ?? [],
   }
 }
 

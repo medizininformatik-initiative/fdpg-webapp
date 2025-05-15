@@ -3,7 +3,7 @@
   <el-card class="form-group">
     <el-row>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription">
+        <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.simpleProjectDescription" />
           <FdpgtextEditor
             v-model="projectDetailsForm.simpleProjectDescription"
@@ -14,7 +14,7 @@
             field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
-        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
+        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.executiveSummaryUac" />
           <FdpgtextEditor
             v-model="projectDetailsForm.executiveSummaryUac"
@@ -27,7 +27,7 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.department">
+        <FdpgFormItem prop="userProject.projectDetails.department" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.department" />
           <FdpgSelect
             v-model="projectDetailsForm.department"
@@ -165,6 +165,7 @@ import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import useUpload from '@/composables/use-upload'
 import { DirectUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const props = defineProps({
   modelValue: {
@@ -183,6 +184,10 @@ const props = defineProps({
   proposalId: {
     type: String,
   },
+  platform: {
+    type: Array as PropType<PlatformIdentifier[]>,
+    required: true,
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -198,6 +203,10 @@ const SupportedMimetype = computed(() => {
 })
 
 const proposalIdRef = computed(() => props.proposalId || '')
+
+const isMIISelected = computed(() => {
+  return props.platform?.includes(PlatformIdentifier.Mii)
+})
 
 const {
   uploadsForType,

@@ -13,10 +13,12 @@ export class ConfigService {
     return response.data
   }
 
-  async getDataPrivacy(platform: PlatformIdentifier): Promise<IDataPrivacyConfigGet> {
-    const response = await this.apiClient.get(`${this.basePath}/${platform}/type-of-use-data-privacy`)
+  async getDataPrivacy(platform: PlatformIdentifier | PlatformIdentifier[]): Promise<IDataPrivacyConfigGet> {
+    const platforms = Array.isArray(platform) ? platform.join(',') : platform
+    const response = await this.apiClient.get(`${this.basePath}/${platforms}/type-of-use-data-privacy`)
     return response.data
   }
+
   async getDataSources(): Promise<IDataSource[]> {
     const response = await this.apiClient.get(`${this.basePath}/data-sources`)
     return response.data
