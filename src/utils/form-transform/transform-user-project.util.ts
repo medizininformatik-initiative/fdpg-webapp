@@ -17,6 +17,7 @@ import type {
 } from '@/types/proposal.types'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.util'
+import { PseudonymizationInfoOptions } from '@/types/PseudonymizationInfo.enum'
 const NEW_ID = 'NEW_ID'
 
 const transformProjectDetails = (projectDetails?: DeepPartial<IProjectDetails>): DeepPartial<IProjectDetails> => {
@@ -164,6 +165,17 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
     targetFormatOther: transformEmptyStringToUndefined(typeOfUse?.targetFormatOther),
     difeUsage: typeOfUse?.difeUsage ?? [],
     pseudonymizationInfo: typeOfUse?.pseudonymizationInfo ?? [],
+    pseudonymizationInfoTexts: {
+      [PseudonymizationInfoOptions.enableRecordLinkage]: transformEmptyStringToUndefined(
+        typeOfUse?.pseudonymizationInfoTexts?.enableRecordLinkage,
+      ),
+      [PseudonymizationInfoOptions.siteGroupingEnabled]: transformEmptyStringToUndefined(
+        typeOfUse?.pseudonymizationInfoTexts?.siteGroupingEnabled,
+      ),
+      [PseudonymizationInfoOptions.namedSiteVariable]: transformEmptyStringToUndefined(
+        typeOfUse?.pseudonymizationInfoTexts?.namedSiteVariable,
+      ),
+    },
   }
 }
 

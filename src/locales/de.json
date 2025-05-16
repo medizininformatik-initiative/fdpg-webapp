@@ -660,7 +660,12 @@
     "keywordsPlaceholder": "Bitte geben Sie alle Schlüsselwörter ein, die sich auf den Vorschlag beziehen",
     "keywords": "Keywords",
     "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Kontrollgruppe)",
-    "projectRecontact": "Rekontaktierung"
+    "projectRecontact": "Rekontaktierung",
+    "pseudonymizationInfo": "Angaben zur gewünschten Pseudonymisierung der Datensätze",
+    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten/ein und derselben Patientin sollten unabhängig von der\nbehandelnden Einrichtung dasselbe Pseudonym bekommen (Record-Linkage)",
+    "pseudonymizationInfo_siteGroupingEnabled": "Datensätze eines Standorts sollten immer als zusammengehörig erkennbar sein (pseudonyme\nStandortvariable benötigt)",
+    "pseudonymizationInfo_namedSiteVariable": "Die Herkunftsstandorte der Datensätze sollten namentlich erkennbar sein (namentliche\nStandortvariable benötigt\n)",
+    "undefined": "Begründung der Auswahl"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

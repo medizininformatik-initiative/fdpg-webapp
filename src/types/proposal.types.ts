@@ -9,7 +9,6 @@ import type { PublicationType } from './publication-type.enum'
 import type { Deadlines } from './due-date.enum'
 import type { DifeTypeOfUse } from './dife-type-of-use.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
-import type { P } from 'vitest/dist/chunks/environment.LoooBwUu'
 import type { PseudonymizationInfoOptions } from './PseudonymizationInfo.enum'
 
 export interface WithIdAndIsDone {
@@ -207,6 +206,7 @@ export interface ITypeOfUse extends WithIdAndIsDone {
   targetFormatOther: string
   difeUsage: DIFEProposalTypeOfUse[]
   pseudonymizationInfo: PseudonymizationInfoOptions[]
+  pseudonymizationInfoTexts: Record<PseudonymizationInfoOptions, string>
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {

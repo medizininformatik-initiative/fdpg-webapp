@@ -14,6 +14,7 @@ vi.mock('vue-i18n', () => ({
 
 const mountComponent = () => {
   const modelValue: IProjectDetails = JSON.parse(JSON.stringify(mockProposal.userProject.projectDetails))
+  const requestedData = JSON.parse(JSON.stringify(mockProposal.requestedData))
   return mount(ProjectDetails, {
     global: {
       plugins: [createTestingPinia()],
@@ -23,6 +24,7 @@ const mountComponent = () => {
       reviewMode: false,
       modelValue,
       platform: [PlatformIdentifier.Mii],
+      requestedData,
     },
   })
 }

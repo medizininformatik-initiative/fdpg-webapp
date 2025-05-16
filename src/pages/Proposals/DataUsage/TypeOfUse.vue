@@ -18,6 +18,7 @@
     :reviewMode="reviewMode"
     :formRef="formRef"
     v-model="typeOfUseForm.pseudonymizationInfo"
+    :pseudonymizationInfoTexts="typeOfUseForm.pseudonymizationInfoTexts"
   />
 </template>
 

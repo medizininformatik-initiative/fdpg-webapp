@@ -15,6 +15,15 @@ vi.mock('vue-i18n', () => ({
 
 const mountComponent = () => {
   const modelValue: ITypeOfUse = JSON.parse(JSON.stringify(mockProposal.userProject.typeOfUse))
+  // Ensure required properties are present
+  if (!modelValue.pseudonymizationInfo) modelValue.pseudonymizationInfo = []
+  if (!modelValue.pseudonymizationInfoTexts) {
+    modelValue.pseudonymizationInfoTexts = {
+      enableRecordLinkage: '',
+      siteGroupingEnabled: '',
+      namedSiteVariable: '',
+    }
+  }
   return mount(TypeOfUse, {
     global: {
       plugins: [createTestingPinia()],
@@ -23,7 +32,7 @@ const mountComponent = () => {
     props: {
       reviewMode: false,
       modelValue,
-      platform: PlatformIdentifier.Mii,
+      platform: [PlatformIdentifier.Mii],
     },
   })
 }

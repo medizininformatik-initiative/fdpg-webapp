@@ -55,7 +55,7 @@ const transformChecklist = (
     return {
       isRegistrationLinkSent: false,
       checkListVerification: [],
-      fdpgInternalCheckNotes: '',
+      fdpgInternalCheckNotes: { note: '', date: undefined, user: undefined },
       projectProperties: [],
     }
   }
