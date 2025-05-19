@@ -1,5 +1,6 @@
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import type { Role } from '@/types/oidc.types'
+import { Role as RoleEnum } from '@/types/oidc.types'
 import { defineStore } from 'pinia'
 export interface IAuthState {
   updatedProfile?: IFdpgOidcProfile
@@ -43,6 +44,10 @@ export const useAuthStore = defineStore('auth', {
       this.isChangeRoleDialogOpen = false
     },
 
+    hasFdpgLevelPermissions() {
+      return this.singleKnownRole === RoleEnum.FdpgMember || this.singleKnownRole === RoleEnum.DataSourceMember
+    },
+
     async loadProfile() {
       const signInData = await this.$oidc.mgr.signinSilent()
 
@@ -70,7 +75,7 @@ export const useAuthStore = defineStore('auth', {
     roles: (state): Role[] => state.$oidc?.user?.profile.realm_access?.roles ?? [],
     isLoggedIn: (state): boolean => state.$oidc?.isAuthenticated ?? false,
     token(state): string {
-      return this.isLoggedIn ? state.$oidc?.accessToken ?? '' : ''
+      return this.isLoggedIn ? (state.$oidc?.accessToken ?? '') : ''
     },
   },
 })
