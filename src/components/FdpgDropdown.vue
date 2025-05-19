@@ -61,7 +61,7 @@ defineProps({
   display: inline-block;
   position: relative;
   text-align: left;
-  z-index: 10;
+  z-index: 20;
 }
 
 .menu-button {
