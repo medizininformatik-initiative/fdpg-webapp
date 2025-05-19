@@ -12,7 +12,7 @@
             ></FdpgLabel>
 
             <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUse">
-              <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUse"></FdpgLabel>
+              <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUse') }}</FdpgLabel>
               <FdpgSelect
                 v-model="variableSelectionDataForm.DIFE.typeOfUse"
                 placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
@@ -24,7 +24,7 @@
 
           <el-col :sm="24">
             <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUseExplanation">
-              <FdpgLabel html-for="proposal.userProject.variableSelection.DIFE.typeOfUseExplanation"></FdpgLabel>
+              <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUseExplanation') }}</FdpgLabel>
               <FdpgTextEditor
                 v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
                 :disabled="reviewMode"

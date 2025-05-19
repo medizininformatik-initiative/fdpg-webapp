@@ -1,13 +1,13 @@
 <template>
-  <div :class="['w-full', props.disabled ? 'readonly-view' : '']">
+  <div :class="['w-full', disabled ? 'readonly-view' : '']">
     <QuillEditor
       theme="snow"
       v-model:content="value"
       contentType="html"
       ref="textEditor"
       :options="options"
-      :enable="!props.disabled"
-      :readOnly="props.disabled"
+      :enable="!disabled"
+      :readOnly="disabled"
       :placeholder="placeholder"
       @blur="handleBlur"
     />
@@ -39,6 +39,14 @@ const emit = defineEmits(['update:modelValue', 'blur'])
 
 const textEditor = ref()
 const isBlurred = ref(false)
+
+watch(
+  () => props.placeholder,
+  () => {
+    const editorInstance = textEditor.value.getQuill()
+    editorInstance.root.dataset.placeholder = props.placeholder
+  },
+)
 
 const value = computed<string | null>({
   get() {
