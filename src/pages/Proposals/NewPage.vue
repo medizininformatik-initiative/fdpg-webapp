@@ -74,7 +74,7 @@
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
           <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
 
-          <FdpgFormItem class="form-label-mb-3" v-if="platform.includes(PlatformIdentifier.Mii)">
+          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -107,6 +107,12 @@
             :form-ref="formRef"
             :platform="platform"
           />
+          <ProjectRecontact
+            v-model="proposalForm.userProject.resourceAndRecontact"
+            :review-mode="isReviewMode"
+            v-if="isMIISelected"
+          />
+
           <TargetFormat
             :platform="platform"
             v-model="proposalForm.userProject.typeOfUse"
@@ -158,6 +164,7 @@
         <div v-show="activeStep === CreatPrposalSteps.ResearchProject">
           <ProjectDetails
             v-model="proposalForm.userProject.projectDetails"
+            :requestedData="proposalForm.requestedData"
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :proposalId="proposalId"
@@ -167,7 +174,7 @@
             v-model="proposalForm.userProject.ethicVote"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            v-if="platform.includes(PlatformIdentifier.Mii)"
+            v-if="isMIISelected"
           />
           <FdpgLabel html-for="" size="large">{{
             $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
@@ -291,6 +298,8 @@ import VariableSelection from './Variables/VariableSelection.vue'
 import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 import ShoppingList from './DataSources/ShoppingList.vue'
 import TargetFormat from './DataUsage/TargetFormat.vue'
+import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
+
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -302,7 +311,12 @@ const stepFieldsMap = {
   ],
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: ['requestedData', 'userProject.variableSelection.DIFE'],
-  [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
+  [CreatPrposalSteps.ResearchProject]: [
+    'userProject.projectDetails',
+    'userProject.ethicVote',
+    'requestedData.desiredControlDataAmount',
+    'requestedData.desiredDataAmount',
+  ],
   [CreatPrposalSteps.Casesohort]: [],
 }
 
@@ -463,6 +477,7 @@ const rules = ref<Record<string, any>>({
     patientInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
     dataInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
     desiredDataAmount: requiredValidationFunc('number'),
+    desiredControlDataAmount: [requiredValidationFunc('number')],
   },
   status: null,
 })
@@ -489,7 +504,9 @@ const OpenProposalTasks = computed(() => {
 const hasBiosamples = computed(() => {
   return proposalForm.value?.userProject.typeOfUse.usage?.includes(ProposalTypeOfUse.Biosample)
 })
-
+const isMIISelected = computed(() => {
+  return platform?.value?.includes(PlatformIdentifier.Mii)
+})
 const openDetails = () => {
   if (proposalId.value) {
     router.push({

@@ -13,6 +13,13 @@
     v-model="typeOfUseForm"
     v-if="isDifeSelected"
   />
+  <PseudonymizationInfo
+    v-if="isMiiSelected"
+    :reviewMode="reviewMode"
+    :formRef="formRef"
+    v-model="typeOfUseForm.pseudonymizationInfo"
+    :pseudonymizationInfoTexts="typeOfUseForm.pseudonymizationInfoTexts"
+  />
 </template>
 
 <script setup lang="ts">
@@ -23,6 +30,7 @@ import type { FormInstance } from 'element-plus'
 import { computed, type PropType } from 'vue'
 import MIITypeOfUse from './MIITypeOfUse.vue'
 import DIFETypeOfUse from './DIFETypeOfUse.vue'
+import PseudonymizationInfo from './PseudonymizationInfo.vue'
 
 const props = defineProps({
   modelValue: {

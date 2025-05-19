@@ -247,7 +247,7 @@
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Bitte hängen Sie den Nachweis über das Ethikvotum dem Antrag an.",
     "chooseAFile": "Datei auswählen",
     "foundation": "Begründung",
-    "projectResourcesAndRecontact": "Projektressourcen* und Rekontaktierung",
+    "projectResources": "Projektressourcen*",
     "areSufficientProfessionalAndFinancialResourcesAvailable": "Stehen ausreichend professionelle und finanzielle Ressourcen zur Verfügung?",
     "areSufficientProfessionalAndFinancialResourcesAvailableInfo": "Stehen ausreichen professionelle und finanzielle Ressourcen für die Projektdurchführung zur Verfügung?",
     "yes": "Ja",
@@ -658,7 +658,14 @@
     "typeOfUse_EXTERNAL_SR": "External Server",
     "typeOfUse_INTERNAL_SR": "Internal SAS/R server",
     "keywordsPlaceholder": "Bitte geben Sie alle Schlüsselwörter ein, die sich auf den Vorschlag beziehen",
-    "keywords": "Keywords"
+    "keywords": "Keywords",
+    "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Kontrollgruppe)",
+    "projectRecontact": "Rekontaktierung",
+    "pseudonymizationInfo": "Angaben zur gewünschten Pseudonymisierung der Datensätze",
+    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten/ein und derselben Patientin sollten unabhängig von der\nbehandelnden Einrichtung dasselbe Pseudonym bekommen (Record-Linkage)",
+    "pseudonymizationInfo_siteGroupingEnabled": "Datensätze eines Standorts sollten immer als zusammengehörig erkennbar sein (pseudonyme\nStandortvariable benötigt)",
+    "pseudonymizationInfo_namedSiteVariable": "Die Herkunftsstandorte der Datensätze sollten namentlich erkennbar sein (namentliche\nStandortvariable benötigt\n)",
+    "undefined": "Begründung der Auswahl"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

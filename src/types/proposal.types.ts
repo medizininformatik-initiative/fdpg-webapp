@@ -9,6 +9,7 @@ import type { PublicationType } from './publication-type.enum'
 import type { Deadlines } from './due-date.enum'
 import type { DifeTypeOfUse } from './dife-type-of-use.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
+import type { PseudonymizationInfoOptions } from './PseudonymizationInfo.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -204,6 +205,8 @@ export interface ITypeOfUse extends WithIdAndIsDone {
   targetFormat: string
   targetFormatOther: string
   difeUsage: DIFEProposalTypeOfUse[]
+  pseudonymizationInfo: PseudonymizationInfoOptions[]
+  pseudonymizationInfoTexts: Record<PseudonymizationInfoOptions, string>
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
@@ -227,6 +230,7 @@ export interface IRequestedData extends WithIdAndIsDone {
   patientInfo: string
   dataInfo: string
   desiredDataAmount?: number
+  desiredControlDataAmount?: number
 }
 
 export interface IVariableSelectionData {}
