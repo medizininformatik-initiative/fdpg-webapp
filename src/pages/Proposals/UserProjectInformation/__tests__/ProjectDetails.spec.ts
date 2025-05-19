@@ -4,6 +4,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import ProjectDetails from '../../ResearchProject/ProjectDetails.vue'
 import { Department } from '@/types/department.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -13,6 +14,7 @@ vi.mock('vue-i18n', () => ({
 
 const mountComponent = () => {
   const modelValue: IProjectDetails = JSON.parse(JSON.stringify(mockProposal.userProject.projectDetails))
+  const requestedData = JSON.parse(JSON.stringify(mockProposal.requestedData))
   return mount(ProjectDetails, {
     global: {
       plugins: [createTestingPinia()],
@@ -21,6 +23,8 @@ const mountComponent = () => {
     props: {
       reviewMode: false,
       modelValue,
+      platform: [PlatformIdentifier.Mii],
+      requestedData,
     },
   })
 }
@@ -38,6 +42,7 @@ describe('ProjectDetails.vue', () => {
 
   it('should provide the correct departments to the select component', () => {
     const selectComponent = wrapper.findComponent({ name: 'FdpgSelect' })
+    expect(selectComponent.exists()).toBe(true)
     const selectComponentProps = selectComponent.props('options')
     const expected = Object.values(Department).map((value) => ({ label: `departments.${value}`, value }))
     expect(selectComponentProps).toEqual(expected)

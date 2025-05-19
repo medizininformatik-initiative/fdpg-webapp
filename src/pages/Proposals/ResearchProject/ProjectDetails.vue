@@ -3,7 +3,7 @@
   <el-card class="form-group">
     <el-row>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription">
+        <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.simpleProjectDescription" />
           <FdpgtextEditor
             v-model="projectDetailsForm.simpleProjectDescription"
@@ -14,7 +14,7 @@
             field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
-        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
+        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.executiveSummaryUac" />
           <FdpgtextEditor
             v-model="projectDetailsForm.executiveSummaryUac"
@@ -27,7 +27,7 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.department">
+        <FdpgFormItem prop="userProject.projectDetails.department" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.department" />
           <FdpgSelect
             v-model="projectDetailsForm.department"
@@ -111,8 +111,30 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
+        <FdpgFormItem prop="requestedData.desiredDataAmount">
+          <FdpgLabel html-for="proposal.informationOnDesiredDataAmount" />
+          <FdpgNumberInput
+            v-model="requestedDataForm.desiredDataAmount"
+            data-testId="requestedData.desiredDataAmount"
+            placeholder="proposal.desiredDataAmountPlaceholder"
+            :disabled="reviewMode || requestedDataForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
+        <FdpgFormItem prop="requestedData.desiredControlDataAmount">
+          <FdpgLabel html-for="proposal.informationOnDesiredControlDataAmount" />
+          <FdpgNumberInput
+            v-model="requestedDataForm.desiredControlDataAmount"
+            data-testId="requestedData.desiredControlDataAmount"
+            placeholder="proposal.desiredDataAmountPlaceholder"
+            :disabled="reviewMode || requestedDataForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.additionalDocument">
-          <FdpgLabel html-for="" size="large" class="form__item--width">{{
+          <FdpgLabel html-for="" size="medium" class="form__item--width">{{
             $t('proposal.additionalDocument') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
           }}</FdpgLabel>
 
@@ -154,7 +176,7 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import { Department } from '@/types/department.enum'
-import type { IProjectDetails } from '@/types/proposal.types'
+import type { IProjectDetails, IRequestedData } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
@@ -165,6 +187,7 @@ import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import useUpload from '@/composables/use-upload'
 import { DirectUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const props = defineProps({
   modelValue: {
@@ -183,9 +206,17 @@ const props = defineProps({
   proposalId: {
     type: String,
   },
+  platform: {
+    type: Array as PropType<PlatformIdentifier[]>,
+    required: true,
+  },
+  requestedData: {
+    type: Object as PropType<IRequestedData>,
+    required: true,
+  },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:requestedDataForm'])
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -199,6 +230,10 @@ const SupportedMimetype = computed(() => {
 
 const proposalIdRef = computed(() => props.proposalId || '')
 
+const isMIISelected = computed(() => {
+  return props.platform?.includes(PlatformIdentifier.Mii)
+})
+
 const {
   uploadsForType,
   handleUploadFile,
@@ -207,6 +242,7 @@ const {
 } = useUpload(proposalIdRef, [DirectUpload.AdditionalDocument], showErrorMessage)
 
 const projectDetailsForm = useVModel(props, 'modelValue', emit)
+const requestedDataForm = useVModel(props, 'requestedData', emit)
 </script>
 <style scoped lang="scss">
 .form__item--width {

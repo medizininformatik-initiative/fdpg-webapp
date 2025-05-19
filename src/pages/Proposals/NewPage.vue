@@ -59,9 +59,10 @@
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
           <VariableSelection
-            v-model:modelValue="proposalForm.userProject.variableSelection"
-            :selected-data-sources="proposalForm.selectedDataSources"
+            v-model="proposalForm.userProject.variableSelection"
+            :platform="platform"
             :review-mode="isReviewMode"
+            :form-ref="formRef"
           />
 
           <FdpgLabel
@@ -73,7 +74,7 @@
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
           <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
 
-          <FdpgFormItem class="form-label-mb-3">
+          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -103,7 +104,19 @@
           <TypeOfUse
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
+            :form-ref="formRef"
             :platform="platform"
+          />
+          <ProjectRecontact
+            v-model="proposalForm.userProject.resourceAndRecontact"
+            :review-mode="isReviewMode"
+            v-if="isMIISelected"
+          />
+
+          <TargetFormat
+            :platform="platform"
+            v-model="proposalForm.userProject.typeOfUse"
+            :review-mode="isReviewMode"
             :form-ref="formRef"
           />
         </div>
@@ -151,11 +164,18 @@
         <div v-show="activeStep === CreatPrposalSteps.ResearchProject">
           <ProjectDetails
             v-model="proposalForm.userProject.projectDetails"
+            :requestedData="proposalForm.requestedData"
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :proposalId="proposalId"
+            :platform="platform"
           />
-          <EthicVote v-model="proposalForm.userProject.ethicVote" :review-mode="isReviewMode" :form-ref="formRef" />
+          <EthicVote
+            v-model="proposalForm.userProject.ethicVote"
+            :review-mode="isReviewMode"
+            :form-ref="formRef"
+            v-if="isMIISelected"
+          />
           <FdpgLabel html-for="" size="large">{{
             $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
           }}</FdpgLabel>
@@ -222,7 +242,7 @@
     </el-row>
   </el-container>
 
-  <TermsDialog v-model="isTermsDialogOpen" :platform="platform" @confirm="handleTermsConfirm" />
+  <TermsDialog v-model="isTermsDialogOpen" :platform="PlatformIdentifier.Mii" @confirm="handleTermsConfirm" />
 </template>
 
 <script setup lang="ts">
@@ -277,6 +297,9 @@ import InformationOnBioSample from './Variables/InformationOnBioSample/Informati
 import VariableSelection from './Variables/VariableSelection.vue'
 import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 import ShoppingList from './DataSources/ShoppingList.vue'
+import TargetFormat from './DataUsage/TargetFormat.vue'
+import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
+
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -288,7 +311,12 @@ const stepFieldsMap = {
   ],
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: ['requestedData', 'userProject.variableSelection.DIFE'],
-  [CreatPrposalSteps.ResearchProject]: ['userProject.projectDetails', 'userProject.ethicVote'],
+  [CreatPrposalSteps.ResearchProject]: [
+    'userProject.projectDetails',
+    'userProject.ethicVote',
+    'requestedData.desiredControlDataAmount',
+    'requestedData.desiredDataAmount',
+  ],
   [CreatPrposalSteps.Casesohort]: [],
 }
 
@@ -300,7 +328,6 @@ defineProps({
 })
 
 // Currently only one platform supported
-const platform = PlatformIdentifier.Mii
 
 const { t } = useI18n()
 
@@ -310,6 +337,10 @@ const { params, query } = useRoute()
 const commentStore = useCommentStore()
 
 const proposalForm = ref<IProposal>()
+const platform = computed(() => {
+  return proposalForm.value?.selectedDataSources ?? [PlatformIdentifier.Mii]
+})
+
 const proposalId = computed(() => proposalForm.value?._id as string)
 const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
@@ -430,15 +461,23 @@ const rules = ref<Record<string, any>>({
     typeOfUse: {
       usage: requiredValidationFunc('array'),
       dataPrivacyExtra: [maxLengthValidationFunc(10000)],
+      difeUsage: requiredValidationFunc('array'),
     },
     informationOnRequestedBioSamples: {
       // Handled in component
+    },
+    variableSelection: {
+      DIFE: {
+        typeOfUse: requiredValidationFunc('string'),
+        typeOfUseExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+      },
     },
   },
   requestedData: {
     patientInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
     dataInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
     desiredDataAmount: requiredValidationFunc('number'),
+    desiredControlDataAmount: [requiredValidationFunc('number')],
   },
   status: null,
 })
@@ -465,7 +504,9 @@ const OpenProposalTasks = computed(() => {
 const hasBiosamples = computed(() => {
   return proposalForm.value?.userProject.typeOfUse.usage?.includes(ProposalTypeOfUse.Biosample)
 })
-
+const isMIISelected = computed(() => {
+  return platform?.value?.includes(PlatformIdentifier.Mii)
+})
 const openDetails = () => {
   if (proposalId.value) {
     router.push({

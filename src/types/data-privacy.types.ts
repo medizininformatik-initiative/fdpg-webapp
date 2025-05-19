@@ -18,6 +18,7 @@ interface IDataPrivacyTexts extends Record<ProposalTypeOfUse, IDataPrivacyTextsC
   [ProposalTypeOfUse.Biosample]: IDataPrivacyTextsContent
   [ProposalTypeOfUse.Centralized]: IDataPrivacyTextsContent
   [ProposalTypeOfUse.Distributed]: IDataPrivacyTextsContent
+  all?: IDataPrivacyTextsContent
 }
 
 interface IDataPrivacyTextsContent {

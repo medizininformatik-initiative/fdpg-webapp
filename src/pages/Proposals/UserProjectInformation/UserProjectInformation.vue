@@ -5,20 +5,30 @@
       :review-mode="reviewMode"
       :form-ref="formRef"
     />
-    <ProjectFeasibility v-model="userProjectForm.feasibility" :review-mode="reviewMode" :form-ref="formRef" />
-    <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" />
-    <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" />
-    <PlannedPublications v-model="userProjectForm.plannedPublication" :review-mode="reviewMode" :form-ref="formRef" />
+    <ProjectFeasibility
+      v-model="userProjectForm.feasibility"
+      :review-mode="reviewMode"
+      :form-ref="formRef"
+      v-if="isMIISelected"
+    />
+    <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" v-if="isMIISelected" />
+    <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
+    <PlannedPublications
+      v-model="userProjectForm.plannedPublication"
+      :review-mode="reviewMode"
+      :form-ref="formRef"
+      v-if="isMIISelected"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import type { IAttachmentsInterface } from '@/types/component.interface'
-import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IUserProject } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
-import type { PropType } from 'vue'
+import { computed, type PropType } from 'vue'
 import PlannedPublications from '../PlannedPublications/PlannedPublications.vue'
 import GeneralProjectInformation from './GeneralProjectInformation.vue'
 import ProjectFeasibility from './ProjectFeasibility.vue'
@@ -47,7 +57,7 @@ const props = defineProps({
     default: false,
   },
   platform: {
-    type: String as PropType<PlatformIdentifier>,
+    type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
 })
@@ -55,4 +65,8 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const userProjectForm = useVModel(props, 'modelValue', emit)
+
+const isMIISelected = computed(() => {
+  return props.platform.includes(PlatformIdentifier.Mii)
+})
 </script>

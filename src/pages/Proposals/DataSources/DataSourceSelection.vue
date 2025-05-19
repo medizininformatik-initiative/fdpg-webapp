@@ -21,6 +21,7 @@ import type { IDataSourceDto } from '@/types/proposal.types'
 import { onMounted, ref, defineExpose, computed } from 'vue'
 import { useConfigStore } from '@/stores/config/config.store'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { useVModel } from '@vueuse/core'
 
 const props = defineProps({
   modelValue: {
@@ -30,7 +31,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 
-const selectedSources = ref<PlatformIdentifier[]>([])
+const selectedSources = useVModel(props, 'modelValue', emit)
 const configStore = useConfigStore()
 
 const dataSources = computed<IDataSourceDto>(() => {
