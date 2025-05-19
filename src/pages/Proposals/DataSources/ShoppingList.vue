@@ -178,7 +178,6 @@ const closeDrawer = () => {
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  /* z-index: 11; */
   transition: width 0.5s ease-in-out;
   overflow: hidden;
   pointer-events: auto;
