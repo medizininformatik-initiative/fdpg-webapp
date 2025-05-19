@@ -51,7 +51,7 @@
                   aria-label="Go to select variable"
                 >
                   <i class="fa-solid fa-plus"></i>
-                  {{ t('proposal.toSelectVariable') }}
+                  <span>{{ t('proposal.toSelectVariable') }}</span>
                 </el-button>
               </div>
             </div>
@@ -64,14 +64,20 @@
       <div class="data-source-list-drawer-footer">
         <el-button
           type="primary"
+          @click="goToStep(CreatPrposalSteps.DataSources)"
+          aria-label="Continue with data source"
+        >
+          {{ t('proposal.continueWithDataSource') }}
+        </el-button>
+
+        <el-button
+          type="primary"
+          plain
           @click="nextStep"
           aria-label="Go to Next Step"
           :disabled="selectedSources.length === 0"
         >
           {{ t('proposal.nextStep') }}
-        </el-button>
-        <el-button plain @click="goToStep(CreatPrposalSteps.DataSources)" aria-label="Continue with data source">
-          {{ t('proposal.continueWithDataSource') }}
         </el-button>
       </div>
     </div>
@@ -172,7 +178,7 @@ const closeDrawer = () => {
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
-  z-index: 101;
+  /* z-index: 11; */
   transition: width 0.5s ease-in-out;
   overflow: hidden;
   pointer-events: auto;
@@ -205,10 +211,13 @@ const closeDrawer = () => {
   }
   &-footer {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     padding: 16px 20px;
-    min-width: 300px;
+    flex-direction: column;
+    gap: 10px;
+    button {
+      width: 300px;
+    }
   }
 }
 
@@ -264,6 +273,15 @@ const closeDrawer = () => {
     justify-content: center;
     align-items: center;
     margin-top: 15px;
+    padding: 15px 0;
+    border: 1px dashed $gray-600;
+    .info-link {
+      span {
+        i {
+          margin-top: 5px;
+        }
+      }
+    }
   }
 }
 
