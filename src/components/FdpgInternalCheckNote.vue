@@ -3,29 +3,13 @@
     <FdpgLabel html-for="proposal.internalCheckNotes" />
     <FdpgTextEditor
       v-model="localNote"
-      :placeholder="$t('proposal.internalCheckNotes')"
+      :placeholder="$t('proposal.internalCheckNotesPlaceholder')"
       :disabled="isDisabled"
       @blur="handleBlur(localNote)"
       @input="handleInput"
       @update:modelValue="debouncedHandleChange(localNote)"
       ref="editorRef"
     ></FdpgTextEditor>
-  </div>
-  <div v-if="currentNote?.note" class="note-meta">
-    <div class="message-footer">
-      <span class="message-owner"
-        ><b>{{ $t('general.editor') }}:</b> {{ currentNote.user }}</span
-      >
-      <span class="message-date">{{
-        new Date(currentNote.date).toLocaleDateString(undefined, {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      }}</span>
-    </div>
   </div>
 </template>
 
@@ -34,7 +18,6 @@ import { ref, watch, onMounted } from 'vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import { defineProps, defineEmits } from '@vue/runtime-core'
-import type { InternalCheckNote } from '@/types/proposal.types'
 import { debounce } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 
@@ -43,28 +26,28 @@ const { t } = useI18n()
 const props = defineProps({
   isDisabled: Boolean,
   currentNote: {
-    type: Object as () => InternalCheckNote,
-    default: () => ({ note: '' }),
+    type: Object as () => string | null,
+    default: () => '',
   },
 })
 
 const emit = defineEmits(['update:listItem'])
 
-const localNote = ref(props.currentNote?.note)
+const localNote = ref(props.currentNote ?? '')
 const editorRef = ref()
 const isInitialized = ref(false)
 const isUserTyping = ref(false)
 
 onMounted(() => {
-  localNote.value = props.currentNote?.note
+  localNote.value = props.currentNote ?? ''
   isInitialized.value = true
 })
 
 watch(
-  () => props.currentNote?.note,
+  () => props.currentNote,
   (newValue) => {
     if (newValue !== localNote.value && isInitialized.value && !isUserTyping.value) {
-      localNote.value = newValue
+      localNote.value = newValue ?? ''
     }
   },
 )
@@ -72,18 +55,14 @@ watch(
 const handleBlur = (value: string) => {
   isUserTyping.value = false
   emit('update:listItem', {
-    fdpgInternalCheckNotes: {
-      note: value,
-    },
+    fdpgInternalCheckNotes: value,
   })
 }
 
 const debouncedHandleChange = debounce((value: string) => {
   isUserTyping.value = false
   emit('update:listItem', {
-    fdpgInternalCheckNotes: {
-      note: value,
-    },
+    fdpgInternalCheckNotes: value,
   })
 }, 1000)
 
