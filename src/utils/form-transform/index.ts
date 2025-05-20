@@ -25,6 +25,7 @@ const transformRequestedData = (requestedData?: DeepPartial<IRequestedData>): De
     patientInfo: transformEmptyStringToUndefined(requestedData?.patientInfo),
     dataInfo: transformEmptyStringToUndefined(requestedData?.dataInfo),
     desiredDataAmount: requestedData?.desiredDataAmount,
+    desiredControlDataAmount: requestedData?.desiredControlDataAmount,
   }
 }
 
