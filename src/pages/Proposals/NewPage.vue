@@ -435,6 +435,7 @@ const rules = ref<Record<string, any>>({
       scientificBackground: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       hypothesisAndQuestionProjectGoals: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       materialAndMethods: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+      executiveSummaryUac: [requiredValidationFunc('string'), maxLengthValidationFunc(3000)],
     },
     ethicVote: {
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],

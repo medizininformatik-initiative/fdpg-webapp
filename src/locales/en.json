@@ -613,6 +613,7 @@
     "out-EU": "outside EU",
     "listOfNoMarked": "These items are marked as No",
     "internalCheckNotes": "Internal Check Notes",
+    "internalCheckNotesPlaceholder": "Notes in format: dd.mm.yyyy\n\nEditor: <>\n\n<Notes>",
     "desiredStartTime_immediate": "As soon as possible",
     "desiredStartTime_later": "other time",
     "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",

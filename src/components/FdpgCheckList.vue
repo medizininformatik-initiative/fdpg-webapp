@@ -8,7 +8,7 @@
         <ElCol :span="24">
           <FdpgInternalCheckNote
             :currentNote="props.checklist?.fdpgInternalCheckNotes"
-            @update:listItem="($event: InternalCheckNote) => emit('update:listItem', $event)"
+            @update:listItem="($event: string) => emit('update:listItem', $event)"
           ></FdpgInternalCheckNote>
         </ElCol>
       </ElRow>
@@ -64,12 +64,7 @@
 import { computed, onMounted, ref, type PropType } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import {
-  ProposalStatus,
-  type IChecklistItem,
-  type IFdpgChecklist,
-  type InternalCheckNote,
-} from '@/types/proposal.types'
+import { ProposalStatus, type IChecklistItem, type IFdpgChecklist } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
 import { ElCard, ElCol, ElRow, ElCheckbox, ElCollapse, ElCollapseItem } from 'element-plus'
 

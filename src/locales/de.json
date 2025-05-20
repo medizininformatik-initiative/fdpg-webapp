@@ -613,6 +613,7 @@
     "out-EU": "Internationale Beteiligte (non-EU)",
     "listOfNoMarked": "Diese Elemente sind als Nein gekennzeichnet.",
     "internalCheckNotes": "Interne Kontrollnotizen",
+    "internalCheckNotesPlaceholder": "Notizen im Format: Datum: dd.mm.yyyy\n\nBearbeiter: <>\n\n<Bearbeitungsstand/Hinweise>",
     "desiredStartTime_immediate": "sobald wie möglich",
     "desiredStartTime_later": "anderer Zeitpunkt",
     "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",

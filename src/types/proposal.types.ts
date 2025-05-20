@@ -355,23 +355,17 @@ export interface IChecklistItem {
   sublist?: IChecklistItem[]
 }
 
-export interface InternalCheckNote {
-  note: string
-  date: Date
-  user: string
-}
-
 export interface IFdpgChecklist {
   isRegistrationLinkSent: boolean
   checkListVerification: IChecklistItem[]
-  fdpgInternalCheckNotes: InternalCheckNote
+  fdpgInternalCheckNotes: string | null
   projectProperties: IChecklistItem[]
 }
 
 export type FdpgChecklistItemUpdateResponse =
   | IChecklistItem
   | { _id: 'isRegistrationLinkSent'; isRegistrationLinkSent: boolean }
-  | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: InternalCheckNote | null }
+  | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: string | null }
 
 export interface IsDoneDetail {
   path: string
