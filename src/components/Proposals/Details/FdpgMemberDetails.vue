@@ -428,8 +428,8 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     testId: 'button__lockOrUnlockProposal',
     action: openLockModal,
     isHidden:
-      authStore.singleKnownRole !== Role.FdpgMember ||
-      (authStore.singleKnownRole === Role.FdpgMember && proposalStore.currentProposal?.status === ProposalStatus.Draft),
+      !authStore.hasFdpgLevelPermissions() ||
+      (authStore.hasFdpgLevelPermissions() && proposalStore.currentProposal?.status === ProposalStatus.Draft),
   },
   {
     type: 'primary',

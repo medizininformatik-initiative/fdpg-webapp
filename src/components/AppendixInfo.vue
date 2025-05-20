@@ -94,7 +94,7 @@ const hideContracts = computed(() => {
 const authStore = useAuthStore()
 const hideDocuments = computed(() => {
   const isFdpgCheck = proposalStore.currentProposal?.status === ProposalStatus.FdpgCheck
-  const isFdpgMember = authStore.singleKnownRole === Role.FdpgMember
+  const isFdpgMember = authStore.hasFdpgLevelPermissions()
 
   return isFdpgCheck && isFdpgMember
 })

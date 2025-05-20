@@ -20,7 +20,7 @@
     <DefinitionCard v-else :card="card" :dto="dto"></DefinitionCard>
 
     <FdpgCommentCreator
-      v-if="authStore.singleKnownRole === Role.FdpgMember && !isDraft"
+      v-if="authStore.hasFdpgLevelPermissions() && !isDraft"
       :object-id="dto[card.key]._id"
       :type="CommentType.PROPOSAL_TASK"
     />

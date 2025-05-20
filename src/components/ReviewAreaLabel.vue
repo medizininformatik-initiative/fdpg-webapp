@@ -4,7 +4,7 @@
 
     <el-checkbox
       v-if="
-        authStore.singleKnownRole === Role.FdpgMember &&
+        authStore.hasFdpgLevelPermissions() &&
         proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
         sectionIds &&
         sectionIds.length > 0

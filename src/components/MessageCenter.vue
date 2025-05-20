@@ -61,9 +61,9 @@ const showDoneComments = ref(true)
 
 const titleForType = computed<TranslationSchema>(() => {
   if (props.type === CommentType.PROPOSAL_MESSAGE_TO_OWNER) {
-    return authStore.singleKnownRole === Role.FdpgMember ? 'proposal.messagesToApplicants' : 'proposal.messagesToFdpg'
+    return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToApplicants' : 'proposal.messagesToFdpg'
   } else {
-    return authStore.singleKnownRole === Role.FdpgMember ? 'proposal.messagesToLocations' : 'proposal.messagesToFdpg'
+    return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToLocations' : 'proposal.messagesToFdpg'
   }
 })
 

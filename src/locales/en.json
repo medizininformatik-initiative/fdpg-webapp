@@ -672,11 +672,13 @@
     "DizMember": "DIZ Employee",
     "UacMember": "UAC Employee",
     "Admin": "Admin",
+    "DataSourceMember": "Data Source Member",
     "HEADER_FdpgMember": "FDPG",
     "HEADER_Researcher": "Researcher",
     "HEADER_DizMember": "DIZ",
     "HEADER_UacMember": "UAC",
     "HEADER_Admin": "Admin",
+    "HEADER_DataSourceMember": "Data Source Member",
     "changeRoleModalText": "This role doesn't have right access. do you want to change role and try again to access?",
     "changeRoleModalTitle": "Wrong role",
     "roleAccessDenied": "Unfortunately you don't have any access to this information."

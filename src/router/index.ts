@@ -36,7 +36,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember],
+          roles: [Role.FdpgMember, Role.DataSourceMember],
         },
       },
       {
@@ -46,7 +46,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember],
+          roles: [Role.FdpgMember, Role.DataSourceMember],
         },
       },
       {
@@ -56,7 +56,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember],
+          roles: [Role.FdpgMember, Role.DataSourceMember],
         },
       },
       {
@@ -66,7 +66,7 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember, Role.Researcher, Role.DizMember, Role.UacMember],
+          roles: [Role.FdpgMember, Role.DataSourceMember, Role.Researcher, Role.DizMember, Role.UacMember],
         },
       },
 
@@ -76,7 +76,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/components/Proposals/Details/DetailComponent.vue'),
         props: true,
         meta: {
-          roles: [Role.Researcher, Role.FdpgMember, Role.DizMember, Role.UacMember],
+          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
         },
       },
       {

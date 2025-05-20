@@ -1,6 +1,6 @@
 <template>
   <ResearcherDashboard v-if="singleKnownRole === Role.Researcher" />
-  <FdpgMemberDashboard v-else-if="singleKnownRole === Role.FdpgMember || singleKnownRole === Role.DataSourceMember" />
+  <FdpgMemberDashboard v-else-if="isFdpgLevelUser" />
   <DizAndUacMemberDashboard v-else-if="singleKnownRole === Role.DizMember || singleKnownRole === Role.UacMember" />
   <AdminDashboard v-else-if="singleKnownRole === Role.Admin" />
   <NoRoleDashboard v-else />
@@ -17,4 +17,5 @@ const AdminDashboard = defineAsyncComponent(() => import('./AdminDashboard.vue')
 const NoRoleDashboard = defineAsyncComponent(() => import('./NoRoleDashboard.vue'))
 const authStore = useAuthStore()
 const singleKnownRole = computed(() => authStore.singleKnownRole)
+const isFdpgLevelUser = computed(() => authStore.hasFdpgLevelPermissions())
 </script>

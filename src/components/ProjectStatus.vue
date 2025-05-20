@@ -75,6 +75,9 @@ const setStatusForRole = async () => {
     case Role.FdpgMember:
       handler = await import('../utils/project-status-handling/project-status-fdpg')
       break
+    case Role.DataSourceMember:
+      handler = await import('../utils/project-status-handling/project-status-fdpg')
+      break
     case Role.DizMember:
       handler = await import('../utils/project-status-handling/project-status-diz')
       break

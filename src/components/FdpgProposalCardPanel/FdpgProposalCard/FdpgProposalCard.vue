@@ -128,7 +128,7 @@ const editedAgo = computed(() => Math.abs(getDateDiff(props.proposal.updatedAt, 
 
 const authStore = useAuthStore()
 const showLocationVoting = computed(() => {
-  return props.proposal.status === ProposalStatus.LocationCheck && authStore.singleKnownRole === Role.FdpgMember
+  return props.proposal.status === ProposalStatus.LocationCheck && authStore.hasFdpgLevelPermissions()
 })
 const showResearcherStatus = computed(() => {
   return authStore.singleKnownRole === Role.Researcher
@@ -145,7 +145,7 @@ const notificationIcon: Record<FdpgTaskType, string> = {
   [FdpgTaskType.DueDateReached]: '',
 }
 const notifications = computed(() => {
-  if (authStore.singleKnownRole === Role.FdpgMember) {
+  if (authStore.hasFdpgLevelPermissions()) {
     return props.proposal.openFdpgTasks.reduce(
       (acc, task) => {
         if (task.type === FdpgTaskType.Comment || task.type === FdpgTaskType.ConditionApproval) {

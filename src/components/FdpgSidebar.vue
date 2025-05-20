@@ -43,6 +43,34 @@ interface Menu {
   [key: string]: SidebarMenu[]
 }
 
+const fdpgRoleSidebar = [
+  {
+    kind: MenuType.Route,
+    to: RouteName.Dashboard,
+    title: 'general.requested',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Pending,
+    title: 'general.pending',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Ongoing,
+    title: 'general.current',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Completed,
+    title: 'general.completed',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Archive,
+    title: 'general.archive',
+  },
+]
+
 const mainMenuMap: Menu = {
   [Role.Admin]: [
     {
@@ -58,33 +86,8 @@ const mainMenuMap: Menu = {
       icon: 'bi bi-archive-fill',
     },
   ],
-  [Role.FdpgMember]: [
-    {
-      kind: MenuType.Route,
-      to: RouteName.Dashboard,
-      title: 'general.requested',
-    },
-    {
-      kind: MenuType.Route,
-      to: RouteName.Pending,
-      title: 'general.pending',
-    },
-    {
-      kind: MenuType.Route,
-      to: RouteName.Ongoing,
-      title: 'general.current',
-    },
-    {
-      kind: MenuType.Route,
-      to: RouteName.Completed,
-      title: 'general.completed',
-    },
-    {
-      kind: MenuType.Route,
-      to: RouteName.Archive,
-      title: 'general.archive',
-    },
-  ],
+  [Role.FdpgMember]: [...fdpgRoleSidebar],
+  [Role.DataSourceMember]: [...fdpgRoleSidebar],
   [Role.Researcher]: [
     {
       kind: MenuType.Route,
