@@ -6,7 +6,9 @@
       :placeholder="$t('proposal.internalCheckNotes')"
       :disabled="isDisabled"
       @blur="handleBlur(localNote)"
-      @input="debouncedHandleChange(localNote)"
+      @input="handleInput"
+      @update:modelValue="debouncedHandleChange(localNote)"
+      ref="editorRef"
     ></FdpgTextEditor>
   </div>
   <div v-if="currentNote?.note" class="note-meta">
@@ -28,12 +30,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import { defineProps, defineEmits } from '@vue/runtime-core'
 import type { InternalCheckNote } from '@/types/proposal.types'
 import { debounce } from 'lodash-es'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   isDisabled: Boolean,
@@ -46,28 +51,45 @@ const props = defineProps({
 const emit = defineEmits(['update:listItem'])
 
 const localNote = ref(props.currentNote?.note)
+const editorRef = ref()
+const isInitialized = ref(false)
+const isUserTyping = ref(false)
+
+onMounted(() => {
+  localNote.value = props.currentNote?.note
+  isInitialized.value = true
+})
 
 watch(
   () => props.currentNote?.note,
   (newValue) => {
-    localNote.value = newValue
+    if (newValue !== localNote.value && isInitialized.value && !isUserTyping.value) {
+      localNote.value = newValue
+    }
   },
 )
 
 const handleBlur = (value: string) => {
+  isUserTyping.value = false
   emit('update:listItem', {
     fdpgInternalCheckNotes: {
       note: value,
     },
   })
 }
+
 const debouncedHandleChange = debounce((value: string) => {
+  isUserTyping.value = false
   emit('update:listItem', {
     fdpgInternalCheckNotes: {
       note: value,
     },
   })
-}, 500)
+}, 1000)
+
+const handleInput = () => {
+  isUserTyping.value = true
+}
 </script>
 
 <style lang="scss" scoped>
