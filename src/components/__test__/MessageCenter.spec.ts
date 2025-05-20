@@ -73,6 +73,7 @@ describe('MessageCenter.vue', () => {
   beforeEach(() => {
     authStore = vi.mocked(useAuthStore())
     authStore.singleKnownRole = Role.FdpgMember
+    authStore.hasFdpgLevelPermissions = vi.fn().mockReturnValue(true)
     commentStore = vi.mocked(useCommentStore())
     commentStore.comments = [
       {

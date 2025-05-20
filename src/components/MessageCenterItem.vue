@@ -28,11 +28,11 @@
 
     <div class="message-content ql-editor" v-html="message.content"></div>
 
-    <section v-if="couldAnswer || authStore.hasFdpgLevelPermissions()" role="region">
+    <section v-if="couldAnswer || hasFdpgLevelPermissions" role="region">
       <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
         {{ $t('proposal.answerComment') }}
       </el-button>
-      <el-button v-if="authStore.hasFdpgLevelPermissions()" link :disabled="isAnswerMode" @click="markAsDone">
+      <el-button v-if="hasFdpgLevelPermissions" link :disabled="isAnswerMode" @click="markAsDone">
         {{ message.isDone ? $t('proposal.markAsOpen') : $t('proposal.markAsDone') }}
       </el-button>
     </section>
@@ -67,6 +67,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const hasFdpgLevelPermissions = computed(() => authStore.hasFdpgLevelPermissions())
 
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer', 'markAsDone'])
 

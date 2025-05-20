@@ -41,6 +41,7 @@ describe('MessageCenterItem.vue', () => {
   beforeEach(() => {
     authStore = vi.mocked(useAuthStore())
     authStore.singleKnownRole = Role.FdpgMember
+    authStore.hasFdpgLevelPermissions = vi.fn().mockReturnValue(true)
   })
 
   it('renders', () => {

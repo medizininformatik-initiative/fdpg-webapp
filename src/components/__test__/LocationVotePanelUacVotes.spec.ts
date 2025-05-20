@@ -68,10 +68,11 @@ describe('LocationVotePanelUacVotes.vue', () => {
   })
 
   beforeEach(() => {
-    proposalStore = vi.mocked(useProposalStore())
-    proposalStore.currentProposal = mockProposal
     authStore = vi.mocked(useAuthStore())
     authStore.singleKnownRole = Role.FdpgMember
+    authStore.hasFdpgLevelPermissions.mockReturnValue(true)
+    proposalStore = vi.mocked(useProposalStore())
+    proposalStore.currentProposal = mockProposal
   })
 
   it('renders', () => {

@@ -73,6 +73,7 @@ describe('UsePanels', () => {
   describe('should return the panels for the fdpg member', () => {
     beforeEach(() => {
       authStore.singleKnownRole = Role.FdpgMember
+      authStore.hasFdpgLevelPermissions.mockReturnValue(true)
     })
     it('on the dashboard page', async () => {
       const routeName = computed(() => RouteName.Dashboard)

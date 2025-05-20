@@ -58,6 +58,7 @@ describe('FdpgCheckNotes.vue', () => {
     proposalStore.currentProposal = { status: ProposalStatus.FdpgCheck } as IProposal
     authStore = vi.mocked(useAuthStore())
     authStore.singleKnownRole = Role.FdpgMember
+    authStore.hasFdpgLevelPermissions = vi.fn().mockReturnValue(true)
   })
 
   it('renders', () => {
