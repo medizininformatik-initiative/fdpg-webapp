@@ -9,7 +9,7 @@ const isExtendedFdpgCardType = (type: CardType): type is CardType.Pending | Card
 }
 
 export const getPanelQuery = (type: CardType, userRole: Role, fetchingType: ProjectFetchingType) => {
-  if (userRole === Role.FdpgMember) {
+  if (userRole === Role.FdpgMember || userRole === Role.DataSourceMember) {
     if (type === CardType.Completed) {
       return PanelQueryObj[userRole][type]
     } else if (isExtendedFdpgCardType(type)) {

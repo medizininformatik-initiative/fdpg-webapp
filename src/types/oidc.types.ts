@@ -1,4 +1,5 @@
 import type { MiiLocation } from './location.enum'
+import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { Salutation } from './salutation.enum'
 
 export interface IOidc {
@@ -18,6 +19,10 @@ export interface IFdpgBaseUser {
   affiliation: string
 }
 
+export interface IUserFromDataSource extends IFdpgBaseUser {
+  assignedDataSources: PlatformIdentifier[]
+}
+
 export interface IUserFromMii extends IFdpgBaseUser {
   MII_LOCATION: MiiLocation
 }
@@ -26,7 +31,7 @@ export interface IUserFromExternalOrganization extends IFdpgBaseUser {
   organization: IOrganization
 }
 
-export type FdpgUser = IUserFromMii | IUserFromExternalOrganization
+export type FdpgUser = IUserFromMii | IUserFromExternalOrganization | IUserFromDataSource
 
 export interface IOrganization {
   country: string
@@ -65,6 +70,7 @@ export interface IOidcRealmAccess {
 export enum Role {
   Admin = 'Admin',
   FdpgMember = 'FdpgMember',
+  DataSourceMember = 'DataSourceMember',
   Researcher = 'Researcher',
   DizMember = 'DizMember',
   UacMember = 'UacMember',

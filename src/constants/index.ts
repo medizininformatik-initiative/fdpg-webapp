@@ -397,22 +397,25 @@ export const tableColumns = {
   ],
 }
 
-export const PanelQueryObj = {
-  [Role.FdpgMember]: {
-    [CardType.Pending]: {
-      [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgPendingToCheck,
-      [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgPendingInWork,
-    },
-    [CardType.Requested]: {
-      [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgRequestedToCheck,
-      [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgRequestedInWork,
-    },
-    [CardType.Ongoing]: {
-      [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgOngoingToCheck,
-      [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgOngoingInWork,
-    },
-    [CardType.Completed]: PanelQuery.FdpgFinished,
+const FdpgMemberQueries = {
+  [CardType.Pending]: {
+    [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgPendingToCheck,
+    [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgPendingInWork,
   },
+  [CardType.Requested]: {
+    [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgRequestedToCheck,
+    [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgRequestedInWork,
+  },
+  [CardType.Ongoing]: {
+    [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgOngoingToCheck,
+    [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgOngoingInWork,
+  },
+  [CardType.Completed]: PanelQuery.FdpgFinished,
+}
+
+export const PanelQueryObj = {
+  [Role.FdpgMember]: FdpgMemberQueries,
+  [Role.DataSourceMember]: FdpgMemberQueries,
 
   [Role.Researcher]: {
     [CardType.Draft]: PanelQuery.Draft,

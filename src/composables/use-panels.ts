@@ -3,10 +3,10 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { CardType } from '@/types/component.types'
 import { Role } from '@/types/oidc.types'
 import type { PanelType } from '@/types/proposal.types'
-import type { FdpgDashboardRoutes} from '@/types/route-name.enum';
+import type { FdpgDashboardRoutes } from '@/types/route-name.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { PanelQuery } from '@/types/sort-filter.types'
-import type { ComputedRef } from 'vue';
+import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import type { RouteRecordName } from 'vue-router'
 
@@ -52,6 +52,7 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
 const PANEL_MAP = {
   [Role.Researcher]: RESEARCHER_PANELS,
   [Role.FdpgMember]: FDPG_PANELS,
+  [Role.DataSourceMember]: FDPG_PANELS,
   [Role.DizMember]: DIZ_PANELS,
   [Role.UacMember]: UAC_PANELS,
 }
@@ -64,8 +65,8 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
   const panels = computed<PanelType[]>(() => {
     if (routeName.value === RouteName.Archive) {
       return []
-    } else if (authStore.singleKnownRole === Role.FdpgMember) {
-      return PANEL_MAP[authStore.singleKnownRole][routeName.value] ?? []
+    } else if (authStore.hasFdpgLevelPermissions()) {
+      return PANEL_MAP[Role.FdpgMember][routeName.value] ?? []
     } else if (
       authStore.singleKnownRole &&
       rolesWithBasicPanels.includes(authStore.singleKnownRole) &&

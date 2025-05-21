@@ -75,7 +75,7 @@ const handleSubmit = () => {
 
 const isAnswerToLocation = computed(() => {
   const ownerIsLocation = props.message.owner.role === Role.DizMember || props.message.owner.role === Role.UacMember
-  const answerIsFromFdpg = authStore.singleKnownRole === Role.FdpgMember
+  const answerIsFromFdpg = authStore.hasFdpgLevelPermissions()
   return ownerIsLocation && answerIsFromFdpg
 })
 

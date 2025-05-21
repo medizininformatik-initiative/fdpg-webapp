@@ -35,6 +35,7 @@ describe('MessageCenterAnswerCreator.vue', () => {
     createTestingPinia()
     authStore = vi.mocked(useAuthStore())
     authStore.singleKnownRole = Role.FdpgMember
+    authStore.hasFdpgLevelPermissions.mockReturnValue(true)
     wrapper = mount(MessageCenterAnswerCreator, {
       props: {
         message: {

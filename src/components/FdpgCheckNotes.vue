@@ -45,9 +45,7 @@ const sendFdpgCheckNotes = async () => {
   }
 }
 const isEditMode = computed(
-  () =>
-    authStore.singleKnownRole === Role.FdpgMember &&
-    proposalStore?.currentProposal?.status === ProposalStatus.FdpgCheck,
+  () => authStore.hasFdpgLevelPermissions() && proposalStore?.currentProposal?.status === ProposalStatus.FdpgCheck,
 )
 </script>
 

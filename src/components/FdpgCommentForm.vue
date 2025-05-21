@@ -71,7 +71,7 @@ const props = defineProps({
 
 const authStore = useAuthStore()
 const isMessageToLocation = computed(() => {
-  const answerIsFromFdpg = authStore.singleKnownRole === Role.FdpgMember
+  const answerIsFromFdpg = authStore.hasFdpgLevelPermissions()
   const isMessageToLocation = props.type === CommentType.PROPOSAL_MESSAGE_TO_LOCATION
   return isMessageToLocation && answerIsFromFdpg
 })

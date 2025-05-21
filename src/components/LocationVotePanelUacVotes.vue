@@ -84,7 +84,7 @@
                   :min-width="column.minWidth"
                 />
                 <el-table-column
-                  v-if="column.prop === 'revert' && !table.hideRevert && authStore.singleKnownRole === Role.FdpgMember"
+                  v-if="column.prop === 'revert' && !table.hideRevert && authStore.hasFdpgLevelPermissions()"
                   :label="$t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
@@ -146,7 +146,7 @@
                         {{ $t(conditionalApproval.statusTagText) }}
                       </div>
 
-                      <div v-if="authStore.singleKnownRole === Role.FdpgMember" class="condition-actions">
+                      <div v-if="authStore.hasFdpgLevelPermissions()" class="condition-actions">
                         <el-button
                           class="negative"
                           :class="conditionalApproval.statusTagStyle"
@@ -170,7 +170,7 @@
                 </template>
 
                 <div
-                  v-if="authStore.singleKnownRole === Role.FdpgMember && conditionalApproval.uploadId"
+                  v-if="authStore.hasFdpgLevelPermissions() && conditionalApproval.uploadId"
                   role="button"
                   class="condition-text cursor-pointer"
                   :data-testId="'button__condition-download__' + conditionalApproval.location"
