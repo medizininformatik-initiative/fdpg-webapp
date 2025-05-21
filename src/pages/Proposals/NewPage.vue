@@ -1,7 +1,7 @@
 <template>
   <el-container class="fdpg-new-proposal-page">
     <div class="lead">
-      <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
+      <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
         <el-button
           type="primary"
@@ -177,13 +177,13 @@
             v-if="isMIISelected"
           />
           <FdpgLabel html-for="" size="large">{{
-            $t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+            t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
           }}</FdpgLabel>
           <p class="desc">
             {{
               proposalId
-                ? $t('proposal.pleaseUploadAdditionalAttachmentsHere')
-                : $t('proposal.attachmentsOnlyAfterSavingHint')
+                ? t('proposal.pleaseUploadAdditionalAttachmentsHere')
+                : t('proposal.attachmentsOnlyAfterSavingHint')
             }}
           </p>
 
@@ -204,7 +204,7 @@
               :disabled="isAppendixLoading || isReviewMode"
               data-test-id="general-appendix__upload__button"
             >
-              {{ $t('proposal.chooseAFile') }}
+              {{ t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
               </template>
@@ -218,7 +218,7 @@
     <el-row class="action-wrapper">
       <el-col :span="12">
         <el-button type="primary" plain data-test-id="prevStep" @click="prevStep">{{
-          $t('proposal.prevStep')
+          t('proposal.prevStep')
         }}</el-button>
       </el-col>
       <el-col :span="12" class="text-right">
@@ -228,7 +228,7 @@
           @click="nextStep"
           :disabled="!proposalForm?.selectedDataSources?.length"
           v-if="activeStep !== CreatPrposalSteps.ResearchProject"
-          >{{ $t('proposal.nextStep') }}</el-button
+          >{{ t('proposal.nextStep') }}</el-button
         >
         <el-button
           :disabled="!isValidToSubmit"
@@ -236,7 +236,7 @@
           data-test-id="handleSubmit"
           @click="handleSubmit"
           v-else-if="!proposalStore.currentProposal || !isReviewMode"
-          >{{ $t('proposal.submitApplication') }}</el-button
+          >{{ t('proposal.submitApplication') }}</el-button
         >
       </el-col>
     </el-row>
@@ -745,6 +745,8 @@ const waitForValidation = async () => {
       return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
     })
 
+    layoutStore.setTotalRequiredFields(requiredFields.length)
+
     await Promise.all(
       allFields.map(
         (field) =>
@@ -765,6 +767,9 @@ const waitForValidation = async () => {
           }),
       ),
     )
+
+    const validatedFields = requiredFields.filter((field) => field.validateState === 'success').length
+    layoutStore.setValidatedFields(validatedFields)
 
     allFieldsValid.value =
       requiredFields.every((field) => field.validateState === 'success') &&

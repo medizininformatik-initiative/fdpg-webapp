@@ -72,7 +72,9 @@
     "success": "FINISH",
     "error": "OPEN REQUIRED FIELDS",
     "wait": "PENDING",
-    "process": "PENDING"
+    "process": "PENDING",
+    "progress": "Progress:",
+    "completed": "{progress}% filled out"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",

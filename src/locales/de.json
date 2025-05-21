@@ -72,7 +72,9 @@
     "success": "FERTIG",
     "error": "OFFENE PFLICHTFELDER",
     "wait": "AUSSTEHEND",
-    "process": "AUSSTEHEND"
+    "process": "AUSSTEHEND",
+    "progress": "Fortschritt:",
+    "completed": "{progress}% ausgefüllt "
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
