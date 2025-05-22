@@ -268,7 +268,7 @@ const handleToLocationCheckClick = () => {
       setup(props) {
         return {}
       },
-      template: `<h4>{{$t('proposal.listOfNoMarked')}}:</h4><ul v-if="listOfNoMarked"><li v-for="(item,i) in listOfNoMarked" :key="i" >{{item}}</li></ul>`,
+      template: `<h4>{{$t('proposal.listOfNoMarked')}}:</h4><ul v-if="listOfNoMarked"><li v-for="(item, i) in listOfNoMarked" :key="i">{{$t('proposal.' + item)}}</li></ul>`,
       props: {
         listOfNoMarked: {
           type: Array,
@@ -286,9 +286,22 @@ const handleToLocationCheckClick = () => {
     messageComponent,
     messageComponentProps: {
       listOfNoMarked:
-        proposalStore.currentProposal?.fdpgChecklist?.checkListVerification
-          ?.filter((item: IChecklistItem) => item.answer.some((a) => a === 'no'))
-          .map((item: IChecklistItem) => item.questionKey) || [],
+        proposalStore.currentProposal?.fdpgChecklist?.checkListVerification?.reduce(
+          (acc: string[], item: IChecklistItem) => {
+            if (item.answer.some((a) => a === 'no')) {
+              acc.push(item.questionKey)
+            }
+            if (item.sublist && item.sublist.length > 0) {
+              item.sublist.forEach((subItem) => {
+                if (subItem.answer.some((a) => a === 'no')) {
+                  acc.push(subItem.questionKey)
+                }
+              })
+            }
+            return acc
+          },
+          [],
+        ) || [],
     },
     callback: async (decision: DecisionType) =>
       decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
