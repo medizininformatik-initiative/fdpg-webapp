@@ -14,6 +14,7 @@ import {
 import { ref } from 'vue'
 import { setImmediate } from 'timers'
 import type { IUpload } from '@/types/proposal.types'
+import { describe, expect, it, test, vi } from 'vitest'
 
 vi.mock('@/stores/proposal/proposal.store', () => ({
   useProposalStore: vi.fn().mockReturnValue({
@@ -49,10 +50,29 @@ describe('Validations', () => {
     it('should return max length validation config', () => {
       const result = maxLengthValidationFunc(10)
       expect(result).toEqual({
-        max: 10,
+        validator: expect.any(Function),
         trigger: ['blur', 'change'],
-        message: 'general.maxCharLimit' + JSON.stringify({ length: 10 }),
       })
+    })
+
+    it('should validate text length correctly', () => {
+      const result = maxLengthValidationFunc(10)
+      let callbackResult
+      const callback = vi.fn().mockImplementation((error) => {
+        callbackResult = error
+      })
+
+      // Test with empty value
+      result.validator({}, '', callback)
+      expect(callbackResult).toBeUndefined()
+
+      // Test with valid length
+      result.validator({}, 'short text', callback)
+      expect(callbackResult).toBeUndefined()
+
+      // Test with invalid length
+      result.validator({}, 'this text is too long for the limit', callback)
+      expect(callbackResult).toEqual(new Error('general.maxCharLimit{"length":10}'))
     })
   })
 
