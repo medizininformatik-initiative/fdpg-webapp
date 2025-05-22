@@ -2,6 +2,7 @@ import { i18n } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IUpload } from '@/types/proposal.types'
 import type { Ref } from 'vue'
+import type { FormRules } from 'element-plus'
 
 const proposalStore = useProposalStore()
 const { t } = i18n.global
@@ -17,9 +18,21 @@ export const requiredValidationFunc = (
 })
 
 export const maxLengthValidationFunc = (length: number) => ({
-  max: length,
+  validator: (_rule: FormRules[string], value: string, callback: (error?: Error) => void) => {
+    if (!value) {
+      callback()
+      return
+    }
+    // Remove HTML tags and count only actual text content
+    const textLength = value.replace(/<[^>]*>/g, '').length
+    console.log(textLength, length)
+    if (textLength > length) {
+      callback(new Error(t('general.maxCharLimit', { length })))
+    } else {
+      callback()
+    }
+  },
   trigger: ['blur', 'change'],
-  message: t('general.maxCharLimit', { length }),
 })
 
 export const numberValidationFunc = () => ({
