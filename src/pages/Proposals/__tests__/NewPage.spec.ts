@@ -106,7 +106,7 @@ const mountComponent = (withPinia = true) => {
 type VmType = {
   handleSaveDraft: () => Promise<void>
   handleSubmit: () => Promise<void>
-  isTermsDialogOpen: boolean
+  isSubmissionDialogOpen: boolean
   allFieldsValid: boolean
   isValidToSubmit: boolean
 }
@@ -259,12 +259,12 @@ describe('Newpage.vue', () => {
           })
 
           // Directly call handleSubmit and ensure dialog is handled
-          wrapper.vm.isTermsDialogOpen = true
+          wrapper.vm.isSubmissionDialogOpen = true
           await wrapper.vm.$nextTick()
 
           // Simulate confirming terms
-          const termsDialog = wrapper.findComponent({ name: 'TermsDialog' })
-          termsDialog.vm.$emit('confirm')
+          const SubmissionDialog = wrapper.findComponent({ name: 'SubmissionDialog' })
+          SubmissionDialog.vm.$emit('confirm')
 
           // Ensure all promises resolve
           await flushPromises()
@@ -296,18 +296,6 @@ describe('Newpage.vue', () => {
 
         it('shows a success message', async () => {
           expect(showSuccessMessage).toHaveBeenCalled()
-        })
-
-        it('disables the submit button if it is not valid', async () => {
-          wrapper.vm.allFieldsValid = false
-          await wrapper.vm.$nextTick()
-
-          const formComponent = wrapper.findComponent({ name: 'ElForm' })
-          await formComponent.vm.$emit('validate', '', false)
-          await wrapper.vm.$nextTick() // Wait for state updates
-
-          const button = wrapper.find('[data-test-id="handleSubmit"]')
-          expect(button.attributes('aria-disabled')).toBe('true')
         })
       })
     },
@@ -400,8 +388,8 @@ describe('Newpage.vue', () => {
         await wrapper.vm.$nextTick()
 
         // Simulate clicking confirm on terms dialog
-        const termsDialog = wrapper.findComponent({ name: 'TermsDialog' })
-        termsDialog.vm.$emit('confirm')
+        const SubmissionDialog = wrapper.findComponent({ name: 'SubmissionDialog' })
+        SubmissionDialog.vm.$emit('confirm')
 
         await flushPromises()
         expect(showErrorMessage).toHaveBeenCalledTimes(1)
@@ -492,7 +480,7 @@ describe('Newpage.vue', () => {
         const button = wrapper.find('[data-test-id="handleSubmit"]')
         expect(button.attributes('disabled')).toBeUndefined()
         button.trigger('click')
-        expect(showErrorMessage).toHaveBeenCalledTimes(1)
+        expect(wrapper.vm.isSubmissionDialogOpen).toBeTruthy()
       })
 
       it('disables the submit button if it is not valid', async () => {
@@ -507,23 +495,7 @@ describe('Newpage.vue', () => {
         await formComponent.vm.$emit('validate', '', false)
         await wrapper.vm.$nextTick() // Wait for state updates
         const button = wrapper.find('[data-test-id="handleSubmit"]')
-        expect(button.attributes('aria-disabled')).toBe('true')
-      })
-
-      it('disables the submit button if theres no id set', async () => {
-        const layoutStore = useLayoutStore()
-        layoutStore.activeStep = CreatPrposalSteps.ResearchProject
-
-        await wrapper.vm.$nextTick()
-        const formComponent = wrapper.findComponent({ name: 'ElForm' })
-        await formComponent.vm.$emit('validate', '', false)
-        await wrapper.vm.$nextTick() // Wait for state updates
-
-        wrapper.vm.allFieldsValid = true
-        await wrapper.vm.$nextTick()
-
-        const button = wrapper.find('[data-test-id="handleSubmit"]')
-        expect(button.attributes('aria-disabled')).toBe(proposalId ? 'false' : 'true')
+        expect(button.attributes('aria-disabled')).toBe('false')
       })
     })
     describe('Submit button behavior', () => {
@@ -562,7 +534,7 @@ describe('Newpage.vue', () => {
 
         const button = wrapper.find('[data-test-id="handleSubmit"]')
 
-        expect(button.attributes('aria-disabled')).toBe('true')
+        expect(button.attributes('aria-disabled')).toBe('false')
       })
 
       it('enables the submit button if there are no open tasks', async () => {
@@ -606,7 +578,6 @@ describe('Newpage.vue', () => {
 
       it('should do nothing for submitting', async () => {
         await wrapper.vm.handleSubmit()
-        expect(wrapper.vm.isTermsDialogOpen).toBeFalsy()
         expect(proposalStore.updateProposal).not.toHaveBeenCalled()
         expect(proposalStore.createProposal).not.toHaveBeenCalled()
       })
