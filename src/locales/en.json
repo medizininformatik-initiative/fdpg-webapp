@@ -72,7 +72,9 @@
     "success": "FINISH",
     "error": "OPEN REQUIRED FIELDS",
     "wait": "PENDING",
-    "process": "PENDING"
+    "process": "PENDING",
+    "progress": "Progress:",
+    "completed": "{progress}% filled out"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -616,7 +618,7 @@
     "internalCheckNotesPlaceholder": "Notes in format: dd.mm.yyyy\n\nEditor: <>\n\n<Notes>",
     "desiredStartTime_immediate": "As soon as possible",
     "desiredStartTime_later": "other time",
-    "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",
+    "executiveSummaryUac": "Executive Summary für die UACs (max. 3000 characters)",
     "literature": "Literatur",
     "literaturePlaceholder": "Specification of all literature references made in 7 project details.",
     "biometricPlaceholder": "Analysis plan (procedure for case number estimation and required effect size (power))",
@@ -665,7 +667,12 @@
     "pseudonymizationInfo": "Information on the desired pseudonymization of the data records",
     "pseudonymizationInfo_enableRecordLinkage": "Records of the same patient should be given the same pseudonym, regardless of the treating institution (record linkage).",
     "pseudonymizationInfo_siteGroupingEnabled": "Data records from a location should always be recognizable as belonging together (pseudonymous location variable required)",
-    "pseudonymizationInfo_namedSiteVariable": "The locations of origin of the data sets should be identifiable by name (name-based location variable required9)"
+    "pseudonymizationInfo_namedSiteVariable": "The locations of origin of the data sets should be identifiable by name (name-based location variable required9)",
+    "submitApplicationTitle": "You have completed the form completely.",
+    "submitApplicationContent": "You have completed the form completely. You can submit it directly, download the information as a PDF, or return to the application form to make changes.",
+    "submitApplicationErrorTitle": "You have not yet completed the form completely.",
+    "submitApplicationErrorContent": "You haven't completed all required fields yet. You can save the application as a draft or return to the application form and enter the missing information.",
+    "backToForm": "Back to the application form"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

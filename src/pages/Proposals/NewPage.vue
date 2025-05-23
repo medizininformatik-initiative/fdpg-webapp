@@ -231,7 +231,6 @@
           >{{ $t('proposal.nextStep') }}</el-button
         >
         <el-button
-          :disabled="!isValidToSubmit"
           type="primary"
           data-test-id="handleSubmit"
           @click="handleSubmit"
@@ -242,7 +241,14 @@
     </el-row>
   </el-container>
 
-  <TermsDialog v-model="isTermsDialogOpen" :platform="PlatformIdentifier.Mii" @confirm="handleTermsConfirm" />
+  <SubmissionDialog
+    v-model="isSubmissionDialogOpen"
+    @confirm="handleTermsConfirm"
+    :isValidToSubmit="isValidToSubmit"
+    :platform="platform"
+    @saveDraft="handleSaveDraft"
+    @exportPdf="handleExportProposalPdfClick"
+  ></SubmissionDialog>
 </template>
 
 <script setup lang="ts">
@@ -250,7 +256,6 @@ import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgUpload from '@/components/FdpgUpload.vue'
-import TermsDialog from '@/components/TermsDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import ParticipatingScientists from '@/pages/Proposals/ParticipatingScientists/ParticipatingScientists.vue'
@@ -299,6 +304,8 @@ import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 import ShoppingList from './DataSources/ShoppingList.vue'
 import TargetFormat from './DataUsage/TargetFormat.vue'
 import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
+import SubmissionDialog from '@/components/SubmissionDialog.vue'
+import useDraftDownload from '@/composables/use-draft-download'
 
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
@@ -363,12 +370,14 @@ const bypassDebounce = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
+const isSubmissionDialogOpen = ref(false)
 
 const activeStep = computed(() => {
   return layoutStore.activeStep
 })
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
 const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } = useUpload(
   proposalId,
@@ -534,10 +543,13 @@ const raiseErrors = (invalidFields: ValidateFieldsError) => {
   showErrorMessage(errors)
 }
 
-const isTermsDialogOpen = ref(false)
-
+const handleExportProposalPdfClick = async () => {
+  if (proposalId.value && !isDownloadLoading.value) {
+    await downloadFile()
+  }
+}
 const handleTermsConfirm = async () => {
-  isTermsDialogOpen.value = false
+  isSubmissionDialogOpen.value = false
   try {
     if (proposalId.value) {
       await proposalStore.updateProposal(proposalId.value, {
@@ -560,20 +572,7 @@ const nextStep = () => {
   layoutStore.nextStep()
 }
 const handleSubmit = async () => {
-  if (
-    proposalForm.value?.status !== undefined &&
-    proposalForm.value.status !== ProposalStatus.Draft &&
-    proposalForm.value.status !== ProposalStatus.Rework
-  ) {
-    return
-  }
-  formRef.value?.validate((isValid: boolean, invalidFields?: ValidateFieldsError) => {
-    if (!isValid && invalidFields) {
-      raiseErrors(invalidFields)
-      return
-    }
-    isTermsDialogOpen.value = true
-  })
+  isSubmissionDialogOpen.value = true
 }
 
 const updateStepStatus = async () => {
@@ -680,6 +679,7 @@ const handleSaveDraft = async () => {
 
   await setUpPage()
   bypassDebounce.value = false
+  isSubmissionDialogOpen.value = false
 }
 
 const authStore = useAuthStore()
