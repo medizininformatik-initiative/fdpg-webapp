@@ -10,7 +10,7 @@
           {{ message }}
         </template>
         <slot />
-        <div class="footer">
+        <div class="footer" :style="{ justifyContent: footerJustify }">
           <slot name="footer"></slot>
         </div>
       </DialogPanel>
@@ -34,6 +34,10 @@ const props = defineProps({
   message: {
     type: String,
     default: '',
+  },
+  footerJustify: {
+    type: String,
+    default: 'flex-end',
   },
 })
 const value = useVModel(props, 'modelValue', emit)

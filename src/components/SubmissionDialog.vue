@@ -6,8 +6,9 @@
     :title="dialogContent.title"
     :before-close="closeDialog"
     :show-close="false"
+    footer-justify="space-between"
   >
-    <div>
+    <div class="submission-dialog-content">
       <p v-if="dialogContent.content" class="checkbox-content">
         {{ dialogContent.content }}
       </p>
@@ -30,7 +31,9 @@
         </el-col>
       </el-row>
     </div>
-    <template #footer> </template>
+    <template #footer>
+      <img :src="logo" alt="" v-for="(logo, i) in dataSourceLogos" :key="i" width="120px" />
+    </template>
   </FdpgDialog>
 </template>
 
@@ -60,6 +63,7 @@ const props = defineProps({
 })
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
+
 const closeDialog = () => {
   dialogOpen.value = false
 }
@@ -73,6 +77,15 @@ const saveDraft = () => {
 const exportPdf = () => {
   emit('exportPdf')
 }
+
+const dataSourceLogos = [
+  new URL('@/assets/img/logo/datasources/dfg.svg', import.meta.url).href,
+  new URL('@/assets/img/logo/datasources/dife.svg', import.meta.url).href,
+  new URL('@/assets/img/logo/datasources/hfdi.svg', import.meta.url).href,
+  new URL('@/assets/img/logo/datasources/mii.svg', import.meta.url).href,
+  new URL('@/assets/img/logo/datasources/zb.svg', import.meta.url).href,
+]
+
 const dialogContent = computed<DialogContent>(() => {
   return props.isValidToSubmit
     ? {
@@ -102,6 +115,12 @@ const dialogContent = computed<DialogContent>(() => {
   .el-button {
     width: 150px;
     flex-shrink: 0;
+  }
+}
+.submission-dialog {
+  .submission-dialog-content {
+    padding-bottom: 24px;
+    border-bottom: 1px solid $gray-200;
   }
 }
 </style>
