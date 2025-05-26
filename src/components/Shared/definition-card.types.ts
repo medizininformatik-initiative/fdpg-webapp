@@ -10,6 +10,8 @@ interface IBaseDefinition<T> {
   key: keyof T
   isList?: boolean
   hideIfOtherValueIsTruthy?: keyof T
+  subKeys?: string[]
+  shouldHide?: boolean
 }
 interface ILookupDefinition<T, L extends Record<string, Object>> extends IBaseDefinition<T> {
   kind: 'lookup'
@@ -59,6 +61,7 @@ export interface IDefinitionCardAction {
 interface IDefinitionCardBase {
   cardLabel: TranslationSchema | null
   actions?: IDefinitionCardAction[]
+  shouldHide?: boolean
 }
 interface IDefinitionCardRealBase extends IDefinitionCardBase {
   kind?: 'real'

@@ -4,6 +4,7 @@ import type {
   IDefinitionSectionObject,
 } from '@/components/Shared/definition-card.types'
 import { MII_LOCATIONS } from '@/constants'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IUserProject, IProposal } from '@/types/proposal.types'
 
 const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProjectInformation'> = {
@@ -38,9 +39,10 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
   ],
 }
 
-const feasibilityCard: IDefinitionCard<IUserProject, 'feasibility'> = {
+const feasibilityCard: IDefinitionCard<IUserProject, 'feasibility'> = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'feasibility',
   cardLabel: 'proposal.feasibility',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.feasibilityId',
@@ -53,9 +55,11 @@ const feasibilityCard: IDefinitionCard<IUserProject, 'feasibility'> = {
       definitions: [[{ key: 'details' }]],
     },
   ],
-}
+})
 
-const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = {
+const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => ({
   key: 'projectDetails',
   cardLabel: 'proposal.projectDetails',
   terms: [
@@ -63,11 +67,19 @@ const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = {
       label: 'proposal.simpleProjectDescription',
       size: 24,
       definitions: [[{ key: 'simpleProjectDescription' }]],
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+    },
+    {
+      label: 'proposal.executiveSummaryUac',
+      size: 24,
+      definitions: [[{ key: 'executiveSummaryUac' }]],
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
     },
     {
       label: 'proposal.department',
       size: 24,
       definitions: [[{ key: 'department', prefix: 'departments.', kind: 'translatable', isList: true }]],
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
     },
     {
       label: 'proposal.hypothesisAndQuestionProjectGoals',
@@ -85,11 +97,12 @@ const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = {
       definitions: [[{ key: 'materialAndMethods' }]],
     },
   ],
-}
+})
 
-const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = {
+const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'ethicVote',
   cardLabel: 'proposal.ethicsVote',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.ethicVoteExistingLabel',
@@ -115,11 +128,14 @@ const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = {
       hideIfThisValueIsFalsy: 'isExisting',
     },
   ],
-}
+})
 
-const recontactCard: IDefinitionCard<IUserProject, 'resourceAndRecontact'> = {
-  key: 'resourceAndRecontact',
+const recontactCard: IDefinitionCard<IUserProject, 'resourceAndRecontact'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => ({
+  key: 'resourceAndRecontact', //MII
   cardLabel: 'proposal.projectResourcesAndRecontact',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.areSufficientProfessionalAndFinancialResourcesAvailable',
@@ -132,11 +148,15 @@ const recontactCard: IDefinitionCard<IUserProject, 'resourceAndRecontact'> = {
       definitions: [[{ key: 'isRecontactingIntended', kind: 'boolean', true: 'proposal.yes', false: 'proposal.no' }]],
     },
   ],
-}
+})
 
-const propertyRightsCard: IDefinitionCard<IUserProject, 'propertyRights'> = {
+const propertyRightsCard: IDefinitionCard<IUserProject, 'propertyRights'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => ({
+  // MII
   key: 'propertyRights',
   cardLabel: 'proposal.propertyRights',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.intellectualPropertyRightCreationApplicationOptions',
@@ -144,7 +164,7 @@ const propertyRightsCard: IDefinitionCard<IUserProject, 'propertyRights'> = {
       definitions: [[{ key: 'options' }]],
     },
   ],
-}
+})
 
 const plannedPublicationCardEmpty: IDefinitionCard<IUserProject, 'plannedPublication'> = {
   key: 'plannedPublication',
@@ -197,14 +217,62 @@ const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOC
   ],
 }
 
-const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = {
+const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'typeOfUse',
   cardLabel: 'proposal.typeOfUse',
   terms: [
     {
-      label: 'proposal.typeOfUse',
+      label: 'proposal.typeOfUse', // MII
       size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
       definitions: [[{ key: 'usage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
+    },
+    {
+      label: 'proposal.pseudonymizationInfo_enableRecordLinkage',
+      size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      definitions: [
+        [
+          {
+            key: 'pseudonymizationInfoTexts',
+            subKeys: ['enableRecordLinkage'],
+          },
+        ],
+      ],
+    },
+
+    {
+      label: 'proposal.pseudonymizationInfo_siteGroupingEnabled',
+      size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      definitions: [
+        [
+          {
+            key: 'pseudonymizationInfoTexts',
+            subKeys: ['siteGroupingEnabled'],
+          },
+        ],
+      ],
+    },
+
+    {
+      label: 'proposal.pseudonymizationInfo_namedSiteVariable', // MII
+      size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      definitions: [
+        [
+          {
+            key: 'pseudonymizationInfoTexts',
+            subKeys: ['namedSiteVariable'],
+          },
+        ],
+      ],
+    },
+    {
+      label: 'proposal.typeOfUse', // DIFE
+      size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+      definitions: [[{ key: 'difeUsage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
     },
     {
       label: 'proposal.dataPrivacyExtra',
@@ -212,7 +280,7 @@ const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = {
       definitions: [[{ key: 'dataPrivacyExtra', kind: 'content' }]],
     },
   ],
-}
+})
 
 const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequestedBioSamples', 'biosamples'> = {
   key: 'informationOnRequestedBioSamples',
@@ -247,23 +315,52 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
   ],
 }
 
-const userProjectCards = [
+const variableSelection: IDefinitionCard<IUserProject, 'variableSelection'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => ({
+  key: 'variableSelection',
+  cardLabel: 'proposal.selectionOfVariablesHeader',
+  shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+  terms: [
+    {
+      label: 'proposal.typeOfUse', // DIFE
+      size: 24,
+      definitions: [
+        [
+          { key: 'DIFE', subKeys: ['typeOfUse'], prefix: 'proposal.difeTypeOfUse_', kind: 'translatable' },
+          {
+            key: 'DIFE',
+            subKeys: ['typeOfUseExplanation'],
+          },
+        ],
+      ],
+    },
+  ],
+})
+
+const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   generalProjectInformationCard,
-  feasibilityCard,
-  projectDetailsCard,
-  ethicVoteCard,
-  recontactCard,
-  propertyRightsCard,
+  feasibilityCard(dataSources),
+  variableSelection(dataSources),
+  projectDetailsCard(dataSources),
+  ethicVoteCard(dataSources),
+  recontactCard(dataSources),
+  propertyRightsCard(dataSources),
   plannedPublicationCardEmpty,
   plannedPublicationCard,
   addresseesCard,
-  typeOfUseCard,
+  typeOfUseCard(dataSources),
   biosamplesCard,
 ]
 
-export const userProjectSection: IDefinitionSectionObject<IProposal, 'userProject'> = {
-  sectionLabel: 'proposal.informationAboutTheUserProject',
-  kind: 'object',
-  key: 'userProject',
-  mapping: userProjectCards,
+export const userProjectSection: IDefinitionSectionObject<IProposal, 'userProject'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => {
+  console.log({ dataSources })
+  return {
+    sectionLabel: 'proposal.informationAboutTheUserProject',
+    kind: 'object',
+    key: 'userProject',
+    mapping: userProjectCards(dataSources),
+  }
 }

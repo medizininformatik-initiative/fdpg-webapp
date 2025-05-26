@@ -18,7 +18,7 @@
           </h3>
           <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
             <PrintCard
-              v-if="!shouldHidePrintCard(sectionItem, card.hideIfOtherValueIsTruthy)"
+              v-if="!shouldHidePrintCard(sectionItem, card.hideIfOtherValueIsTruthy) && !card.shouldHide"
               :dto="sectionItem"
               :card="card"
               headline="h4"
@@ -52,9 +52,9 @@
 <script setup lang="ts">
 import type { DefinitionSection, IVirtualWrap } from '@/components/Shared/definition-card.types'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
-import type { IDataPrivacyOverview} from '@/constants/print-structure/data-privacy-section';
+import type { IDataPrivacyOverview } from '@/constants/print-structure/data-privacy-section'
 import { dataPrivacySection } from '@/constants/print-structure/data-privacy-section'
-import type { IOverview} from '@/constants/print-structure/overview-section';
+import type { IOverview } from '@/constants/print-structure/overview-section'
 import { overviewSection } from '@/constants/print-structure/overview-section'
 import { participantSection } from '@/constants/print-structure/participant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
@@ -63,6 +63,7 @@ import { requestedDataSection } from '@/constants/print-structure/requested-data
 import { userProjectSection } from '@/constants/print-structure/user-project-section'
 import PrintCard from '@/print-module/components/PrintCard.vue'
 import type { DataPrivacyTextsContentKeys } from '@/types/data-privacy.types'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal } from '@/types/proposal.types'
 import { transformForm } from '@/utils/form-transform'
 import { computed, onMounted, ref } from 'vue'
@@ -75,19 +76,20 @@ class FailedStateError extends Error {
   }
 }
 
-type extendedWindow = typeof window & { data: IProposal; dataPrivacyTexts: any }
+type extendedWindow = typeof window & { data: IProposal; dataPrivacyTexts: any; dataSources: PlatformIdentifier[] }
+
+const proposalData = ref<IProposal>()
+const dataPrivacyTexts = ref<DataPrivacyTextsContentKeys[]>()
+const assignedDataSources = ref<PlatformIdentifier[]>()
 
 const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   applicantSection,
   projectResponsibilitySection,
   projectUserSection,
   participantSection,
-  userProjectSection,
+  userProjectSection(assignedDataSources.value),
   requestedDataSection,
 ]
-
-const proposalData = ref<IProposal>()
-const dataPrivacyTexts = ref<DataPrivacyTextsContentKeys[]>()
 
 const { t } = useI18n()
 const overview = computed(() => {
@@ -100,7 +102,7 @@ const overview = computed(() => {
       projectAbbreviation: proposalData.value?.projectAbbreviation,
       proposalId: proposalData.value?._id,
       uploads: proposalData.value?.uploads,
-      fdpgCheckNotes: proposalData.value?.fdpgCheckNotes
+      fdpgCheckNotes: proposalData.value?.fdpgCheckNotes,
     },
   } as IVirtualWrap<IOverview>
 })
@@ -119,6 +121,7 @@ const dataPrivacyOverview = computed(() => {
 const setUp = async () => {
   const data = (window as extendedWindow).data
   dataPrivacyTexts.value = (window as extendedWindow).dataPrivacyTexts
+  assignedDataSources.value = (window as extendedWindow).dataSources
 
   if (!data) {
     throw new FailedStateError('No Data')

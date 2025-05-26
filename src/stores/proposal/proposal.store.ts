@@ -93,6 +93,7 @@ export const useProposalStore = defineStore('Proposal', {
     async setCurrentProposal(id?: string): Promise<IProposal> {
       if (id) {
         const result = await this.apiService.get(id)
+        console.log({ result })
         this.currentProposal = transformForm(result) as IProposal
       } else {
         this.currentProposal = transformForm() as IProposal

@@ -1,5 +1,5 @@
 <template>
-  <template v-if="dto[card.key]">
+  <template v-if="dto[card.key] && !card.shouldHide">
     <ReviewLabel
       :is-done="dto[card.key].isDone"
       class="form-label-mt-4"
@@ -34,7 +34,6 @@ import type { DefinitionCards, DefinitionCardsVirtual } from '@/components/Share
 import DefinitionCard from '@/components/Shared/DefinitionCard.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { CommentType } from '@/types/comment.interface'
-import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { defineAsyncComponent } from 'vue'
 

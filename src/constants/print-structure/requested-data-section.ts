@@ -20,6 +20,11 @@ const requestedDataCard: IDefinitionCard<IProposal, 'requestedData'> = {
       size: 24,
       definitions: [[{ key: 'desiredDataAmount' }]],
     },
+    {
+      label: 'proposal.informationOnDesiredControlDataAmount',
+      size: 24,
+      definitions: [[{ key: 'desiredControlDataAmount' }]],
+    },
   ],
 }
 

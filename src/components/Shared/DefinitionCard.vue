@@ -2,13 +2,16 @@
   <el-card :shadow="isPrint ? 'never' : 'always'">
     <el-row :gutter="20">
       <el-col
-        v-for="({ label, size, definitions, hideIfOtherValueIsTruthy, hideIfThisValueIsFalsy }, termIdx) in card.terms"
+        v-for="(
+          { label, size, definitions, hideIfOtherValueIsTruthy, hideIfThisValueIsFalsy, shouldHide }, termIdx
+        ) in card.terms"
         :key="'group' + termIdx"
         :sm="24"
         :md="size"
       >
         <template
           v-if="
+            !shouldHide &&
             !(hideIfThisValueIsFalsy && !dtoAccess[hideIfThisValueIsFalsy]) &&
             !(hideIfOtherValueIsTruthy && dtoAccess[hideIfOtherValueIsTruthy])
           "
@@ -18,13 +21,22 @@
           <div v-for="(definition, definitionIdx) in definitions" :key="'def' + definitionIdx" role="definition">
             <span v-for="(content, contentIdx) in definition" :key="'content' + contentIdx">
               <template v-if="!(content.hideIfOtherValueIsTruthy && dtoAccess[content.hideIfOtherValueIsTruthy])">
-                <ul v-if="content.isList">
-                  <li v-for="(listItem, listItemIdx) in dtoAccess[content.key]" :key="'li' + termIdx + listItemIdx">
-                    <DefinitionCardItem class="print-region" :definition="content" :value="listItem" />
-                  </li>
-                </ul>
+                <template v-if="content.subKeys">
+                  <DefinitionCardItem
+                    v-if="!content.isList"
+                    :definition="content"
+                    :value="(content.subKeys || []).reduce((acc, key) => acc?.[key], dtoAccess[content.key])"
+                  />
+                </template>
+                <template v-else>
+                  <ul v-if="content.isList">
+                    <li v-for="(listItem, listItemIdx) in dtoAccess[content.key]" :key="'li' + termIdx + listItemIdx">
+                      <DefinitionCardItem class="print-region" :definition="content" :value="listItem" />
+                    </li>
+                  </ul>
 
-                <DefinitionCardItem v-if="!content.isList" :definition="content" :value="dtoAccess[content.key]" />
+                  <DefinitionCardItem v-if="!content.isList" :definition="content" :value="dtoAccess[content.key]" />
+                </template>
               </template>
             </span>
           </div>
