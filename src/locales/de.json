@@ -72,7 +72,9 @@
     "success": "FERTIG",
     "error": "OFFENE PFLICHTFELDER",
     "wait": "AUSSTEHEND",
-    "process": "AUSSTEHEND"
+    "process": "AUSSTEHEND",
+    "progress": "Fortschritt:",
+    "completed": "{progress}% ausgefüllt "
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
@@ -616,7 +618,7 @@
     "internalCheckNotesPlaceholder": "Notizen im Format: Datum: dd.mm.yyyy\n\nBearbeiter: <>\n\n<Bearbeitungsstand/Hinweise>",
     "desiredStartTime_immediate": "sobald wie möglich",
     "desiredStartTime_later": "anderer Zeitpunkt",
-    "executiveSummaryUac": "Executive Summary für die UACs (max. 350 Wörter)",
+    "executiveSummaryUac": "Executive Summary für die UACs (max. 3000 Zeichen)",
     "literature": "Literatur",
     "literaturePlaceholder": "Angabe aller in 7 Projektdetails gemachten Literaturreferenzen",
     "biometricPlaceholder": "Analyseplan (Vorgehen bei der Fallzahlschätzung und benötigte Effektstärke (Power))",
@@ -666,7 +668,11 @@
     "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten/ein und derselben Patientin sollten unabhängig von der\nbehandelnden Einrichtung dasselbe Pseudonym bekommen (Record-Linkage)",
     "pseudonymizationInfo_siteGroupingEnabled": "Datensätze eines Standorts sollten immer als zusammengehörig erkennbar sein (pseudonyme\nStandortvariable benötigt)",
     "pseudonymizationInfo_namedSiteVariable": "Die Herkunftsstandorte der Datensätze sollten namentlich erkennbar sein (namentliche\nStandortvariable benötigt\n)",
-    "undefined": "Begründung der Auswahl"
+    "submitApplicationTitle": "Sie haben das Formular vollständig ausgefüllt. ",
+    "submitApplicationContent": "Sie haben das Formular vollständig ausgefüllt. Sie können es direkt abschicken, sich die Eingaben als PDF herunterladen oder wieder zurück zum Antragsformular, um Änderungen vorzunehmen.  ",
+    "submitApplicationErrorTitle": "Sie haben das Formular noch nicht vollständig ausgefüllt. ",
+    "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen.",
+    "backToForm": "Zurück zum Antragsformular"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

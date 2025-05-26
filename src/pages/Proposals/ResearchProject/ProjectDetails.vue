@@ -14,6 +14,8 @@
             field-path="userProject.projectDetails.simpleProjectDescription"
           />
         </FdpgFormItem>
+      </el-col>
+      <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.executiveSummaryUac" />
           <FdpgtextEditor
@@ -23,6 +25,7 @@
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.executiveSummaryUac"
+            :maxLength="3000"
           />
         </FdpgFormItem>
       </el-col>
