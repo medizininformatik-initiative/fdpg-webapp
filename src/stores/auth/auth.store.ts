@@ -1,12 +1,14 @@
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import type { Role } from '@/types/oidc.types'
 import { Role as RoleEnum } from '@/types/oidc.types'
+import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { defineStore } from 'pinia'
 export interface IAuthState {
   updatedProfile?: IFdpgOidcProfile
   singleKnownRole?: Role
   isChangeRoleDialogOpen: boolean
   redirectToDetailPageProposalId?: string
+  assignedDataSources: PlatformIdentifier[]
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -15,6 +17,7 @@ export const useAuthStore = defineStore('auth', {
     singleKnownRole: localStorage.getItem('currentRole') as Role,
     isChangeRoleDialogOpen: false,
     redirectToDetailPageProposalId: undefined,
+    assignedDataSources: JSON.parse(localStorage.getItem('assignedDataSources') ?? '[]') as PlatformIdentifier[],
   }),
 
   actions: {
@@ -35,6 +38,12 @@ export const useAuthStore = defineStore('auth', {
       this.singleKnownRole = role
       localStorage.setItem('currentRole', role)
     },
+
+    setAssignedDataSources(assignedDataSources: PlatformIdentifier[]) {
+      this.assignedDataSources = assignedDataSources
+      localStorage.setItem('assignedDataSources', JSON.stringify(assignedDataSources))
+    },
+
     openChangeRoleDialog(id: string) {
       this.redirectToDetailPageProposalId = id
       this.isChangeRoleDialogOpen = true

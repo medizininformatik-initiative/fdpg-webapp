@@ -22,7 +22,7 @@
 
             <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
               <ReviewCard
-                v-if="!shouldHideReviewCard(sectionItem, card.hideIfOtherValueIsTruthy)"
+                v-if="!shouldHideReviewCard(sectionItem, card.hideIfOtherValueIsTruthy) && !card.shouldHide"
                 :dto="sectionItem"
                 :card="card"
                 headline="h4"
@@ -106,20 +106,28 @@ import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { ElButton } from 'element-plus'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
 import { projectUserSection } from '@/constants/print-structure/project-user-section'
 import useNotifications from '@/composables/use-notifications'
 import { ProposalStatus } from '@/types/proposal.types'
+import { useAuthStore } from '@/stores/auth/auth.store'
+
+const authStore = useAuthStore()
+
+watch(
+  () => authStore.assignedDataSources,
+  () => console.log({ ss: authStore.assignedDataSources }),
+)
 
 const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   applicantSection,
   projectResponsibilitySection,
   projectUserSection,
   participantSection,
-  userProjectSection,
+  userProjectSection(authStore.assignedDataSources),
   requestedDataSection,
 ]
 
