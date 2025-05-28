@@ -489,7 +489,8 @@ const rules = ref<Record<string, any>>({
       difeUsage: requiredValidationFunc('array'),
     },
     informationOnRequestedBioSamples: {
-      // Handled in component
+      laboratoryResources: [requiredValidationFunc('string'), maxLengthValidationFunc(1000)],
+      //rest Handled in component
     },
     variableSelection: {
       DIFE: {
