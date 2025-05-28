@@ -98,7 +98,9 @@
           />
         </div>
 
-        <div v-show="activeStep === CreatPrposalSteps.Casesohort"></div>
+        <div v-show="activeStep === CreatPrposalSteps.Casesohort">
+          <CohortSelection v-model="proposalForm.cohorts" />
+        </div>
 
         <div v-show="activeStep === CreatPrposalSteps.DataUsage">
           <TypeOfUse
@@ -307,6 +309,7 @@ import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
 import SubmissionDialog from '@/components/SubmissionDialog.vue'
 import useDraftDownload from '@/composables/use-draft-download'
 
+import CohortSelection from './Casesohort/CohortSelection.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -324,7 +327,7 @@ const stepFieldsMap = {
     'requestedData.desiredControlDataAmount',
     'requestedData.desiredDataAmount',
   ],
-  [CreatPrposalSteps.Casesohort]: [],
+  [CreatPrposalSteps.Casesohort]: ['cohorts'],
 }
 
 defineProps({
@@ -393,6 +396,18 @@ const rules = ref<Record<string, any>>({
   ],
   participants: [
     /** Handled in component */
+  ],
+  cohorts: [
+    {
+      validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
+        if (!value || value.length === 0) {
+          callback(new Error(t('general.requiredField')))
+        } else {
+          callback()
+        }
+      },
+      trigger: ['blur', 'change'],
+    },
   ],
   projectUser: {
     projectUserType: [requiredValidationFunc('string')],

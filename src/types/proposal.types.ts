@@ -472,6 +472,7 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
+  cohorts: ICohort[]
 
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
@@ -596,4 +597,10 @@ export type IDataSource = {
 }
 export type IDataSourceDto = {
   [key in PlatformIdentifier]: IDataSource
+}
+export interface ICohort {
+  feasibilityQueryId: string
+  label: string
+  comment: string
+  uploadId?: File
 }

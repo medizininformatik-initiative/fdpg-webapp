@@ -672,7 +672,12 @@
     "submitApplicationContent": "Sie haben das Formular vollständig ausgefüllt. Sie können es direkt abschicken, sich die Eingaben als PDF herunterladen oder wieder zurück zum Antragsformular, um Änderungen vorzunehmen.  ",
     "submitApplicationErrorTitle": "Sie haben das Formular noch nicht vollständig ausgefüllt. ",
     "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen.",
-    "backToForm": "Zurück zum Antragsformular"
+    "backToForm": "Zurück zum Antragsformular",
+    "cohortSelection": "Kohortenauswahl",
+    "addCohortAutomatic": "Kohorte automatisch hinzufügen",
+    "addCohortManual": "Kohortenhandbuch hinzufügen",
+    "selectFeasibilityQuery": "Machbarkeitsabfrage auswählen",
+    "viewQuery": "Abfrage anzeigen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
