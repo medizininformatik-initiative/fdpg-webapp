@@ -117,11 +117,6 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 
 const authStore = useAuthStore()
 
-watch(
-  () => authStore.assignedDataSources,
-  () => console.log({ ss: authStore.assignedDataSources }),
-)
-
 const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   applicantSection,
   projectResponsibilitySection,

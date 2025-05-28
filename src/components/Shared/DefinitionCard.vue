@@ -21,22 +21,19 @@
           <div v-for="(definition, definitionIdx) in definitions" :key="'def' + definitionIdx" role="definition">
             <span v-for="(content, contentIdx) in definition" :key="'content' + contentIdx">
               <template v-if="!(content.hideIfOtherValueIsTruthy && dtoAccess[content.hideIfOtherValueIsTruthy])">
-                <template v-if="content.subKeys">
-                  <DefinitionCardItem
-                    v-if="!content.isList"
-                    :definition="content"
-                    :value="(content.subKeys || []).reduce((acc, key) => acc?.[key], dtoAccess[content.key])"
-                  />
-                </template>
-                <template v-else>
-                  <ul v-if="content.isList">
-                    <li v-for="(listItem, listItemIdx) in dtoAccess[content.key]" :key="'li' + termIdx + listItemIdx">
-                      <DefinitionCardItem class="print-region" :definition="content" :value="listItem" />
-                    </li>
-                  </ul>
-
-                  <DefinitionCardItem v-if="!content.isList" :definition="content" :value="dtoAccess[content.key]" />
-                </template>
+                <DefinitionCardItem
+                  v-if="!content.isList"
+                  :definition="content"
+                  :value="getValue(dtoAccess, content)"
+                />
+                <ul v-if="content.isList">
+                  <li
+                    v-for="(listItem, listItemIdx) in getValue(dtoAccess, content)"
+                    :key="'li' + termIdx + listItemIdx"
+                  >
+                    <DefinitionCardItem class="print-region" :definition="content" :value="listItem" />
+                  </li>
+                </ul>
               </template>
             </span>
           </div>
@@ -79,6 +76,16 @@ const props = defineProps({
 const dtoAccess = computed(() => (props.card.loopOn ? props.dto : props.dto[props.card.key]))
 const route = useRoute()
 const isPrint = route.matched.some((route) => route.name === 'PrintLayout')
+
+const getValue = (dtoAccess, content) => {
+  if (!!content.subKeys) {
+    const result = (content.subKeys || []).reduce((acc, subKey) => acc?.[subKey], dtoAccess[content.key])
+
+    return result
+  } else {
+    return dtoAccess[content.key]
+  }
+}
 </script>
 
 <style lang="scss" scoped>

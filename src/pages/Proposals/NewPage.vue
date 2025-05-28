@@ -99,7 +99,12 @@
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Casesohort">
-          <CohortSelection v-model="proposalForm.cohorts" />
+          <DifeSelectionOfCases
+            v-if="isDifeSelected"
+            v-model="proposalForm.userProject.selectionOfCases.difeSelectionOfCases"
+            :review-mode="isReviewMode"
+          />
+          <CohortSelection v-if="isMIISelected" v-model="proposalForm.cohorts" />
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.DataUsage">
@@ -310,6 +315,7 @@ import SubmissionDialog from '@/components/SubmissionDialog.vue'
 import useDraftDownload from '@/composables/use-draft-download'
 
 import CohortSelection from './Casesohort/CohortSelection.vue'
+import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -497,6 +503,12 @@ const rules = ref<Record<string, any>>({
         typeOfUseExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       },
     },
+    selectionOfCases: {
+      difeSelectionOfCases: {
+        selectedEntries: requiredValidationFunc('array'),
+        otherExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+      },
+    },
   },
   requestedData: {
     patientInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
@@ -532,6 +544,10 @@ const hasBiosamples = computed(() => {
 const isMIISelected = computed(() => {
   return platform?.value?.includes(PlatformIdentifier.Mii)
 })
+const isDifeSelected = computed(() => {
+  return platform?.value?.includes(PlatformIdentifier.DIFE)
+})
+
 const openDetails = () => {
   if (proposalId.value) {
     router.push({

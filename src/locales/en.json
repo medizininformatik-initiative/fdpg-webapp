@@ -677,7 +677,20 @@
     "addCohortAutomatic": "Add cohort automatically",
     "addCohortManual": "Add cohort manual",
     "selectFeasibilityQuery": "Select feasibility query",
-    "viewQuery": "Show query"
+    "viewQuery": "Show query",
+    "selectionOfCases": "Selection of cases",
+    "difeSelectionOfCasesHeader": "DIFE: Selection of Cases",
+    "difeSelectionOfCases_EPIC_Potsdam_Full_Cohort": "EPIC-Potsdam Full-Cohort",
+    "difeSelectionOfCases_EPIC_Potsdam_Sub_Cohort": "EPIC-Potsdam Sub-Cohort",
+    "difeSelectionOfCases_EPIC_Potsdam_Case_Cohort": "EPIC-Potsdam Case-Cohort",
+    "difeSelectionOfCases_EPIC_Potsdam_InterAct_Physical_Activity": "EPIC-Potsdam InterAct Physical Activity",
+    "difeSelectionOfCases_Validation_Study_EPIC_Potsdam_Baseline": "Validation study (EPIC-Potsdam Baseline)",
+    "difeSelectionOfCases_EPIC_Long_term_study_BMBF_2010_2012": "EPIC-Long-term study 1 (BMBF 2010-2012)",
+    "difeSelectionOfCases_EPIC_Long_term_study_BMBF_2013": "EPIC-Long-term study 1 (BMBF 2013)",
+    "difeSelectionOfCases_EPIC_DZD_2014": "EPIC-DZD (from 2014)",
+    "difeSelectionOfCases_Other": "Others (please specify)",
+    "difeSelectionOfCases_Other_Header": "Specification for 'Others'",
+    "difeSelectionOfCases_Other_Placeholder": "Please specify"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
