@@ -599,8 +599,8 @@ export type IDataSourceDto = {
   [key in PlatformIdentifier]: IDataSource
 }
 export interface ICohort {
-  id: string
+  feasibilityQueryId: string
   label: string
   comment: string
-  file?: File
+  uploadId?: File
 }

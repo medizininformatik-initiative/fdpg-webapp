@@ -40,7 +40,6 @@ import { useFeasibilityStore } from '@/stores/feasibility.store'
 import { useVModel } from '@vueuse/core'
 import type { ICohort } from '@/types/proposal.types'
 import type { TranslationSchema } from '@/plugins/i18n'
-import type { IFeasibilityDetail } from '@/types/feasibility-detail.interface'
 
 const props = defineProps({
   modelValue: {
@@ -48,7 +47,7 @@ const props = defineProps({
     required: true,
   },
 })
-const selectedQuery = ref<IFeasibilityDetail | null>(null)
+const selectedQuery = ref<ICohort | null>(null)
 
 const isLoading = ref(false)
 const noDataText = ref<TranslationSchema>('proposal.noFeasibilityQueriesSaved')
@@ -60,7 +59,14 @@ const feasibilityStore = useFeasibilityStore()
 const dialogOpen = useVModel(props, 'modelValue', emit)
 
 const selectableQueries = computed(() => {
-  return feasibilityStore.feasibilityQueries.map((query) => ({ value: query, label: query.label }))
+  return feasibilityStore.feasibilityQueries.map((query) => ({
+    value: {
+      feasibilityQueryId: query.id,
+      comment: query.comment,
+      label: query.label,
+    },
+    label: query.label,
+  }))
 })
 
 const close = () => {
@@ -70,7 +76,7 @@ const add = () => {
   if (!selectedQuery.value) return
 
   const newCohort: ICohort = {
-    id: selectedQuery.value.id.toString(),
+    feasibilityQueryId: selectedQuery.value.feasibilityQueryId.toString(),
     label: selectedQuery.value.label,
     comment: selectedQuery.value.comment,
   }

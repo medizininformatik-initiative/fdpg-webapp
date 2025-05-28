@@ -117,7 +117,7 @@ const closeManualDialog = () => {
 }
 
 const handleDelete = (cohort: ICohort) => {
-  cohorts.value = cohorts.value.filter((c) => c.id !== cohort.id)
+  cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
 }
 </script>
 
