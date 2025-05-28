@@ -684,7 +684,6 @@ const handleSaveDraft = async () => {
 
 const authStore = useAuthStore()
 const setUpPage = async () => {
-  console.log({ curr: proposalStore.currentProposal })
   proposalForm.value = transformForm(proposalStore.currentProposal, false, authStore.profile) as IProposal
   const lastDashboard = layoutStore.lastDashboard
   layoutStore.setBreadcrumbs([
