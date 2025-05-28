@@ -11,6 +11,8 @@ interface ILayoutStore {
   activeStep: CreatPrposalSteps
   isShoppingListOpen: boolean
   isDatasourceSelected: boolean
+  totalRequiredFields: number
+  validatedFields: number
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
@@ -34,6 +36,8 @@ export const useLayoutStore = defineStore('layout', {
     activeStep: CreatPrposalSteps.DataSources,
     isShoppingListOpen: false,
     isDatasourceSelected: false,
+    totalRequiredFields: 0,
+    validatedFields: 0,
   }),
 
   actions: {
@@ -86,6 +90,12 @@ export const useLayoutStore = defineStore('layout', {
     },
     setDatasourceSelected(isSelected: boolean) {
       this.isDatasourceSelected = isSelected
+    },
+    setTotalRequiredFields(count: number) {
+      this.totalRequiredFields = count
+    },
+    setValidatedFields(count: number) {
+      this.validatedFields = count
     },
   },
 })

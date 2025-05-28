@@ -3,6 +3,20 @@
     <img :src="logoSrc" alt="" class="logo" />
     <div class="proposal-menu">
       <div class="proposal-menu__top">
+        <div class="progress-container">
+          <el-progress
+            :percentage="progressPercentage"
+            :stroke-width="8"
+            :show-text="false"
+            class="progress-bar"
+            color="#5a79ae"
+            :intermittent="true"
+          />
+          <div class="progress-info">
+            <span class="progress-text">{{ t('sidebar.progress') }}</span>
+            <span class="progress-percentage">{{ t('sidebar.completed', { progress: progressPercentage }) }}</span>
+          </div>
+        </div>
         <div style="height: 590px; max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
@@ -15,10 +29,10 @@
               }"
             >
               <template #title>
-                <span class="step-title">{{ $t(`sidebar.${getStepKey(step.step)}`) }}</span>
+                <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
               </template>
               <template #description>
-                <span class="step-status">{{ $t(`sidebar.${getStepStatus(getStepKey(step.step))}`) }}</span>
+                <span class="step-status">{{ t(`sidebar.${getStepStatus(getStepKey(step.step))}`) }}</span>
               </template>
             </el-step>
           </el-steps>
@@ -32,7 +46,9 @@
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const layoutStore = useLayoutStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
@@ -74,6 +90,11 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
   }
   return 'wait'
 }
+
+const progressPercentage = computed(() => {
+  if (layoutStore.totalRequiredFields === 0) return 0
+  return Math.round((layoutStore.validatedFields / layoutStore.totalRequiredFields) * 100)
+})
 </script>
 
 <style lang="scss">
@@ -113,9 +134,8 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
   }
   &.is-success {
     .el-step__icon {
-      background-color: $green !important;
+      background-color: $blue !important;
       color: $white !important;
-      border-color: $green !important;
     }
   }
 }
@@ -171,6 +191,40 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
       font-size: 18px;
       color: $gray-900;
       font-weight: 900;
+    }
+
+    .progress-container {
+      padding: 0 24px;
+      margin-bottom: 24px;
+
+      .progress-info {
+        display: flex;
+        justify-content: flex-start;
+        gap: 6px;
+        margin-bottom: 8px;
+
+        .progress-text {
+          font-size: 16px;
+          color: $gray-800;
+          font-weight: 500;
+        }
+
+        .progress-percentage {
+          font-size: 16px;
+          color: $gray-900;
+          font-weight: 600;
+        }
+      }
+
+      .progress-bar {
+        :deep(.el-progress-bar__outer) {
+          background-color: $gray-200;
+        }
+
+        :deep(.el-progress-bar__inner) {
+          background-color: $blue !important;
+        }
+      }
     }
   }
 
