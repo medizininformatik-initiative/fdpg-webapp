@@ -18,14 +18,25 @@ const transformParticipantResearcher = (
   researcher?: Partial<IResearcher>,
   fdpgUser?: IFdpgOidcProfile,
 ): Partial<IResearcher> => {
+  const fdpgUserToResearcher = {
+    title: fdpgUser?.title,
+    firstName: fdpgUser?.given_name,
+    lastName: fdpgUser?.family_name,
+    affiliation: fdpgUser?.affiliation,
+    email: fdpgUser?.email,
+  }
+
+  const { title, firstName, lastName, affiliation, email } =
+    researcher?._id || researcher?.lastName ? researcher : fdpgUserToResearcher
+
   return {
     _id: researcher?._id,
     isDone: researcher?.isDone ?? false,
-    title: transformEmptyStringToUndefined(fdpgUser?.title ?? researcher?.title),
-    firstName: transformEmptyStringToUndefined(fdpgUser?.given_name ?? researcher?.firstName),
-    lastName: transformEmptyStringToUndefined(fdpgUser?.family_name ?? researcher?.lastName),
-    affiliation: transformEmptyStringToUndefined(fdpgUser?.affiliation ?? researcher?.affiliation),
-    email: transformEmptyStringToUndefined(fdpgUser?.email ?? researcher?.email),
+    title: transformEmptyStringToUndefined(title),
+    firstName: transformEmptyStringToUndefined(firstName),
+    lastName: transformEmptyStringToUndefined(lastName),
+    affiliation: transformEmptyStringToUndefined(affiliation),
+    email: transformEmptyStringToUndefined(email),
   }
 }
 

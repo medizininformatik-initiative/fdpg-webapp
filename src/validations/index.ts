@@ -25,7 +25,6 @@ export const maxLengthValidationFunc = (length: number) => ({
     }
     // Remove HTML tags and count only actual text content
     const textLength = value.replace(/<[^>]*>/g, '').length
-    console.log(textLength, length)
     if (textLength > length) {
       callback(new Error(t('general.maxCharLimit', { length })))
     } else {
