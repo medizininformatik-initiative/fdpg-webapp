@@ -14,4 +14,5 @@ export interface IProjectTodo {
   condition?: IConditionalApproval
   additionalInformation?: IEditAdditionalLocationProposalInformation
   readonly: boolean
+  additionalData?: { isDraft: boolean }
 }

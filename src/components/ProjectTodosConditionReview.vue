@@ -71,6 +71,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isDraft: {
+    type: Boolean,
+    default: false,
+  },
 })
 const emit = defineEmits(['disableButton'])
 
@@ -138,6 +142,7 @@ const getFileName = (uploadId?: string) => {
 onMounted(async () => {
   const dataAmount = props.uacCondition.dataAmount
   emit('disableButton', { value: !(typeof dataAmount === 'number' && dataAmount >= 0), button: 'positive' })
+  emit('disableButton', { value: props.isDisabled || !props.isDraft, button: 'negative' })
 })
 </script>
 

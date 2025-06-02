@@ -288,6 +288,7 @@ const getCheckContractTodo = (): IProjectTodo[] => {
             }
           : conditionDraft) ?? { conditionReasoning: '', dataAmount: uacVote.dataAmount },
         readonly: !isEditable,
+        additionalData: { isDraft: !!conditionDraft },
       },
     ]
   }
