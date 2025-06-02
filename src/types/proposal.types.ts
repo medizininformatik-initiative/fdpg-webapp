@@ -191,14 +191,30 @@ export enum DifeSelectionOfCasesEntries {
   EPIC_DZD_2014 = 'EPIC_DZD_2014',
   Other = 'Other',
 }
+export enum BiosampleType {
+  FLUID = 'FLUID',
+  TISSUE = 'TISSUE',
+  DRIVATIVE = 'DRIVATIVE',
+}
 
+export enum BiosampleCode {
+  SNOMED = 'SNOMED',
+  SPREC = 'SPREC',
+}
 export interface IBiosample {
   _id?: string
-  type?: string
+  type?: BiosampleType
+  typeDetails?: string
   count?: string
   parameter?: string
-  laboratoryResources?: string
   requirements?: string
+  optionalBiosample?: boolean
+  sampleCode?: BiosampleCode[]
+  [BiosampleCode.SNOMED]?: string
+  [BiosampleCode.SPREC]?: string
+  method?: string
+  externalLabTransfer?: boolean
+  externalLabTransferDetails?: string
 }
 
 export interface IFeasibility extends WithIdAndIsDone {
@@ -230,6 +246,8 @@ export interface ITypeOfUse extends WithIdAndIsDone {
 }
 
 export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
+  noSampleRequired: boolean
+  laboratoryResources: string
   biosamples: IBiosample[]
 }
 export interface IUserProject {

@@ -23,6 +23,7 @@ import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.u
 import { PseudonymizationInfoOptions } from '@/types/PseudonymizationInfo.enum'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import TypeOfUse from '@/pages/Proposals/DataUsage/TypeOfUse.vue'
+import { BiosampleCode } from '@/types/proposal.types'
 const NEW_ID = 'NEW_ID'
 
 const transformProjectDetails = (projectDetails?: DeepPartial<IProjectDetails>): DeepPartial<IProjectDetails> => {
@@ -185,6 +186,8 @@ const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<IT
 }
 
 const transformInformationOnRequestedBioSamples = (
+  noSampleRequired?: boolean,
+  laboratoryResources?: string,
   informationOnRequestedBioSamples?: DeepPartial<IInformationOnRequestedBioSamples>,
   typeOfUse?: DeepPartial<ITypeOfUse>,
   transformToApi?: boolean,
@@ -193,6 +196,10 @@ const transformInformationOnRequestedBioSamples = (
     ? {
         _id: informationOnRequestedBioSamples?._id,
         isDone: informationOnRequestedBioSamples?.isDone ?? false,
+        noSampleRequired: noSampleRequired ?? informationOnRequestedBioSamples?.noSampleRequired ?? false,
+        laboratoryResources: transformEmptyStringToUndefined(
+          laboratoryResources ?? informationOnRequestedBioSamples?.laboratoryResources,
+        ),
         biosamples: transformBiosamples(informationOnRequestedBioSamples?.biosamples, transformToApi),
       }
     : undefined
@@ -201,11 +208,18 @@ const transformInformationOnRequestedBioSamples = (
 export const mapBiosample = (biosample?: Partial<IBiosample>): Partial<IBiosample> => {
   return {
     _id: biosample?._id ?? NEW_ID,
-    type: transformEmptyStringToUndefined(biosample?.type),
+    typeDetails: transformEmptyStringToUndefined(biosample?.typeDetails),
     parameter: transformEmptyStringToUndefined(biosample?.parameter),
-    laboratoryResources: transformEmptyStringToUndefined(biosample?.laboratoryResources),
     requirements: transformEmptyStringToUndefined(biosample?.requirements),
     count: transformEmptyStringToUndefined(biosample?.count),
+    sampleCode: biosample?.sampleCode?.filter((code): code is BiosampleCode => code !== undefined) ?? [],
+    [BiosampleCode.SNOMED]: transformEmptyStringToUndefined(biosample?.[BiosampleCode.SNOMED]),
+    [BiosampleCode.SPREC]: transformEmptyStringToUndefined(biosample?.[BiosampleCode.SPREC]),
+    method: transformEmptyStringToUndefined(biosample?.method),
+    externalLabTransfer: biosample?.externalLabTransfer ?? false,
+    externalLabTransferDetails: transformEmptyStringToUndefined(biosample?.externalLabTransferDetails),
+    optionalBiosample: biosample?.optionalBiosample ?? false,
+    type: biosample?.type,
   }
 }
 export const transformBiosamples = (
@@ -214,8 +228,11 @@ export const transformBiosamples = (
 ): DeepPartial<IBiosample[]> | undefined => {
   if (biosamples) {
     const filteredBiosamples = biosamples
-      .map((biosample) => mapBiosample(biosample))
-      .filter((biosample) => !hasNoContent(biosample))
+      .map((biosample) => {
+        if (!biosample) return undefined
+        return mapBiosample(biosample as Partial<IBiosample>)
+      })
+      .filter((biosample): biosample is Partial<IBiosample> => biosample !== undefined && !hasNoContent(biosample))
 
     const isEmpty = filteredBiosamples.length <= 0
     if (!isEmpty) {
@@ -262,6 +279,8 @@ export const transformUserProject = (
     addressees: transformAddressees(userProject?.addressees),
     typeOfUse: transformTypeOfUse(userProject?.typeOfUse),
     informationOnRequestedBioSamples: transformInformationOnRequestedBioSamples(
+      userProject?.informationOnRequestedBioSamples?.noSampleRequired,
+      userProject?.informationOnRequestedBioSamples?.laboratoryResources,
       userProject?.informationOnRequestedBioSamples,
       userProject?.typeOfUse,
       transformToApi,
