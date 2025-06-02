@@ -147,6 +147,14 @@ export interface IResourceAndRecontact extends WithIdAndIsDone {
   urgentIncidentalReContactingText: string
 }
 
+export interface IDifeSelectionOfCases {
+  selectedCases: DifeSelectionOfCasesEntries[]
+  otherExplanation?: string
+}
+export interface ISelectionOfCases {
+  difeSelectionOfCases: IDifeSelectionOfCases
+}
+
 export interface IAppendix {
   name: string
   size: number
@@ -170,6 +178,18 @@ export enum DIFEProposalTypeOfUse {
   DATA_SHIELD = 'DATA_SHIELD',
   EXTERNAL_SR = 'EXTERNAL_SR',
   INTERNAL_SR = 'INTERNAL_SR',
+}
+
+export enum DifeSelectionOfCasesEntries {
+  EPIC_Potsdam_Full_Cohort = 'EPIC_Potsdam_Full_Cohort',
+  EPIC_Potsdam_Sub_Cohort = 'EPIC_Potsdam_Sub_Cohort',
+  EPIC_Potsdam_Case_Cohort = 'EPIC_Potsdam_Case_Cohort',
+  EPIC_Potsdam_InterAct_Physical_Activity = 'EPIC_Potsdam_InterAct_Physical_Activity',
+  Validation_Study_EPIC_Potsdam_Baseline = 'Validation_Study_EPIC_Potsdam_Baseline',
+  EPIC_Long_term_study_BMBF_2010_2012 = 'EPIC_Long_term_study_BMBF_2010_2012',
+  EPIC_Long_term_study_BMBF_2013 = 'EPIC_Long_term_study_BMBF_2013',
+  EPIC_DZD_2014 = 'EPIC_DZD_2014',
+  Other = 'Other',
 }
 export enum BiosampleType {
   FLUID = 'FLUID',
@@ -242,6 +262,7 @@ export interface IUserProject {
   typeOfUse: ITypeOfUse
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>
+  selectionOfCases: ISelectionOfCases
 }
 
 export interface IRequestedData extends WithIdAndIsDone {

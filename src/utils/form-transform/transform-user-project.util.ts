@@ -3,6 +3,7 @@ import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,
+  IDifeVariableSelectionData,
   IEthicVote,
   IFeasibility,
   IGeneralProjectInformation,
@@ -12,12 +13,16 @@ import type {
   IPropertyRights,
   IPublication,
   IResourceAndRecontact,
+  ISelectionOfCases,
   ITypeOfUse,
   IUserProject,
+  IVariableSelectionData,
 } from '@/types/proposal.types'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.util'
 import { PseudonymizationInfoOptions } from '@/types/PseudonymizationInfo.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import TypeOfUse from '@/pages/Proposals/DataUsage/TypeOfUse.vue'
 import { BiosampleCode } from '@/types/proposal.types'
 const NEW_ID = 'NEW_ID'
 
@@ -239,6 +244,26 @@ export const transformBiosamples = (
   return transformToApi ? undefined : [mapBiosample()]
 }
 
+const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>): ISelectionOfCases => {
+  return {
+    difeSelectionOfCases: {
+      selectedCases: selectionOfCases?.difeSelectionOfCases?.selectedCases ?? [],
+      otherExplanation: transformEmptyStringToUndefined(selectionOfCases?.difeSelectionOfCases?.otherExplanation),
+    },
+  }
+}
+
+const transformVariableSelection = (
+  variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>,
+) => {
+  return {
+    [PlatformIdentifier.DIFE]: {
+      typeOfUse: variableSelection?.DIFE?.typeOfUse,
+      typeOfUseExplanation: variableSelection?.DIFE?.typeOfUseExplanation,
+    },
+  }
+}
+
 export const transformUserProject = (
   userProject?: DeepPartial<IUserProject>,
   transformToApi?: boolean,
@@ -260,6 +285,7 @@ export const transformUserProject = (
       userProject?.typeOfUse,
       transformToApi,
     ),
-    variableSelection: userProject?.variableSelection,
+    variableSelection: transformVariableSelection(userProject?.variableSelection),
+    selectionOfCases: transformSelectionOfCases(userProject?.selectionOfCases),
   }
 }

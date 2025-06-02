@@ -315,7 +315,7 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
   ],
 }
 
-const variableSelection: IDefinitionCard<IUserProject, 'variableSelection'> = (
+const variableSelectionCard: IDefinitionCard<IUserProject, 'variableSelection'> = (
   dataSources: PlatformIdentifier[] = [],
 ) => ({
   key: 'variableSelection',
@@ -338,10 +338,48 @@ const variableSelection: IDefinitionCard<IUserProject, 'variableSelection'> = (
   ],
 })
 
+const difeSelectionOfCasesCard: IDefinitionCard<IUserProject, 'selectionOfCases'> = (
+  dataSources: PlatformIdentifier[] = [],
+) => ({
+  key: 'selectionOfCases',
+  cardLabel: 'proposal.selectionOfCases',
+  shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+  terms: [
+    {
+      label: 'proposal.difeSelectionOfCasesHeader',
+      size: 24,
+      definitions: [
+        [
+          {
+            key: 'difeSelectionOfCases',
+            subKeys: ['selectedCases'],
+            prefix: 'proposal.difeSelectionOfCases_',
+            isList: true,
+            kind: 'translatable',
+          },
+        ],
+      ],
+    },
+    {
+      label: 'proposal.difeSelectionOfCases_Other_Header',
+      size: 24,
+      definitions: [
+        [
+          {
+            key: 'difeSelectionOfCases',
+            subKeys: ['otherExplanation'],
+          },
+        ],
+      ],
+    },
+  ],
+})
+
 const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   generalProjectInformationCard,
   feasibilityCard(dataSources),
-  variableSelection(dataSources),
+  variableSelectionCard(dataSources),
+  difeSelectionOfCasesCard(dataSources),
   projectDetailsCard(dataSources),
   ethicVoteCard(dataSources),
   recontactCard(dataSources),
@@ -356,7 +394,6 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
 export const userProjectSection: IDefinitionSectionObject<IProposal, 'userProject'> = (
   dataSources: PlatformIdentifier[] = [],
 ) => {
-  console.log({ dataSources })
   return {
     sectionLabel: 'proposal.informationAboutTheUserProject',
     kind: 'object',
