@@ -23,8 +23,12 @@ export const maxLengthValidationFunc = (length: number) => ({
       callback()
       return
     }
+    // Create a temporary div to decode HTML entities
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = value
+    const decodedValue = tempDiv.textContent || tempDiv.innerText || ''
     // Remove HTML tags and count only actual text content
-    const textLength = value.replace(/<[^>]*>/g, '').length
+    const textLength = decodedValue.replace(/<[^>]*>/g, '').length
     if (textLength > length) {
       callback(new Error(t('general.maxCharLimit', { length })))
     } else {
