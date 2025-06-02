@@ -35,6 +35,7 @@
         :is-disabled="isDisabled"
         :uac-condition="uacCondition"
         @disableButton="onChildTriggeredDisableButton"
+        :is-draft="!!projectTodo.additionalData?.isDraft"
       />
     </div>
     <div v-if="projectTodo.type === 'additional-location-information' && projectTodo.additionalInformation">
