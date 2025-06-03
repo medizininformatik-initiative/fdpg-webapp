@@ -5,12 +5,6 @@
       :review-mode="reviewMode"
       :form-ref="formRef"
     />
-    <ProjectFeasibility
-      v-model="userProjectForm.feasibility"
-      :review-mode="reviewMode"
-      :form-ref="formRef"
-      v-if="isMIISelected"
-    />
     <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" v-if="isMIISelected" />
     <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
     <PlannedPublications
@@ -31,7 +25,6 @@ import type { FormInstance } from 'element-plus'
 import { computed, type PropType } from 'vue'
 import PlannedPublications from '../PlannedPublications/PlannedPublications.vue'
 import GeneralProjectInformation from './GeneralProjectInformation.vue'
-import ProjectFeasibility from './ProjectFeasibility.vue'
 import ProjectResources from './ProjectResources.vue'
 import PropertyRights from './PropertyRights.vue'
 

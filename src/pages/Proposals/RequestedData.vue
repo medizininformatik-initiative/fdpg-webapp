@@ -3,17 +3,6 @@
     <el-card class="form-group">
       <el-row>
         <el-col :sm="24">
-          <FdpgFormItem prop="requestedData.patientInfo">
-            <FdpgLabel html-for="proposal.patientInfo" />
-            <FdpgInput
-              v-model="requestedDataForm.patientInfo"
-              data-testId="requestedData.patientInfo"
-              placeholder="proposal.pleaseEnterYourDetailsForPatientSelectionHere"
-              :disabled="reviewMode || requestedDataForm.isDone"
-            />
-          </FdpgFormItem>
-        </el-col>
-        <el-col :sm="24">
           <FdpgFormItem prop="requestedData.dataInfo">
             <FdpgLabel html-for="proposal.informationOnDataSelection" />
             <FdpgInput

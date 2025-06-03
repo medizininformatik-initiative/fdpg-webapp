@@ -1,33 +1,36 @@
 <template>
-  <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.selectedCases">
-    <div class="dife-selection-of-variables">
-      <FdpgLabel html-for="proposal.difeSelectionOfCasesHeader" size="large" />
+  <FdpgLabel :html-for="'DIFE:'" :size="'large'" :info="$t('proposal.difeSelectionOfCases_Info')" />
+  <el-card>
+    <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.selectedCases">
+      <div class="dife-selection-of-variables">
+        <FdpgLabel html-for="proposal.difeSelectionOfCasesHeader" size="medium" />
 
-      <div class="flex-table">
-        <div v-for="(entry, idx) in entries" :key="idx" class="cell">
-          <el-checkbox
-            class="fdpg-checkbox"
-            :model-value="selected.has(entry)"
-            :disabled="reviewMode"
-            @change="() => onClickEntry(entry)"
-          />
-          {{ $t(`proposal.difeSelectionOfCases_${entry}`) }}
+        <div class="flex-table">
+          <div v-for="(entry, idx) in entries" :key="idx" class="cell">
+            <el-checkbox
+              class="fdpg-checkbox"
+              :model-value="selected.has(entry)"
+              :disabled="reviewMode"
+              @change="() => onClickEntry(entry)"
+            />
+            {{ $t(`proposal.difeSelectionOfCases_${entry}`) }}
+          </div>
+        </div>
+
+        <div v-if="isOtherSelected" class="other-explanation">
+          <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation">
+            <FdpgLabel html-for="proposal.difeSelectionOfCases_Other_Header" size="small" />
+            <FdpgTextEditor
+              v-model:model-value="difeSelectionOfCasesForm.otherExplanation"
+              :placeholder="$t('proposal.difeSelectionOfCases_Other_Placeholder')"
+              :disabled="reviewMode"
+              field-path="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation"
+            />
+          </FdpgFormItem>
         </div>
       </div>
-
-      <div v-if="isOtherSelected" class="other-explanation">
-        <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation">
-          <FdpgLabel html-for="proposal.difeSelectionOfCases_Other_Header" size="small" />
-          <FdpgTextEditor
-            v-model:model-value="difeSelectionOfCasesForm.otherExplanation"
-            :placeholder="$t('proposal.difeSelectionOfCases_Other_Placeholder')"
-            :disabled="reviewMode"
-            field-path="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation"
-          />
-        </FdpgFormItem>
-      </div>
-    </div>
-  </FdpgFormItem>
+    </FdpgFormItem>
+  </el-card>
 </template>
 
 <script setup lang="ts">

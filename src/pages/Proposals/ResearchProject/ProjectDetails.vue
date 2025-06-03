@@ -135,38 +135,6 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.additionalDocument">
-          <FdpgLabel html-for="" size="medium" class="form__item--width">{{
-            $t('proposal.additionalDocument') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
-          }}</FdpgLabel>
-
-          <FdpgUpload
-            v-if="proposalId"
-            data-test-id="additional-document__upload"
-            :accept="SupportedMimetype"
-            :file-list="uploadsForType"
-            :is-loading="isAdditionalLoading"
-            :is-disabled="reviewMode"
-            :proposal-id="proposalId"
-            @change="handleUploadFile"
-            @remove="handleRemoveFile"
-            class="form__item--width"
-          >
-            <el-button
-              class="upload-button"
-              link
-              :disabled="isAdditionalLoading || reviewMode || projectDetailsForm.isDone"
-              data-test-id="additional-document__upload__button"
-            >
-              {{ $t('proposal.chooseAFile') }}
-              <template #icon>
-                <el-icon class="bi-paperclip"></el-icon>
-              </template>
-            </el-button>
-          </FdpgUpload>
-        </FdpgFormItem>
-      </el-col>
     </el-row>
   </el-card>
 
@@ -186,7 +154,6 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgtextEditor from '@/components/FdpgTextEditor.vue'
 import type { FormInstance } from 'element-plus'
-import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import useUpload from '@/composables/use-upload'
 import { DirectUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
@@ -227,22 +194,12 @@ const { showErrorMessage } = useNotifications()
 const departments = computed(() =>
   Object.values(Department).map((value) => ({ label: t(`departments.${value}`), value })),
 )
-const SupportedMimetype = computed(() => {
-  return Object.values(ESupportedMimetype).join(',')
-})
 
 const proposalIdRef = computed(() => props.proposalId || '')
 
 const isMIISelected = computed(() => {
   return props.platform?.includes(PlatformIdentifier.Mii)
 })
-
-const {
-  uploadsForType,
-  handleUploadFile,
-  handleRemoveFile,
-  isAppendixLoading: isAdditionalLoading,
-} = useUpload(proposalIdRef, [DirectUpload.AdditionalDocument], showErrorMessage)
 
 const projectDetailsForm = useVModel(props, 'modelValue', emit)
 const requestedDataForm = useVModel(props, 'requestedData', emit)
