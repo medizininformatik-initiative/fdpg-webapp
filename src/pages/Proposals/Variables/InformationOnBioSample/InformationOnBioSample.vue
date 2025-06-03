@@ -3,7 +3,7 @@
     v-if="informationOnRequestedBioSamplesForm"
     required
     html-for="proposal.selectedBioSamples"
-    size="large"
+    size="medium"
     :section-id="informationOnRequestedBioSamplesForm!._id"
   />
   <el-card class="form-group">
@@ -12,10 +12,10 @@
       :prop="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
     >
       <Fdpgcheckbox
-        v-model="informationOnRequestedBioSamplesForm.noSampleRequired"
+        :value="informationOnRequestedBioSamplesForm.noSampleRequired"
         :data-testId="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
         :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-        :label="$t('proposal.noSampleRequired')"
+        label="proposal.noSampleRequired"
         size="small"
       />
     </FdpgFormItem>
@@ -130,10 +130,10 @@
 
             <FdpgFormItem :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].optionalBiosample`">
               <Fdpgcheckbox
-                v-model="biosample.optionalBiosample"
+                :value="biosample.optionalBiosample"
                 :data-testId="'biosample.optionalBiosample__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                :label="$t('proposal.optionalBiosample')"
+                label="proposal.optionalBiosample"
                 size="small"
               />
             </FdpgFormItem>
@@ -166,7 +166,7 @@
                         v-model="biosample[option.value]"
                         :data-testId="'biosample.sampleCodeTexts__' + index + '__' + option.value"
                         :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                        :placeholder="$t('proposal.biosampleCodeTextPlaceholder')"
+                        placeholder="proposal.biosampleCodeTextPlaceholder"
                       />
                     </FdpgFormItem>
                   </el-col>
@@ -195,10 +195,10 @@
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransfer`"
             >
               <Fdpgcheckbox
-                v-model="biosample.externalLabTransfer"
+                :value="biosample.externalLabTransfer"
                 :data-testId="'biosample.externalLabTransfer__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                :label="$t('proposal.externalLabTransfer')"
+                label="proposal.externalLabTransfer"
                 size="small"
               />
             </FdpgFormItem>
@@ -310,14 +310,14 @@ const biosampleSectionActiveKey = ref(0)
 
 const biosamlpeTypeOptions = computed(() =>
   Object.keys(BiosampleType).map((key) => ({
-    label: t(`proposal.biosampleType_${key}`),
+    label: `proposal.biosampleType_${key}` as TranslationSchema,
     value: BiosampleType[key as keyof typeof BiosampleType],
   })),
 )
 
 const sampleCodeOptions = computed(() =>
   Object.keys(BiosampleCode).map((key) => ({
-    label: key,
+    label: `proposal.${key}`,
     value: BiosampleCode[key as keyof typeof BiosampleCode],
   })),
 )

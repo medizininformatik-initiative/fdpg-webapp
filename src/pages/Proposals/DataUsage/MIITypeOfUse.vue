@@ -1,4 +1,5 @@
 <template>
+  <FdpgLabel html-for="proposal.MII" size="large" />
   <el-card class="form-group">
     <el-row>
       <el-col :sm="24">

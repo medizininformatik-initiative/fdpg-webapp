@@ -12,7 +12,7 @@
             <FdpgRadio
               v-for="option in ['CSV', 'FHIR']"
               :value="option"
-              :label="option"
+              :label="`proposal.${option}`"
               test-id-extension="__typeOfUseForm.targetFormat"
             />
           </el-radio-group>

@@ -1,5 +1,5 @@
 <template>
-  <FdpgLabel html-for="MII:" size="large" class="mt-22" />
+  <FdpgLabel html-for="proposal.MII" size="large" class="mt-22" />
   <el-card>
     <el-row>
       <el-col :sm="24">
@@ -31,13 +31,13 @@
               :cell-style="{ border: 'none' }"
               :row-style="{ border: 'none' }"
             >
-              <el-table-column prop="label" :label="t('proposal.cohortName')" />
+              <el-table-column prop="label" />
               <el-table-column :label="t('proposal.viewQuery')">
                 <template #default="scope">
                   <span>{{ t('proposal.viewQuery') }}</span>
                 </template>
               </el-table-column>
-              <el-table-column :label="t('general.actions')" width="100">
+              <el-table-column width="100">
                 <template #default="scope">
                   <el-button type="primary" link @click="handleDelete(scope.row)" data-test-id="deleteCohort">
                     <i class="fa-solid fa-trash"></i>

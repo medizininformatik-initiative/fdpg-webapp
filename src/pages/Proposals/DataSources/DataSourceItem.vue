@@ -6,8 +6,10 @@
           <h5 class="identifier">{{ platformIdentifier }}</h5>
         </div>
         <FdpgLabel :htmlFor="dataSource.title" size="medium" />
-        <p>{{ $t(dataSource.description) }}</p>
-        <a :href="$t(dataSource.externalLink)" target="_blank" class="info-link">More info</a>
+        <p v-if="dataSource.description">{{ $t(dataSource.description) }}</p>
+        <a v-if="dataSource.externalLink" :href="$t(dataSource.externalLink)" target="_blank" class="info-link"
+          >More info</a
+        >
 
         <div class="data-source-footer">
           <el-button type="primary" class="action-button" @click="addSelection(platformIdentifier)">

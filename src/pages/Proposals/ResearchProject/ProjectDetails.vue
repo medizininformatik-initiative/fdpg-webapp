@@ -100,7 +100,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
+      <el-col :sm="24" v-if="isMIISelected">
         <FdpgFormItem prop="userProject.projectDetails.biometric">
           <FdpgLabel html-for="proposal.biometric" />
           <FdpgtextEditor
@@ -113,7 +113,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
+      <el-col :sm="24" v-if="isMIISelected">
         <FdpgFormItem prop="requestedData.desiredDataAmount">
           <FdpgLabel html-for="proposal.informationOnDesiredDataAmount" />
           <FdpgNumberInput
@@ -124,7 +124,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
+      <el-col :sm="24" v-if="isMIISelected">
         <FdpgFormItem prop="requestedData.desiredControlDataAmount">
           <FdpgLabel html-for="proposal.informationOnDesiredControlDataAmount" />
           <FdpgNumberInput

@@ -1,11 +1,4 @@
 <template>
-  <MIITypeOfUse
-    :reviewMode="reviewMode"
-    :platform="PlatformIdentifier.Mii"
-    :formRef="formRef"
-    v-model="typeOfUseForm"
-    v-if="isMiiSelected"
-  />
   <DIFETypeOfUse
     :reviewMode="reviewMode"
     :platform="PlatformIdentifier.DIFE"
@@ -13,6 +6,14 @@
     v-model="typeOfUseForm"
     v-if="isDifeSelected"
   />
+  <MIITypeOfUse
+    :reviewMode="reviewMode"
+    :platform="PlatformIdentifier.Mii"
+    :formRef="formRef"
+    v-model="typeOfUseForm"
+    v-if="isMiiSelected"
+  />
+
   <PseudonymizationInfo
     v-if="isMiiSelected"
     :reviewMode="reviewMode"
