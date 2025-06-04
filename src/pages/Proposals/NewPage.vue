@@ -587,7 +587,88 @@ const openDetails = () => {
   }
 }
 const getFormValues = () => {
-  return transformForm(proposalForm.value, true)
+  const formData = transformForm(proposalForm.value, true)
+
+  // Initialize userProject if it doesn't exist
+  if (!formData.userProject) {
+    formData.userProject = {}
+  }
+
+  // If MII is not selected, set MII-specific fields to empty objects/arrays
+  if (!isMIISelected.value) {
+    // Set MII-specific fields to empty objects/arrays
+    formData.requestedData = {
+      patientInfo: '',
+      dataInfo: '',
+      desiredDataAmount: 0,
+      desiredControlDataAmount: 0,
+    }
+    formData.userProject.addressees = {
+      desiredLocations: [],
+    }
+    formData.userProject.resourceAndRecontact = {
+      hasEnoughResources: false,
+      isRecontactingIntended: false,
+    }
+    formData.userProject.ethicVote = {
+      ethicsCommittee: '',
+      ethicsVoteNumber: '',
+      voteFromDate: undefined,
+      isDone: false,
+      isExisting: false,
+    }
+    formData.userProject.informationOnRequestedBioSamples = {
+      laboratoryResources: '',
+      biosamples: [],
+    }
+    formData.cohorts = []
+    formData.userProject.feasibility = {
+      details: '',
+    }
+    formData.userProject.typeOfUse = {
+      usage: [],
+      dataPrivacyExtra: '',
+      targetFormat: '',
+      targetFormatOther: '',
+      pseudonymizationInfo: [],
+      pseudonymizationInfoTexts: {},
+    }
+    formData.userProject.propertyRights = {
+      options: '',
+    }
+    formData.userProject.projectDetails = {
+      simpleProjectDescription: '',
+      department: [],
+      executiveSummaryUac: '',
+      biometrics: '',
+    }
+  }
+
+  // If DIFE is not selected, set DIFE-specific fields to empty objects/arrays
+  if (!isDifeSelected.value) {
+    // Initialize variableSelection and selectionOfCases if they don't exist
+    if (!formData.userProject.variableSelection) {
+      formData.userProject.variableSelection = {}
+    }
+    if (!formData.userProject.selectionOfCases) {
+      formData.userProject.selectionOfCases = {}
+    }
+    // Set DIFE-specific fields to empty objects/arrays
+    formData.userProject.variableSelection.DIFE = {
+      typeOfUse: '',
+      typeOfUseExplanation: '',
+    }
+    formData.userProject.selectionOfCases.difeSelectionOfCases = {
+      selectedCases: [],
+      otherExplanation: '',
+    }
+    formData.requestedData.plannedPublication = {
+      noPublicationPlanned: false,
+      publications: [],
+    }
+  }
+
+  return formData
 }
 
 const raiseErrors = (invalidFields: ValidateFieldsError) => {
