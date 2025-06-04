@@ -65,14 +65,12 @@
             :form-ref="formRef"
           />
 
-          <FdpgLabel
-            required
-            info="proposal.informationOnTheRequestedDataInfo"
-            size="large"
-            html-for="proposal.informationOnTheRequestedData"
+          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
+          <ProjectAddresses
+            v-model="proposalForm.userProject.addressees"
+            :review-mode="isReviewMode"
+            v-if="isMIISelected"
           />
-          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" />
-          <ProjectAddresses v-model="proposalForm.userProject.addressees" :review-mode="isReviewMode" />
 
           <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
@@ -91,7 +89,7 @@
           </FdpgFormItem>
 
           <InformationOnBioSample
-            v-if="hasBiosamples"
+            v-if="hasBiosamples && isMIISelected"
             v-model="proposalForm.userProject.informationOnRequestedBioSamples"
             :review-mode="isReviewMode"
             :form-ref="formRef"
@@ -141,6 +139,7 @@
           />
 
           <TargetFormat
+            v-if="isMIISelected"
             :platform="platform"
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
@@ -627,21 +626,12 @@ const handleTermsConfirm = async () => {
     showErrorMessage(error.message)
   }
 }
-const scrollToTop = () => {
-  setTimeout(() => {
-    const mainWrapper = document.getElementById('main-scroll-top')
-    if (mainWrapper) {
-      mainWrapper.scrollTo(0, 0)
-    }
-  }, 100)
-}
+
 const prevStep = () => {
   layoutStore.prevStep()
-  scrollToTop()
 }
 const nextStep = () => {
   layoutStore.nextStep()
-  scrollToTop()
 }
 const handleSubmit = async () => {
   isSubmissionDialogOpen.value = true

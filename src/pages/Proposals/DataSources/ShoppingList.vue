@@ -25,7 +25,7 @@
                   <h5 class="identifier">{{ item }}</h5>
                 </div>
                 <div class="data-source-title">
-                  <FdpgLabel size="small" :html-for="dataSources[item].title">
+                  <FdpgLabel v-if="dataSources[item].title" size="small" :html-for="dataSources[item].title">
                     {{ t(dataSources[item].title) }}
                   </FdpgLabel>
                   <el-button
@@ -42,7 +42,7 @@
             </template>
 
             <div>
-              <p>{{ t(dataSources[item].description) }}</p>
+              <p v-if="dataSources[item].description">{{ t(dataSources[item].description) }}</p>
               <div class="data-source-footer">
                 <el-button
                   type="primary"

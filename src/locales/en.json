@@ -702,7 +702,13 @@
     "externalLabTransfer": "Samples will be forwarded to an external laboratory (please specify)",
     "biosampleMethod": "Analysis design and methods (e.g., CRP with ELISA; whole genome sequencing)",
     "biosampleMethodPlaceholder": "Requirements",
-    "externalLabTransferDetailsPlaceholder": "Requirements"
+    "externalLabTransferDetailsPlaceholder": "Requirements",
+    "MII": "MII:",
+    "DIFE": "DIFE:",
+    "SNOMED": "SNOMED",
+    "SPREC": "SPREC",
+    "CSV": "CSV",
+    "FHIR": "FHIR"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
