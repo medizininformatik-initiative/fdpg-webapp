@@ -48,11 +48,7 @@ export const useProposalStore = defineStore('Proposal', {
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
       checkListVerification: [],
-      fdpgInternalCheckNotes: {
-        note: '',
-        date: new Date(),
-        user: '',
-      },
+      fdpgInternalCheckNotes: '',
       projectProperties: [],
     },
     search: undefined,

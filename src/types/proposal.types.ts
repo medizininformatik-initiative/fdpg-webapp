@@ -512,6 +512,7 @@ export interface IProposal {
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
   cohorts: ICohort[]
+  dataSourceLocaleId: string
 
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.

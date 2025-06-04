@@ -362,6 +362,8 @@ const stepFieldsMap = {
     'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
+    'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
+    'userProject.selectionOfCases.difeSelectionOfCases.otherExplanation',
   ],
 }
 
@@ -535,7 +537,7 @@ const rules = ref<Record<string, any>>({
     },
     selectionOfCases: {
       difeSelectionOfCases: {
-        selectedEntries: requiredValidationFunc('array'),
+        selectedCases: requiredValidationFunc('array'),
         otherExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       },
     },
@@ -589,82 +591,33 @@ const openDetails = () => {
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
-  // Initialize userProject if it doesn't exist
-  if (!formData.userProject) {
-    formData.userProject = {}
-  }
-
-  // If MII is not selected, set MII-specific fields to empty objects/arrays
+  // If MII is not selected, remove MII-specific fields
   if (!isMIISelected.value) {
-    // Set MII-specific fields to empty objects/arrays
-    formData.requestedData = {
-      patientInfo: '',
-      dataInfo: '',
-      desiredDataAmount: 0,
-      desiredControlDataAmount: 0,
-    }
-    formData.userProject.addressees = {
-      desiredLocations: [],
-    }
-    formData.userProject.resourceAndRecontact = {
-      hasEnoughResources: false,
-      isRecontactingIntended: false,
-    }
-    formData.userProject.ethicVote = {
-      ethicsCommittee: '',
-      ethicsVoteNumber: '',
-      voteFromDate: undefined,
-      isDone: false,
-      isExisting: false,
-    }
-    formData.userProject.informationOnRequestedBioSamples = {
-      laboratoryResources: '',
-      biosamples: [],
-    }
-    formData.cohorts = []
-    formData.userProject.feasibility = {
-      details: '',
-    }
-    formData.userProject.typeOfUse = {
-      usage: [],
-      dataPrivacyExtra: '',
-      targetFormat: '',
-      targetFormatOther: '',
-      pseudonymizationInfo: [],
-      pseudonymizationInfoTexts: {},
-    }
-    formData.userProject.propertyRights = {
-      options: '',
-    }
-    formData.userProject.projectDetails = {
-      simpleProjectDescription: '',
-      department: [],
-      executiveSummaryUac: '',
-      biometrics: '',
-    }
+    // Remove MII-specific fields
+    delete formData.requestedData
+    delete formData.userProject?.addressees
+    delete formData.userProject?.resourceAndRecontact
+    delete formData.userProject?.ethicVote
+    delete formData.userProject?.informationOnRequestedBioSamples
+    delete formData.cohorts
+    delete formData.userProject?.feasibility
+    delete formData.userProject?.typeOfUse?.usage
+    delete formData.userProject?.typeOfUse?.pseudonymizationInfo
+    delete formData.userProject?.typeOfUse?.pseudonymizationInfoTexts
+    delete formData.userProject?.propertyRights
+    delete formData.userProject?.projectDetails.simpleProjectDescription
+    delete formData.userProject?.projectDetails.department
+    delete formData.userProject?.projectDetails.executiveSummaryUac
   }
 
-  // If DIFE is not selected, set DIFE-specific fields to empty objects/arrays
+  // If DIFE is not selected, remove DIFE-specific fields
   if (!isDifeSelected.value) {
-    // Initialize variableSelection and selectionOfCases if they don't exist
-    if (!formData.userProject.variableSelection) {
-      formData.userProject.variableSelection = {}
+    // Remove DIFE-specific fields
+    if (formData.userProject?.variableSelection) {
+      delete formData.userProject.variableSelection.DIFE
     }
-    if (!formData.userProject.selectionOfCases) {
-      formData.userProject.selectionOfCases = {}
-    }
-    // Set DIFE-specific fields to empty objects/arrays
-    formData.userProject.variableSelection.DIFE = {
-      typeOfUse: '',
-      typeOfUseExplanation: '',
-    }
-    formData.userProject.selectionOfCases.difeSelectionOfCases = {
-      selectedCases: [],
-      otherExplanation: '',
-    }
-    formData.requestedData.plannedPublication = {
-      noPublicationPlanned: false,
-      publications: [],
+    if (formData.userProject?.selectionOfCases) {
+      delete formData.userProject.selectionOfCases.difeSelectionOfCases
     }
   }
 
