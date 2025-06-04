@@ -76,7 +76,7 @@ const add = () => {
   if (!selectedQuery.value) return
 
   const newCohort: ICohort = {
-    feasibilityQueryId: selectedQuery.value.feasibilityQueryId.toString(),
+    feasibilityQueryId: selectedQuery.value.feasibilityQueryId,
     label: selectedQuery.value.label,
     comment: selectedQuery.value.comment,
   }
@@ -87,6 +87,7 @@ onMounted(async () => {
   isLoading.value = true
   try {
     await feasibilityStore.getAll()
+
     noDataText.value = 'proposal.noFeasibilityQueriesSaved'
   } catch (error) {
     noDataText.value = 'proposal.noFeasibilityQueriesWhenError'
