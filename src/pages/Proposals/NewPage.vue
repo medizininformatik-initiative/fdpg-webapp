@@ -104,7 +104,27 @@
             v-model="proposalForm.userProject.selectionOfCases.difeSelectionOfCases"
             :review-mode="isReviewMode"
           />
-          <CohortSelection v-if="isMIISelected" v-model="proposalForm.cohorts" />
+          <MiiCohortSelection
+            v-if="isMIISelected"
+            v-model="proposalForm.cohorts"
+            :review-mode="isReviewMode"
+            :feasibilityForm="proposalForm.userProject.feasibility"
+            @update:feasibility-form="
+              (value) => {
+                if (proposalForm?.userProject) {
+                  proposalForm.userProject.feasibility = value
+                }
+              }
+            "
+            :requestedDataForm="proposalForm.requestedData"
+            @update:requestedDataForm="
+              (value) => {
+                if (proposalForm) {
+                  proposalForm.requestedData = value
+                }
+              }
+            "
+          />
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.DataUsage">
@@ -314,7 +334,7 @@ import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
 import SubmissionDialog from '@/components/SubmissionDialog.vue'
 import useDraftDownload from '@/composables/use-draft-download'
 
-import CohortSelection from './Casesohort/CohortSelection.vue'
+import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
@@ -327,7 +347,7 @@ const stepFieldsMap = {
   ],
   [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: [
-    'requestedData',
+    'requestedData.dataInfo',
     'userProject.variableSelection.DIFE',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
@@ -338,7 +358,12 @@ const stepFieldsMap = {
     'requestedData.desiredControlDataAmount',
     'requestedData.desiredDataAmount',
   ],
-  [CreatPrposalSteps.Casesohort]: ['cohorts'],
+  [CreatPrposalSteps.Casesohort]: [
+    'cohorts',
+    'userProject.feasibility.details',
+    'userProject.selectionOfCases.difeSelectionOfCases',
+    'requestedData.patientInfo',
+  ],
 }
 
 defineProps({
@@ -602,11 +627,21 @@ const handleTermsConfirm = async () => {
     showErrorMessage(error.message)
   }
 }
+const scrollToTop = () => {
+  setTimeout(() => {
+    const mainWrapper = document.getElementById('main-scroll-top')
+    if (mainWrapper) {
+      mainWrapper.scrollTo(0, 0)
+    }
+  }, 100)
+}
 const prevStep = () => {
   layoutStore.prevStep()
+  scrollToTop()
 }
 const nextStep = () => {
   layoutStore.nextStep()
+  scrollToTop()
 }
 const handleSubmit = async () => {
   isSubmissionDialogOpen.value = true
