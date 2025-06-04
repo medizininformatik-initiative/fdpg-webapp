@@ -54,23 +54,27 @@ export const useLayoutStore = defineStore('layout', {
     },
     setActiveStep(step: CreatPrposalSteps) {
       this.activeStep = step
+      this.scrollToTop()
     },
     nextStep() {
       const nextStep = this.createProposalSteps.find((s) => s.step === this.activeStep + 1)
       if (nextStep) {
         this.activeStep = nextStep.step
+        this.scrollToTop()
       }
     },
     prevStep() {
       const prevStep = this.createProposalSteps.find((s) => s.step === this.activeStep - 1)
       if (prevStep) {
         this.activeStep = prevStep.step
+        this.scrollToTop()
       }
     },
     goToStep(step: CreatPrposalSteps) {
       const targetStep = this.createProposalSteps.find((s) => s.step === step)
       if (targetStep) {
         this.activeStep = targetStep.step
+        this.scrollToTop()
       }
     },
     updateStepStatus(step: keyof typeof CreatPrposalSteps, valid: boolean | null) {
@@ -96,6 +100,14 @@ export const useLayoutStore = defineStore('layout', {
     },
     setValidatedFields(count: number) {
       this.validatedFields = count
+    },
+    scrollToTop() {
+      setTimeout(() => {
+        const mainWrapper = document.getElementById('main-scroll-top')
+        if (mainWrapper) {
+          mainWrapper.scrollTo(0, 0)
+        }
+      }, 100)
     },
   },
 })

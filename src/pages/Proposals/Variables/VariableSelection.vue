@@ -1,55 +1,45 @@
 <template>
-  <h2>{{ t('proposal.selectionOfVariablesHeader') }}</h2>
-
   <template v-if="isDifeSelected && difeSet">
-    <div class="form-group-wrapper">
-      <el-card class="form-group">
-        <el-row>
-          <el-col :sm="24">
-            <FdpgLabel
-              html-for="proposal.informationOnDifeSelectionForVariableSelectionStepHeader"
-              required
-            ></FdpgLabel>
+    <FdpgLabel html-for="proposal.DIFE" size="large"></FdpgLabel>
+    <el-card class="form-group">
+      <el-row>
+        <el-col :sm="24">
+          <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUse">
+            <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUse') }}</FdpgLabel>
+            <FdpgSelect
+              v-model="variableSelectionDataForm.DIFE.typeOfUse"
+              placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
+              :disabled="reviewMode"
+              :options="difeTypeOfUseOptions"
+            />
+          </FdpgFormItem>
+        </el-col>
 
-            <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUse">
-              <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUse') }}</FdpgLabel>
-              <FdpgSelect
-                v-model="variableSelectionDataForm.DIFE.typeOfUse"
-                placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
-                :disabled="reviewMode"
-                :options="difeTypeOfUseOptions"
-              />
-            </FdpgFormItem>
-          </el-col>
-
-          <el-col :sm="24">
-            <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUseExplanation">
-              <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUseExplanation') }}</FdpgLabel>
-              <FdpgTextEditor
-                v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
-                :disabled="reviewMode"
-                :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
-                :form-ref="formRef"
-                field-path="userProject.variableSelection.DIFE.typeOfUseExplanation"
-              />
-            </FdpgFormItem>
-          </el-col>
-        </el-row>
-      </el-card>
-    </div>
+        <el-col :sm="24">
+          <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUseExplanation">
+            <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUseExplanation') }}</FdpgLabel>
+            <FdpgTextEditor
+              v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
+              :disabled="reviewMode"
+              :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
+              :form-ref="formRef"
+              field-path="userProject.variableSelection.DIFE.typeOfUseExplanation"
+            />
+          </FdpgFormItem>
+        </el-col>
+      </el-row>
+    </el-card>
   </template>
 
   <template v-if="isMiiSelected">
-    <div class="form-group-wrapper">
-      <el-card class="form-group">
-        <el-row>
-          <el-col :sm="24">
-            <FdpgLabel html-for="proposal.informationOnMiiSelectionForVariableSelectionStepHeader"></FdpgLabel>
-            <p>{{ t('proposal.informationOnMiiSelectionForVariableSelectionStepBody') }}</p>
-          </el-col>
-        </el-row>
-      </el-card>
-    </div>
+    <FdpgLabel html-for="proposal.MII" size="large"></FdpgLabel>
+    <el-card class="form-group">
+      <el-row>
+        <el-col :sm="24">
+          <p>{{ t('proposal.informationOnMiiSelectionForVariableSelectionStepBody') }}</p>
+        </el-col>
+      </el-row>
+    </el-card>
   </template>
 </template>
 

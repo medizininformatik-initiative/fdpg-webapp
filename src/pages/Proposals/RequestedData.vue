@@ -1,23 +1,26 @@
 <template>
-  <div class="form-group-wrapper">
-    <el-card class="form-group">
-      <el-row>
-        <el-col :sm="24">
-          <FdpgFormItem prop="requestedData.dataInfo">
-            <FdpgLabel html-for="proposal.informationOnDataSelection" />
-            <FdpgInput
-              v-model="requestedDataForm.dataInfo"
-              data-testId="requestedData.dataInfo"
-              placeholder="proposal.pleaseEnterYourDataSelectionInformationHere"
-              :disabled="reviewMode || requestedDataForm.isDone"
-            />
-          </FdpgFormItem>
-        </el-col>
-      </el-row>
-    </el-card>
-
-    <TaskViewer :object-id="requestedDataForm._id" />
-  </div>
+  <FdpgLabel
+    required
+    info="proposal.informationOnTheRequestedDataInfo"
+    size="medium"
+    html-for="proposal.informationOnTheRequestedData"
+  />
+  <el-card class="form-group">
+    <el-row>
+      <el-col :sm="24">
+        <FdpgFormItem prop="requestedData.dataInfo">
+          <FdpgLabel html-for="proposal.informationOnDataSelection" />
+          <FdpgInput
+            v-model="requestedDataForm.dataInfo"
+            data-testId="requestedData.dataInfo"
+            placeholder="proposal.pleaseEnterYourDataSelectionInformationHere"
+            :disabled="reviewMode || requestedDataForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
+    </el-row>
+  </el-card>
+  <TaskViewer :object-id="requestedDataForm._id" />
 </template>
 
 <script setup lang="ts">
