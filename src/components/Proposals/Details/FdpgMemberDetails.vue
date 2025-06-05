@@ -303,8 +303,16 @@ const handleToLocationCheckClick = () => {
           [],
         ) || [],
     },
-    callback: async (decision: DecisionType) =>
-      decision === 'confirm' ? await changeStatus(ProposalStatus.LocationCheck) : undefined,
+    callback: async (decision: DecisionType) => {
+      if (decision === 'confirm') {
+        await changeStatus(ProposalStatus.LocationCheck)
+      }
+      //clean up messageBoxStore
+      messageBoxStore.$patch({
+        messageComponent: undefined,
+        messageComponentProps: {},
+      })
+    },
   })
 }
 
