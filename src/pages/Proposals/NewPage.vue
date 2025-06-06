@@ -538,18 +538,20 @@ const rules = ref<Record<string, any>>({
         otherExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       },
     },
-    cohorts: [
-      {
-        validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
-          if (!value || value.length === 0) {
-            callback(new Error(t('general.requiredField')))
-          } else {
-            callback()
-          }
+    cohorts: {
+      selectedCohorts: [
+        {
+          validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
+            if (!value || value.length === 0) {
+              callback(new Error(t('general.requiredField')))
+            } else {
+              callback()
+            }
+          },
+          trigger: ['blur', 'change'],
         },
-        trigger: ['blur', 'change'],
-      },
-    ],
+      ],
+    },
   },
   requestedData: {
     patientInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
