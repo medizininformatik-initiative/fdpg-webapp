@@ -263,6 +263,7 @@ export interface IUserProject {
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>
   selectionOfCases: ISelectionOfCases
+  cohorts: ICohort[]
 }
 
 export interface IRequestedData extends WithIdAndIsDone {
@@ -511,7 +512,6 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
-  cohorts: ICohort[]
 
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
