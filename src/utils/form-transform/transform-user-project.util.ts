@@ -287,5 +287,6 @@ export const transformUserProject = (
     ),
     variableSelection: transformVariableSelection(userProject?.variableSelection),
     selectionOfCases: transformSelectionOfCases(userProject?.selectionOfCases),
+    cohorts: userProject?.cohorts ?? [],
   }
 }
