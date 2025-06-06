@@ -3,11 +3,11 @@
   <el-card>
     <el-row>
       <el-col :sm="24">
-        <FdpgFormItem prop="cohorts">
+        <FdpgFormItem prop="userProject.cohorts.selectedCohorts">
           <div class="cohort-selection">
             <FdpgLabel html-for="proposal.cohortSelection" size="medium" />
 
-            <div v-if="cohorts.length < 49" class="cohort-actions">
+            <div v-if="cohorts.selectedCohorts.length < 49" class="cohort-actions">
               <el-button type="primary" @click="openAutomaticDialog" data-test-id="addCohortAutomatic">
                 {{ t('proposal.addCohortAutomatic') }}
               </el-button>
@@ -22,8 +22,8 @@
             </div>
 
             <el-table
-              v-if="cohorts.length > 0"
-              :data="cohorts"
+              v-if="cohorts.selectedCohorts.length > 0"
+              :data="cohorts.selectedCohorts"
               class="cohort-table"
               fit
               :show-header="false"
@@ -91,7 +91,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance } from 'element-plus'
-import type { IFeasibility, ICohort } from '@/types/proposal.types'
+import type { IFeasibility, ICohort, ICohorts } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
 import ManualCohortDialog from './ManualCohortDialog.vue'
@@ -102,7 +102,7 @@ const { showErrorMessage } = useNotifications()
 
 const props = defineProps({
   modelValue: {
-    type: Array as () => ICohort[],
+    type: Array as () => ICohorts,
     required: true,
     default: () => [],
   },
@@ -147,7 +147,7 @@ const handleAutomaticAdd = async (newCohort: ICohort) => {
     showErrorMessage(t('proposal.maxCohortsReached'))
     return
   }
-  cohorts.value = [...cohorts.value, newCohort]
+  cohorts.value.selectedCohorts = [...cohorts.value.selectedCohorts, newCohort]
   closeAutomaticDialog()
 }
 
@@ -163,7 +163,9 @@ const closeManualDialog = () => {
 }
 
 const handleDelete = (cohort: ICohort) => {
-  cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
+  cohorts.value.selectedCohorts = cohorts.value.selectedCohorts.filter(
+    (c) => c.feasibilityQueryId !== cohort.feasibilityQueryId,
+  )
 }
 </script>
 
