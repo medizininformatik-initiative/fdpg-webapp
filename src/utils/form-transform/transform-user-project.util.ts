@@ -3,6 +3,7 @@ import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,
+  ICohort,
   IDifeVariableSelectionData,
   IEthicVote,
   IFeasibility,
@@ -264,6 +265,16 @@ const transformVariableSelection = (
   }
 }
 
+export const mapSelectedCohorts = (cohort?: Partial<ICohort>): Partial<ICohort> => {
+  return {
+    _id: cohort?._id ?? NEW_ID,
+    feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
+    label: transformEmptyStringToUndefined(cohort?.label),
+    comment: transformEmptyStringToUndefined(cohort?.comment),
+    uploadId: cohort?.uploadId ?? undefined,
+  }
+}
+
 export const transformUserProject = (
   userProject?: DeepPartial<IUserProject>,
   transformToApi?: boolean,
@@ -287,6 +298,16 @@ export const transformUserProject = (
     ),
     variableSelection: transformVariableSelection(userProject?.variableSelection),
     selectionOfCases: transformSelectionOfCases(userProject?.selectionOfCases),
-    cohorts: userProject?.cohorts ?? [],
+    cohorts: {
+      selectedCohorts:
+        userProject?.cohorts?.selectedCohorts?.map((cohort) =>
+          mapSelectedCohorts({
+            ...cohort,
+            uploadId: cohort?.uploadId as File | undefined,
+          }),
+        ) ?? [],
+      _id: userProject?.cohorts?._id ?? NEW_ID,
+      isDone: userProject?.cohorts?.isDone ?? false,
+    },
   }
 }
