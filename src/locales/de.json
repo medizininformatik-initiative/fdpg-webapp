@@ -697,7 +697,7 @@
     "biosampleType_TISSUE": "Gewebeprobe (z.B. Leber, Colon, Lungenparenchym), Fixierungsart (z.B. Paraffin, frisch eingefroren), Art der Sammlung (z.B. Autopsie, Biopsie)",
     "biosampleType_DRIVATIVE": "Derivate/verarbeitete Proben (Spezifizierung der Derivate (z.B. DNA, RNA, mononukleäre Zellen, Tissue-Microarray))",
     "optionalBiosample": "Das Projekt soll auch durchgeführt werden, wenn diese Bioprobe nicht erhältlich ist",
-    "sampleCode": "Probecode (optional)",
+    "sampleCode": "Probecode",
     "biosampleCodeTextPlaceholder": "CODE",
     "externalLabTransfer": "Proben werden an ein externes Labor weitergegeben (bitte spezifizieren)",
     "biosampleMethod": "Analysedesign und Methoden (z.B. CRP mit ELISA; whole genome sequencing)",
