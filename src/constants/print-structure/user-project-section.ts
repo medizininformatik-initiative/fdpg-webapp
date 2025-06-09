@@ -2,10 +2,12 @@ import type {
   IDefinitionCard,
   IDefinitionCardArray,
   IDefinitionSectionObject,
+  IDefinitionCardTerm,
+  DefinitionCards,
 } from '@/components/Shared/definition-card.types'
 import { MII_LOCATIONS } from '@/constants'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IUserProject, IProposal } from '@/types/proposal.types'
+import type { IUserProject, IProposal, ICohort } from '@/types/proposal.types'
 
 const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProjectInformation'> = {
   key: 'generalProjectInformation',
@@ -39,16 +41,11 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
   ],
 }
 
-const feasibilityCard: IDefinitionCard<IUserProject, 'feasibility'> = (dataSources: PlatformIdentifier[] = []) => ({
+const feasibilityCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'feasibility'> => ({
   key: 'feasibility',
   cardLabel: 'proposal.feasibility',
   shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
-    {
-      label: 'proposal.feasibilityId',
-      size: 24,
-      definitions: [[{ key: 'id' }]],
-    },
     {
       label: 'proposal.assessmentOfFeasibilityDetails',
       size: 24,
@@ -57,9 +54,7 @@ const feasibilityCard: IDefinitionCard<IUserProject, 'feasibility'> = (dataSourc
   ],
 })
 
-const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => ({
+const projectDetailsCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'projectDetails',
   cardLabel: 'proposal.projectDetails',
   terms: [
@@ -99,7 +94,7 @@ const projectDetailsCard: IDefinitionCard<IUserProject, 'projectDetails'> = (
   ],
 })
 
-const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = (dataSources: PlatformIdentifier[] = []) => ({
+const ethicVoteCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'ethicVote',
   cardLabel: 'proposal.ethicsVote',
   shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
@@ -130,9 +125,7 @@ const ethicVoteCard: IDefinitionCard<IUserProject, 'ethicVote'> = (dataSources: 
   ],
 })
 
-const recontactCard: IDefinitionCard<IUserProject, 'resourceAndRecontact'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => ({
+const recontactCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'resourceAndRecontact', //MII
   cardLabel: 'proposal.projectResourcesAndRecontact',
   shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
@@ -150,9 +143,7 @@ const recontactCard: IDefinitionCard<IUserProject, 'resourceAndRecontact'> = (
   ],
 })
 
-const propertyRightsCard: IDefinitionCard<IUserProject, 'propertyRights'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => ({
+const propertyRightsCard = (dataSources: PlatformIdentifier[] = []) => ({
   // MII
   key: 'propertyRights',
   cardLabel: 'proposal.propertyRights',
@@ -202,7 +193,6 @@ const plannedPublicationCard: IDefinitionCardArray<IUserProject, 'plannedPublica
     },
   ],
 }
-
 const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOCATIONS> = {
   key: 'addressees',
   cardLabel: 'proposal.addressees',
@@ -217,7 +207,7 @@ const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOC
   ],
 }
 
-const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = (dataSources: PlatformIdentifier[] = []) => ({
+const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'typeOfUse',
   cardLabel: 'proposal.typeOfUse',
   terms: [
@@ -269,6 +259,12 @@ const typeOfUseCard: IDefinitionCard<IUserProject, 'typeOfUse'> = (dataSources: 
       ],
     },
     {
+      label: 'proposal.targetFormat', // MII
+      size: 24,
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      definitions: [[{ key: 'targetFormat', subkeys: ['targetFormatOther'] }]],
+    },
+    {
       label: 'proposal.typeOfUse', // DIFE
       size: 24,
       shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
@@ -293,31 +289,54 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
       definitions: [[{ key: 'type' }]],
     },
     {
+      label: 'proposal.biosampleMaterialRequirements',
+      size: 24,
+      definitions: [[{ key: 'typeDetails' }]],
+    },
+    {
       label: 'proposal.biosampleCount',
       size: 24,
       definitions: [[{ key: 'count' }]],
-    },
-    {
-      label: 'proposal.biosampleParameter',
-      size: 24,
-      definitions: [[{ key: 'parameter' }]],
-    },
-    {
-      label: 'proposal.biosampleLaboratoryResources',
-      size: 24,
-      definitions: [[{ key: 'laboratoryResources' }]],
     },
     {
       label: 'proposal.biosampleMaterialRequirements',
       size: 24,
       definitions: [[{ key: 'requirements' }]],
     },
+    {
+      label: 'proposal.optionalBiosample',
+      size: 24,
+      definitions: [[{ key: 'optionalBiosample' }]],
+    },
+    {
+      label: 'proposal.sampleCode',
+      size: 24,
+      definitions: [[{ key: 'sampleCode' }]],
+    },
+    {
+      label: 'proposal.biosampleMethod',
+      size: 24,
+      definitions: [[{ key: 'method' }]],
+    },
+    {
+      label: 'proposal.biosampleMaterialRequirements',
+      size: 24,
+      definitions: [[{ key: 'requirements' }]],
+    },
+    {
+      label: 'proposal.externalLabTransfer',
+      size: 24,
+      definitions: [[{ key: 'externalLabTransfer' }]],
+    },
+    {
+      label: 'proposal.biosampleMaterialRequirements',
+      size: 24,
+      definitions: [[{ key: 'externalLabTransferDetails' }]],
+    },
   ],
 }
 
-const variableSelectionCard: IDefinitionCard<IUserProject, 'variableSelection'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => ({
+const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'variableSelection',
   cardLabel: 'proposal.selectionOfVariablesHeader',
   shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
@@ -325,22 +344,36 @@ const variableSelectionCard: IDefinitionCard<IUserProject, 'variableSelection'> 
     {
       label: 'proposal.typeOfUse', // DIFE
       size: 24,
-      definitions: [
-        [
-          { key: 'DIFE', subKeys: ['typeOfUse'], prefix: 'proposal.difeTypeOfUse_', kind: 'translatable' },
-          {
-            key: 'DIFE',
-            subKeys: ['typeOfUseExplanation'],
-          },
-        ],
-      ],
+      definitions: [[{ key: 'DIFE', subKeys: ['typeOfUse'], prefix: 'proposal.difeTypeOfUse_', kind: 'translatable' }]],
+    },
+    {
+      label: 'proposal.userProjectVariableSelectionDifeTypeOfUseExplanation',
+      size: 24,
+      definitions: [[{ key: 'DIFE', subKeys: ['typeOfUseExplanation'] }]],
     },
   ],
 })
 
-const difeSelectionOfCasesCard: IDefinitionCard<IUserProject, 'selectionOfCases'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => ({
+const cohortsCard: IDefinitionCardArray<IUserProject, 'cohorts', 'selectedCohorts'> = {
+  key: 'cohorts',
+  cardLabel: 'proposal.cohortSelection',
+  loopOn: 'selectedCohorts',
+  shouldHide: false,
+  terms: [
+    {
+      label: 'proposal.cohortSelection',
+      size: 24,
+      definitions: [[{ key: 'label' }]],
+    },
+    {
+      label: 'proposal.selectFeasibilityQuery',
+      size: 24,
+      definitions: [[{ key: 'feasibilityQueryId' }]],
+    },
+  ],
+}
+
+const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'selectionOfCases',
   cardLabel: 'proposal.selectionOfCases',
   shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
@@ -379,7 +412,8 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   generalProjectInformationCard,
   feasibilityCard(dataSources),
   variableSelectionCard(dataSources),
-  difeSelectionOfCasesCard(dataSources),
+  cohortsCard,
+  selectionOfCasesCard(dataSources),
   projectDetailsCard(dataSources),
   ethicVoteCard(dataSources),
   recontactCard(dataSources),
@@ -391,9 +425,7 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   biosamplesCard,
 ]
 
-export const userProjectSection: IDefinitionSectionObject<IProposal, 'userProject'> = (
-  dataSources: PlatformIdentifier[] = [],
-) => {
+export const userProjectSection = (dataSources: PlatformIdentifier[] = []) => {
   return {
     sectionLabel: 'proposal.informationAboutTheUserProject',
     kind: 'object',
