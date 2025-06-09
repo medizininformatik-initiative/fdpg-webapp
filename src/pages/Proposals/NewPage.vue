@@ -58,14 +58,17 @@
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.Variables">
-          <VariableSelection
+          <DIFEVariableSelection
             v-model="proposalForm.userProject.variableSelection"
             :platform="platform"
             :review-mode="isReviewMode"
             :form-ref="formRef"
+            v-if="isDifeSelected"
           />
+          <FdpgLabel html-for="proposal.MII" size="large"></FdpgLabel>
 
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
+          <MiiVariableSelection v-if="isMIISelected" />
           <ProjectAddresses
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
@@ -325,7 +328,7 @@ import ProjectDetails from './ResearchProject/ProjectDetails.vue'
 import EthicVote from './ResearchProject/EthicVote.vue'
 import ProjectAddresses from './Variables/ProjectAddresses.vue'
 import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
-import VariableSelection from './Variables/VariableSelection.vue'
+import DIFEVariableSelection from './Variables/DIFEVariableSelection.vue'
 import DataSourceSelection from './DataSources/DataSourceSelection.vue'
 import ShoppingList from './DataSources/ShoppingList.vue'
 import TargetFormat from './DataUsage/TargetFormat.vue'
@@ -335,6 +338,7 @@ import useDraftDownload from '@/composables/use-draft-download'
 
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
+import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
