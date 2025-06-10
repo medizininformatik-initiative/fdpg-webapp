@@ -65,7 +65,7 @@
             :form-ref="formRef"
             v-if="isDifeSelected"
           />
-          <FdpgLabel html-for="proposal.MII" size="large"></FdpgLabel>
+          <FdpgLabel html-for="proposal.MII" v-if="isMIISelected" size="large"></FdpgLabel>
 
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
           <MiiVariableSelection v-if="isMIISelected" />
