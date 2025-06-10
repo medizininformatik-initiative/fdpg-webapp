@@ -3,7 +3,7 @@
   <el-card>
     <el-row>
       <el-col :sm="24">
-        <FdpgFormItem prop="cohorts">
+        <FdpgFormItem prop="userProject.cohorts.selectedCohorts">
           <div class="cohort-selection">
             <FdpgLabel html-for="proposal.cohortSelection" size="medium" />
 
@@ -93,10 +93,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance } from 'element-plus'
-import type { IFeasibility, ICohort } from '@/types/proposal.types'
+import type { IFeasibility, ICohort, ISelectedCohort } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
 import ManualCohortDialog from './ManualCohortDialog.vue'
@@ -107,7 +107,7 @@ const { showErrorMessage } = useNotifications()
 
 const props = defineProps({
   modelValue: {
-    type: Array as () => ICohort[],
+    type: Array as () => ISelectedCohort[],
     required: true,
     default: () => [],
   },
@@ -147,7 +147,7 @@ const closeAutomaticDialog = () => {
   isAutomaticDialogOpen.value = false
 }
 
-const handleAutomaticAdd = async (newCohort: ICohort) => {
+const handleAutomaticAdd = async (newCohort: ISelectedCohort) => {
   if (cohorts.value.length >= 49) {
     showErrorMessage(t('proposal.maxCohortsReached'))
     return
@@ -171,7 +171,7 @@ const closeManualDialog = () => {
   isManualDialogOpen.value = false
 }
 
-const handleDelete = (cohort: ICohort) => {
+const handleDelete = (cohort: ISelectedCohort) => {
   cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
 }
 </script>

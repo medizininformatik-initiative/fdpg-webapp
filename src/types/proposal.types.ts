@@ -263,6 +263,7 @@ export interface IUserProject {
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: IVariableSelectionData
   selectionOfCases: ISelectionOfCases
+  cohorts: ICohort
 }
 
 export interface IRequestedData extends WithIdAndIsDone {
@@ -513,7 +514,6 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
-  cohorts: ICohort[]
   dataSourceLocaleId: string
 
   // LOCATION Tasks --->
@@ -640,10 +640,14 @@ export type IDataSource = {
 export type IDataSourceDto = {
   [key in PlatformIdentifier]: IDataSource
 }
-export interface ICohort {
+
+export interface ISelectedCohort {
   feasibilityQueryId?: number
   label: string
   comment?: string
-  uploadId?: File
+  uploadId?: string
   isManualUpload?: boolean
+}
+export interface ICohort extends WithIdAndIsDone {
+  selectedCohorts: ISelectedCohort[]
 }

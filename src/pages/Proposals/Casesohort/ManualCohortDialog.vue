@@ -120,7 +120,7 @@ const add = async () => {
 
   const newCohort: ICohort = {
     feasibilityQueryId: undefined,
-    label: manualForm.name,
+    label: manualForm.name.trim(),
     comment: '',
     isManualUpload: true,
   }

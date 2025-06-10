@@ -110,7 +110,7 @@
           />
           <MiiCohortSelection
             v-if="isMIISelected"
-            v-model="proposalForm.cohorts"
+            v-model="proposalForm.userProject.cohorts.selectedCohorts"
             :review-mode="isReviewMode"
             :feasibilityForm="proposalForm.userProject.feasibility"
             @update:feasibility-form="
@@ -367,7 +367,7 @@ const stepFieldsMap = {
     'requestedData.desiredDataAmount',
   ],
   [CreatPrposalSteps.Casesohort]: [
-    'cohorts',
+    'userProject.cohorts',
     'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
@@ -443,18 +443,6 @@ const rules = ref<Record<string, any>>({
   participants: [
     /** Handled in component */
   ],
-  cohorts: [
-    {
-      validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
-        if (!value || value.length === 0) {
-          callback(new Error(t('general.requiredField')))
-        } else {
-          callback()
-        }
-      },
-      trigger: ['blur', 'change'],
-    },
-  ],
   projectUser: {
     projectUserType: [requiredValidationFunc('string')],
   },
@@ -494,6 +482,20 @@ const rules = ref<Record<string, any>>({
         /*
           handled in component
         */
+      },
+      cohorts: {
+        selectedCohorts: [
+          {
+            validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
+              if (!value || value.length === 0) {
+                callback(new Error(t('general.requiredField')))
+              } else {
+                callback()
+              }
+            },
+            trigger: ['blur', 'change'],
+          },
+        ],
       },
     },
     feasibility: {

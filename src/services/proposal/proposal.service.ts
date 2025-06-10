@@ -15,6 +15,8 @@ import type {
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
   FdpgChecklistItemUpdateResponse,
+  ICohort,
+  ISelectedCohort,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -277,5 +279,23 @@ export class ProposalService {
 
   async updateDeadlines(proposalId: string, deadlines: Deadlines): Promise<void> {
     await this.apiClient.put(`${this.basePath}/${proposalId}/deadlines`, deadlines)
+  }
+
+  async uploadManualCohort(id: string, newCohort: ICohort, file: File): Promise<IProposal> {
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('newCohort', JSON.stringify(newCohort))
+
+    const response = await this.apiClient.put(`${this.basePath}/${id}/cohort`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  }
+
+  async deleteCohort(id: string, cohortId: string): Promise<ISelectedCohort> {
+    const result = await this.apiClient.delete(`${this.basePath}/${id}/cohort/${cohortId}`)
+    return result.data
   }
 }

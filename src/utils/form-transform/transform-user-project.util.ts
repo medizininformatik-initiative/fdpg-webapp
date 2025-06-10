@@ -3,6 +3,7 @@ import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,
+  ICohort,
   IEthicVote,
   IFeasibility,
   IGeneralProjectInformation,
@@ -264,6 +265,14 @@ const transformVariableSelection = (variableSelection?: IVariableSelectionData):
   }
 }
 
+export const transformCohorts = (cohorts?: ICohort): ICohort => {
+  return {
+    selectedCohorts: cohorts?.selectedCohorts?.map((c) => ({ ...c })) ?? [],
+    _id: cohorts?._id,
+    isDone: cohorts?.isDone,
+  }
+}
+
 export const transformUserProject = (
   userProject?: DeepPartial<IUserProject>,
   transformToApi?: boolean,
@@ -287,5 +296,6 @@ export const transformUserProject = (
     ),
     variableSelection: transformVariableSelection(userProject?.variableSelection),
     selectionOfCases: transformSelectionOfCases(userProject?.selectionOfCases),
+    cohorts: transformCohorts(userProject?.cohorts),
   }
 }

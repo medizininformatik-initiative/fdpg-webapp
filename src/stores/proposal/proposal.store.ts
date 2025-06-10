@@ -13,6 +13,9 @@ import type {
   IReportCreate,
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
+  ICohort,
+  IUpload,
+  ISelectedCohort,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -26,6 +29,7 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
+import { transformCohorts } from '@/utils/form-transform/transform-user-project.util'
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -354,9 +358,29 @@ export const useProposalStore = defineStore('Proposal', {
     isCurrentUserParticipatingScientist(): boolean {
       return !!this.currentProposal?.isParticipatingScientist
     },
+
     async updateDeadlines(id: string, deadlines: Deadlines): Promise<void> {
       await this.apiService.updateDeadlines(id, deadlines)
       await this.setCurrentProposal(id)
+    },
+
+    async uploadManualCohort(proposalId: string, newCohort: ICohort, file: File): Promise<void> {
+      const result = await this.apiService.uploadManualCohort(proposalId, newCohort, file)
+
+      const insertedCohort = result.userProject.cohorts?.selectedCohorts?.at(-1)
+      const insertedUpload = result.uploads?.at?.(-1)
+
+      if (!!insertedCohort && this.currentProposal) {
+        this.currentProposal.userProject?.cohorts.selectedCohorts.push(insertedCohort as ISelectedCohort)
+      }
+
+      if (!!insertedUpload && this.currentProposal) {
+        this.currentProposal.uploads?.push(insertedUpload)
+      }
+    },
+
+    async deleteCohort(proposalId: string, cohortId: string): Promise<ISelectedCohort> {
+      return await this.apiService.deleteCohort(proposalId, cohortId)
     },
   },
 
