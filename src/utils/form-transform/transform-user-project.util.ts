@@ -276,26 +276,6 @@ export const mapSelectedCohorts = (cohort?: Partial<ICohort>): Partial<ICohort> 
   }
 }
 
-export const mapSelectedCohorts = (cohort?: Partial<ICohort>): Partial<ICohort> => {
-  return {
-    _id: cohort?._id ?? NEW_ID,
-    feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
-    label: transformEmptyStringToUndefined(cohort?.label),
-    comment: transformEmptyStringToUndefined(cohort?.comment),
-    uploadId: cohort?.uploadId ?? undefined,
-  }
-}
-
-export const mapSelectedCohorts = (cohort?: Partial<ICohort>): Partial<ICohort> => {
-  return {
-    _id: cohort?._id ?? NEW_ID,
-    feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
-    label: transformEmptyStringToUndefined(cohort?.label),
-    comment: transformEmptyStringToUndefined(cohort?.comment),
-    uploadId: cohort?.uploadId ?? undefined,
-  }
-}
-
 export const transformUserProject = (
   userProject?: DeepPartial<IUserProject>,
   transformToApi?: boolean,
