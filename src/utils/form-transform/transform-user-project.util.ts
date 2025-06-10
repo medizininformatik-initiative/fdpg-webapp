@@ -248,6 +248,7 @@ const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>
       selectedCases: selectionOfCases?.difeSelectionOfCases?.selectedCases ?? [],
       otherExplanation: transformEmptyStringToUndefined(selectionOfCases?.difeSelectionOfCases?.otherExplanation),
     },
+    _id: selectionOfCases?._id,
     isDone: selectionOfCases?.isDone ?? false,
   }
 }
@@ -258,6 +259,7 @@ const transformVariableSelection = (variableSelection?: IVariableSelectionData):
       typeOfUse: variableSelection?.DIFE?.typeOfUse,
       typeOfUseExplanation: variableSelection?.DIFE?.typeOfUseExplanation,
     },
+    _id: variableSelection?._id,
     isDone: variableSelection?.isDone ?? false,
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <FdpgLabel :html-for="'proposal.DIFE'" :size="'large'" :info="$t('proposal.difeSelectionOfCases_Info')" />
-  <el-card>
+  <el-card class="form-group form-group-mb-40">
     <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.selectedCases">
       <div class="dife-selection-of-variables">
         <FdpgLabel html-for="proposal.difeSelectionOfCasesHeader" size="medium" />
