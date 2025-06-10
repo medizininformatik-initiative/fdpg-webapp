@@ -4,6 +4,7 @@ import type {
   IDefinitionSectionObject,
   IDefinitionCardTerm,
   DefinitionCards,
+  DefinitionSection,
 } from '@/components/Shared/definition-card.types'
 import { MII_LOCATIONS } from '@/constants'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
@@ -43,7 +44,7 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
 
 const feasibilityCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'feasibility'> => ({
   key: 'feasibility',
-  cardLabel: 'proposal.feasibility',
+  cardLabel: null,
   shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
     {
@@ -212,7 +213,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
   cardLabel: 'proposal.typeOfUse',
   terms: [
     {
-      label: 'proposal.typeOfUse', // MII
+      label: 'proposal.MIItypeOfUse', // MII
       size: 24,
       shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
       definitions: [[{ key: 'usage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
@@ -265,7 +266,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
       definitions: [[{ key: 'targetFormat', subkeys: ['targetFormatOther'] }]],
     },
     {
-      label: 'proposal.typeOfUse', // DIFE
+      label: 'proposal.DIFEtypeOfUse', // DIFE
       size: 24,
       shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
       definitions: [[{ key: 'difeUsage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
@@ -354,11 +355,11 @@ const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const cohortsCard: IDefinitionCardArray<IUserProject, 'cohorts', 'selectedCohorts'> = {
+const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   key: 'cohorts',
   cardLabel: 'proposal.cohortSelection',
   loopOn: 'selectedCohorts',
-  shouldHide: false,
   terms: [
     {
       label: 'proposal.cohortSelection',
@@ -371,7 +372,7 @@ const cohortsCard: IDefinitionCardArray<IUserProject, 'cohorts', 'selectedCohort
       definitions: [[{ key: 'feasibilityQueryId' }]],
     },
   ],
-}
+})
 
 const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'selectionOfCases',
@@ -410,9 +411,9 @@ const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
 
 const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   generalProjectInformationCard,
+  cohortsCard(dataSources),
   feasibilityCard(dataSources),
   variableSelectionCard(dataSources),
-  cohortsCard,
   selectionOfCasesCard(dataSources),
   projectDetailsCard(dataSources),
   ethicVoteCard(dataSources),
@@ -425,7 +426,9 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   biosamplesCard,
 ]
 
-export const userProjectSection = (dataSources: PlatformIdentifier[] = []) => {
+export const userProjectSection = (
+  dataSources: PlatformIdentifier[] = [],
+): DefinitionSection<IProposal, 'userProject'> => {
   return {
     sectionLabel: 'proposal.informationAboutTheUserProject',
     kind: 'object',

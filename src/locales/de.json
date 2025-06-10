@@ -708,7 +708,9 @@
     "SNOMED": "SNOMED",
     "SPREC": "SPREC",
     "CSV": "CSV",
-    "FHIR": "FHIR"
+    "FHIR": "FHIR",
+    "MIItypeOfUse": "MII Art der Nutzung",
+    "DIFEtypeOfUse": "DIFE Art der Nutzung"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

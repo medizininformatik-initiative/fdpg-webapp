@@ -1,10 +1,10 @@
 <template>
   <section class="review-proposal">
     <div class="lead">
-      <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
+      <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
       <div>
         <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{
-          $t('proposal.projectDetails')
+          t('proposal.projectDetails')
         }}</el-button>
       </div>
     </div>
@@ -51,7 +51,7 @@
           :section-values="getSectionObjectProposalData(section, 'isDone', proposalData)"
           :section-ids="getSectionObjectProposalData(section, '_id', proposalData)"
           headline="h2"
-          :title="$t(section.sectionLabel)"
+          :title="t(section.sectionLabel)"
         />
 
         <section
@@ -114,6 +114,7 @@ import { projectUserSection } from '@/constants/print-structure/project-user-sec
 import useNotifications from '@/composables/use-notifications'
 import { ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
 
@@ -143,6 +144,8 @@ const { uploadsForType } = useUpload(proposalId, [
 ])
 
 const { showErrorMessage } = useNotifications()
+
+const { t } = useI18n()
 
 const openDetails = () => {
   router.push({
@@ -257,6 +260,12 @@ onMounted(async () => {
     .title {
       margin: 0;
       font-size: 32px;
+    }
+  }
+
+  .review-label {
+    .label-checkbox {
+      margin-left: auto;
     }
   }
 
