@@ -151,7 +151,7 @@ export interface IDifeSelectionOfCases {
   selectedCases: DifeSelectionOfCasesEntries[]
   otherExplanation?: string
 }
-export interface ISelectionOfCases {
+export interface ISelectionOfCases extends WithIdAndIsDone {
   difeSelectionOfCases: IDifeSelectionOfCases
 }
 
@@ -261,7 +261,7 @@ export interface IUserProject {
   addressees: IAddressees
   typeOfUse: ITypeOfUse
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
-  variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>
+  variableSelection?: IVariableSelectionData
   selectionOfCases: ISelectionOfCases
 }
 
@@ -272,7 +272,9 @@ export interface IRequestedData extends WithIdAndIsDone {
   desiredControlDataAmount?: number
 }
 
-export interface IVariableSelectionData {}
+export interface IVariableSelectionData extends WithIdAndIsDone {
+  DIFE?: IDifeVariableSelectionData
+}
 
 export interface IDifeVariableSelectionData {
   typeOfUse?: DifeTypeOfUse
