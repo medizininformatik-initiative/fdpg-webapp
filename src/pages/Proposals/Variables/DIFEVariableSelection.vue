@@ -1,11 +1,11 @@
 <template>
-  <template v-if="isDifeSelected && difeSet">
+  <template v-if="difeSet">
     <FdpgLabel html-for="proposal.DIFE" size="large"></FdpgLabel>
     <el-card class="form-group">
       <el-row>
         <el-col :sm="24">
           <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUse">
-            <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUse') }}</FdpgLabel>
+            <FdpgLabel>{{ t('proposal.userProjectVariableSelectionDifeTypeOfUse') }}</FdpgLabel>
             <FdpgSelect
               v-model="variableSelectionDataForm.DIFE.typeOfUse"
               placeholder="proposal.difeTypeOfUseSelectionPlaceholder"
@@ -17,7 +17,7 @@
 
         <el-col :sm="24">
           <FdpgFormItem class="form-label-mb-3" prop="userProject.variableSelection.DIFE.typeOfUseExplanation">
-            <FdpgLabel>{{ $t('proposal.userProjectVariableSelectionDifeTypeOfUseExplanation') }}</FdpgLabel>
+            <FdpgLabel>{{ t('proposal.userProjectVariableSelectionDifeTypeOfUseExplanation') }}</FdpgLabel>
             <FdpgTextEditor
               v-model="variableSelectionDataForm.DIFE.typeOfUseExplanation"
               :disabled="reviewMode"
@@ -26,17 +26,6 @@
               field-path="userProject.variableSelection.DIFE.typeOfUseExplanation"
             />
           </FdpgFormItem>
-        </el-col>
-      </el-row>
-    </el-card>
-  </template>
-
-  <template v-if="isMiiSelected">
-    <FdpgLabel html-for="proposal.MII" size="large"></FdpgLabel>
-    <el-card class="form-group">
-      <el-row>
-        <el-col :sm="24">
-          <p>{{ t('proposal.informationOnMiiSelectionForVariableSelectionStepBody') }}</p>
         </el-col>
       </el-row>
     </el-card>
@@ -85,9 +74,6 @@ const props = defineProps({
 
 const { t } = useI18n()
 
-const isMiiSelected = computed(() => props.platform.includes(PlatformIdentifier.Mii))
-const isDifeSelected = computed(() => props.platform.includes(PlatformIdentifier.DIFE))
-
 const difeTypeOfUseOptions = computed(() =>
   Object.keys(DifeTypeOfUse).map((value) => ({ label: t(`proposal.difeTypeOfUse_${value}`), value })),
 )
@@ -103,22 +89,17 @@ watch(
     if (!variableSelectionDataForm.value) {
       variableSelectionDataForm.value = {}
     }
+    const previousValue: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE || {
+      typeOfUse: undefined,
+      typeOfUseExplanation: undefined,
+    }
 
-    if (isDifeSelected.value) {
-      const previousValue: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE || {
-        typeOfUse: undefined,
-        typeOfUseExplanation: undefined,
-      }
-
-      variableSelectionDataForm.value = {
-        ...variableSelectionDataForm.value,
-        [PlatformIdentifier.DIFE]: {
-          typeOfUse: previousValue.typeOfUse,
-          typeOfUseExplanation: previousValue.typeOfUseExplanation,
-        },
-      }
-    } else {
-      variableSelectionDataForm.value = { ...variableSelectionDataForm.value, DIFE: undefined }
+    variableSelectionDataForm.value = {
+      ...variableSelectionDataForm.value,
+      [PlatformIdentifier.DIFE]: {
+        typeOfUse: previousValue.typeOfUse,
+        typeOfUseExplanation: previousValue.typeOfUseExplanation,
+      },
     }
   },
 )
@@ -128,16 +109,14 @@ onMounted(() => {
     variableSelectionDataForm.value = {}
   }
 
-  if (isDifeSelected.value) {
-    const defaultDife: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE ?? {
-      typeOfUse: undefined,
-      typeOfUseExplanation: undefined,
-    }
+  const defaultDife: IDifeVariableSelectionData = variableSelectionDataForm?.value?.DIFE ?? {
+    typeOfUse: undefined,
+    typeOfUseExplanation: undefined,
+  }
 
-    variableSelectionDataForm.value.DIFE = {
-      typeOfUse: defaultDife.typeOfUse,
-      typeOfUseExplanation: defaultDife.typeOfUseExplanation,
-    }
+  variableSelectionDataForm.value.DIFE = {
+    typeOfUse: defaultDife.typeOfUse,
+    typeOfUseExplanation: defaultDife.typeOfUseExplanation,
   }
 })
 </script>
