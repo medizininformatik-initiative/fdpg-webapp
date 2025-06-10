@@ -72,6 +72,7 @@
                 :data-testId="'biosample.type__radio__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
                 size="small"
+                class="biosample-radio-group"
               >
                 <FdpgRadio
                   v-for="(option, optionIndex) in biosamlpeTypeOptions"
@@ -102,20 +103,6 @@
           </el-col>
           <el-col :sm="24">
             <FdpgFormItem
-              :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].count`"
-              :rules="biosampleRules.count"
-            >
-              <FdpgLabel html-for="proposal.biosampleCount" required />
-              <FdpgInput
-                v-model="biosample.count"
-                :data-testId="'biosample.count__' + index"
-                placeholder="proposal.biosampleCountPlaceholder"
-                :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-              />
-            </FdpgFormItem>
-          </el-col>
-          <el-col :sm="24">
-            <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].requirements`"
               :rules="biosampleRules.requirements"
             >
@@ -124,6 +111,18 @@
                 v-model="biosample.requirements"
                 :data-testId="'biosample.requirements__' + index"
                 placeholder="proposal.biosampleMaterialRequirementsPlaceholder"
+                :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
+              />
+            </FdpgFormItem>
+            <FdpgFormItem
+              :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].count`"
+              :rules="biosampleRules.count"
+            >
+              <FdpgLabel html-for="proposal.biosampleCount" required />
+              <FdpgInput
+                v-model="biosample.count"
+                :data-testId="'biosample.count__' + index"
+                placeholder="proposal.biosampleCountPlaceholder"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
               />
             </FdpgFormItem>
@@ -212,9 +211,8 @@
                 :data-testId="'biosample.externalLabTransferDetails__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
                 :placeholder="$t('proposal.externalLabTransferDetailsPlaceholder')"
-                size="medium"
                 :formRef="formRef"
-                :file-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransferDetails`"
+                :field-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransferDetails`"
               />
             </FdpgFormItem>
           </el-col>
@@ -297,13 +295,11 @@ if (
 const biosampleRules = {
   type: [requiredValidationFunc('string')],
   sampleCode: [requiredValidationFunc('array')],
-  typeDetails: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-  count: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
-  requirements: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
+  typeDetails: [requiredValidationFunc('string'), maxLengthValidationFunc(1000)],
+  count: [requiredValidationFunc('string'), maxLengthValidationFunc(1000)],
+  requirements: [requiredValidationFunc('string'), maxLengthValidationFunc(1000)],
   method: [requiredValidationFunc('string'), maxLengthValidationFunc(3000)],
-  externalLabTransferDetails: [maxLengthValidationFunc(10000)],
-  externalLabTransfer: [requiredValidationFunc('boolean')],
-  optionalBiosample: [requiredValidationFunc('boolean')],
+  externalLabTransferDetails: [maxLengthValidationFunc(1000)],
 }
 
 const biosampleSectionActiveKey = ref(0)
@@ -345,3 +341,10 @@ onBeforeUnmount(() => {
   informationOnRequestedBioSamplesForm.value = undefined
 })
 </script>
+<style lang="scss" scoped>
+.biosample-radio-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+</style>
