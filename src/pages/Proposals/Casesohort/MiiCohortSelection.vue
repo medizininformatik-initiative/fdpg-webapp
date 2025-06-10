@@ -55,7 +55,12 @@
             />
 
             <!-- Manual Cohort Dialog -->
-            <ManualCohortDialog v-model="isManualDialogOpen" @close="closeManualDialog" />
+            <ManualCohortDialog
+              v-model="isManualDialogOpen"
+              @close="closeManualDialog"
+              @add="handleManualAdd"
+              :form-ref="formRef"
+            />
           </div>
         </FdpgFormItem>
       </el-col>
@@ -149,6 +154,10 @@ const handleAutomaticAdd = async (newCohort: ICohort) => {
   }
   cohorts.value = [...cohorts.value, newCohort]
   closeAutomaticDialog()
+}
+
+const handleManualAdd = async (newCohort: ICohort, file: File) => {
+  console.log({ newCohort, file })
 }
 
 // Manual cohort dialog

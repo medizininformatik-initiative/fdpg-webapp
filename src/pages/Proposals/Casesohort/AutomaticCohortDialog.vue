@@ -79,6 +79,7 @@ const add = () => {
     feasibilityQueryId: selectedQuery.value.feasibilityQueryId,
     label: selectedQuery.value.label,
     comment: selectedQuery.value.comment,
+    isManualUpload: false,
   }
   emit('add', newCohort)
 }
