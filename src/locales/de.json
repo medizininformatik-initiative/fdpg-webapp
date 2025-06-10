@@ -600,7 +600,7 @@
     "distributedAnalysisDockerR": "Docker/R scripts",
     "distributedAnalysisDataSHIELD": "DataSHIELD",
     "distributedAnalysisOther": "Andere",
-    "projectProperties": "Projekteigenschaften",
+    "projectProperties": "Projekteigenschaften({checkedCount}/{optionsCount})",
     "NonMII-Project": "Nicht-MII Institution Antragsteller",
     "NonGDNG-Project": "Nicht-GDNG Institution Antragsteller",
     "HealthData-Project": "Krankenkassendaten",
