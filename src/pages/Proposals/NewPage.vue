@@ -610,15 +610,15 @@ const getFormValues = () => {
     delete formData.userProject?.resourceAndRecontact
     delete formData.userProject?.ethicVote
     delete formData.userProject?.informationOnRequestedBioSamples
-    delete formData.cohorts
+    delete formData.userProject?.cohorts
     delete formData.userProject?.feasibility
     delete formData.userProject?.typeOfUse?.usage
     delete formData.userProject?.typeOfUse?.pseudonymizationInfo
     delete formData.userProject?.typeOfUse?.pseudonymizationInfoTexts
     delete formData.userProject?.propertyRights
-    delete formData.userProject?.projectDetails.simpleProjectDescription
-    delete formData.userProject?.projectDetails.department
-    delete formData.userProject?.projectDetails.executiveSummaryUac
+    delete formData.userProject?.projectDetails?.simpleProjectDescription
+    delete formData.userProject?.projectDetails?.department
+    delete formData.userProject?.projectDetails?.executiveSummaryUac
   }
 
   // If DIFE is not selected, remove DIFE-specific fields
