@@ -5,17 +5,17 @@
       <div class="dife-selection-of-variables">
         <FdpgLabel html-for="proposal.difeSelectionOfCasesHeader" size="medium" />
 
-        <div class="flex-table">
+        <el-checkbox-group class="flex-table" v-model="difeSelectionOfCasesForm.selectedCases" :disabled="reviewMode">
           <div v-for="(entry, idx) in entries" :key="idx" class="cell">
-            <el-checkbox
-              class="fdpg-checkbox"
-              :model-value="selected.has(entry)"
+            <FdpgCheckbox
+              :id="`proposal.difeSelectionOfCases_${entry}`"
               :disabled="reviewMode"
-              @change="() => onClickEntry(entry)"
+              :label="`proposal.difeSelectionOfCases_${entry}`"
+              :value="entry"
+              size="small"
             />
-            {{ $t(`proposal.difeSelectionOfCases_${entry}`) }}
           </div>
-        </div>
+        </el-checkbox-group>
 
         <div v-if="isOtherSelected" class="other-explanation">
           <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation">
@@ -57,21 +57,9 @@ const { t } = useI18n()
 
 const entries = ref(Object.values(DifeSelectionOfCasesEntries))
 const selected: Ref<Set<DifeSelectionOfCasesEntries>> = ref(new Set<DifeSelectionOfCasesEntries>())
-const isOtherSelected = computed(() => selected.value.has(DifeSelectionOfCasesEntries.Other))
-
-const onClickEntry = (entry: DifeSelectionOfCasesEntries) => {
-  const next = new Set(selected.value)
-  if (next.has(entry)) {
-    next.delete(entry)
-  } else {
-    next.add(entry)
-  }
-  selected.value = next
-  difeSelectionOfCasesForm.value = {
-    ...difeSelectionOfCasesForm.value,
-    selectedCases: Array.from(next),
-  }
-}
+const isOtherSelected = computed(() =>
+  difeSelectionOfCasesForm.value.selectedCases.includes(DifeSelectionOfCasesEntries.Other),
+)
 
 onMounted(() => {
   selected.value = new Set(props.modelValue.selectedCases ?? [])

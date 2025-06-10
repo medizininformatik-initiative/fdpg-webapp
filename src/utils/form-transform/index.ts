@@ -136,5 +136,6 @@ export const transformForm = (
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
     cohorts: form?.cohorts ?? [],
+    dataSourceLocaleId: form?.dataSourceLocaleId,
   }
 }

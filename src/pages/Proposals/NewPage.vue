@@ -362,6 +362,8 @@ const stepFieldsMap = {
     'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
+    'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
+    'userProject.selectionOfCases.difeSelectionOfCases.otherExplanation',
   ],
 }
 
@@ -535,7 +537,7 @@ const rules = ref<Record<string, any>>({
     },
     selectionOfCases: {
       difeSelectionOfCases: {
-        selectedEntries: requiredValidationFunc('array'),
+        selectedCases: requiredValidationFunc('array'),
         otherExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       },
     },
@@ -587,7 +589,39 @@ const openDetails = () => {
   }
 }
 const getFormValues = () => {
-  return transformForm(proposalForm.value, true)
+  const formData = transformForm(proposalForm.value, true)
+
+  // If MII is not selected, remove MII-specific fields
+  if (!isMIISelected.value) {
+    // Remove MII-specific fields
+    delete formData.requestedData
+    delete formData.userProject?.addressees
+    delete formData.userProject?.resourceAndRecontact
+    delete formData.userProject?.ethicVote
+    delete formData.userProject?.informationOnRequestedBioSamples
+    delete formData.cohorts
+    delete formData.userProject?.feasibility
+    delete formData.userProject?.typeOfUse?.usage
+    delete formData.userProject?.typeOfUse?.pseudonymizationInfo
+    delete formData.userProject?.typeOfUse?.pseudonymizationInfoTexts
+    delete formData.userProject?.propertyRights
+    delete formData.userProject?.projectDetails.simpleProjectDescription
+    delete formData.userProject?.projectDetails.department
+    delete formData.userProject?.projectDetails.executiveSummaryUac
+  }
+
+  // If DIFE is not selected, remove DIFE-specific fields
+  if (!isDifeSelected.value) {
+    // Remove DIFE-specific fields
+    if (formData.userProject?.variableSelection) {
+      delete formData.userProject.variableSelection.DIFE
+    }
+    if (formData.userProject?.selectionOfCases) {
+      delete formData.userProject.selectionOfCases.difeSelectionOfCases
+    }
+  }
+
+  return formData
 }
 
 const raiseErrors = (invalidFields: ValidateFieldsError) => {
