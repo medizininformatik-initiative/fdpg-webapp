@@ -69,6 +69,9 @@
 
           <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
           <MiiVariableSelection v-if="isMIISelected" />
+
+          <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
+
           <ProjectAddresses
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
@@ -126,6 +129,8 @@
               }
             "
           />
+
+          <TaskViewer :object-id="proposalForm.userProject?.selectionOfCases?._id" />
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.DataUsage">

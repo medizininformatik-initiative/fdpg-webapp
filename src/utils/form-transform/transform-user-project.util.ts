@@ -3,7 +3,6 @@ import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,
-  IDifeVariableSelectionData,
   IEthicVote,
   IFeasibility,
   IGeneralProjectInformation,
@@ -22,7 +21,6 @@ import { ProposalTypeOfUse } from '@/types/proposal.types'
 import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.util'
 import { PseudonymizationInfoOptions } from '@/types/PseudonymizationInfo.enum'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import TypeOfUse from '@/pages/Proposals/DataUsage/TypeOfUse.vue'
 import { BiosampleCode } from '@/types/proposal.types'
 const NEW_ID = 'NEW_ID'
 
@@ -250,17 +248,19 @@ const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>
       selectedCases: selectionOfCases?.difeSelectionOfCases?.selectedCases ?? [],
       otherExplanation: transformEmptyStringToUndefined(selectionOfCases?.difeSelectionOfCases?.otherExplanation),
     },
+    _id: selectionOfCases?._id,
+    isDone: selectionOfCases?.isDone ?? false,
   }
 }
 
-const transformVariableSelection = (
-  variableSelection?: Partial<Record<PlatformIdentifier, IVariableSelectionData | IDifeVariableSelectionData>>,
-) => {
+const transformVariableSelection = (variableSelection?: IVariableSelectionData): IVariableSelectionData => {
   return {
     [PlatformIdentifier.DIFE]: {
       typeOfUse: variableSelection?.DIFE?.typeOfUse,
       typeOfUseExplanation: variableSelection?.DIFE?.typeOfUseExplanation,
     },
+    _id: variableSelection?._id,
+    isDone: variableSelection?.isDone ?? false,
   }
 }
 
