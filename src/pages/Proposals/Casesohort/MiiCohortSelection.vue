@@ -223,14 +223,12 @@ const handleDelete = async (cohort: ISelectedCohort) => {
   const _proposalId = proposalId.value
 
   try {
-    if (cohort.isManualUpload && _proposalId && cohort._id) {
+    if (_proposalId && cohort._id && cohort.uploadId) {
       await proposalStore.deleteCohort(_proposalId, cohort._id)
-      if (cohort.uploadId) {
-        updateFiles(
-          { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
-          'remove',
-        )
-      }
+      updateFiles(
+        { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
+        'remove',
+      )
     }
   } catch (e) {
     showErrorMessage()

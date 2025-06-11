@@ -11,7 +11,7 @@
           :accept="'.json'"
           :is-loading="false"
           :is-disabled="false"
-          :hide-file-list="false"
+          :hide-file-list="true"
           :file-list="uploadsForType"
           @change="handleUpload"
         >
