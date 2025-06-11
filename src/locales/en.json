@@ -55,7 +55,12 @@
     "title": "Title",
     "additionalInformation": "Additional information",
     "selectAll": "Select all",
-    "editor": "Editor"
+    "editor": "Editor",
+    "inputName": "Input Name",
+    "fileSelect": "Please select a file",
+    "notEndWithJson": "Name should not include “.json”",
+    "invalidCharacters": "Name contains invalid character",
+    "nameMissing": "Name is required"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -697,7 +702,7 @@
     "biosampleType_TISSUE": "Tissue sample (e.g. liver, colon, lung parenchyma), fixation type (e.g. paraffin, fresh frozen), type of collection (e.g. autopsy, biopsy)",
     "biosampleType_DRIVATIVE": "Derivatives/processed samples (specification of derivatives (e.g. DNA, RNA, mononuclear cells, tissue microarray))",
     "optionalBiosample": "The project should also be carried out if this biosample is not available",
-    "sampleCode": "Probecode",
+    "sampleCode": "Sample code",
     "biosampleCodeTextPlaceholder": "CODE",
     "externalLabTransfer": "Samples will be forwarded to an external laboratory (please specify)",
     "biosampleMethod": "Analysis design and methods (e.g., CRP with ELISA; whole genome sequencing)",
@@ -710,7 +715,10 @@
     "CSV": "CSV",
     "FHIR": "FHIR",
     "MIItypeOfUse": "MII type of use",
-    "DIFEtypeOfUse": "DIFE type of use"
+    "DIFEtypeOfUse": "DIFE type of use",
+    "saveProposalBeforeUploadingCohorts": "Please save the proposal beforehand at least once, after that manual uploads will be enabled.",
+    "cohortFile": "Cohort File",
+    "cohortName": "Cohort Name"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

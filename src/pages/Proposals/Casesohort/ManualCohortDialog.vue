@@ -3,7 +3,7 @@
     <el-form v-if="!!proposalId" :model="manualForm" ref="manualFormRef" :rules="rules">
       <FdpgFormItem prop="name">
         <FdpgLabel html-for="proposal.cohortName" required />
-        <FdpgInput v-model="manualForm.name" />
+        <FdpgInput v-model="manualForm.name" :placeholder="'general.inputName'" />
       </FdpgFormItem>
       <FdpgFormItem prop="file">
         <FdpgLabel html-for="proposal.cohortFile" required />
@@ -28,7 +28,7 @@
         <div v>{{ manualForm.file.name }}</div>
       </div>
     </el-form>
-    <div v-else>Please save the proposal beforehand at least once, after that manual uploads will be enabled.</div>
+    <div v-else>{{ t('proposal.saveProposalBeforeUploadingCohorts') }}</div>
     <template #footer>
       <span>
         <el-button link @click="close">
@@ -88,13 +88,13 @@ const handleUpload = async (file: UploadFile) => {
 const validateName = (rule: any, value: string, callback: (err?: Error) => void) => {
   const trimmed = (value || '').trim()
   if (!trimmed) {
-    return callback(new Error('Name is required'))
+    return callback(new Error(t('general.nameMissing')))
   }
   if (/[\\\/:*?"<>|]/.test(trimmed)) {
-    return callback(new Error('Name contains invalid characters'))
+    return callback(new Error(t('general.invalidCharacters')))
   }
   if (trimmed.toLowerCase().endsWith('.json')) {
-    return callback(new Error('Name should not include “.json”'))
+    return callback(new Error(t('general.notEndWithJson')))
   }
   callback()
 }
@@ -104,7 +104,7 @@ const rules = {
   file: [
     {
       required: true,
-      message: 'Please select a file',
+      message: t('general.fileSelect'),
       trigger: 'change',
     },
   ],
