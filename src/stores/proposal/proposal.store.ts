@@ -364,19 +364,14 @@ export const useProposalStore = defineStore('Proposal', {
       await this.setCurrentProposal(id)
     },
 
-    async uploadManualCohort(proposalId: string, newCohort: ICohort, file: File): Promise<void> {
-      const result = await this.apiService.uploadManualCohort(proposalId, newCohort, file)
+    async uploadManualCohort(
+      proposalId: string,
+      newCohort: ICohort,
+      file: File,
+    ): Promise<{ insertedCohort?: ISelectedCohort; uploadedFile?: IUpload }> {
+      const { insertedCohort, uploadedFile } = await this.apiService.uploadManualCohort(proposalId, newCohort, file)
 
-      const insertedCohort = result.userProject.cohorts?.selectedCohorts?.at(-1)
-      const insertedUpload = result.uploads?.at?.(-1)
-
-      if (!!insertedCohort && this.currentProposal) {
-        this.currentProposal.userProject?.cohorts.selectedCohorts.push(insertedCohort as ISelectedCohort)
-      }
-
-      if (!!insertedUpload && this.currentProposal) {
-        this.currentProposal.uploads?.push(insertedUpload)
-      }
+      return { insertedCohort, uploadedFile }
     },
 
     async deleteCohort(proposalId: string, cohortId: string): Promise<ISelectedCohort> {

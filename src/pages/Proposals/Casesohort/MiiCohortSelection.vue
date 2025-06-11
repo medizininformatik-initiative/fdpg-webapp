@@ -93,14 +93,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, type PropType } from 'vue'
+import { computed, ref, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance } from 'element-plus'
-import type { IFeasibility, ICohort, ISelectedCohort } from '@/types/proposal.types'
+import type { IFeasibility, ICohort, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { UseCaseUpload } from '@/types/upload.types'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -124,17 +126,25 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  uploads: {
+    type: Array as () => IUpload[],
+    default: () => [],
+  },
   reviewMode: {
     type: Boolean,
     default: false,
   },
 })
 
-const emit = defineEmits(['update:modelValue', 'update:feasibilityForm', 'update:requestedDataForm'])
+const proposalStore = useProposalStore()
+const proposalId = computed(() => proposalStore.currentProposal?._id)
+
+const emit = defineEmits(['update:modelValue', 'update:feasibilityForm', 'update:requestedDataForm', 'update:uploads'])
 
 const cohorts = useVModel(props, 'modelValue', emit)
 const feasibilityForm = useVModel(props, 'feasibilityForm', emit)
 const requestedDataForm = useVModel(props, 'requestedDataForm', emit)
+const uploads = useVModel(props, 'uploads', emit)
 // Automatic cohort dialog
 const isAutomaticDialogOpen = ref(false)
 const formRef = ref<FormInstance>()
@@ -147,17 +157,44 @@ const closeAutomaticDialog = () => {
   isAutomaticDialogOpen.value = false
 }
 
-const handleAutomaticAdd = async (newCohort: ISelectedCohort) => {
+const addCohort = (newCohort: ISelectedCohort) => {
   if (cohorts.value.length >= 49) {
     showErrorMessage(t('proposal.maxCohortsReached'))
     return
   }
   cohorts.value = [...cohorts.value, newCohort]
+}
+
+const updateFiles = (file: IUpload, mode: 'add' | 'remove') => {
+  if (mode === 'add') {
+    uploads.value.push(file)
+  } else {
+    uploads.value = uploads.value.filter((f) => f._id !== file._id)
+  }
+}
+
+const handleAutomaticAdd = (newCohort: ISelectedCohort) => {
+  addCohort(newCohort)
   closeAutomaticDialog()
 }
 
 const handleManualAdd = async (newCohort: ICohort, file: File) => {
-  console.log({ newCohort, file })
+  try {
+    if (proposalId.value) {
+      const { insertedCohort, uploadedFile } = await proposalStore.uploadManualCohort(proposalId.value, newCohort, file)
+      if (insertedCohort) {
+        addCohort(insertedCohort)
+      }
+
+      if (uploadedFile) {
+        updateFiles(uploadedFile, 'add')
+      }
+
+      closeManualDialog()
+    }
+  } catch (e) {
+    showErrorMessage()
+  }
 }
 
 // Manual cohort dialog
@@ -171,8 +208,24 @@ const closeManualDialog = () => {
   isManualDialogOpen.value = false
 }
 
-const handleDelete = (cohort: ISelectedCohort) => {
-  cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
+const handleDelete = async (cohort: ISelectedCohort) => {
+  if (!!cohort._id) {
+    cohorts.value = cohorts.value.filter((c) => c._id !== cohort._id)
+  } else if (!!cohort.feasibilityQueryId) {
+    cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
+  } else {
+    showErrorMessage()
+  }
+
+  if (cohort.isManualUpload && proposalId.value && cohort._id) {
+    await proposalStore.deleteCohort(proposalId.value, cohort._id)
+    if (cohort.uploadId) {
+      updateFiles(
+        { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
+        'remove',
+      )
+    }
+  }
 }
 </script>
 

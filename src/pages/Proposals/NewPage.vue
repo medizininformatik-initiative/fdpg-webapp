@@ -113,6 +113,7 @@
             v-model="proposalForm.userProject.cohorts.selectedCohorts"
             :review-mode="isReviewMode"
             :feasibilityForm="proposalForm.userProject.feasibility"
+            :uploads="proposalForm.uploads"
             @update:feasibility-form="
               (value) => {
                 if (proposalForm?.userProject) {

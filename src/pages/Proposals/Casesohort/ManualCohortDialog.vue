@@ -55,7 +55,8 @@ import useUpload from '@/composables/use-upload'
 import { UseCaseUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import type { ICohort } from '@/types/proposal.types'
+import type { ISelectedCohort } from '@/types/proposal.types'
+
 const { t } = useI18n()
 const props = defineProps({
   modelValue: {
@@ -118,7 +119,7 @@ const add = async () => {
     return false
   }
 
-  const newCohort: ICohort = {
+  const newCohort: ISelectedCohort = {
     feasibilityQueryId: undefined,
     label: manualForm.name.trim(),
     comment: '',
@@ -126,7 +127,6 @@ const add = async () => {
   }
 
   emit('add', newCohort, manualForm.file)
-  close()
 }
 
 const close = () => {

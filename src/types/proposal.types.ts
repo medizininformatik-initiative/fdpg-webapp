@@ -642,6 +642,7 @@ export type IDataSourceDto = {
 }
 
 export interface ISelectedCohort {
+  _id?: string
   feasibilityQueryId?: number
   label: string
   comment?: string

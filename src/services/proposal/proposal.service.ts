@@ -281,7 +281,11 @@ export class ProposalService {
     await this.apiClient.put(`${this.basePath}/${proposalId}/deadlines`, deadlines)
   }
 
-  async uploadManualCohort(id: string, newCohort: ICohort, file: File): Promise<IProposal> {
+  async uploadManualCohort(
+    id: string,
+    newCohort: ICohort,
+    file: File,
+  ): Promise<{ insertedCohort?: ISelectedCohort; uploadedFile?: IUpload }> {
     const formData = new FormData()
     formData.append('file', file as Blob)
     formData.append('newCohort', JSON.stringify(newCohort))
