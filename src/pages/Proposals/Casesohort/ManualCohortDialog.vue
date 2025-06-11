@@ -1,6 +1,6 @@
 <template>
   <FdpgDialog v-model="isManualDialogOpen" :title="t('proposal.addCohortManual')" width="50%">
-    <el-form v-if="!!proposalId" :model="manualForm" ref="manualFormRef" :rules="rules">
+    <el-form v-if="!!proposalId" :model="manualForm" ref="manualFormRef" :rules="rules" class="dialog-form">
       <FdpgFormItem prop="name">
         <FdpgLabel html-for="proposal.cohortName" required />
         <FdpgInput v-model="manualForm.name" :placeholder="'general.inputName'" />
@@ -148,6 +148,12 @@ const close = () => {
 </script>
 
 <style scoped>
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+}
 .display-uploaded {
   display: flex;
   flex-direction: row;
