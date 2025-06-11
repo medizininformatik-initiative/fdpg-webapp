@@ -271,14 +271,9 @@ export interface IUserProject {
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: IVariableSelectionData
   selectionOfCases: ISelectionOfCases
-  cohorts: ICohorts
+  cohorts: ICohort
 }
 
-export interface ICohorts extends WithIdAndIsDone {
-  selectedCohorts: ICohort[]
-  isDone?: boolean
-  _id?: string
-}
 export interface IRequestedData extends WithIdAndIsDone {
   patientInfo: string
   dataInfo: string
