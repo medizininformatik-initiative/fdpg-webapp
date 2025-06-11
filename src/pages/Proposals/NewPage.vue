@@ -110,7 +110,7 @@
           />
           <MiiCohortSelection
             v-if="isMIISelected"
-            v-model="proposalForm.cohorts"
+            v-model="proposalForm.userProject.cohorts"
             :review-mode="isReviewMode"
             :feasibilityForm="proposalForm.userProject.feasibility"
             @update:feasibility-form="
@@ -367,7 +367,7 @@ const stepFieldsMap = {
     'requestedData.desiredDataAmount',
   ],
   [CreatPrposalSteps.Casesohort]: [
-    'cohorts',
+    'userProject.cohorts',
     'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
@@ -442,18 +442,6 @@ const rules = ref<Record<string, any>>({
   ],
   participants: [
     /** Handled in component */
-  ],
-  cohorts: [
-    {
-      validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
-        if (!value || value.length === 0) {
-          callback(new Error(t('general.requiredField')))
-        } else {
-          callback()
-        }
-      },
-      trigger: ['blur', 'change'],
-    },
   ],
   projectUser: {
     projectUserType: [requiredValidationFunc('string')],
@@ -550,6 +538,20 @@ const rules = ref<Record<string, any>>({
         otherExplanation: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       },
     },
+    cohorts: {
+      selectedCohorts: [
+        {
+          validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
+            if (!value || value.length === 0) {
+              callback(new Error(t('general.requiredField')))
+            } else {
+              callback()
+            }
+          },
+          trigger: ['blur', 'change'],
+        },
+      ],
+    },
   },
   requestedData: {
     patientInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
@@ -608,15 +610,15 @@ const getFormValues = () => {
     delete formData.userProject?.resourceAndRecontact
     delete formData.userProject?.ethicVote
     delete formData.userProject?.informationOnRequestedBioSamples
-    delete formData.cohorts
+    delete formData.userProject?.cohorts
     delete formData.userProject?.feasibility
     delete formData.userProject?.typeOfUse?.usage
     delete formData.userProject?.typeOfUse?.pseudonymizationInfo
     delete formData.userProject?.typeOfUse?.pseudonymizationInfoTexts
     delete formData.userProject?.propertyRights
-    delete formData.userProject?.projectDetails.simpleProjectDescription
-    delete formData.userProject?.projectDetails.department
-    delete formData.userProject?.projectDetails.executiveSummaryUac
+    delete formData.userProject?.projectDetails?.simpleProjectDescription
+    delete formData.userProject?.projectDetails?.department
+    delete formData.userProject?.projectDetails?.executiveSummaryUac
   }
 
   // If DIFE is not selected, remove DIFE-specific fields

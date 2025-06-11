@@ -250,6 +250,14 @@ export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
   laboratoryResources: string
   biosamples: IBiosample[]
 }
+export interface ICohort {
+  feasibilityQueryId: number
+  label: string
+  comment?: string
+  uploadId?: File
+  _id?: string
+}
+
 export interface IUserProject {
   generalProjectInformation: IGeneralProjectInformation
   feasibility: IFeasibility
@@ -263,8 +271,14 @@ export interface IUserProject {
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: IVariableSelectionData
   selectionOfCases: ISelectionOfCases
+  cohorts: ICohorts
 }
 
+export interface ICohorts extends WithIdAndIsDone {
+  selectedCohorts: ICohort[]
+  isDone?: boolean
+  _id?: string
+}
 export interface IRequestedData extends WithIdAndIsDone {
   patientInfo: string
   dataInfo: string
@@ -513,8 +527,6 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
-  cohorts: ICohort[]
-  dataSourceLocaleId: string
 
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
@@ -639,10 +651,4 @@ export type IDataSource = {
 }
 export type IDataSourceDto = {
   [key in PlatformIdentifier]: IDataSource
-}
-export interface ICohort {
-  feasibilityQueryId: number
-  label: string
-  comment?: string
-  uploadId?: File
 }
