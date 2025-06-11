@@ -7,6 +7,20 @@
           <div class="cohort-selection">
             <FdpgLabel html-for="proposal.cohortSelection" size="medium" />
 
+            <div v-if="cohorts.length < 49" class="cohort-actions">
+              <el-button type="primary" @click="openAutomaticDialog" data-test-id="addCohortAutomatic">
+                {{ t('proposal.addCohortAutomatic') }}
+              </el-button>
+              <el-button type="primary" @click="openManualDialog" data-test-id="addCohortManual">
+                {{ t('proposal.addCohortManual') }}
+              </el-button>
+            </div>
+            <div v-else class="cohort-limit-warning">
+              <el-alert type="warning" :closable="false" show-icon>
+                {{ t('proposal.maxCohortsReached') }}
+              </el-alert>
+            </div>
+
             <el-table
               v-if="cohorts.length > 0"
               :data="cohorts"

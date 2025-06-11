@@ -4,6 +4,7 @@ import type {
   IAddressees,
   IBiosample,
   ICohort,
+  IDifeVariableSelectionData,
   IEthicVote,
   IFeasibility,
   IGeneralProjectInformation,
@@ -13,6 +14,7 @@ import type {
   IPropertyRights,
   IPublication,
   IResourceAndRecontact,
+  ISelectedCohort,
   ISelectionOfCases,
   ITypeOfUse,
   IUserProject,
@@ -265,9 +267,19 @@ const transformVariableSelection = (variableSelection?: IVariableSelectionData):
   }
 }
 
+export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort => {
+  return {
+    _id: cohort?._id ?? NEW_ID,
+    feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
+    label: transformEmptyStringToUndefined(cohort?.label),
+    comment: transformEmptyStringToUndefined(cohort?.comment),
+    uploadId: cohort?.uploadId ?? undefined,
+  }
+}
+
 export const transformCohorts = (cohorts?: ICohort): ICohort => {
   return {
-    selectedCohorts: cohorts?.selectedCohorts?.map((c) => ({ ...c })) ?? [],
+    selectedCohorts: cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ?? [],
     _id: cohorts?._id,
     isDone: cohorts?.isDone,
   }
