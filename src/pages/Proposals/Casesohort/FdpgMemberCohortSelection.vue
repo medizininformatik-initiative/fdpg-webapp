@@ -71,14 +71,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance, UploadFile } from 'element-plus'
 import type { ISelectedCohort } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -95,10 +94,7 @@ const props = defineProps({
   },
 })
 
-const proposalStore = useProposalStore()
-const proposalId = computed(() => proposalStore.currentProposal?._id)
-
-const emit = defineEmits(['update:modelValue', 'update:uploads', 'change'])
+const emit = defineEmits(['update:modelValue', 'update:uploads', 'addCohort', 'removeCohort'])
 
 const cohorts = useVModel(props, 'modelValue', emit)
 const formRef = ref<FormInstance>()
@@ -111,31 +107,14 @@ const addCohort = (newCohort: ISelectedCohort) => {
   cohorts.value = [...cohorts.value, newCohort]
 }
 const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) => {
-  const _proposalId = proposalId.value
-
   if (!raw) {
     showErrorMessage()
   }
 
-  try {
-    if (_proposalId) {
-      const { insertedCohort, uploadedFile } = await proposalStore.uploadManualCohort(
-        _proposalId,
-        newCohort,
-        raw as File,
-      )
+  emit('addCohort', newCohort, raw as File)
+  addCohort(newCohort)
 
-      if (insertedCohort) {
-        addCohort(insertedCohort)
-      }
-
-      closeManualDialog()
-    }
-  } catch (e) {
-    showErrorMessage()
-  }
-
-  emit('change')
+  closeManualDialog()
 }
 
 // Manual cohort dialog
@@ -150,15 +129,8 @@ const closeManualDialog = () => {
 }
 
 const handleDelete = async (cohort: ISelectedCohort) => {
-  const _proposalId = proposalId.value
-
-  try {
-    if (_proposalId && cohort._id && cohort.uploadId) {
-      await proposalStore.deleteCohort(_proposalId, cohort._id)
-    }
-  } catch (e) {
-    showErrorMessage()
-    return
+  if (cohort._id && cohort.uploadId) {
+    emit('removeCohort', cohort)
   }
 
   if (!!cohort._id) {
@@ -166,7 +138,6 @@ const handleDelete = async (cohort: ISelectedCohort) => {
   } else {
     showErrorMessage()
   }
-  emit('change')
 }
 </script>
 

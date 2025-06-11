@@ -35,7 +35,8 @@
       v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
       :enable-edit="status === ProposalStatus.FdpgCheck"
-      @change="handleCohortEdit"
+      @add-cohort="addCohort"
+      @remove-cohort="removeCohort"
     />
 
     <FdpgCheckList
@@ -586,6 +587,32 @@ const showLocationVotePanel = computed(() => {
 
 const handleCohortEdit = async () => {
   await fetchProposal()
+}
+
+const addCohort = async (newCohort: ISelectedCohort, file: File) => {
+  const _proposalId = proposalId.value
+  if (_proposalId) {
+    try {
+      await proposalStore.uploadManualCohort(_proposalId, newCohort, file)
+    } catch (e) {
+      showErrorMessage()
+    }
+  }
+
+  await handleCohortEdit()
+}
+
+const removeCohort = async (cohort: ISelectedCohort) => {
+  const _proposalId = proposalId.value
+  if (_proposalId && cohort._id) {
+    try {
+      await proposalStore.deleteCohort(_proposalId, cohort._id)
+    } catch (e) {
+      showErrorMessage()
+    }
+  }
+
+  await handleCohortEdit()
 }
 
 const fetchProposal = async () => {

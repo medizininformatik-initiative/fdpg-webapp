@@ -250,13 +250,6 @@ export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
   laboratoryResources: string
   biosamples: IBiosample[]
 }
-export interface ICohort {
-  feasibilityQueryId: number
-  label: string
-  comment?: string
-  uploadId?: File
-  _id?: string
-}
 
 export interface IUserProject {
   generalProjectInformation: IGeneralProjectInformation
