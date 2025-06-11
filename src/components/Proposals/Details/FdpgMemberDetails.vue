@@ -113,7 +113,6 @@ import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
 import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
-import { da } from 'element-plus/es/locale'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const messageBoxStore = useMessageBoxStore()
