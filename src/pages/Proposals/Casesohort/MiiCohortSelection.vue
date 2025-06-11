@@ -7,20 +7,6 @@
           <div class="cohort-selection">
             <FdpgLabel html-for="proposal.cohortSelection" size="medium" />
 
-            <div v-if="cohorts.length < 49" class="cohort-actions">
-              <el-button type="primary" @click="openAutomaticDialog" data-test-id="addCohortAutomatic">
-                {{ t('proposal.addCohortAutomatic') }}
-              </el-button>
-              <el-button type="primary" @click="openManualDialog" data-test-id="addCohortManual">
-                {{ t('proposal.addCohortManual') }}
-              </el-button>
-            </div>
-            <div v-else class="cohort-limit-warning">
-              <el-alert type="warning" :closable="false" show-icon>
-                {{ t('proposal.maxCohortsReached') }}
-              </el-alert>
-            </div>
-
             <el-table
               v-if="cohorts.length > 0"
               :data="cohorts"
@@ -45,6 +31,20 @@
                 </template>
               </el-table-column>
             </el-table>
+
+            <div v-if="cohorts.length < 49" class="cohort-actions">
+              <el-button type="primary" @click="openAutomaticDialog" data-test-id="addCohortAutomatic">
+                {{ t('proposal.addCohortAutomatic') }}
+              </el-button>
+              <el-button type="primary" @click="openManualDialog" data-test-id="addCohortManual">
+                {{ t('proposal.addCohortManual') }}
+              </el-button>
+            </div>
+            <div v-else class="cohort-limit-warning">
+              <el-alert type="warning" :closable="false" show-icon>
+                {{ t('proposal.maxCohortsReached') }}
+              </el-alert>
+            </div>
 
             <!-- Automatic Cohort Dialog -->
             <AutomaticCohortDialog
@@ -93,10 +93,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, type PropType } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance, UploadFile } from 'element-plus'
-import type { IFeasibility, ICohort, ISelectedCohort, IUpload } from '@/types/proposal.types'
+import type { IFeasibility, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
 import ManualCohortDialog from './ManualCohortDialog.vue'

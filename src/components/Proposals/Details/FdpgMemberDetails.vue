@@ -31,6 +31,13 @@
       />
     </div>
 
+    <FdpgMemberCohortSelection
+      v-if="proposalStore.currentProposal"
+      v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
+      :uploads="proposalStore.currentProposal.uploads"
+      :enable-edit="status === ProposalStatus.FdpgCheck"
+    />
+
     <FdpgCheckList
       v-model="fdpgChecklist"
       :status="status"
@@ -77,7 +84,6 @@ import ProjectReports from '@/components/ProjectReports.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import useDraftDownload from '@/composables/use-draft-download'
-import type { TranslationSchema } from '@/plugins/i18n'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
@@ -91,7 +97,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
+import { computed, defineComponent, onMounted, ref, markRaw, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -105,6 +111,7 @@ import type { MiiLocation } from '@/types/location.enum'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
+import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
