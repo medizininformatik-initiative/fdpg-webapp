@@ -32,10 +32,10 @@
     </div>
 
     <FdpgMemberCohortSelection
-      v-if="proposalStore.currentProposal"
+      v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
-      :uploads="proposalStore.currentProposal.uploads"
       :enable-edit="status === ProposalStatus.FdpgCheck"
+      @change="handleCohortEdit"
     />
 
     <FdpgCheckList
@@ -90,14 +90,14 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist, IProposal } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, ref, markRaw, nextTick } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -112,6 +112,8 @@ import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
 import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
+import { da } from 'element-plus/es/locale'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -137,6 +139,8 @@ const isSubmitting = ref(false)
 const openReviewPage = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
 }
+
+const cohortAndUploadsRef = ref<{ selectedCohorts: ISelectedCohort[]; uploads: IUpload[] } | null>(null)
 
 const openLockModal = () => {
   messageBoxStore.setMessageBoxInfo({
@@ -580,6 +584,10 @@ const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
 
+const handleCohortEdit = async () => {
+  await fetchProposal()
+}
+
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
@@ -599,6 +607,8 @@ const fetchProposal = async () => {
         displayName: data.projectAbbreviation,
       },
     ])
+
+    console.log(cohortAndUploadsRef)
   } catch (error) {
     showErrorMessage()
     await router.push({ name: RouteName.Dashboard })

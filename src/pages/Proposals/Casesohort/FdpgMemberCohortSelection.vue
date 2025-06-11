@@ -64,12 +64,11 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance, UploadFile } from 'element-plus'
-import type { ISelectedCohort, IUpload } from '@/types/proposal.types'
+import type { ISelectedCohort } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { UseCaseUpload } from '@/types/upload.types'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -78,10 +77,6 @@ const props = defineProps({
   modelValue: {
     type: Array as () => ISelectedCohort[],
     required: true,
-    default: () => [],
-  },
-  uploads: {
-    type: Array as () => IUpload[],
     default: () => [],
   },
   enableEdit: {
@@ -93,11 +88,9 @@ const props = defineProps({
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id)
 
-const emit = defineEmits(['update:modelValue', 'update:uploads'])
+const emit = defineEmits(['update:modelValue', 'update:uploads', 'change'])
 
 const cohorts = useVModel(props, 'modelValue', emit)
-const uploads = useVModel(props, 'uploads', emit)
-// Automatic cohort dialog
 const formRef = ref<FormInstance>()
 
 const addCohort = (newCohort: ISelectedCohort) => {
@@ -107,15 +100,6 @@ const addCohort = (newCohort: ISelectedCohort) => {
   }
   cohorts.value = [...cohorts.value, newCohort]
 }
-
-const updateFiles = (file: IUpload, mode: 'add' | 'remove') => {
-  if (mode === 'add') {
-    uploads.value.push(file)
-  } else {
-    uploads.value = uploads.value.filter((f) => f._id !== file._id)
-  }
-}
-
 const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) => {
   const _proposalId = proposalId.value
 
@@ -135,15 +119,13 @@ const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) 
         addCohort(insertedCohort)
       }
 
-      if (uploadedFile) {
-        updateFiles(uploadedFile, 'add')
-      }
-
       closeManualDialog()
     }
   } catch (e) {
     showErrorMessage()
   }
+
+  emit('change')
 }
 
 // Manual cohort dialog
@@ -157,18 +139,12 @@ const closeManualDialog = () => {
   isManualDialogOpen.value = false
 }
 
-watch(() => val)
-
 const handleDelete = async (cohort: ISelectedCohort) => {
   const _proposalId = proposalId.value
 
   try {
     if (_proposalId && cohort._id && cohort.uploadId) {
       await proposalStore.deleteCohort(_proposalId, cohort._id)
-      updateFiles(
-        { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
-        'remove',
-      )
     }
   } catch (e) {
     showErrorMessage()
@@ -180,6 +156,7 @@ const handleDelete = async (cohort: ISelectedCohort) => {
   } else {
     showErrorMessage()
   }
+  emit('change')
 }
 </script>
 
