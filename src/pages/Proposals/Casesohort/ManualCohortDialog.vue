@@ -78,7 +78,7 @@ const manualForm = reactive({
   numberOfPatients: undefined as number | undefined,
   file: null as UploadFile | null,
 })
-const emit = defineEmits(['update:modelValue', 'add'])
+const emit = defineEmits(['update:modelValue', 'add', 'close'])
 const isManualDialogOpen = useVModel(props, 'modelValue', emit)
 
 const proposalStore = useProposalStore()
@@ -142,8 +142,11 @@ const add = async () => {
 }
 
 const close = () => {
-  isManualDialogOpen.value = false
   manualFormRef.value?.resetFields()
+  manualForm.file = null
+  manualForm.name = ''
+  manualForm.numberOfPatients = undefined
+  emit('close')
 }
 </script>
 

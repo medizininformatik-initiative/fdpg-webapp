@@ -54,6 +54,13 @@ vi.mock('@/composables/use-notifications', () => ({
   }),
 }))
 
+vi.mock('@/validations', () => ({
+  maxLengthValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  numberValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  requiredValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  specialCharactersValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+}))
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',

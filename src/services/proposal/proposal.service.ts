@@ -15,7 +15,6 @@ import type {
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
   FdpgChecklistItemUpdateResponse,
-  ICohort,
   ISelectedCohort,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'

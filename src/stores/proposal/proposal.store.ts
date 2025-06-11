@@ -13,7 +13,6 @@ import type {
   IReportCreate,
   IReportUpdate,
   IEditAdditionalLocationProposalInformation,
-  ICohort,
   IUpload,
   ISelectedCohort,
 } from '@/types/proposal.types'
