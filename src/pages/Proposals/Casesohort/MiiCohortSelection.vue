@@ -95,7 +95,7 @@
 <script setup lang="ts">
 import { computed, ref, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, UploadFile } from 'element-plus'
 import type { IFeasibility, ICohort, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
@@ -178,10 +178,21 @@ const handleAutomaticAdd = (newCohort: ISelectedCohort) => {
   closeAutomaticDialog()
 }
 
-const handleManualAdd = async (newCohort: ICohort, file: File) => {
+const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) => {
+  const _proposalId = proposalId.value
+
+  if (!raw) {
+    showErrorMessage()
+  }
+
   try {
-    if (proposalId.value) {
-      const { insertedCohort, uploadedFile } = await proposalStore.uploadManualCohort(proposalId.value, newCohort, file)
+    if (_proposalId) {
+      const { insertedCohort, uploadedFile } = await proposalStore.uploadManualCohort(
+        _proposalId,
+        newCohort,
+        raw as File,
+      )
+
       if (insertedCohort) {
         addCohort(insertedCohort)
       }
@@ -209,22 +220,29 @@ const closeManualDialog = () => {
 }
 
 const handleDelete = async (cohort: ISelectedCohort) => {
+  const _proposalId = proposalId.value
+
+  try {
+    if (cohort.isManualUpload && _proposalId && cohort._id) {
+      await proposalStore.deleteCohort(_proposalId, cohort._id)
+      if (cohort.uploadId) {
+        updateFiles(
+          { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
+          'remove',
+        )
+      }
+    }
+  } catch (e) {
+    showErrorMessage()
+    return
+  }
+
   if (!!cohort._id) {
     cohorts.value = cohorts.value.filter((c) => c._id !== cohort._id)
   } else if (!!cohort.feasibilityQueryId) {
     cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
   } else {
     showErrorMessage()
-  }
-
-  if (cohort.isManualUpload && proposalId.value && cohort._id) {
-    await proposalStore.deleteCohort(proposalId.value, cohort._id)
-    if (cohort.uploadId) {
-      updateFiles(
-        { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
-        'remove',
-      )
-    }
   }
 }
 </script>

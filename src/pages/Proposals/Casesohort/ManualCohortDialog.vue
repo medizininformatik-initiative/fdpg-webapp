@@ -125,7 +125,6 @@ const add = async () => {
     comment: '',
     isManualUpload: true,
   }
-
   emit('add', newCohort, manualForm.file)
 }
 

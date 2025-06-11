@@ -366,11 +366,10 @@ export const useProposalStore = defineStore('Proposal', {
 
     async uploadManualCohort(
       proposalId: string,
-      newCohort: ICohort,
+      newCohort: ISelectedCohort,
       file: File,
     ): Promise<{ insertedCohort?: ISelectedCohort; uploadedFile?: IUpload }> {
       const { insertedCohort, uploadedFile } = await this.apiService.uploadManualCohort(proposalId, newCohort, file)
-
       return { insertedCohort, uploadedFile }
     },
 

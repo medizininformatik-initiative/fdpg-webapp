@@ -283,12 +283,15 @@ export class ProposalService {
 
   async uploadManualCohort(
     id: string,
-    newCohort: ICohort,
+    newCohort: ISelectedCohort,
     file: File,
   ): Promise<{ insertedCohort?: ISelectedCohort; uploadedFile?: IUpload }> {
     const formData = new FormData()
     formData.append('file', file as Blob)
-    formData.append('newCohort', JSON.stringify(newCohort))
+    formData.append(
+      'newCohort',
+      JSON.stringify({ label: newCohort.label, comment: newCohort.comment, isManualUpload: newCohort.isManualUpload }),
+    )
 
     const response = await this.apiClient.put(`${this.basePath}/${id}/cohort`, formData, {
       headers: {
