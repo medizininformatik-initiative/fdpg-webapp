@@ -18,11 +18,21 @@
               :row-style="{ border: 'none' }"
             >
               <el-table-column prop="label" />
+
+              <el-table-column :label="t('proposal.numberOfPatients')">
+                <template #default="scope">
+                  <span v-if="scope.row.numberOfPatients"
+                    >{{ t('proposal.numberOfPatients') }}: {{ scope.row.numberOfPatients }}</span
+                  >
+                </template>
+              </el-table-column>
+
               <el-table-column :label="t('proposal.viewQuery')">
                 <template #default="scope">
                   <span>{{ t('proposal.viewQuery') }}</span>
                 </template>
               </el-table-column>
+
               <el-table-column width="100">
                 <template #default="scope">
                   <el-button type="primary" link @click="handleDelete(scope.row)" data-test-id="deleteCohort">

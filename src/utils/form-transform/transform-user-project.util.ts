@@ -274,6 +274,7 @@ export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort =>
     label: transformEmptyStringToUndefined(cohort?.label),
     comment: transformEmptyStringToUndefined(cohort?.comment),
     uploadId: cohort?.uploadId ?? undefined,
+    numberOfPatients: cohort?.numberOfPatients,
   }
 }
 

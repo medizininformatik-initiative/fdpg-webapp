@@ -718,7 +718,8 @@
     "DIFEtypeOfUse": "DIFE type of use",
     "saveProposalBeforeUploadingCohorts": "Please save the proposal beforehand at least once, after that manual uploads will be enabled.",
     "cohortFile": "Cohort File",
-    "cohortName": "Cohort Name"
+    "cohortName": "Cohort Name",
+    "numberOfPatients": "Patient count"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

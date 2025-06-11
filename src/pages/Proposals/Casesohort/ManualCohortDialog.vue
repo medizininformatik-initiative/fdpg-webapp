@@ -5,6 +5,12 @@
         <FdpgLabel html-for="proposal.cohortName" required />
         <FdpgInput v-model="manualForm.name" :placeholder="'general.inputName'" />
       </FdpgFormItem>
+
+      <FdpgFormItem prop="numberOfPatients">
+        <FdpgLabel html-for="proposal.numberOfPatients" required />
+        <FdpgNumberInput v-model="manualForm.numberOfPatients" :placeholder="'general.numberOfPatients'" />
+      </FdpgFormItem>
+
       <FdpgFormItem prop="file">
         <FdpgLabel html-for="proposal.cohortFile" required />
         <FdpgUpload
@@ -56,6 +62,8 @@ import { UseCaseUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { ISelectedCohort } from '@/types/proposal.types'
+import { numberValidationFunc, requiredValidationFunc } from '@/validations'
+import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 
 const { t } = useI18n()
 const props = defineProps({
@@ -67,6 +75,7 @@ const props = defineProps({
 const manualFormRef = ref<FormInstance | null>(null)
 const manualForm = reactive({
   name: '',
+  numberOfPatients: undefined as number | undefined,
   file: null as UploadFile | null,
 })
 const emit = defineEmits(['update:modelValue', 'add'])
@@ -100,7 +109,8 @@ const validateName = (rule: any, value: string, callback: (err?: Error) => void)
 }
 
 const rules = {
-  name: [{ validator: validateName, trigger: 'blur' }],
+  name: [requiredValidationFunc('string'), { validator: validateName, trigger: 'blur' }],
+  numberOfPatients: [requiredValidationFunc('number'), numberValidationFunc()],
   file: [
     {
       required: true,
@@ -114,7 +124,9 @@ const add = async () => {
   if (!manualFormRef.value) {
     return false
   }
-  const isValid = await manualFormRef.value.validate()
+  const isValid = await manualFormRef.value.validate((a, b) => {
+    console.log({ a, b })
+  })
   if (!isValid) {
     return false
   }
@@ -124,6 +136,7 @@ const add = async () => {
     label: manualForm.name.trim(),
     comment: '',
     isManualUpload: true,
+    numberOfPatients: manualForm.numberOfPatients,
   }
   emit('add', newCohort, manualForm.file)
 }

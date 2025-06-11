@@ -660,6 +660,7 @@ export interface ISelectedCohort {
   comment?: string
   uploadId?: string
   isManualUpload?: boolean
+  numberOfPatients?: number
 }
 export interface ICohort extends WithIdAndIsDone {
   selectedCohorts: ISelectedCohort[]

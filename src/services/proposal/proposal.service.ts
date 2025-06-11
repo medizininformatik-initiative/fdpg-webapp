@@ -290,7 +290,12 @@ export class ProposalService {
     formData.append('file', file as Blob)
     formData.append(
       'newCohort',
-      JSON.stringify({ label: newCohort.label, comment: newCohort.comment, isManualUpload: newCohort.isManualUpload }),
+      JSON.stringify({
+        label: newCohort.label,
+        comment: newCohort.comment,
+        isManualUpload: newCohort.isManualUpload,
+        numberOfPatients: newCohort.numberOfPatients,
+      }),
     )
 
     const response = await this.apiClient.put(`${this.basePath}/${id}/cohort`, formData, {

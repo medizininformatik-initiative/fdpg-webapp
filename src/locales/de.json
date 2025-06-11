@@ -718,7 +718,8 @@
     "DIFEtypeOfUse": "DIFE Art der Nutzung",
     "saveProposalBeforeUploadingCohorts": "Bitte speichern sie den Antrag bevor sie eine Kohorte manuell hinzufügen",
     "cohortFile": "Kohorten Datei",
-    "cohortName": "Kohortenname"
+    "cohortName": "Kohortenname",
+    "numberOfPatients": "Patientenanzahl"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
