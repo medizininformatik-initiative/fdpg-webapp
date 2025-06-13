@@ -112,14 +112,7 @@
             v-if="isMIISelected"
             v-model="proposalForm.userProject.cohorts"
             :review-mode="isReviewMode"
-            :feasibilityForm="proposalForm.userProject.feasibility"
-            @update:feasibility-form="
-              (value) => {
-                if (proposalForm?.userProject) {
-                  proposalForm.userProject.feasibility = value
-                }
-              }
-            "
+            :form-ref="formRef"
             :requestedDataForm="proposalForm.requestedData"
             @update:requestedDataForm="
               (value) => {

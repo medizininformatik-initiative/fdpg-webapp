@@ -1,21 +1,23 @@
 <template>
   <template v-if="value === undefined"> - </template>
-  <template v-else-if="definition.kind === 'translatable'">
+  <template v-else-if="definition.kind === 'translatable' && !definition.defaultValue">
     {{ t(`${definition.prefix}${value}`) }}
   </template>
 
-  <template v-else-if="definition.kind === 'date'">
+  <template v-else-if="definition.kind === 'date' && !definition.defaultValue">
     {{ getLocaleDateString(value as string | Date) }}
   </template>
 
-  <template v-else-if="definition.kind === 'boolean'">
+  <template v-else-if="definition.kind === 'boolean' && !definition.defaultValue">
     {{ t(`${definition[value as string]}`) }}
   </template>
 
-  <template v-else-if="definition.kind === 'lookup'">
+  <template v-else-if="definition.kind === 'lookup' && !definition.defaultValue">
     {{ definition.lookupMap[value as string][definition.lookupKey] }}
   </template>
-
+  <template v-else-if="definition.defaultValue">
+    {{ $t(definition.defaultValue) }}
+  </template>
   <template v-else>
     <div class="ql-editor" v-html="value"></div>
   </template>
@@ -26,6 +28,7 @@ import type { Definitions } from '@/components/Shared/definition-card.types'
 import type { PropType } from 'vue'
 import { getLocaleDateString } from '@/utils/date.util'
 import { useI18n } from 'vue-i18n'
+import { de } from '@/locales'
 
 defineProps({
   value: {

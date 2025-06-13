@@ -60,15 +60,15 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.feasibility.details">
+        <FdpgFormItem prop="userProject.cohorts.details">
           <FdpgLabel html-for="proposal.assessmentOfFeasibilityDetails" />
           <FdpgTextEditor
-            v-model="feasibilityForm.details"
-            data-testId="feasibilityForm.details"
+            v-model="cohorts.details"
+            data-testId="cohorts.details"
             :placeholder="t('proposal.pleaseEnterAssessmentOfFeasibilityDetails')"
-            :disabled="reviewMode || feasibilityForm.isDone"
+            :disabled="reviewMode || cohorts.isDone"
             :form-ref="formRef"
-            field-path="userProject.feasibility.details"
+            field-path="userProject.cohorts.details"
           />
         </FdpgFormItem>
       </el-col>
@@ -102,13 +102,9 @@ const { showErrorMessage } = useNotifications()
 
 const props = defineProps({
   modelValue: {
-    type: Array as () => ICohorts,
+    type: Object as () => ICohorts,
     required: true,
     default: () => [],
-  },
-  feasibilityForm: {
-    type: Object as () => IFeasibility,
-    required: true,
   },
   requestedDataForm: {
     type: Object as () => { patientInfo: string; isDone?: boolean },
@@ -125,10 +121,9 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue', 'update:feasibilityForm', 'update:requestedDataForm'])
+const emit = defineEmits(['update:modelValue', 'update:requestedDataForm'])
 
 const cohorts = useVModel(props, 'modelValue', emit)
-const feasibilityForm = useVModel(props, 'feasibilityForm', emit)
 const requestedDataForm = useVModel(props, 'requestedDataForm', emit)
 // Automatic cohort dialog
 const isAutomaticDialogOpen = ref(false)
@@ -143,7 +138,7 @@ const closeAutomaticDialog = () => {
 }
 
 const handleAutomaticAdd = async (newCohort: ICohort) => {
-  if (cohorts.value.length >= 49) {
+  if (cohorts.value.selectedCohorts.length >= 49) {
     showErrorMessage(t('proposal.maxCohortsReached'))
     return
   }

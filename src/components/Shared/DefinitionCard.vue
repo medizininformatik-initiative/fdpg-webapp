@@ -83,7 +83,7 @@ const getValue = (dtoAccess, content) => {
 
     return result
   } else {
-    return dtoAccess[content.key]
+    return dtoAccess[content.key] || content.defaultValue
   }
 }
 </script>

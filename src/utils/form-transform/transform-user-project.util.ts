@@ -307,6 +307,7 @@ export const transformUserProject = (
             uploadId: cohort?.uploadId as File | undefined,
           }),
         ) ?? [],
+      details: transformEmptyStringToUndefined(userProject?.cohorts?.details),
       _id: userProject?.cohorts?._id ?? NEW_ID,
       isDone: userProject?.cohorts?.isDone ?? false,
     },

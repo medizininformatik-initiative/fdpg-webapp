@@ -276,6 +276,7 @@ export interface IUserProject {
 
 export interface ICohorts extends WithIdAndIsDone {
   selectedCohorts: ICohort[]
+  details?: string
   isDone?: boolean
   _id?: string
 }
