@@ -3,10 +3,12 @@ import type {
   IDefinitionCard,
   IDefinitionCardArray,
 } from '@/components/Shared/definition-card.types'
-import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
 
-const informationOnRequestedBioSamplesCard: IDefinitionCard<IUserProject, 'informationOnRequestedBioSamples'> = {
+const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+
   key: 'informationOnRequestedBioSamples',
   cardLabel: 'proposal.selectedBioSamples',
   terms: [
@@ -22,10 +24,12 @@ const informationOnRequestedBioSamplesCard: IDefinitionCard<IUserProject, 'infor
     },
   ],
   kind: 'real',
-}
+})
 
-const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequestedBioSamples', 'biosamples'> = {
+const biosamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'informationOnRequestedBioSamples',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+
   cardLabel: 'proposal.informationOnRequestedBioSamples',
   loopOn: 'biosamples',
   terms: [
@@ -80,9 +84,12 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
       definitions: [[{ key: 'externalLabTransferDetails' }]],
     },
   ],
-}
+})
 
-const biosampleCard = (dataSources: PlatformIdentifier[] = []) => [informationOnRequestedBioSamplesCard, biosamplesCard]
+const biosampleCard = (dataSources: PlatformIdentifier[] = []) => [
+  informationOnRequestedBioSamplesCard(dataSources),
+  biosamplesCard(dataSources),
+]
 
 export const biosampleSection = (
   dataSources: PlatformIdentifier[] = [],

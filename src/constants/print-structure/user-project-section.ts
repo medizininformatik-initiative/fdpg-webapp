@@ -194,9 +194,11 @@ const plannedPublicationCard: IDefinitionCardArray<IUserProject, 'plannedPublica
     },
   ],
 }
-const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOCATIONS> = {
+const addresseesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'addressees',
   cardLabel: 'proposal.addressees',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  // MII
   terms: [
     {
       label: 'proposal.desiredLocations',
@@ -206,7 +208,7 @@ const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOC
       ],
     },
   ],
-}
+})
 
 const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'typeOfUse',
@@ -359,7 +361,7 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   propertyRightsCard(dataSources),
   plannedPublicationCardEmpty,
   plannedPublicationCard,
-  addresseesCard,
+  addresseesCard(dataSources),
   typeOfUseCard(dataSources),
   cohortsCard(dataSources),
   cohortsDetailsCard(dataSources),
