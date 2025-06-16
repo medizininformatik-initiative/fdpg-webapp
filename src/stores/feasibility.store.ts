@@ -17,5 +17,9 @@ export const useFeasibilityStore = defineStore('Feasibility', {
     async getAll(): Promise<void> {
       this.feasibilityQueries = await this.apiService.getAll()
     },
+
+    async getCsvByQueryId(id: number, queryName: string): Promise<void> {
+      await this.apiService.getCsvByQueryId(id, queryName)
+    },
   },
 })

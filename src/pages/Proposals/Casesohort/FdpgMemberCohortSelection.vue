@@ -27,7 +27,15 @@
 
             <el-table-column :label="t('proposal.viewQuery')">
               <template #default="scope">
-                <span>{{ t('proposal.viewQuery') }}</span>
+                <el-button
+                  v-if="scope.row.feasibilityQueryId"
+                  type="primary"
+                  link
+                  @click="downloadCsv(scope.row.feasibilityQueryId, scope.row.feasibilityQueryId)"
+                  data-test-id="downloadCsv"
+                >
+                  {{ t('proposal.viewQuery') }}
+                </el-button>
               </template>
             </el-table-column>
 
@@ -78,9 +86,11 @@ import type { ISelectedCohort } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
+import { useFeasibilityStore } from '@/stores/feasibility.store'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
+const feasibilityStore = useFeasibilityStore()
 
 const props = defineProps({
   modelValue: {
@@ -126,6 +136,15 @@ const openManualDialog = () => {
 
 const closeManualDialog = () => {
   isManualDialogOpen.value = false
+}
+
+const downloadCsv = async (id?: number, label?: string) => {
+  if (!id || !label) {
+    showErrorMessage()
+    return
+  }
+
+  return await feasibilityStore.getCsvByQueryId(id, label)
 }
 
 const handleDelete = async (cohort: ISelectedCohort) => {
