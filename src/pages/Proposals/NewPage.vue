@@ -110,18 +110,11 @@
           />
           <MiiCohortSelection
             v-if="isMIISelected"
-            v-model="proposalForm.userProject.cohorts.selectedCohorts"
+            v-model="proposalForm.userProject.cohorts"
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :feasibilityForm="proposalForm.userProject.feasibility"
             :uploads="proposalForm.uploads"
-            @update:feasibility-form="
-              (value) => {
-                if (proposalForm?.userProject) {
-                  proposalForm.userProject.feasibility = value
-                }
-              }
-            "
             :requestedDataForm="proposalForm.requestedData"
             @update:requestedDataForm="
               (value) => {

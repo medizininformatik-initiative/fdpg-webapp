@@ -8,8 +8,8 @@
             <FdpgLabel html-for="proposal.cohortSelection" size="medium" />
 
             <el-table
-              v-if="cohorts.length > 0"
-              :data="cohorts"
+              v-if="cohort.selectedCohorts.length > 0"
+              :data="cohort.selectedCohorts"
               class="cohort-table"
               fit
               :show-header="false"
@@ -42,7 +42,7 @@
               </el-table-column>
             </el-table>
 
-            <div v-if="cohorts.length < 49" class="cohort-actions">
+            <div v-if="cohort.selectedCohorts.length < 49" class="cohort-actions">
               <el-button type="primary" @click="openAutomaticDialog" data-test-id="addCohortAutomatic">
                 {{ t('proposal.addCohortAutomatic') }}
               </el-button>
@@ -78,10 +78,10 @@
         <FdpgFormItem prop="userProject.cohorts.details">
           <FdpgLabel html-for="proposal.assessmentOfFeasibilityDetails" />
           <FdpgTextEditor
-            v-model="cohorts.details"
+            v-model="cohort.details"
             data-testId="cohorts.details"
             :placeholder="t('proposal.pleaseEnterAssessmentOfFeasibilityDetails')"
-            :disabled="reviewMode || cohorts.isDone"
+            :disabled="reviewMode || cohort.isDone"
             :form-ref="formRef"
             field-path="userProject.cohorts.details"
           />
@@ -106,7 +106,7 @@
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance, UploadFile } from 'element-plus'
-import type { IFeasibility, ISelectedCohort, IUpload } from '@/types/proposal.types'
+import type { ICohort, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import AutomaticCohortDialog from './AutomaticCohortDialog.vue'
 import ManualCohortDialog from './ManualCohortDialog.vue'
@@ -119,9 +119,9 @@ const { showErrorMessage } = useNotifications()
 
 const props = defineProps({
   modelValue: {
-    type: Array as () => ISelectedCohort[],
+    type: Object as () => ICohort,
     required: true,
-    default: () => [],
+    default: () => {},
   },
   requestedDataForm: {
     type: Object as () => { patientInfo: string; isDone?: boolean },
@@ -147,7 +147,7 @@ const proposalId = computed(() => proposalStore.currentProposal?._id)
 
 const emit = defineEmits(['update:modelValue', 'update:requestedDataForm', 'update:uploads'])
 
-const cohorts = useVModel(props, 'modelValue', emit)
+const cohort = useVModel(props, 'modelValue', emit)
 const requestedDataForm = useVModel(props, 'requestedDataForm', emit)
 const uploads = useVModel(props, 'uploads', emit)
 // Automatic cohort dialog
@@ -163,11 +163,12 @@ const closeAutomaticDialog = () => {
 }
 
 const addCohort = (newCohort: ISelectedCohort) => {
-  if (cohorts.value.length >= 49) {
+  if (cohort.value.selectedCohorts.length >= 49) {
     showErrorMessage(t('proposal.maxCohortsReached'))
     return
   }
-  cohorts.value = [...cohorts.value, newCohort]
+
+  cohort.value.selectedCohorts = [...cohort.value.selectedCohorts, newCohort]
 }
 
 const updateFiles = (file: IUpload, mode: 'add' | 'remove') => {
@@ -224,14 +225,14 @@ const closeManualDialog = () => {
   isManualDialogOpen.value = false
 }
 
-const handleDelete = async (cohort: ISelectedCohort) => {
+const handleDelete = async (deletedCohort: ISelectedCohort) => {
   const _proposalId = proposalId.value
 
   try {
-    if (_proposalId && cohort._id && cohort.uploadId) {
-      await proposalStore.deleteCohort(_proposalId, cohort._id)
+    if (_proposalId && deletedCohort._id && deletedCohort.uploadId) {
+      await proposalStore.deleteCohort(_proposalId, deletedCohort._id)
       updateFiles(
-        { _id: cohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
+        { _id: deletedCohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
         'remove',
       )
     }
@@ -240,10 +241,12 @@ const handleDelete = async (cohort: ISelectedCohort) => {
     return
   }
 
-  if (!!cohort._id) {
-    cohorts.value = cohorts.value.filter((c) => c._id !== cohort._id)
-  } else if (!!cohort.feasibilityQueryId) {
-    cohorts.value = cohorts.value.filter((c) => c.feasibilityQueryId !== cohort.feasibilityQueryId)
+  if (!!deletedCohort._id) {
+    cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter((c) => c._id !== deletedCohort._id)
+  } else if (!!deletedCohort.feasibilityQueryId) {
+    cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter(
+      (c) => c.feasibilityQueryId !== deletedCohort.feasibilityQueryId,
+    )
   } else {
     showErrorMessage()
   }
