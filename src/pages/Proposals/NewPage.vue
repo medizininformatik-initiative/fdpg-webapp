@@ -477,20 +477,6 @@ const rules = ref<Record<string, any>>({
           handled in component
         */
       },
-      cohorts: {
-        selectedCohorts: [
-          {
-            validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
-              if (!value || value.length === 0) {
-                callback(new Error(t('general.requiredField')))
-              } else {
-                callback()
-              }
-            },
-            trigger: ['blur', 'change'],
-          },
-        ],
-      },
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
