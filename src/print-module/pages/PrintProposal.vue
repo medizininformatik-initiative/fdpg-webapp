@@ -52,6 +52,7 @@
 <script setup lang="ts">
 import type { DefinitionSection, IVirtualWrap } from '@/components/Shared/definition-card.types'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
+import { biosampleSection } from '@/constants/print-structure/biosample-section'
 import type { IDataPrivacyOverview } from '@/constants/print-structure/data-privacy-section'
 import { dataPrivacySection } from '@/constants/print-structure/data-privacy-section'
 import type { IOverview } from '@/constants/print-structure/overview-section'
@@ -89,6 +90,7 @@ const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   participantSection,
   userProjectSection(assignedDataSources.value),
   requestedDataSection,
+  biosampleSection(assignedDataSources.value),
 ]
 
 const { t } = useI18n()
