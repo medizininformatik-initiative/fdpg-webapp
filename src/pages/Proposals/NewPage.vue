@@ -113,6 +113,7 @@
             v-model="proposalForm.userProject.cohorts"
             :review-mode="isReviewMode"
             :form-ref="formRef"
+            :uploads="proposalForm.uploads"
             :requestedDataForm="proposalForm.requestedData"
             @update:requestedDataForm="
               (value) => {

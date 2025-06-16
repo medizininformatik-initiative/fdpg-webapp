@@ -38,7 +38,7 @@ import { useI18n } from 'vue-i18n'
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import { useFeasibilityStore } from '@/stores/feasibility.store'
 import { useVModel } from '@vueuse/core'
-import type { ICohort } from '@/types/proposal.types'
+import type { ICohort, ISelectedCohort } from '@/types/proposal.types'
 import type { TranslationSchema } from '@/plugins/i18n'
 
 const props = defineProps({
@@ -75,10 +75,12 @@ const close = () => {
 const add = () => {
   if (!selectedQuery.value) return
 
-  const newCohort: ICohort = {
+  const newCohort: ISelectedCohort = {
     feasibilityQueryId: selectedQuery.value.feasibilityQueryId,
     label: selectedQuery.value.label,
     comment: selectedQuery.value.comment,
+    isManualUpload: false,
+    numberOfPatients: undefined,
   }
   emit('add', newCohort)
 }

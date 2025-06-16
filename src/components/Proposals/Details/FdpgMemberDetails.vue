@@ -31,6 +31,14 @@
       />
     </div>
 
+    <FdpgMemberCohortSelection
+      v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
+      v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
+      :enable-edit="status === ProposalStatus.FdpgCheck"
+      @add-cohort="addCohort"
+      @remove-cohort="removeCohort"
+    />
+
     <FdpgCheckList
       v-model="fdpgChecklist"
       :status="status"
@@ -77,14 +85,13 @@ import ProjectReports from '@/components/ProjectReports.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import useDraftDownload from '@/composables/use-draft-download'
-import type { TranslationSchema } from '@/plugins/i18n'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist, IProposal } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
@@ -105,6 +112,8 @@ import type { MiiLocation } from '@/types/location.enum'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
+import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -572,6 +581,36 @@ const showContractingParticipants = computed(() => {
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
+
+const handleCohortEdit = async () => {
+  await fetchProposal()
+}
+
+const addCohort = async (newCohort: ISelectedCohort, file: File) => {
+  const _proposalId = proposalId.value
+  if (_proposalId) {
+    try {
+      await proposalStore.uploadManualCohort(_proposalId, newCohort, file)
+    } catch (e) {
+      showErrorMessage(t('general.failedSubmit'))
+    }
+  }
+
+  await handleCohortEdit()
+}
+
+const removeCohort = async (cohort: ISelectedCohort) => {
+  const _proposalId = proposalId.value
+  if (_proposalId && cohort._id) {
+    try {
+      await proposalStore.deleteCohort(_proposalId, cohort._id)
+    } catch (e) {
+      showErrorMessage()
+    }
+  }
+
+  await handleCohortEdit()
+}
 
 const fetchProposal = async () => {
   try {

@@ -55,7 +55,13 @@
     "title": "Titel",
     "additionalInformation": "Zusätzliche Informationen",
     "selectAll": "Alle auswählen",
-    "editor": "Bearbeiter"
+    "editor": "Bearbeiter",
+    "inputName": "Name eingeben",
+    "fileSelect": "Bitte wählen Sie eine Datei aus",
+    "notEndWithJson": "Datei darf nicht auf \".json\" enden",
+    "invalidCharacters": "Name beinhaltet invalide Zeichen",
+    "nameMissing": "Name fehlt",
+    "numberOfPatients": "Patientenanzahl"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -710,7 +716,12 @@
     "CSV": "CSV",
     "FHIR": "FHIR",
     "MIItypeOfUse": "MII Art der Nutzung",
-    "DIFEtypeOfUse": "DIFE Art der Nutzung"
+    "DIFEtypeOfUse": "DIFE Art der Nutzung",
+    "projectResourcesAndRecontact": "Projektressourcen* und Rekontaktierung",
+    "saveProposalBeforeUploadingCohorts": "Bitte speichern sie den Antrag bevor sie eine Kohorte manuell hinzufügen",
+    "cohortFile": "Kohorten Datei",
+    "cohortName": "Kohortenname",
+    "numberOfPatients": "Patientenanzahl"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

@@ -14,6 +14,7 @@ import type {
   IPropertyRights,
   IPublication,
   IResourceAndRecontact,
+  ISelectedCohort,
   ISelectionOfCases,
   ITypeOfUse,
   IUserProject,
@@ -266,13 +267,23 @@ const transformVariableSelection = (variableSelection?: IVariableSelectionData):
   }
 }
 
-export const mapSelectedCohorts = (cohort?: Partial<ICohort>): Partial<ICohort> => {
+export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort => {
   return {
     _id: cohort?._id ?? NEW_ID,
     feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
     label: transformEmptyStringToUndefined(cohort?.label),
     comment: transformEmptyStringToUndefined(cohort?.comment),
     uploadId: cohort?.uploadId ?? undefined,
+    numberOfPatients: cohort?.numberOfPatients,
+  }
+}
+
+export const transformCohorts = (cohorts?: ICohort): ICohort => {
+  return {
+    selectedCohorts: cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ?? [],
+    details: transformEmptyStringToUndefined(cohorts?.details),
+    _id: cohorts?._id,
+    isDone: cohorts?.isDone,
   }
 }
 
@@ -299,17 +310,6 @@ export const transformUserProject = (
     ),
     variableSelection: transformVariableSelection(userProject?.variableSelection),
     selectionOfCases: transformSelectionOfCases(userProject?.selectionOfCases),
-    cohorts: {
-      selectedCohorts:
-        userProject?.cohorts?.selectedCohorts?.map((cohort) =>
-          mapSelectedCohorts({
-            ...cohort,
-            uploadId: cohort?.uploadId as File | undefined,
-          }),
-        ) ?? [],
-      details: transformEmptyStringToUndefined(userProject?.cohorts?.details),
-      _id: userProject?.cohorts?._id ?? NEW_ID,
-      isDone: userProject?.cohorts?.isDone ?? false,
-    },
+    cohorts: transformCohorts(userProject?.cohorts),
   }
 }

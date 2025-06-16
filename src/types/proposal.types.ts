@@ -250,13 +250,6 @@ export interface IInformationOnRequestedBioSamples extends WithIdAndIsDone {
   laboratoryResources: string
   biosamples: IBiosample[]
 }
-export interface ICohort {
-  feasibilityQueryId: number
-  label: string
-  comment?: string
-  uploadId?: File
-  _id?: string
-}
 
 export interface IUserProject {
   generalProjectInformation: IGeneralProjectInformation
@@ -271,15 +264,9 @@ export interface IUserProject {
   informationOnRequestedBioSamples: IInformationOnRequestedBioSamples
   variableSelection?: IVariableSelectionData
   selectionOfCases: ISelectionOfCases
-  cohorts: ICohorts
+  cohorts: ICohort
 }
 
-export interface ICohorts extends WithIdAndIsDone {
-  selectedCohorts: ICohort[]
-  details?: string
-  isDone?: boolean
-  _id?: string
-}
 export interface IRequestedData extends WithIdAndIsDone {
   patientInfo: string
   dataInfo: string
@@ -652,4 +639,18 @@ export type IDataSource = {
 }
 export type IDataSourceDto = {
   [key in PlatformIdentifier]: IDataSource
+}
+
+export interface ISelectedCohort {
+  _id?: string
+  feasibilityQueryId?: number
+  label?: string
+  comment?: string
+  uploadId?: string
+  isManualUpload?: boolean
+  numberOfPatients?: number
+}
+export interface ICohort extends WithIdAndIsDone {
+  selectedCohorts: ISelectedCohort[]
+  details?: string
 }
