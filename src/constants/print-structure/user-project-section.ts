@@ -22,7 +22,7 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
     {
       label: 'proposal.desiredStartTime',
       size: 12,
-      definitions: [[{ key: 'desiredStartTime', kind: 'date' }]],
+      definitions: [[{ key: 'desiredStartTime', kind: 'date', defaultValue: 'proposal.desiredStartTime_immediate' }]],
     },
     {
       label: 'proposal.projectDuration',
@@ -42,8 +42,8 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
   ],
 }
 
-const feasibilityCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'feasibility'> => ({
-  key: 'feasibility',
+const cohortsDetailsCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'cohorts'> => ({
+  key: 'cohorts',
   cardLabel: null,
   shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
   terms: [
@@ -194,9 +194,11 @@ const plannedPublicationCard: IDefinitionCardArray<IUserProject, 'plannedPublica
     },
   ],
 }
-const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOCATIONS> = {
+const addresseesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'addressees',
   cardLabel: 'proposal.addressees',
+  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  // MII
   terms: [
     {
       label: 'proposal.desiredLocations',
@@ -206,7 +208,7 @@ const addresseesCard: IDefinitionCard<IUserProject, 'addressees', typeof MII_LOC
       ],
     },
   ],
-}
+})
 
 const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'typeOfUse',
@@ -279,64 +281,6 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequestedBioSamples', 'biosamples'> = {
-  key: 'informationOnRequestedBioSamples',
-  cardLabel: 'proposal.informationOnRequestedBioSamples',
-  loopOn: 'biosamples',
-  terms: [
-    {
-      label: 'proposal.biosampleType',
-      size: 24,
-      definitions: [[{ key: 'type' }]],
-    },
-    {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'typeDetails' }]],
-    },
-    {
-      label: 'proposal.biosampleCount',
-      size: 24,
-      definitions: [[{ key: 'count' }]],
-    },
-    {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'requirements' }]],
-    },
-    {
-      label: 'proposal.optionalBiosample',
-      size: 24,
-      definitions: [[{ key: 'optionalBiosample' }]],
-    },
-    {
-      label: 'proposal.sampleCode',
-      size: 24,
-      definitions: [[{ key: 'sampleCode' }]],
-    },
-    {
-      label: 'proposal.biosampleMethod',
-      size: 24,
-      definitions: [[{ key: 'method' }]],
-    },
-    {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'requirements' }]],
-    },
-    {
-      label: 'proposal.externalLabTransfer',
-      size: 24,
-      definitions: [[{ key: 'externalLabTransfer' }]],
-    },
-    {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'externalLabTransferDetails' }]],
-    },
-  ],
-}
-
 const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'variableSelection',
   cardLabel: 'proposal.selectionOfVariablesHeader',
@@ -362,7 +306,7 @@ const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
   loopOn: 'selectedCohorts',
   terms: [
     {
-      label: 'proposal.cohortSelection',
+      label: 'proposal.selectFeasibilityQuery',
       size: 24,
       definitions: [[{ key: 'label' }]],
     },
@@ -411,19 +355,18 @@ const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
 
 const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
   generalProjectInformationCard,
-  cohortsCard(dataSources),
-  feasibilityCard(dataSources),
-  variableSelectionCard(dataSources),
-  selectionOfCasesCard(dataSources),
   projectDetailsCard(dataSources),
   ethicVoteCard(dataSources),
   recontactCard(dataSources),
   propertyRightsCard(dataSources),
   plannedPublicationCardEmpty,
   plannedPublicationCard,
-  addresseesCard,
+  addresseesCard(dataSources),
   typeOfUseCard(dataSources),
-  biosamplesCard,
+  cohortsCard(dataSources),
+  cohortsDetailsCard(dataSources),
+  variableSelectionCard(dataSources),
+  selectionOfCasesCard(dataSources),
 ]
 
 export const userProjectSection = (

@@ -281,6 +281,7 @@ export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort =>
 export const transformCohorts = (cohorts?: ICohort): ICohort => {
   return {
     selectedCohorts: cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ?? [],
+    details: transformEmptyStringToUndefined(cohorts?.details),
     _id: cohorts?._id,
     isDone: cohorts?.isDone,
   }

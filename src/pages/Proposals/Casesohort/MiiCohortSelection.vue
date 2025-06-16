@@ -75,15 +75,15 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
-        <FdpgFormItem prop="userProject.feasibility.details">
+        <FdpgFormItem prop="userProject.cohorts.details">
           <FdpgLabel html-for="proposal.assessmentOfFeasibilityDetails" />
           <FdpgTextEditor
-            v-model="feasibilityForm.details"
-            data-testId="feasibilityForm.details"
+            v-model="cohorts.details"
+            data-testId="cohorts.details"
             :placeholder="t('proposal.pleaseEnterAssessmentOfFeasibilityDetails')"
-            :disabled="reviewMode || feasibilityForm.isDone"
+            :disabled="reviewMode || cohorts.isDone"
             :form-ref="formRef"
-            field-path="userProject.feasibility.details"
+            field-path="userProject.cohorts.details"
           />
         </FdpgFormItem>
       </el-col>
@@ -123,10 +123,6 @@ const props = defineProps({
     required: true,
     default: () => [],
   },
-  feasibilityForm: {
-    type: Object as () => IFeasibility,
-    required: true,
-  },
   requestedDataForm: {
     type: Object as () => { patientInfo: string; isDone?: boolean },
     required: true,
@@ -149,10 +145,9 @@ const props = defineProps({
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id)
 
-const emit = defineEmits(['update:modelValue', 'update:feasibilityForm', 'update:requestedDataForm', 'update:uploads'])
+const emit = defineEmits(['update:modelValue', 'update:requestedDataForm', 'update:uploads'])
 
 const cohorts = useVModel(props, 'modelValue', emit)
-const feasibilityForm = useVModel(props, 'feasibilityForm', emit)
 const requestedDataForm = useVModel(props, 'requestedDataForm', emit)
 const uploads = useVModel(props, 'uploads', emit)
 // Automatic cohort dialog

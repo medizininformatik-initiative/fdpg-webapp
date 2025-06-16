@@ -115,6 +115,7 @@ import useNotifications from '@/composables/use-notifications'
 import { ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useI18n } from 'vue-i18n'
+import { biosampleSection } from '@/constants/print-structure/biosample-section'
 
 const authStore = useAuthStore()
 
@@ -125,6 +126,7 @@ const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   participantSection,
   userProjectSection(authStore.assignedDataSources),
   requestedDataSection,
+  biosampleSection(authStore.assignedDataSources),
 ]
 
 const proposalData = ref<IProposal>()

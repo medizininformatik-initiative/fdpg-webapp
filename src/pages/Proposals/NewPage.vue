@@ -112,6 +112,7 @@
             v-if="isMIISelected"
             v-model="proposalForm.userProject.cohorts.selectedCohorts"
             :review-mode="isReviewMode"
+            :form-ref="formRef"
             :feasibilityForm="proposalForm.userProject.feasibility"
             :uploads="proposalForm.uploads"
             @update:feasibility-form="
@@ -500,7 +501,7 @@ const rules = ref<Record<string, any>>({
       },
     },
     feasibility: {
-      details: [requiredIfEmptyValidationFunc(feasibilityId), maxLengthValidationFunc(10000)],
+      details: [maxLengthValidationFunc(10000)],
     },
     projectDetails: {
       simpleProjectDescription: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
@@ -554,18 +555,7 @@ const rules = ref<Record<string, any>>({
       },
     },
     cohorts: {
-      selectedCohorts: [
-        {
-          validator: (_rule: any, value: any[], callback: (error?: Error) => void) => {
-            if (!value || value.length === 0) {
-              callback(new Error(t('general.requiredField')))
-            } else {
-              callback()
-            }
-          },
-          trigger: ['blur', 'change'],
-        },
-      ],
+      selectedCohorts: [],
     },
   },
   requestedData: {

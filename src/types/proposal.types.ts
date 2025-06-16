@@ -652,4 +652,5 @@ export interface ISelectedCohort {
 }
 export interface ICohort extends WithIdAndIsDone {
   selectedCohorts: ISelectedCohort[]
+  details?: string
 }
