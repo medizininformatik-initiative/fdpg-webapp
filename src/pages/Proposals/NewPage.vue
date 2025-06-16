@@ -113,7 +113,6 @@
             v-model="proposalForm.userProject.cohorts"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            :feasibilityForm="proposalForm.userProject.feasibility"
             :uploads="proposalForm.uploads"
             :requestedDataForm="proposalForm.requestedData"
             @update:requestedDataForm="
