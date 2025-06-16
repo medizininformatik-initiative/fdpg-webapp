@@ -60,7 +60,8 @@
     "fileSelect": "Please select a file",
     "notEndWithJson": "Name should not include “.json”",
     "invalidCharacters": "Name contains invalid character",
-    "nameMissing": "Name is required"
+    "nameMissing": "Name is required",
+    "numberOfPatients": "Number of patients"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -716,6 +717,7 @@
     "FHIR": "FHIR",
     "MIItypeOfUse": "MII type of use",
     "DIFEtypeOfUse": "DIFE type of use",
+    "projectResourcesAndRecontact": "Project Resources and Recontact",
     "saveProposalBeforeUploadingCohorts": "Please save the proposal beforehand at least once, after that manual uploads will be enabled.",
     "cohortFile": "Cohort File",
     "cohortName": "Cohort Name",
