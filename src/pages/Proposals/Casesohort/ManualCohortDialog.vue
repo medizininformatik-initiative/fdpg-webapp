@@ -124,9 +124,7 @@ const add = async () => {
   if (!manualFormRef.value) {
     return false
   }
-  const isValid = await manualFormRef.value.validate((a, b) => {
-    console.log({ a, b })
-  })
+  const isValid = await manualFormRef.value.validate()
   if (!isValid) {
     return false
   }

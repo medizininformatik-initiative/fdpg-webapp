@@ -140,8 +140,6 @@ const openReviewPage = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
 }
 
-const cohortAndUploadsRef = ref<{ selectedCohorts: ISelectedCohort[]; uploads: IUpload[] } | null>(null)
-
 const openLockModal = () => {
   messageBoxStore.setMessageBoxInfo({
     ...messageBoxDefaults,
@@ -594,7 +592,7 @@ const addCohort = async (newCohort: ISelectedCohort, file: File) => {
     try {
       await proposalStore.uploadManualCohort(_proposalId, newCohort, file)
     } catch (e) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedSubmit'))
     }
   }
 
@@ -633,8 +631,6 @@ const fetchProposal = async () => {
         displayName: data.projectAbbreviation,
       },
     ])
-
-    console.log(cohortAndUploadsRef)
   } catch (error) {
     showErrorMessage()
     await router.push({ name: RouteName.Dashboard })
