@@ -12,6 +12,7 @@ interface IBaseDefinition<T> {
   hideIfOtherValueIsTruthy?: keyof T
   subKeys?: string[]
   shouldHide?: boolean
+  defaultValue?: TranslationSchema
 }
 interface ILookupDefinition<T, L extends Record<string, Object>> extends IBaseDefinition<T> {
   kind: 'lookup'
@@ -51,6 +52,7 @@ export interface IDefinitionCardTerm<T, L extends Record<string, Object> = {}> {
   definitions: Definitions<T, L>[][]
   hideIfOtherValueIsTruthy?: keyof T
   hideIfThisValueIsFalsy?: keyof T
+  shouldHide?: boolean
 }
 
 export interface IDefinitionCardAction {
