@@ -3,6 +3,10 @@ name: Pipeline
 on:
   push:
 
+env:
+  isMain: ${{ github.ref == 'refs/heads/main' }}
+  isDev: ${{ github.ref == 'refs/heads/dev' }}
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -42,8 +46,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: 'print'
-      pushImages: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' }}
-      suffix: ${{ github.ref == 'refs/heads/main' && '_main' || github.ref == 'refs/heads/dev' && '_dev' || '' }}
+      pushImages: ${{env.isMain == 'true' || env.isDev == 'true' }}
     secrets: inherit
 
   build_dev:
@@ -51,8 +54,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: 'dev'
-      pushImages: ${{ github.ref == 'refs/heads/dev' }}
-      suffix: ${{ github.ref == 'refs/heads/main' && '_main' || github.ref == 'refs/heads/dev' && '_dev' || '' }}
+      pushImages: ${{ env.isDev == 'true' }}
     secrets: inherit
 
   build_prelive:
@@ -60,8 +62,7 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: 'prelive'
-      pushImages: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev' }}
-      suffix: ${{ github.ref == 'refs/heads/main' && '_main' || github.ref == 'refs/heads/dev' && '_dev' || '' }}
+      pushImages: ${{env.isMain == 'true' || env.isDev == 'true' }}
     secrets: inherit
 
   build_main:
@@ -69,6 +70,5 @@ jobs:
     needs: verify
     with:
       nodeEnvironment: 'prod'
-      pushImages: ${{ github.ref == 'refs/heads/main' }}
-      suffix: ${{ github.ref == 'refs/heads/main' && '_main' || github.ref == 'refs/heads/dev' && '_dev' || '' }}
+      pushImages: ${{ env.isMain == 'true' }}
     secrets: inherit
