@@ -13,8 +13,6 @@ on:
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
   imageName: fdpg-webapp
-  isMain: ${{ github.ref == 'refs/heads/main' }}
-  isDev: ${{ github.ref == 'refs/heads/dev' }}
 
 jobs:
   build_publish:
@@ -54,17 +52,8 @@ jobs:
       - name: set pipeTime variable
         run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
 
-      - name: Set imageTag variable
-        run: |
-          if [[ "${{ env.isMain }}" == "true" ]]; then
-            suffix="_main"
-          elif [[ "${{ env.isDev }}" == "true" ]]; then
-            suffix="_dev"
-          else
-            suffix=""
-          fi
-
-          echo "imageTag=${{ inputs.nodeEnvironment }}-${{ env.npmVersionString }}_${{ env.pipeDate }}_${{ env.buildNumberOfDate }}${suffix}" >> "$GITHUB_ENV"
+      - name: set imageTag variable
+        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
