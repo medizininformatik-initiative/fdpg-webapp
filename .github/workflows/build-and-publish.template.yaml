@@ -4,39 +4,43 @@ on:
       nodeEnvironment:
         type: string
         required: true
-        default: "dev"
+        default: 'dev'
       pushImages:
         type: boolean
         required: true
         default: false
+      suffix:
+        type: string
+        required: false
+        default: '_undefined'
 
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
   imageName: fdpg-webapp
 
-
 jobs:
   build_publish:
-    name: "Build and Publish"
+    name: 'Build and Publish'
+    if: ${{ inputs.pushImages == true }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: "Setup Node"
+      - name: 'Setup Node'
         uses: actions/setup-node@v3
         with:
           node-version: ${{vars.NODE_VERSION}}
           cache: yarn
 
-      - name: "Installing Modules"
+      - name: 'Installing Modules'
         run: yarn install
 
-      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+      - name: 'Yarn Build for env: ${{ inputs.nodeEnvironment }}'
         if: ${{ inputs.nodeEnvironment != 'print' }}
         run: yarn run build --mode ${{ inputs.nodeEnvironment }} && echo "DOCKERFILE=Dockerfile" >> "$GITHUB_ENV"
 
       # if env = print, build the print-module Dockerimage instead
-      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+      - name: 'Yarn Build for env: ${{ inputs.nodeEnvironment }}'
         if: ${{ inputs.nodeEnvironment == 'print' }}
         run: yarn run build:print --mode prod && echo "DOCKERFILE=print.Dockerfile" >> "$GITHUB_ENV"
 
@@ -54,7 +58,7 @@ jobs:
         run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
 
       - name: set imageTag variable
-        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}" >> "$GITHUB_ENV"
+        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}${{inputs.suffix}}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -74,10 +78,9 @@ jobs:
         with:
           context: .
           file: ${{env.DOCKERFILE}}
-          push: ${{ inputs.pushImages }}
+          push: ${{ inputs.pushImages == true }}
           tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.imageTag}}
           build-args: |
             BUILD_DATE=${{env.pipeDate}}
             BUILD_TIME=${{env.pipeTime}}
             SOURCE_BRANCH=${{github.ref}}
-
