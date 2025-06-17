@@ -4,7 +4,7 @@ on:
       nodeEnvironment:
         type: string
         required: true
-        default: "dev"
+        default: 'dev'
       pushImages:
         type: boolean
         required: true
@@ -13,30 +13,31 @@ on:
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
   imageName: fdpg-webapp
-
+  isMain: ${{ github.ref == 'refs/heads/main' }}
+  isDev: ${{ github.ref == 'refs/heads/dev' }}
 
 jobs:
   build_publish:
-    name: "Build and Publish"
+    name: 'Build and Publish'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: "Setup Node"
+      - name: 'Setup Node'
         uses: actions/setup-node@v3
         with:
           node-version: ${{vars.NODE_VERSION}}
           cache: yarn
 
-      - name: "Installing Modules"
+      - name: 'Installing Modules'
         run: yarn install
 
-      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+      - name: 'Yarn Build for env: ${{ inputs.nodeEnvironment }}'
         if: ${{ inputs.nodeEnvironment != 'print' }}
         run: yarn run build --mode ${{ inputs.nodeEnvironment }} && echo "DOCKERFILE=Dockerfile" >> "$GITHUB_ENV"
 
       # if env = print, build the print-module Dockerimage instead
-      - name: "Yarn Build for env: ${{ inputs.nodeEnvironment }}"
+      - name: 'Yarn Build for env: ${{ inputs.nodeEnvironment }}'
         if: ${{ inputs.nodeEnvironment == 'print' }}
         run: yarn run build:print --mode prod && echo "DOCKERFILE=print.Dockerfile" >> "$GITHUB_ENV"
 
@@ -53,8 +54,17 @@ jobs:
       - name: set pipeTime variable
         run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
 
-      - name: set imageTag variable
-        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}" >> "$GITHUB_ENV"
+      - name: Set imageTag variable
+        run: |
+          if [[ "${{ env.isMain }}" == "true" ]]; then
+            suffix="_main"
+          elif [[ "${{ env.isDev }}" == "true" ]]; then
+            suffix="_dev"
+          else
+            suffix=""
+          fi
+
+          echo "imageTag=${{ inputs.nodeEnvironment }}-${{ env.npmVersionString }}_${{ env.pipeDate }}_${{ env.buildNumberOfDate }}${suffix}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -80,4 +90,3 @@ jobs:
             BUILD_DATE=${{env.pipeDate}}
             BUILD_TIME=${{env.pipeTime}}
             SOURCE_BRANCH=${{github.ref}}
-
