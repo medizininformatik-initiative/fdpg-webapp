@@ -9,6 +9,10 @@ on:
         type: boolean
         required: true
         default: false
+      suffix:
+        type: string
+        required: false
+        default: ''
 
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
