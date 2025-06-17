@@ -241,8 +241,11 @@ const downloadCsv = async (id?: number, label?: string) => {
     showErrorMessage()
     return
   }
-
-  await feasibilityStore.getCsvByQueryId(id, label)
+  try {
+    await feasibilityStore.getCsvByQueryId(id, label)
+  } catch (e) {
+    showErrorMessage()
+  }
 }
 
 const handleDelete = async (deletedCohort: ISelectedCohort) => {
