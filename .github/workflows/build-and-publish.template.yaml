@@ -21,7 +21,7 @@ env:
 jobs:
   build_publish:
     name: 'Build and Publish'
-    if: ${{ inputs.pushImages == 'true' }}
+    if: ${{ inputs.pushImages == true }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -78,7 +78,7 @@ jobs:
         with:
           context: .
           file: ${{env.DOCKERFILE}}
-          push: ${{ inputs.pushImages == 'true' }}
+          push: ${{ inputs.pushImages == true }}
           tags: ${{env.containerRegistry}}/fdpg/${{env.imageName}}:${{env.imageTag}}
           build-args: |
             BUILD_DATE=${{env.pipeDate}}
