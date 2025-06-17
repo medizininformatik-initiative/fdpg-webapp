@@ -12,7 +12,7 @@ on:
       suffix:
         type: string
         required: false
-        default: '_undefined'
+        default: 'undefined'
 
 env:
   containerRegistry: container-registry.cr.de-fra.ionos.com
@@ -57,7 +57,7 @@ jobs:
         run: echo "pipeTime=$(date +%H%M%S)" >> "$GITHUB_ENV"
 
       - name: set imageTag variable
-        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}}" >> "$GITHUB_ENV"
+        run: echo "imageTag=${{inputs.nodeEnvironment}}-${{env.npmVersionString}}_${{env.pipeDate}}_${{env.buildNumberOfDate}-${{inputs.suffix}}}" >> "$GITHUB_ENV"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
