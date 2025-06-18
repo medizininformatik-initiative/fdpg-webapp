@@ -51,7 +51,7 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  alreadySelected: {
+  existingCohorts: {
     type: Array as PropType<ISelectedCohort[]>,
     required: true,
     default: () => [],
@@ -59,7 +59,7 @@ const props = defineProps({
 })
 
 const selectedQueryIds = ref<number[]>(
-  props.alreadySelected.filter((c) => c.feasibilityQueryId).map((c) => c.feasibilityQueryId as number),
+  props.existingCohorts.filter((c) => c.feasibilityQueryId).map((c) => c.feasibilityQueryId as number),
 )
 
 const isLoading = ref(false)
@@ -87,7 +87,7 @@ const close = () => {
 }
 
 const update = () => {
-  const alreadySelectedFeasibilityIds = props.alreadySelected
+  const alreadySelectedFeasibilityIds = props.existingCohorts
     .filter((c) => c.feasibilityQueryId)
     .map((c) => c.feasibilityQueryId as number)
 
@@ -110,12 +110,12 @@ const update = () => {
 
 const mapQueryIdToSelectedCohort = (queryId: number) => {
   if (
-    props.alreadySelected
+    props.existingCohorts
       .filter((c) => c.feasibilityQueryId && c.uploadId)
       .map((c) => c.feasibilityQueryId)
       .includes(queryId)
   ) {
-    const [persisted] = props.alreadySelected.filter((c) => c.feasibilityQueryId == queryId)
+    const [persisted] = props.existingCohorts.filter((c) => c.feasibilityQueryId == queryId)
     return persisted
   }
 

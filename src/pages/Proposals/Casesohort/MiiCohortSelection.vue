@@ -71,7 +71,7 @@
               @add="handleAutomaticAdd"
               @remove="handleAutomaticRemove"
               :form-ref="formRef"
-              :already-selected="modelValue.selectedCohorts"
+              :existing-cohorts="modelValue.selectedCohorts"
             />
 
             <!-- Manual Cohort Dialog -->
