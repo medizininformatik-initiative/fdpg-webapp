@@ -11,17 +11,13 @@
         <FdpgRadio
           :test-id-extension="'__' + identifier"
           value="PARTICIPATING_SCIENTIST"
-          label="proposal.participantRole_PARTICIPATING_SCIENTIST"
+          label="roles.participantRole_PARTICIPATING_SCIENTIST"
         />
-        <FdpgRadio
-          :test-id-extension="'__' + identifier"
-          value="RESEARCHER"
-          label="proposal.participantRole_RESEARCHER"
-        />
+        <FdpgRadio :test-id-extension="'__' + identifier" value="RESEARCHER" label="roles.participantRole_RESEARCHER" />
         <FdpgRadio
           :test-id-extension="'__' + identifier"
           value="RESPONSIBLE_SCIENTIST"
-          label="proposal.participantRole_RESPONSIBLE_SCIENTIST"
+          label="roles.participantRole_RESPONSIBLE_SCIENTIST"
         />
       </el-radio-group>
     </FdpgFormItem>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="participants" class="section">
-    <h2 class="section-title">{{ $t('proposal.participatingScientistsDetailTitle', { count: participantsCount }) }}</h2>
+    <h2 class="section-title">{{ t('proposal.participatingScientistsDetailTitle', { count: participantsCount }) }}</h2>
     <div class="participants">
       <div
         v-for="(people, panelType, index) in participants"
@@ -9,7 +9,7 @@
         :class="participantPanels[index] ? 'participant-item--expanded' : 'participant-item--collapsed'"
       >
         <div class="participant-item-header" @click="() => toggleParticipantPanel(index)">
-          <h6><span /> {{ $t(`proposal.${panelType}`) }} ({{ people.length }})</h6>
+          <h6><span /> {{ t(`proposal.${panelType}`) }} ({{ people.length }})</h6>
           <i
             :class="participantPanels[index] ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"
             type="button"
@@ -19,32 +19,62 @@
         </div>
         <div class="participant-item-content">
           <el-row
-            v-for="(
-              { fullName, participantType, participantRole, email, action, actionTitle, isDisabled }, participantIndex
-            ) in people"
+            v-for="(participant, participantIndex) in people"
             :key="`participant-${participantIndex}`"
             type="flex"
             align="middle"
           >
-            <el-col :span="6">{{ fullName }}</el-col>
-            <el-col :span="6">
-              <el-tag>
-                {{ $t('proposal.participantCategory_' + participantType) }}
-              </el-tag>
+            <el-col :span="4">{{ participant.fullName }}</el-col>
+            <el-col :span="4">
+              <FdpgDropdown
+                :button="{
+                  label: t('proposal.participantCategory_' + participant.participantType),
+                  kind: 'basic',
+                  isTranslatable: false,
+                }"
+                :items="participantCategoryItems"
+                :show-dropdown-icon="true"
+              />
             </el-col>
-            <el-col :span="6">
-              <el-tag> {{ $t('proposal.participantRole_' + participantRole) }}</el-tag>
+            <el-col :span="4">
+              <FdpgDropdown
+                :button="{
+                  label: t('roles.participantRole_' + participant.participantRole),
+                  kind: 'basic',
+                  isTranslatable: false,
+                }"
+                :items="[
+                  {
+                    label: 'roles.participantRole_PARTICIPATING_SCIENTIST',
+                    kind: 'basic',
+                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.ParticipatingScientist),
+                  },
+                  {
+                    label: 'roles.participantRole_RESEARCHER',
+                    kind: 'basic',
+                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.Researcher),
+                  },
+                  {
+                    label: 'roles.participantRole_RESPONSIBLE_SCIENTIST',
+                    kind: 'basic',
+                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.ResponsibleScientist),
+                  },
+                ]"
+                :show-dropdown-icon="true"
+              />
             </el-col>
-            <el-col :span="6">{{ email }}</el-col>
+            <el-col :span="6">{{ participant.email }}</el-col>
             <el-col :span="6" class="action-column">
               <el-button
-                v-if="action && actionTitle && participantPanels[index] && userHasPermission"
+                v-if="participant.action && participant.actionTitle && participantPanels[index] && userHasPermission"
                 v-loading="isEmailSendingInProgress"
                 link
-                :disabled="isDisabled || isEmailSendingInProgress || proposalStore.currentProposal?.isLocked"
-                @click="action"
+                :disabled="
+                  participant.isDisabled || isEmailSendingInProgress || proposalStore.currentProposal?.isLocked
+                "
+                @click="participant.action"
               >
-                {{ $t(actionTitle) }}
+                {{ t(participant.actionTitle) }}
               </el-button>
             </el-col>
           </el-row>
@@ -57,14 +87,20 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import FdpgDropdown from './FdpgDropdown.vue'
+import type { DropdownButton, DropdownItem } from '@/types/dropdown.types'
+import { useI18n } from 'vue-i18n'
 
 import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useUserStore } from '@/stores/user.store'
-import type { IResearcherIdentity, ParticipantType, ParticipantRole } from '@/types/proposal.types'
+import type { IResearcherIdentity } from '@/types/proposal.types'
+import { ParticipantType, ParticipantRole } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
+import { Countries } from '@/types/location.enum'
+import type { IParticipant } from '@/types/proposal.types'
 
 const { params } = useRoute()
 const proposalId = params.id as string
@@ -72,6 +108,7 @@ const proposalId = params.id as string
 const proposalStore = useProposalStore()
 const userStore = useUserStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+const { t } = useI18n()
 
 interface ParticipantAction {
   action: () => Promise<void>
@@ -108,6 +145,34 @@ const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'usernam
   }
 }
 
+const participantCategoryItems: DropdownItem[] = [
+  {
+    label: 'proposal.participantCategory_PROJECT_LEADER',
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, ParticipantType.ProjectLeader),
+  },
+  {
+    label: 'proposal.participantCategory_ADDITIONAL_PROJECT_LEADER',
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, ParticipantType.AdditionalProjectLeader),
+  },
+  {
+    label: 'proposal.participantCategory_DATA_RECEIVER',
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, ParticipantType.DataReceiver),
+  },
+  {
+    label: 'proposal.participantCategory_BIOSAMPLE_RECEIVER',
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, ParticipantType.BiosampleReceiver),
+  },
+  {
+    label: 'proposal.participantCategory_DATA_AND_BIOSAMPLE_RECEIVER',
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, ParticipantType.DataAndBiosampleReceiver),
+  },
+]
+
 const getRegistrationPendingAction = (
   identity: Pick<IResearcherIdentity | ParticipantInfo, 'email'>,
 ): ParticipantAction => {
@@ -122,7 +187,7 @@ const participants = computed<ParticipantPanelType>(() => {
       const result = {
         fullName: `${info.firstName} ${info.lastName}`,
         participantType: info.participantType,
-        participantRole: info.participantRole,
+        participantRole: info.participantRole as ParticipantRole,
         email: info.email,
         isDisabled: triggeredEmails.value.includes(info.email),
       }
@@ -196,9 +261,65 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
   }
   isEmailSendingInProgress.value = false
 }
+
+async function handleParticipantTypeSelect(participant: ParticipantInfo, newType: ParticipantType) {
+  try {
+    participant.participantType = newType
+    const researcher = researcherIdentities.value.find((r) => r.email === participant.email)
+    if (researcher) {
+      researcher.participantType = newType
+    }
+    const updatedParticipants: IParticipant[] =
+      proposalStore.currentProposal?.participants?.map((p) => {
+        if (p.researcher.email === participant.email) {
+          return {
+            ...p,
+            participantCategory: {
+              ...p.participantCategory,
+              category: newType,
+            },
+          }
+        }
+        return p
+      }) ?? []
+    await proposalStore.updateParticipants(proposalId, updatedParticipants)
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error updating participant type:', error)
+    showErrorMessage()
+  }
+}
+
+async function handleParticipantRoleSelect(participant: ParticipantInfo, newRole: ParticipantRole) {
+  try {
+    participant.participantRole = newRole
+    const researcher = researcherIdentities.value.find((r) => r.email === participant.email)
+    if (researcher) {
+      researcher.participantRole = newRole
+    }
+    const updatedParticipants: IParticipant[] =
+      proposalStore.currentProposal?.participants?.map((p) => {
+        if (p.researcher.email === participant.email) {
+          return {
+            ...p,
+            participantRole: {
+              ...p.participantRole,
+              role: newRole,
+            },
+          }
+        }
+        return p
+      }) ?? []
+    await proposalStore.updateParticipants(proposalId, updatedParticipants)
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error updating participant role:', error)
+    showErrorMessage()
+  }
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @use '@/assets/sass/variable' as *;
 
 .participants {
@@ -211,12 +332,22 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
     &.participant-item--expanded {
       .participant-item-content {
         height: 100%;
+        opacity: 1;
+        transition-duration: 100ms;
+        transition-timing-function: linear;
+        overflow: visible;
+
+        .el-col {
+          position: static;
+        }
       }
     }
 
     &.participant-item--collapsed {
       .participant-item-content {
-        height: 0;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
         padding-top: 0;
         padding-bottom: 0;
       }
@@ -307,13 +438,14 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
     .participant-item-content {
       color: $black;
       padding: 10px 39px 9px 39px;
-      transition-property: all;
-      transition-duration: 100ms;
-      transition-timing-function: linear;
-      overflow: hidden;
+      transition: all 0.3s ease;
 
       .el-row {
         padding: 13px 0;
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $gray-200;
+        }
       }
 
       .el-tag {
@@ -344,6 +476,17 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
         }
       }
     }
+  }
+}
+
+:deep(.menu) {
+  position: relative;
+  z-index: 100;
+
+  .menu-items {
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 101;
   }
 }
 </style>
