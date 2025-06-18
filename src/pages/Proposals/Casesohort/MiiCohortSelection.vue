@@ -69,6 +69,7 @@
               v-model="isAutomaticDialogOpen"
               @close="closeAutomaticDialog"
               @add="handleAutomaticAdd"
+              @remove="handleAutomaticRemove"
               :form-ref="formRef"
               :already-selected="modelValue.selectedCohorts"
             />
@@ -191,8 +192,13 @@ const updateFiles = (file: IUpload, mode: 'add' | 'remove') => {
   }
 }
 
-const handleAutomaticAdd = (newCohort: ISelectedCohort) => {
-  addCohort(newCohort)
+const handleAutomaticAdd = (newCohorts: ISelectedCohort[]) => {
+  newCohorts.forEach(addCohort)
+  closeAutomaticDialog()
+}
+
+const handleAutomaticRemove = (removedCohorts: ISelectedCohort[]) => {
+  removedCohorts.forEach(handleDelete)
   closeAutomaticDialog()
 }
 
