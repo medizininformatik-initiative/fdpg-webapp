@@ -7,11 +7,11 @@
           <FdpgFormItem>
             <FdpgLabel html-for="proposal.selectFeasibilityQuery" required />
             <FdpgSelect
-              v-model="selectedQuery"
+              v-model="selectedQueryId"
               data-testId="feasibilityForm.id"
               test-id-extension="__feasibilityForm.id"
               placeholder="proposal.referToFeasibilityStudiesOrSimilarThatHaveAlreadyBeenCarriedOut"
-              :options="selectableQueries"
+              :options="selectOptions"
               :is-loading="isLoading"
               :no-data-text="noDataText"
               clearable
@@ -25,29 +25,38 @@
         <el-button link @click="close">
           {{ t('general.cancel') }}
         </el-button>
-        <el-button type="primary" @click="add">
+        <el-button type="primary" @click="add" :disabled="!selectedQueryId">
           {{ t('general.save') }}
         </el-button>
       </span>
     </template>
   </FdpgDialog>
 </template>
+
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import { useFeasibilityStore } from '@/stores/feasibility.store'
 import { useVModel } from '@vueuse/core'
-import type { ICohort, ISelectedCohort } from '@/types/proposal.types'
+import type { ISelectedCohort } from '@/types/proposal.types'
 import type { TranslationSchema } from '@/plugins/i18n'
+import FdpgSelect from '@/components/FdpgSelect.vue'
+import FdpgFormItem from '@/components/FdpgFormItem.vue'
+import FdpgLabel from '@/components/FdpgLabel.vue'
 
 const props = defineProps({
   modelValue: {
     type: Boolean,
     required: true,
   },
+  alreadySelected: {
+    type: Array as PropType<ISelectedCohort[]>,
+    required: true,
+    default: () => [],
+  },
 })
-const selectedQuery = ref<ICohort | null>(null)
+const selectedQueryId = ref<number | undefined>(undefined)
 
 const isLoading = ref(false)
 const noDataText = ref<TranslationSchema>('proposal.noFeasibilityQueriesSaved')
@@ -58,31 +67,42 @@ const { t } = useI18n()
 const feasibilityStore = useFeasibilityStore()
 const dialogOpen = useVModel(props, 'modelValue', emit)
 
-const selectableQueries = computed(() => {
-  return feasibilityStore.feasibilityQueries.map((query) => ({
-    value: {
-      feasibilityQueryId: query.id,
-      comment: query.comment,
+const allQueries = computed(() => feasibilityStore.feasibilityQueries || [])
+
+const selectOptions = computed(() => {
+  const alreadySelectedFeasibilityIdNonNull = props.alreadySelected
+    .filter((c) => c.feasibilityQueryId)
+    .map((c) => c.feasibilityQueryId)
+  const queriesSelect = allQueries.value
+    .filter((query) => !alreadySelectedFeasibilityIdNonNull.includes(query.id))
+    .map((query) => ({
+      value: query.id,
       label: query.label,
-    },
-    label: query.label,
-  }))
+    }))
+
+  return queriesSelect
 })
 
 const close = () => {
   dialogOpen.value = false
 }
+
 const add = () => {
-  if (!selectedQuery.value) return
+  if (!selectedQueryId.value) return
+
+  const [selectedQuery] = allQueries.value.filter((query) => query.id === selectedQueryId.value)
 
   const newCohort: ISelectedCohort = {
-    feasibilityQueryId: selectedQuery.value.feasibilityQueryId,
-    label: selectedQuery.value.label,
-    comment: selectedQuery.value.comment,
+    feasibilityQueryId: selectedQuery.id,
+    label: selectedQuery.label,
+    comment: selectedQuery.comment,
     isManualUpload: false,
     numberOfPatients: undefined,
   }
+
   emit('add', newCohort)
+
+  selectedQueryId.value = undefined
 }
 
 onMounted(async () => {

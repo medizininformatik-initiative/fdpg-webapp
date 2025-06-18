@@ -70,6 +70,7 @@
               @close="closeAutomaticDialog"
               @add="handleAutomaticAdd"
               :form-ref="formRef"
+              :already-selected="modelValue.selectedCohorts"
             />
 
             <!-- Manual Cohort Dialog -->
