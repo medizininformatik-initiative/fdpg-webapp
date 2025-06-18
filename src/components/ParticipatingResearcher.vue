@@ -19,7 +19,9 @@
         </div>
         <div class="participant-item-content">
           <el-row
-            v-for="({ fullName, participantType, email, action, actionTitle, isDisabled }, participantIndex) in people"
+            v-for="(
+              { fullName, participantType, participantRole, email, action, actionTitle, isDisabled }, participantIndex
+            ) in people"
             :key="`participant-${participantIndex}`"
             type="flex"
             align="middle"
@@ -30,10 +32,13 @@
                 {{ $t('proposal.participantCategory_' + participantType) }}
               </el-tag>
             </el-col>
+            <el-col :span="6">
+              <el-tag> {{ $t('proposal.participantRole_' + participantRole) }}</el-tag>
+            </el-col>
             <el-col :span="6">{{ email }}</el-col>
             <el-col :span="6" class="action-column">
               <el-button
-                v-if="action && actionTitle && participantPanels[index]"
+                v-if="action && actionTitle && participantPanels[index] && userHasPermission"
                 v-loading="isEmailSendingInProgress"
                 link
                 :disabled="isDisabled || isEmailSendingInProgress || proposalStore.currentProposal?.isLocked"
@@ -57,7 +62,9 @@ import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useUserStore } from '@/stores/user.store'
-import type { IResearcherIdentity, ParticipantType } from '@/types/proposal.types'
+import type { IResearcherIdentity, ParticipantType, ParticipantRole } from '@/types/proposal.types'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import { Role } from '@/types/oidc.types'
 
 const { params } = useRoute()
 const proposalId = params.id as string
@@ -76,6 +83,7 @@ interface ParticipantInfo extends Partial<ParticipantAction> {
   participantType: ParticipantType
   email: string
   isDisabled?: boolean
+  participantRole: ParticipantRole
 }
 
 type PanelType = 'invitationPending' | 'registrationPending' | 'alreadyRegistered'
@@ -86,6 +94,13 @@ let researcherIdentities = ref<Omit<IResearcherIdentity, 'username'>[]>([])
 const participantsCount = ref(0)
 const triggeredEmails = ref<string[]>([])
 
+const authStore = useAuthStore()
+const userRole = computed<Role | undefined>(() => {
+  return authStore.singleKnownRole
+})
+const userHasPermission = computed(() => {
+  return userRole.value === Role.FdpgMember || userRole.value === Role.DataSourceMember
+})
 const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
   return {
     action: () => createUser(identity),
@@ -107,6 +122,7 @@ const participants = computed<ParticipantPanelType>(() => {
       const result = {
         fullName: `${info.firstName} ${info.lastName}`,
         participantType: info.participantType,
+        participantRole: info.participantRole,
         email: info.email,
         isDisabled: triggeredEmails.value.includes(info.email),
       }
