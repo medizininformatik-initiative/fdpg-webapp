@@ -44,7 +44,7 @@ export enum ParticipantType {
   DataAndBiosampleReceiver = 'DATA_AND_BIOSAMPLE_RECEIVER',
 }
 
-export const enum ParticipantRole {
+export enum ParticipantRole {
   ParticipatingScientist = 'PARTICIPATING_SCIENTIST',
   Researcher = 'RESEARCHER',
   ResponsibleScientist = 'RESPONSIBLE_SCIENTIST',

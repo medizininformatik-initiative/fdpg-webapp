@@ -1,6 +1,6 @@
 <template>
   <Menu v-slot="{ open }" as="div" class="menu">
-    <MenuButton class="menu-button">
+    <MenuButton class="menu-button" :disabled="button.disabled" :aria-label="button.label">
       <img v-if="button.kind === 'img'" :src="button.src" aria-hidden="true" alt="" width="16" height="16" />
       <span v-if="button.kind === 'icon'" class="icon" :class="button.iconClass" aria-hidden="true" />
       <template v-if="button.isTranslatable">{{ $t(button.label) }}</template>

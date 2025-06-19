@@ -31,6 +31,7 @@
                   label: '',
                   kind: 'basic',
                   isTranslatable: false,
+                  disabled: !userHasPermission,
                 }"
                 :items="getParticipantCategoryItems(participant)"
                 @select="handleParticipantTypeSelect(participant, $event)"
@@ -49,6 +50,7 @@
                   label: '',
                   kind: 'basic',
                   isTranslatable: false,
+                  disabled: !userHasPermission,
                 }"
                 :items="getParticipantRoleItems(participant)"
                 @select="handleParticipantRoleSelect(participant, $event)"
@@ -62,7 +64,7 @@
             <el-col :span="5">{{ participant.email }}</el-col>
             <el-col :span="5" class="action-column">
               <el-button
-                v-if="participant.action && participant.actionTitle && participantPanels[index] && userHasPermission"
+                v-if="participant.action && participant.actionTitle && participantPanels[index] && isFdpgMembers"
                 v-loading="isEmailSendingInProgress"
                 link
                 :disabled="
@@ -92,7 +94,7 @@ import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useUserStore } from '@/stores/user.store'
 import type { IResearcherIdentity } from '@/types/proposal.types'
-import { ParticipantType, ParticipantRole } from '@/types/proposal.types'
+import { ParticipantType, ParticipantRole, ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { Countries } from '@/types/location.enum'
@@ -126,45 +128,21 @@ type ParticipantPanelType = Record<PanelType, ParticipantInfo[]>
 let researcherIdentities = ref<Omit<IResearcherIdentity, 'username'>[]>([])
 const participantsCount = ref(0)
 const triggeredEmails = ref<string[]>([])
+const isEmailSendingInProgress = ref(false)
+const participantPanels = ref<boolean[]>([])
 
 const authStore = useAuthStore()
+
 const userRole = computed<Role | undefined>(() => {
   return authStore.singleKnownRole
 })
-const userHasPermission = computed(() => {
+const isFdpgMembers = computed(() => {
   return userRole.value === Role.FdpgMember || userRole.value === Role.DataSourceMember
 })
-const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
-  return {
-    action: () => createUser(identity),
-    actionTitle: 'proposal.sendInvitation',
-  }
-}
 
-function getParticipantCategoryItems(participant: ParticipantInfo): DropdownItem[] {
-  return Object.values(ParticipantType).map((type) => ({
-    label: `proposal.participantCategory_${type}`,
-    kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, type),
-  }))
-}
-
-function getParticipantRoleItems(participant: ParticipantInfo): DropdownItem[] {
-  return Object.values(ParticipantRole).map((role) => ({
-    label: `roles.participantRole_${role}`,
-    kind: 'basic',
-    action: () => handleParticipantRoleSelect(participant, role),
-  }))
-}
-
-const getRegistrationPendingAction = (
-  identity: Pick<IResearcherIdentity | ParticipantInfo, 'email'>,
-): ParticipantAction => {
-  return {
-    action: () => resendInvitation(identity),
-    actionTitle: 'proposal.resendInvitation',
-  }
-}
+const isResearcher = computed(() => {
+  return userRole.value === Role.Researcher
+})
 
 const participants = computed<ParticipantPanelType>(() => {
   return researcherIdentities.value.reduce(
@@ -198,6 +176,57 @@ const participants = computed<ParticipantPanelType>(() => {
     } as ParticipantPanelType,
   )
 })
+const userHasPermission = computed(
+  () =>
+    isFdpgMembers.value ||
+    (isResearcher.value &&
+      proposalStore.currentProposal?.status &&
+      [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
+        proposalStore.currentProposal.status,
+      )),
+)
+
+const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
+  return {
+    action: () => createUser(identity),
+    actionTitle: 'proposal.sendInvitation',
+  }
+}
+
+const getParticipantCategoryItems = (participant: ParticipantInfo): DropdownItem[] => {
+  return Object.values(ParticipantType).map((type) => ({
+    label: `proposal.participantCategory_${type}`,
+    kind: 'basic',
+    action: () => handleParticipantTypeSelect(participant, type),
+    disabled: !userHasPermission.value,
+  }))
+}
+
+const getParticipantRoleItems = (participant: ParticipantInfo): DropdownItem[] => {
+  // Check if this participant is the only Responsible Scientist
+  const isOnlyResponsibleScientist =
+    participant.participantRole === ParticipantRole.ResponsibleScientist &&
+    !researcherIdentities.value.some(
+      (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
+    )
+
+  return Object.values(ParticipantRole).map((role) => ({
+    label: `roles.participantRole_${role}`,
+    kind: 'basic',
+    action: () => handleParticipantRoleSelect(participant, role),
+    // Disable if user has no permission or if trying to change the only Responsible Scientist
+    disabled: !userHasPermission.value || (isOnlyResponsibleScientist && role !== ParticipantRole.ResponsibleScientist),
+  }))
+}
+
+const getRegistrationPendingAction = (
+  identity: Pick<IResearcherIdentity | ParticipantInfo, 'email'>,
+): ParticipantAction => {
+  return {
+    action: () => resendInvitation(identity),
+    actionTitle: 'proposal.resendInvitation',
+  }
+}
 
 onBeforeMount(async () => {
   try {
@@ -208,13 +237,10 @@ onBeforeMount(async () => {
   }
 })
 
-const participantPanels = ref<boolean[]>([])
-
 const toggleParticipantPanel = (id: number) => {
   participantPanels.value[id] = !participantPanels.value[id]
 }
 
-const isEmailSendingInProgress = ref(false)
 const createUser = async (userToCreate: Omit<IResearcherIdentity, 'username'>) => {
   const users = researcherIdentities.value.filter((identity) => identity.email === userToCreate.email)
   if (users.length) {
@@ -247,7 +273,7 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
   isEmailSendingInProgress.value = false
 }
 
-async function handleParticipantTypeSelect(participant: ParticipantInfo, newType: ParticipantType) {
+const handleParticipantTypeSelect = async (participant: ParticipantInfo, newType: ParticipantType) => {
   try {
     participant.participantType = newType
     const researcher = researcherIdentities.value.find((r) => r.email === participant.email)
@@ -275,13 +301,35 @@ async function handleParticipantTypeSelect(participant: ParticipantInfo, newType
   }
 }
 
-async function handleParticipantRoleSelect(participant: ParticipantInfo, newRole: ParticipantRole) {
+const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole: ParticipantRole) => {
   try {
+    // Prevent changing role if this is the only Responsible Scientist
+    if (
+      participant.participantRole === ParticipantRole.ResponsibleScientist &&
+      newRole !== ParticipantRole.ResponsibleScientist &&
+      !researcherIdentities.value.some(
+        (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
+      )
+    ) {
+      showErrorMessage(t('proposal.cannotChangeOnlyResponsibleScientist'))
+      return
+    }
+
+    if (newRole === ParticipantRole.ResponsibleScientist) {
+      const existingResponsibleScientist = researcherIdentities.value.find(
+        (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
+      )
+      if (existingResponsibleScientist) {
+        existingResponsibleScientist.participantRole = ParticipantRole.ParticipatingScientist
+      }
+    }
+
     participant.participantRole = newRole
     const researcher = researcherIdentities.value.find((r) => r.email === participant.email)
     if (researcher) {
       researcher.participantRole = newRole
     }
+
     const updatedParticipants: IParticipant[] =
       proposalStore.currentProposal?.participants?.map((p) => {
         if (p.researcher.email === participant.email) {
@@ -293,13 +341,31 @@ async function handleParticipantRoleSelect(participant: ParticipantInfo, newRole
             },
           }
         }
+        if (
+          newRole === ParticipantRole.ResponsibleScientist &&
+          p.participantRole.role === ParticipantRole.ResponsibleScientist &&
+          p.researcher.email !== participant.email
+        ) {
+          return {
+            ...p,
+            participantRole: {
+              ...p.participantRole,
+              role: ParticipantRole.ParticipatingScientist,
+            },
+          }
+        }
         return p
       }) ?? []
+
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
-    showSuccessMessage()
+    showSuccessMessage(
+      newRole === ParticipantRole.ResponsibleScientist
+        ? t('proposal.responsibleScientistUpdated')
+        : t('proposal.participantRoleUpdated'),
+    )
   } catch (error) {
     console.error('Error updating participant role:', error)
-    showErrorMessage()
+    showErrorMessage(t('proposal.errorUpdatingParticipantRole'))
   }
 }
 </script>
