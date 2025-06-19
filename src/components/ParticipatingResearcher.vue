@@ -25,46 +25,42 @@
             align="middle"
           >
             <el-col :span="4">{{ participant.fullName }}</el-col>
-            <el-col :span="4">
+            <el-col :span="5">
               <FdpgDropdown
                 :button="{
-                  label: t('proposal.participantCategory_' + participant.participantType),
+                  label: '',
                   kind: 'basic',
                   isTranslatable: false,
                 }"
-                :items="participantCategoryItems"
+                :items="getParticipantCategoryItems(participant)"
+                @select="handleParticipantTypeSelect(participant, $event)"
+                :class="['dropdown-tag', `dropdown-tag--${panelType}`]"
+                :data-testId="`participant-category-${participant.participantType}`"
                 :show-dropdown-icon="true"
-              />
+              >
+                <span class="dropdown-lable">{{
+                  t('proposal.participantCategory_' + participant.participantType)
+                }}</span>
+              </FdpgDropdown>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
               <FdpgDropdown
                 :button="{
-                  label: t('roles.participantRole_' + participant.participantRole),
+                  label: '',
                   kind: 'basic',
                   isTranslatable: false,
                 }"
-                :items="[
-                  {
-                    label: 'roles.participantRole_PARTICIPATING_SCIENTIST',
-                    kind: 'basic',
-                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.ParticipatingScientist),
-                  },
-                  {
-                    label: 'roles.participantRole_RESEARCHER',
-                    kind: 'basic',
-                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.Researcher),
-                  },
-                  {
-                    label: 'roles.participantRole_RESPONSIBLE_SCIENTIST',
-                    kind: 'basic',
-                    action: () => handleParticipantRoleSelect(participant, ParticipantRole.ResponsibleScientist),
-                  },
-                ]"
+                :items="getParticipantRoleItems(participant)"
+                @select="handleParticipantRoleSelect(participant, $event)"
                 :show-dropdown-icon="true"
-              />
+                :data-testId="`participant-role-${participant.participantRole}`"
+                :class="['dropdown-tag', `dropdown-tag--${panelType}`]"
+              >
+                <span class="dropdown-lable">{{ t('roles.participantRole_' + participant.participantRole) }}</span>
+              </FdpgDropdown>
             </el-col>
-            <el-col :span="6">{{ participant.email }}</el-col>
-            <el-col :span="6" class="action-column">
+            <el-col :span="5">{{ participant.email }}</el-col>
+            <el-col :span="5" class="action-column">
               <el-button
                 v-if="participant.action && participant.actionTitle && participantPanels[index] && userHasPermission"
                 v-loading="isEmailSendingInProgress"
@@ -145,33 +141,21 @@ const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'usernam
   }
 }
 
-const participantCategoryItems: DropdownItem[] = [
-  {
-    label: 'proposal.participantCategory_PROJECT_LEADER',
+function getParticipantCategoryItems(participant: ParticipantInfo): DropdownItem[] {
+  return Object.values(ParticipantType).map((type) => ({
+    label: `proposal.participantCategory_${type}`,
     kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, ParticipantType.ProjectLeader),
-  },
-  {
-    label: 'proposal.participantCategory_ADDITIONAL_PROJECT_LEADER',
+    action: () => handleParticipantTypeSelect(participant, type),
+  }))
+}
+
+function getParticipantRoleItems(participant: ParticipantInfo): DropdownItem[] {
+  return Object.values(ParticipantRole).map((role) => ({
+    label: `roles.participantRole_${role}`,
     kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, ParticipantType.AdditionalProjectLeader),
-  },
-  {
-    label: 'proposal.participantCategory_DATA_RECEIVER',
-    kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, ParticipantType.DataReceiver),
-  },
-  {
-    label: 'proposal.participantCategory_BIOSAMPLE_RECEIVER',
-    kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, ParticipantType.BiosampleReceiver),
-  },
-  {
-    label: 'proposal.participantCategory_DATA_AND_BIOSAMPLE_RECEIVER',
-    kind: 'basic',
-    action: () => handleParticipantTypeSelect(participant, ParticipantType.DataAndBiosampleReceiver),
-  },
-]
+    action: () => handleParticipantRoleSelect(participant, role),
+  }))
+}
 
 const getRegistrationPendingAction = (
   identity: Pick<IResearcherIdentity | ParticipantInfo, 'email'>,
@@ -181,6 +165,7 @@ const getRegistrationPendingAction = (
     actionTitle: 'proposal.resendInvitation',
   }
 }
+
 const participants = computed<ParticipantPanelType>(() => {
   return researcherIdentities.value.reduce(
     (acc, info) => {
@@ -442,20 +427,22 @@ async function handleParticipantRoleSelect(participant: ParticipantInfo, newRole
 
       .el-row {
         padding: 13px 0;
+        align-items: center;
 
         &:not(:last-child) {
           border-bottom: 1px solid $gray-200;
         }
-      }
 
-      .el-tag {
-        border: none;
-        color: $white;
-        padding: 0 14px;
-        font-size: 14px;
+        .el-col {
+          &:first-child {
+            font-weight: 500;
+          }
 
-        & ~ .el-tag {
-          margin-left: 4px;
+          &:last-child {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            word-break: break-all;
+          }
         }
       }
 
@@ -479,14 +466,45 @@ async function handleParticipantRoleSelect(participant: ParticipantInfo, newRole
   }
 }
 
-:deep(.menu) {
-  position: relative;
-  z-index: 100;
+.dropdown-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 15px;
+  border: none;
+  min-height: 32px;
+  height: 32px;
+  line-height: 32px;
+  min-width: 200px;
+  max-width: 100%;
+}
 
-  .menu-items {
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 101;
-  }
+.dropdown-tag--invitationPending {
+  background-color: $gray-800;
+  z-index: 22 !important;
+}
+.dropdown-tag--registrationPending {
+  background-color: $blue;
+  z-index: 21 !important;
+}
+.dropdown-tag--alreadyRegistered {
+  background-color: $green;
+}
+
+.dropdown-tag--alreadyRegistered .menu-button .caret-icon,
+.dropdown-tag--registrationPending .menu-button .caret-icon,
+.dropdown-tag--invitationPending .menu-button .caret-icon {
+  color: $white !important;
+  font-size: 0.8rem;
+}
+.dropdown-lable {
+  color: $white !important;
+  font-size: 0.8rem;
+  font-weight: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+  display: inline-block;
 }
 </style>
