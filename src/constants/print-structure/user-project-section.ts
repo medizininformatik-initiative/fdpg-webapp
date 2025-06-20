@@ -92,6 +92,16 @@ const projectDetailsCard = (dataSources: PlatformIdentifier[] = []) => ({
       size: 24,
       definitions: [[{ key: 'materialAndMethods' }]],
     },
+    {
+      label: 'proposal.literature',
+      size: 24,
+      definitions: [[{ key: 'literature' }]],
+    },
+    {
+      label: 'proposal.biometric',
+      size: 24,
+      definitions: [[{ key: 'biometric' }]],
+    },
   ],
 })
 
@@ -265,7 +275,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
       label: 'proposal.targetFormat', // MII
       size: 24,
       shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
-      definitions: [[{ key: 'targetFormat', subkeys: ['targetFormatOther'] }]],
+      definitions: [[{ key: 'targetFormat', subKeys: ['targetFormatOther'] }]],
     },
     {
       label: 'proposal.DIFEtypeOfUse', // DIFE
@@ -274,7 +284,9 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
       definitions: [[{ key: 'difeUsage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
     },
     {
-      label: 'proposal.dataPrivacyExtra',
+      label: 'proposal.dataPrivacyExtra', // MII
+      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+
       size: 24,
       definitions: [[{ key: 'dataPrivacyExtra', kind: 'content' }]],
     },
