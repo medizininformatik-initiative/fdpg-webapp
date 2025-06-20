@@ -61,7 +61,7 @@
           class="print-region"
         >
           <ReviewCard
-            v-if="!shouldHideReviewCard(proposalData[section.key], card.hideIfOtherValueIsTruthy)"
+            v-if="!shouldHideReviewCard(proposalData[section.key], card.hideIfOtherValueIsTruthy) && !card.shouldHide"
             :dto="proposalData[section.key]"
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
@@ -119,7 +119,7 @@ import { biosampleSection } from '@/constants/print-structure/biosample-section'
 
 const authStore = useAuthStore()
 
-const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
+const sections = computed<DefinitionSection<IProposal, keyof IProposal>[]>(() => [
   applicantSection,
   projectResponsibilitySection,
   projectUserSection,
@@ -127,7 +127,7 @@ const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   userProjectSection(authStore.assignedDataSources),
   requestedDataSection,
   biosampleSection(authStore.assignedDataSources),
-]
+])
 
 const proposalData = ref<IProposal>()
 

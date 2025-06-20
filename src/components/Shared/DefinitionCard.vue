@@ -9,7 +9,6 @@
         :sm="24"
         :md="size"
       >
-        {{ label }},{{ shouldHide }}
         <template
           v-if="
             !shouldHide &&
