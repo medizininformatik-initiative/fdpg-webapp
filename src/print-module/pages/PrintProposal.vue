@@ -5,14 +5,15 @@
     <PrintCard class="print-region" :dto="overview" :card="card"></PrintCard>
   </section>
   <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
-    <h2>{{ $t(section.sectionLabel) }}</h2>
+    <h2>{{ `${sIdx + 1}.` }} {{ $t(section.sectionLabel) }}</h2>
 
     <template v-if="section.kind === 'array' && proposalData">
       <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
         <section role="region" class="print-region">
           <h3>
-            <span v-for="(labelKey, labelKeyIdx) in section.arrayLabel" :key="labelKeyIdx"
-              >{{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}
+            {{ `${sIdx + 1}.${sectionItemIdx + 1}.` }}
+            <span v-for="(labelKey, labelKeyIdx) in section.arrayLabel" :key="labelKeyIdx">
+              {{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}
             </span>
           </h3>
           <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
@@ -21,6 +22,7 @@
               :dto="sectionItem"
               :card="card"
               headline="h4"
+              :number="`${sIdx + 1}.${sectionItemIdx + 1}.${cardIdx + 1}`"
             ></PrintCard>
           </template>
         </section>
@@ -28,7 +30,7 @@
     </template>
 
     <section v-else-if="section.kind === 'single' && proposalData" role="region" class="print-region">
-      <PrintCard :dto="proposalData" :card="section.card"></PrintCard>
+      <PrintCard :dto="proposalData" :card="section.card" :number="`${sIdx + 1}`"></PrintCard>
     </section>
 
     <template v-else-if="section.kind === 'object' && proposalData">
@@ -37,6 +39,7 @@
           v-if="!shouldHidePrintCard(proposalData[section.key], card.hideIfOtherValueIsTruthy) && !card.shouldHide"
           :dto="proposalData[section.key]"
           :card="card"
+          :number="`${sIdx + 1}.${cardIdx + 1}`"
         ></PrintCard>
       </section>
     </template>

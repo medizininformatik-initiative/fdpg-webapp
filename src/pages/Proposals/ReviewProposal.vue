@@ -260,8 +260,7 @@ const getSectionArrayProposalData = (
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
 
-const HideReviewCheckbox = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
-  section.key === 'userProject' || section.key === 'biosample'
+const HideReviewCheckbox = (section: any) => section.key === 'userProject' || section.key === 'biosample'
 
 onMounted(async () => {
   await fetchProposal()
