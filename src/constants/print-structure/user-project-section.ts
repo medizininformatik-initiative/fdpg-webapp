@@ -9,6 +9,7 @@ import type {
 import { MII_LOCATIONS } from '@/constants'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IUserProject, IProposal, ICohort } from '@/types/proposal.types'
+import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
 const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProjectInformation'> = {
   key: 'generalProjectInformation',
@@ -44,8 +45,8 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
 
 const cohortsDetailsCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'cohorts'> => ({
   key: 'cohorts',
-  cardLabel: null,
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  cardLabel: 'proposal.cohortSelection',
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.assessmentOfFeasibilityDetails',
@@ -63,19 +64,19 @@ const projectDetailsCard = (dataSources: PlatformIdentifier[] = []) => ({
       label: 'proposal.simpleProjectDescription',
       size: 24,
       definitions: [[{ key: 'simpleProjectDescription' }]],
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
     },
     {
       label: 'proposal.executiveSummaryUac',
       size: 24,
       definitions: [[{ key: 'executiveSummaryUac' }]],
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
     },
     {
       label: 'proposal.department',
       size: 24,
       definitions: [[{ key: 'department', prefix: 'departments.', kind: 'translatable', isList: true }]],
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
     },
     {
       label: 'proposal.hypothesisAndQuestionProjectGoals',
@@ -92,13 +93,23 @@ const projectDetailsCard = (dataSources: PlatformIdentifier[] = []) => ({
       size: 24,
       definitions: [[{ key: 'materialAndMethods' }]],
     },
+    {
+      label: 'proposal.literature',
+      size: 24,
+      definitions: [[{ key: 'literature' }]],
+    },
+    {
+      label: 'proposal.biometric',
+      size: 24,
+      definitions: [[{ key: 'biometric' }]],
+    },
   ],
 })
 
 const ethicVoteCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'ethicVote',
   cardLabel: 'proposal.ethicsVote',
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.ethicVoteExistingLabel',
@@ -129,7 +140,7 @@ const ethicVoteCard = (dataSources: PlatformIdentifier[] = []) => ({
 const recontactCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'resourceAndRecontact', //MII
   cardLabel: 'proposal.projectResourcesAndRecontact',
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.areSufficientProfessionalAndFinancialResourcesAvailable',
@@ -148,7 +159,7 @@ const propertyRightsCard = (dataSources: PlatformIdentifier[] = []) => ({
   // MII
   key: 'propertyRights',
   cardLabel: 'proposal.propertyRights',
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
     {
       label: 'proposal.intellectualPropertyRightCreationApplicationOptions',
@@ -197,7 +208,7 @@ const plannedPublicationCard: IDefinitionCardArray<IUserProject, 'plannedPublica
 const addresseesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'addressees',
   cardLabel: 'proposal.addressees',
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   // MII
   terms: [
     {
@@ -217,13 +228,13 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
     {
       label: 'proposal.MIItypeOfUse', // MII
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
       definitions: [[{ key: 'usage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
     },
     {
       label: 'proposal.pseudonymizationInfo_enableRecordLinkage',
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
       definitions: [
         [
           {
@@ -237,7 +248,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
     {
       label: 'proposal.pseudonymizationInfo_siteGroupingEnabled',
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
       definitions: [
         [
           {
@@ -251,7 +262,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
     {
       label: 'proposal.pseudonymizationInfo_namedSiteVariable', // MII
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
       definitions: [
         [
           {
@@ -264,17 +275,19 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
     {
       label: 'proposal.targetFormat', // MII
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
-      definitions: [[{ key: 'targetFormat', subkeys: ['targetFormatOther'] }]],
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
+      definitions: [[{ key: 'targetFormat', subKeys: ['targetFormatOther'] }]],
     },
     {
       label: 'proposal.DIFEtypeOfUse', // DIFE
       size: 24,
-      shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.DIFE),
       definitions: [[{ key: 'difeUsage', isList: true, prefix: 'proposal.typeOfUse_', kind: 'translatable' }]],
     },
     {
-      label: 'proposal.dataPrivacyExtra',
+      label: 'proposal.dataPrivacyExtra', // MII
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
+
       size: 24,
       definitions: [[{ key: 'dataPrivacyExtra', kind: 'content' }]],
     },
@@ -284,7 +297,7 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
 const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'variableSelection',
   cardLabel: 'proposal.selectionOfVariablesHeader',
-  shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.DIFE),
   terms: [
     {
       label: 'proposal.typeOfUse', // DIFE
@@ -300,7 +313,7 @@ const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
 })
 
 const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   key: 'cohorts',
   cardLabel: 'proposal.cohortSelection',
   loopOn: 'selectedCohorts',
@@ -321,7 +334,7 @@ const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
 const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'selectionOfCases',
   cardLabel: 'proposal.selectionOfCases',
-  shouldHide: !dataSources.includes(PlatformIdentifier.DIFE),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.DIFE),
   terms: [
     {
       label: 'proposal.difeSelectionOfCasesHeader',

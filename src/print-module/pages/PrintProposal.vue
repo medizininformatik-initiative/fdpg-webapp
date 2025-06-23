@@ -4,7 +4,6 @@
   <section v-for="(card, cardIdx) in overviewSection.mapping" :key="'card' + cardIdx" role="region">
     <PrintCard class="print-region" :dto="overview" :card="card"></PrintCard>
   </section>
-
   <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
     <h2>{{ $t(section.sectionLabel) }}</h2>
 
@@ -35,7 +34,7 @@
     <template v-else-if="section.kind === 'object' && proposalData">
       <section v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx" role="region" class="print-region">
         <PrintCard
-          v-if="!shouldHidePrintCard(proposalData[section.key], card.hideIfOtherValueIsTruthy)"
+          v-if="!shouldHidePrintCard(proposalData[section.key], card.hideIfOtherValueIsTruthy) && !card.shouldHide"
           :dto="proposalData[section.key]"
           :card="card"
         ></PrintCard>
@@ -83,7 +82,7 @@ const proposalData = ref<IProposal>()
 const dataPrivacyTexts = ref<DataPrivacyTextsContentKeys[]>()
 const assignedDataSources = ref<PlatformIdentifier[]>()
 
-const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
+const sections = computed<DefinitionSection<IProposal, keyof IProposal>[]>(() => [
   applicantSection,
   projectResponsibilitySection,
   projectUserSection,
@@ -91,7 +90,7 @@ const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
   userProjectSection(assignedDataSources.value),
   requestedDataSection,
   biosampleSection(assignedDataSources.value),
-]
+])
 
 const { t } = useI18n()
 const overview = computed(() => {
