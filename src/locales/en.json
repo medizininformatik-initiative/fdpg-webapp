@@ -61,7 +61,11 @@
     "notEndWithJson": "Name should not include “.json”",
     "invalidCharacters": "Name contains invalid character",
     "nameMissing": "Name is required",
-    "numberOfPatients": "Number of patients"
+    "numberOfPatients": "Number of patients",
+    "emailSettings": "E-Mail Settings",
+    "receiveProposalEmails": "Receive E-Mails",
+    "boolean_true": "Yes",
+    "boolean_false": "No"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -738,7 +742,10 @@
     "HEADER_DataSourceMember": "Data Source Member",
     "changeRoleModalText": "This role doesn't have right access. do you want to change role and try again to access?",
     "changeRoleModalTitle": "Wrong role",
-    "roleAccessDenied": "Unfortunately you don't have any access to this information."
+    "roleAccessDenied": "Unfortunately you don't have any access to this information.",
+    "participantRole_PARTICIPATING_SCIENTIST": "Participant Scientist",
+    "participantRole_RESEARCHER": "Researcher",
+    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist"
   },
   "countries": {
     "AD": "Andorra",
