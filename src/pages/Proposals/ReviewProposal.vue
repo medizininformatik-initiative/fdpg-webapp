@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
+    <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
       <ReviewAreaLabel
         headline="h2"
         :title="section.sectionLabel"
@@ -18,7 +18,10 @@
         v-if="section.key == 'participants'"
       />
       <template v-if="section.kind === 'array' && proposalData">
-        <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
+        <div
+          v-for="(sectionItem, sectionItemIdx) in getVisibleItems(proposalData[section.key], section)"
+          :key="'item' + sectionItemIdx"
+        >
           <section role="region" class="print-region">
             <ReviewAreaLabel
               :section-values="getSectionArrayProposalData(section, 'isDone', sectionItem)"
@@ -28,9 +31,8 @@
               :number="`${sIdx + 1}.${sectionItemIdx + 1}`"
             />
 
-            <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
+            <template v-for="(card, cardIdx) in getVisibleCards(section.mapping, sectionItem)" :key="'card' + cardIdx">
               <ReviewCard
-                v-if="!shouldHideReviewCard(sectionItem, card.hideIfOtherValueIsTruthy) && !card.shouldHide"
                 :dto="sectionItem"
                 :card="card"
                 headline="h4"
@@ -66,13 +68,12 @@
         />
 
         <section
-          v-for="(card, cardIdx) in section.mapping"
+          v-for="(card, cardIdx) in getVisibleCards(section.mapping, proposalData[section.key])"
           :key="'objectCard' + cardIdx"
           role="region"
           class="print-region"
         >
           <ReviewCard
-            v-if="!shouldHideReviewCard(proposalData[section.key], card.hideIfOtherValueIsTruthy) && !card.shouldHide"
             :dto="proposalData[section.key]"
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
@@ -88,7 +89,7 @@
       title="proposal.appendix"
       headline="h2"
       :counter="uploadsForType.length"
-      :number="`${sections.length + 1}`"
+      :number="`${getVisibleSections(sections).length + 1}`"
     />
     <DocumentList
       :documents="uploadsForType"
@@ -137,15 +138,18 @@ import { biosampleSection } from '@/constants/print-structure/biosample-section'
 
 const authStore = useAuthStore()
 
-const sections = computed<DefinitionSection<IProposal, keyof IProposal>[]>(() => [
-  applicantSection,
-  projectResponsibilitySection,
-  projectUserSection,
-  participantSection,
-  userProjectSection(authStore.assignedDataSources),
-  requestedDataSection,
-  biosampleSection(authStore.assignedDataSources),
-])
+const sections = computed(
+  () =>
+    [
+      applicantSection,
+      projectResponsibilitySection,
+      projectUserSection,
+      participantSection,
+      userProjectSection(authStore.assignedDataSources),
+      requestedDataSection,
+      biosampleSection(authStore.assignedDataSources),
+    ] as DefinitionSection<IProposal, keyof IProposal>[],
+)
 
 const proposalData = ref<IProposal>()
 
@@ -216,16 +220,23 @@ const scrollToAnchor = async () => {
   }
 }
 
-const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: [string, string]) => {
-  if (!hideIfOtherValueIsTruthy) {
+const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: string[]) => {
+  if (!hideIfOtherValueIsTruthy || hideIfOtherValueIsTruthy.length === 0) {
     return false
   }
-  const [parentKey, secondLevelKey] = hideIfOtherValueIsTruthy
 
-  if (Array.isArray(dto?.[parentKey]?.[secondLevelKey])) {
-    return dto?.[parentKey]?.[secondLevelKey].length
+  let value = dto
+  for (const key of hideIfOtherValueIsTruthy) {
+    if (value === undefined || value === null) {
+      return false
+    }
+    value = value[key]
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0
   } else {
-    return dto?.[parentKey]?.[secondLevelKey]
+    return !!value
   }
 }
 
@@ -249,7 +260,10 @@ const getSectionObjectProposalData = (
   section: IDefinitionSectionObject<IProposal, keyof IProposal>,
   property: string,
   proposalData?: IProposal,
-) => section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key]).map((data) => data[property])
+) =>
+  getVisibleCards(section.mapping, proposalData?.[section.key])
+    .map((mapping: any) => (proposalData?.[section.key] as any)?.[mapping.key])
+    .map((data: any) => (data ? data[property] : undefined))
 
 const getSectionArrayProposalData = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
@@ -261,6 +275,27 @@ const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof 
   section.key === 'applicant' || section.key === 'projectResponsible'
 
 const HideReviewCheckbox = (section: any) => section.key === 'userProject' || section.key === 'biosample'
+
+function getVisibleSections(sections: any[]) {
+  return sections.filter((section) => !section.shouldHide)
+}
+
+function getVisibleCards(cards: any, dto: any) {
+  return cards.filter((card: any) => {
+    if (shouldHideReviewCard(dto, card.hideIfOtherValueIsTruthy) || card.shouldHide) {
+      return false
+    }
+    if (card.loopOn) {
+      const loopData = dto[card.key]?.[card.loopOn]
+      return Array.isArray(loopData) && loopData.length > 0
+    }
+    return true
+  })
+}
+
+function getVisibleItems(items: any[], card: any) {
+  return items
+}
 
 onMounted(async () => {
   await fetchProposal()

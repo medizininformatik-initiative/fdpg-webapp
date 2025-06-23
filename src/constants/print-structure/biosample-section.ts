@@ -8,8 +8,6 @@ import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
 const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
-
   key: 'informationOnRequestedBioSamples',
   cardLabel: 'proposal.selectedBioSamples',
   terms: [
@@ -29,8 +27,6 @@ const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] 
 
 const biosamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'informationOnRequestedBioSamples',
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
-
   cardLabel: 'proposal.informationOnRequestedBioSamples',
   loopOn: 'biosamples',
   terms: [
@@ -97,6 +93,7 @@ export const biosampleSection = (
 ): DefinitionSection<IProposal, 'userProject'> => {
   return {
     sectionLabel: 'proposal.selectedBioSamples',
+    shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
     kind: 'object',
     key: 'userProject',
     mapping: biosampleCard(dataSources),

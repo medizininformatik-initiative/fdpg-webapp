@@ -1,5 +1,12 @@
 <template>
-  <section :id="sectionIds?.map((_id) => _id as string).reduce((prev, curr) => prev + '_' + curr)" class="review-label">
+  <section
+    :id="
+      sectionIds && sectionIds.length > 0
+        ? sectionIds.map((_id) => _id as string).reduce((prev, curr) => prev + '_' + curr, '')
+        : ''
+    "
+    class="review-label"
+  >
     <component :is="headline" v-if="title">
       <span v-if="number">{{ number }}. </span>{{ t(title) }}
     </component>

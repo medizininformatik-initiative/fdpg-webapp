@@ -1,5 +1,5 @@
 <template>
-  <template v-if="dto[card.key] && !card.shouldHide && (!card.loopOn || dto[card.key][card.loopOn]?.length)">
+  <template v-if="dto[card.key]">
     <ReviewLabel
       :is-done="dto[card.key].isDone"
       class="form-label-mt-4"

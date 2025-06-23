@@ -1,28 +1,36 @@
 <template>
   <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
-  <h2>{{ $t(overviewSection.sectionLabel) }}</h2>
+  <h2>1. {{ $t(overviewSection.sectionLabel) }}</h2>
   <section v-for="(card, cardIdx) in overviewSection.mapping" :key="'card' + cardIdx" role="region">
-    <PrintCard class="print-region" :dto="overview" :card="card"></PrintCard>
+    <PrintCard
+      class="print-region"
+      :dto="overview"
+      :card="card"
+      :number="`1.${cardIdx + 1}`"
+      :headline="card.headline"
+    ></PrintCard>
   </section>
-  <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
-    <h2>{{ `${sIdx + 1}.` }} {{ $t(section.sectionLabel) }}</h2>
+  <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
+    <h2>{{ sIdx + 2 }}. {{ $t(section.sectionLabel) }}</h2>
 
     <template v-if="section.kind === 'array' && proposalData">
-      <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
+      <div
+        v-for="(sectionItem, sectionItemIdx) in getVisibleItems(proposalData[section.key], section)"
+        :key="'item' + sectionItemIdx"
+      >
         <section role="region" class="print-region">
           <h3>
-            {{ `${sIdx + 1}.${sectionItemIdx + 1}.` }}
+            {{ `${sIdx + 2}.${sectionItemIdx + 1}.` }}
             <span v-for="(labelKey, labelKeyIdx) in section.arrayLabel" :key="labelKeyIdx">
               {{ sectionItem[section.arrayLabelKey][labelKey.key] ?? labelKey.key }}
             </span>
           </h3>
-          <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
+          <template v-for="(card, cardIdx) in getVisibleCards(section.mapping, sectionItem)" :key="'card' + cardIdx">
             <PrintCard
-              v-if="!shouldHidePrintCard(sectionItem, card.hideIfOtherValueIsTruthy) && !card.shouldHide"
               :dto="sectionItem"
               :card="card"
               headline="h4"
-              :number="`${sIdx + 1}.${sectionItemIdx + 1}.${cardIdx + 1}`"
+              :number="`${sIdx + 2}.${sectionItemIdx + 1}.${cardIdx + 1}`"
             ></PrintCard>
           </template>
         </section>
@@ -30,24 +38,29 @@
     </template>
 
     <section v-else-if="section.kind === 'single' && proposalData" role="region" class="print-region">
-      <PrintCard :dto="proposalData" :card="section.card" :number="`${sIdx + 1}`"></PrintCard>
+      <PrintCard :dto="proposalData" :card="section.card" :number="`${sIdx + 2}`"></PrintCard>
     </section>
 
     <template v-else-if="section.kind === 'object' && proposalData">
-      <section v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx" role="region" class="print-region">
-        <PrintCard
-          v-if="!shouldHidePrintCard(proposalData[section.key], card.hideIfOtherValueIsTruthy) && !card.shouldHide"
-          :dto="proposalData[section.key]"
-          :card="card"
-          :number="`${sIdx + 1}.${cardIdx + 1}`"
-        ></PrintCard>
+      <section
+        v-for="(card, cardIdx) in getVisibleCards(section.mapping, proposalData[section.key])"
+        :key="'card' + cardIdx"
+        role="region"
+        class="print-region"
+      >
+        <PrintCard :dto="proposalData[section.key]" :card="card" :number="`${sIdx + 2}.${cardIdx + 1}`"></PrintCard>
       </section>
     </template>
   </template>
 
-  <h2>{{ $t(dataPrivacySection.sectionLabel) }}</h2>
+  <h2>{{ getVisibleSections(sections).length + 2 }}. {{ $t(dataPrivacySection.sectionLabel) }}</h2>
   <section v-for="(card, cardIdx) in dataPrivacySection.mapping" :key="'privacy-card' + cardIdx" role="region">
-    <PrintCard class="print-region" :dto="dataPrivacyOverview" :card="card"></PrintCard>
+    <PrintCard
+      class="print-region"
+      :dto="dataPrivacyOverview"
+      :card="card"
+      :number="`${getVisibleSections(sections).length + 2}.${cardIdx + 1}`"
+    ></PrintCard>
   </section>
 </template>
 
@@ -146,6 +159,27 @@ const shouldHidePrintCard = (dto: any, hideIfOtherValueIsTruthy?: [string, strin
   } else {
     return dto?.[parentKey]?.[secondLevelKey]
   }
+}
+
+function getVisibleSections(sections: any[]) {
+  return sections.filter((section) => !section.shouldHide)
+}
+
+function getVisibleCards(cards: any, dto: any) {
+  return cards.filter((card: any) => {
+    if (shouldHidePrintCard(dto, card.hideIfOtherValueIsTruthy) || card.shouldHide) {
+      return false
+    }
+    if (card.loopOn) {
+      const loopData = dto[card.key]?.[card.loopOn]
+      return Array.isArray(loopData) && loopData.length > 0
+    }
+    return true
+  })
+}
+
+function getVisibleItems(items: any[], card: any) {
+  return items
 }
 
 onMounted(() => setUp())
