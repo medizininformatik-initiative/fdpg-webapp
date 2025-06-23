@@ -1,15 +1,17 @@
 <template>
-  <component :is="headline" v-if="card.cardLabel">{{ $t(card.cardLabel) }}</component>
-  <template v-if="card.loopOn">
-    <DefinitionCard
-      v-for="(item, itemIdx) in dto[card.key][card.loopOn]"
-      :key="'item' + itemIdx"
-      :card="card"
-      :dto="item"
-      class="print-region"
-    ></DefinitionCard>
+  <template v-if="dto[card.key] && !card.shouldHide && (!card.loopOn || dto[card.key][card.loopOn]?.length)">
+    <component :is="headline" v-if="card.cardLabel">{{ $t(card.cardLabel) }}</component>
+    <template v-if="card.loopOn">
+      <DefinitionCard
+        v-for="(item, itemIdx) in dto[card.key][card.loopOn]"
+        :key="'item' + itemIdx"
+        :card="card"
+        :dto="item"
+        class="print-region"
+      ></DefinitionCard>
+    </template>
+    <DefinitionCard v-else :card="card" :dto="dto"></DefinitionCard>
   </template>
-  <DefinitionCard v-else :card="card" :dto="dto"></DefinitionCard>
 </template>
 
 <script setup lang="ts">

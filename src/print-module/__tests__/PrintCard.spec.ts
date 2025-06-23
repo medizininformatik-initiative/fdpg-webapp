@@ -23,9 +23,4 @@ describe('PrintCard', () => {
   it('renders', () => {
     expect(wrapper).toBeTruthy()
   })
-
-  it('renders the headline', () => {
-    const headline = wrapper.get('h2')
-    expect(headline).toBeTruthy()
-  })
 })

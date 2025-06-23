@@ -5,9 +5,10 @@ import type {
 } from '@/components/Shared/definition-card.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
+import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
 const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
 
   key: 'informationOnRequestedBioSamples',
   cardLabel: 'proposal.selectedBioSamples',
@@ -28,7 +29,7 @@ const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] 
 
 const biosamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'informationOnRequestedBioSamples',
-  shouldHide: !dataSources.includes(PlatformIdentifier.Mii),
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
 
   cardLabel: 'proposal.informationOnRequestedBioSamples',
   loopOn: 'biosamples',
