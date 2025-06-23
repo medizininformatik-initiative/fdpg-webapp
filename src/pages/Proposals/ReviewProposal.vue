@@ -10,6 +10,13 @@
     </div>
 
     <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
+      <ReviewAreaLabel
+        headline="h2"
+        :title="section.sectionLabel"
+        :hide-review-checkbox="HideReviewCheckbox(section)"
+        :number="`${sIdx + 1}`"
+        v-if="section.key == 'participants'"
+      />
       <template v-if="section.kind === 'array' && proposalData">
         <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
           <section role="region" class="print-region">
@@ -18,6 +25,7 @@
               :section-ids="getSectionArrayProposalData(section, '_id', sectionItem)"
               headline="h3"
               :title="getArrayLabelFromSection(section, sectionItem)"
+              :number="`${sIdx + 1}.${sectionItemIdx + 1}`"
             />
 
             <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
@@ -28,6 +36,7 @@
                 headline="h4"
                 :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
                 hide-review-checkbox
+                :number="`${sIdx + 1}.${sectionItemIdx + 1}.${cardIdx + 1}`"
               ></ReviewCard>
             </template>
           </section>
@@ -41,17 +50,19 @@
           :headline="section.card.cardLabel === null ? 'h2' : 'h3'"
           :headline-overwrite="section.sectionLabel"
           :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
+          :number="`${sIdx + 1}`"
         ></ReviewCard>
       </section>
 
       <template v-else-if="section.kind === 'object' && proposalData">
         <ReviewAreaLabel
-          v-if="isSinglePersonEntry(section)"
+          :hide-review-checkbox="HideReviewCheckbox(section)"
           class="form-label-mt-4"
           :section-values="getSectionObjectProposalData(section, 'isDone', proposalData)"
           :section-ids="getSectionObjectProposalData(section, '_id', proposalData)"
           headline="h2"
           :title="t(section.sectionLabel)"
+          :number="`${sIdx + 1}`"
         />
 
         <section
@@ -66,12 +77,19 @@
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
             :hide-review-checkbox="isSinglePersonEntry(section)"
+            :number="`${sIdx + 1}.${cardIdx + 1}`"
           ></ReviewCard>
         </section>
       </template>
     </template>
 
-    <ReviewLabel class="form-label-mt-4" title="proposal.appendix" headline="h2" :counter="uploadsForType.length" />
+    <ReviewLabel
+      class="form-label-mt-4"
+      title="proposal.appendix"
+      headline="h2"
+      :counter="uploadsForType.length"
+      :number="`${sections.length + 1}`"
+    />
     <DocumentList
       :documents="uploadsForType"
       :proposal-id="proposalId"
@@ -242,6 +260,9 @@ const getSectionArrayProposalData = (
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
 
+const HideReviewCheckbox = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
+  section.key === 'userProject' || section.key === 'biosample'
+
 onMounted(async () => {
   await fetchProposal()
   await fetchComments()
@@ -269,49 +290,6 @@ onMounted(async () => {
     .label-checkbox {
       margin-left: auto;
     }
-  }
-
-  counter-reset: h2 h3 h4;
-  @supports not (-moz-appearance: none) {
-    h1 {
-      counter-reset: h2;
-    }
-
-    h2 {
-      counter-reset: h3;
-    }
-
-    h3 {
-      counter-reset: h4;
-    }
-  }
-
-  @supports (-moz-appearance: none) {
-    h1 {
-      counter-set: h2;
-    }
-
-    h2 {
-      counter-set: h3;
-    }
-
-    h3 {
-      counter-set: h4;
-    }
-  }
-  h2::before {
-    counter-increment: h2;
-    content: counter(h2) '. ';
-  }
-
-  h3::before {
-    counter-increment: h3;
-    content: counter(h2) '.' counter(h3) '. ';
-  }
-
-  h4::before {
-    counter-increment: h4;
-    content: counter(h2) '.' counter(h3) '.' counter(h4) '. ';
   }
 
   h1,
