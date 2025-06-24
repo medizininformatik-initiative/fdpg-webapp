@@ -372,8 +372,20 @@ export const useProposalStore = defineStore('Proposal', {
       return { insertedCohort, uploadedFile }
     },
 
+    async addAutomaticCohort(proposalId: string, newCohort: ISelectedCohort): Promise<ISelectedCohort> {
+      return await this.apiService.addAutomaticCohort(proposalId, newCohort)
+    },
+
     async deleteCohort(proposalId: string, cohortId: string): Promise<ISelectedCohort> {
       return await this.apiService.deleteCohort(proposalId, cohortId)
+    },
+
+    async getFeasibilityCsvByQueryId(feasibilityQueryId: number, queryName: string): Promise<void> {
+      if (!this.currentProposal?._id) {
+        throw new Error('No persisted proposal selected')
+      }
+
+      await this.apiService.getFeasibilityCsvByQueryId(this.currentProposal?._id, feasibilityQueryId, queryName)
     },
   },
 
