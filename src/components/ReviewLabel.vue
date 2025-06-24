@@ -1,8 +1,8 @@
 <template>
   <section :id="sectionId" class="review-label">
-    <component :is="headline" v-if="title"
-      >{{ $t(title) }} <span v-if="counter >= 0">({{ counter }})</span></component
-    >
+    <component :is="headline" v-if="title" :style="hideReviewCheckbox ? { width: '100%' } : undefined">
+      <span v-if="number">{{ number }}. </span>{{ t(title) }}<span v-if="counter"> ({{ counter }})</span>
+    </component>
 
     <el-checkbox
       v-if="
@@ -16,8 +16,8 @@
       :disabled="isCheckboxLoading"
       class="label-checkbox"
     >
-      <template v-if="checkboxValue">{{ $t('proposal.areaWasChecked') }}</template>
-      <template v-else>{{ $t('proposal.markAreaAsChecked') }}</template>
+      <template v-if="checkboxValue">{{ t('proposal.areaWasChecked') }}</template>
+      <template v-else>{{ t('proposal.markAreaAsChecked') }}</template>
     </el-checkbox>
   </section>
 </template>
@@ -29,8 +29,10 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const authStore = useAuthStore()
+const { t } = useI18n()
 
 const props = defineProps({
   title: {
@@ -56,6 +58,10 @@ const props = defineProps({
   counter: {
     type: Number,
     default: undefined,
+  },
+  number: {
+    type: String,
+    default: '',
   },
 })
 

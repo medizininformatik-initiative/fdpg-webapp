@@ -117,6 +117,7 @@ export interface IDefinitionSectionObject<Parent, Key extends keyof Parent> {
   kind: 'object'
   key: Key
   mapping: DefinitionCards<Parent, Key>[]
+  shouldHide?: boolean
 }
 
 export interface IDefinitionSectionObjectVirtual<Parent, Key extends keyof Parent> {
@@ -142,6 +143,7 @@ export interface IDefinitionSectionArray<
   key: Key
   arrayLabelKey: ArrayLabelKey
   mapping: IDefinitionCard<ArrElement<Parent[Key]>, any>[]
+  shouldHide?: boolean
 }
 
 export interface IDefinitionSectionSingle<Parent, Key extends keyof Parent> {
@@ -149,6 +151,7 @@ export interface IDefinitionSectionSingle<Parent, Key extends keyof Parent> {
   kind: 'single'
   key: Key
   card: IDefinitionCard<ArrElement<Parent[Key]>, any> | IDefinitionCardVirtual<ArrElement<Parent[Key]>, any>
+  shouldHide?: boolean
 }
 
 export type DefinitionSection<Parent, Key extends keyof Parent> =

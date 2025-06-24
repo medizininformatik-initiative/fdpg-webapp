@@ -366,21 +366,22 @@ const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
-  generalProjectInformationCard,
-  projectDetailsCard(dataSources),
-  ethicVoteCard(dataSources),
-  recontactCard(dataSources),
-  propertyRightsCard(dataSources),
-  plannedPublicationCardEmpty,
-  plannedPublicationCard,
-  addresseesCard(dataSources),
-  typeOfUseCard(dataSources),
-  cohortsCard(dataSources),
-  cohortsDetailsCard(dataSources),
-  variableSelectionCard(dataSources),
-  selectionOfCasesCard(dataSources),
-]
+const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
+  [
+    generalProjectInformationCard,
+    projectDetailsCard(dataSources),
+    ethicVoteCard(dataSources),
+    recontactCard(dataSources),
+    propertyRightsCard(dataSources),
+    plannedPublicationCardEmpty,
+    plannedPublicationCard,
+    addresseesCard(dataSources),
+    typeOfUseCard(dataSources),
+    cohortsCard(dataSources),
+    cohortsDetailsCard(dataSources),
+    variableSelectionCard(dataSources),
+    selectionOfCasesCard(dataSources),
+  ] as any
 
 export const userProjectSection = (
   dataSources: PlatformIdentifier[] = [],
