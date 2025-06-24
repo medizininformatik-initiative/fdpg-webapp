@@ -1,21 +1,31 @@
 <template>
-  <section :id="sectionIds?.map((_id) => _id as string).reduce((prev, curr) => prev + '_' + curr)" class="review-label">
-    <component :is="headline" v-if="title">{{ $t(title) }}</component>
+  <section
+    :id="
+      sectionIds && sectionIds.length > 0
+        ? sectionIds.map((_id) => _id as string).reduce((prev, curr) => prev + '_' + curr, '')
+        : ''
+    "
+    class="review-label"
+  >
+    <component :is="headline" v-if="title">
+      <span v-if="number">{{ number }}. </span>{{ t(title) }}
+    </component>
 
     <el-checkbox
       v-if="
         authStore.hasFdpgLevelPermissions() &&
         proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
         sectionIds &&
-        sectionIds.length > 0
+        sectionIds.length > 0 &&
+        !hideReviewCheckbox
       "
       v-model="checkboxValue"
       v-loading="isCheckboxLoading"
       :disabled="isCheckboxLoading"
       class="label-checkbox"
     >
-      <template v-if="checkboxValue">{{ $t('proposal.areaWasChecked') }}</template>
-      <template v-else>{{ $t('proposal.markAreaAsChecked') }}</template>
+      <template v-if="checkboxValue">{{ t('proposal.areaWasChecked') }}</template>
+      <template v-else>{{ t('proposal.markAreaAsChecked') }}</template>
     </el-checkbox>
   </section>
 </template>
@@ -27,9 +37,11 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { computed, ref } from 'vue'
+import ReviewLabel from '@/components/ReviewLabel.vue'
+import ReviewAreaLabel from '@/components/ReviewAreaLabel.vue'
+import { useI18n } from 'vue-i18n'
 
-const authStore = useAuthStore()
-
+const { t } = useI18n()
 const props = defineProps({
   title: {
     type: String,
@@ -39,6 +51,10 @@ const props = defineProps({
     type: String,
     default: 'h3',
   },
+  number: {
+    type: String,
+    default: '',
+  },
   sectionIds: {
     type: Array<String>,
     default: undefined,
@@ -46,6 +62,10 @@ const props = defineProps({
   sectionValues: {
     type: Array<Boolean>,
     default: undefined,
+  },
+  hideReviewCheckbox: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -89,6 +109,8 @@ const checkboxValue = computed({
     isCheckboxLoading.value = false
   },
 })
+
+const authStore = useAuthStore()
 </script>
 
 <style lang="scss">
