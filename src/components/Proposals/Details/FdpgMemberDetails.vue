@@ -34,7 +34,11 @@
     <FdpgMemberCohortSelection
       v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
-      :enable-edit="status === ProposalStatus.FdpgCheck"
+      :enable-edit="
+        [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck, ProposalStatus.LocationCheck].includes(
+          status,
+        )
+      "
       @add-cohort="addCohort"
       @remove-cohort="removeCohort"
     />
