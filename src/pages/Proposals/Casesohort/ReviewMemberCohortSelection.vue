@@ -59,7 +59,7 @@
               {{ t('proposal.addCohortManual') }}
             </el-button>
           </div>
-          <div v-else class="cohort-limit-warning">
+          <div v-else-if="cohorts.length >= 49" class="cohort-limit-warning">
             <el-alert type="warning" :closable="false" show-icon>
               {{ t('proposal.maxCohortsReached') }}
             </el-alert>

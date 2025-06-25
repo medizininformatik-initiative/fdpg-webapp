@@ -46,6 +46,13 @@ vi.mock('@/composables/use-notifications', () => ({
   }),
 }))
 
+vi.mock('@/validations', () => ({
+  maxLengthValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  numberValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  requiredValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+  specialCharactersValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
+}))
+
 const mountComponent = (withPinia = true) => {
   const plugins: any[] = withPinia ? [createTestingPinia()] : []
   return shallowMount(DizMemberDetails, {

@@ -31,7 +31,7 @@
       />
     </div>
 
-    <FdpgMemberCohortSelection
+    <ReviewMemberCohortSelection
       v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
       :enable-edit="
@@ -110,13 +110,12 @@ import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
-import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
+import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const messageBoxStore = useMessageBoxStore()
