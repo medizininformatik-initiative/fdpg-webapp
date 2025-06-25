@@ -61,7 +61,11 @@
     "notEndWithJson": "Datei darf nicht auf \".json\" enden",
     "invalidCharacters": "Name beinhaltet invalide Zeichen",
     "nameMissing": "Name fehlt",
-    "numberOfPatients": "Patientenanzahl"
+    "numberOfPatients": "Patientenanzahl",
+    "emailSettings": "E-Mail Einstellungen",
+    "receiveProposalEmails": "E-Mails empfangen",
+    "boolean_true": "Ja",
+    "boolean_false": "Nein"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -721,7 +725,8 @@
     "saveProposalBeforeUploadingCohorts": "Bitte speichern sie den Antrag bevor sie eine Kohorte manuell hinzufügen",
     "cohortFile": "Kohorten Datei",
     "cohortName": "Kohortenname",
-    "numberOfPatients": "Patientenanzahl"
+    "numberOfPatients": "Patientenanzahl",
+    "maxCohortsReached": "Maximale Kohortenanzahl erreicht"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -738,7 +743,10 @@
     "HEADER_DataSourceMember": "Data Source Member",
     "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
     "changeRoleModalTitle": "Falsche Rolle",
-    "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen."
+    "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
+    "participantRole_PARTICIPATING_SCIENTIST": "Teilnehmer Wissenschaftler",
+    "participantRole_RESEARCHER": "Forschende",
+    "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
   },
   "countries": {
     "AD": "Andorra",
