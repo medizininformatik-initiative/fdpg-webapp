@@ -4,7 +4,6 @@ import type { IUpload } from '@/types/proposal.types'
 import type { Ref } from 'vue'
 import type { FormRules } from 'element-plus'
 
-const proposalStore = useProposalStore()
 const { t } = i18n.global
 
 export const requiredValidationFunc = (
@@ -109,6 +108,7 @@ export const projectAbbreviationValidationFunc = (
 
         debounceTimeout = window.setTimeout(
           async () => {
+            const proposalStore = useProposalStore()
             const isUnique = await proposalStore.checkUnique(value, proposalId.value)
 
             if (isUnique === true) {
