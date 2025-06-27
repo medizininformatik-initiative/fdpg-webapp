@@ -1,7 +1,10 @@
 <template>
   <FdpgLabel :required="required" size="medium" class="form-label-mb-9" html-for="proposal.involvedRole" />
   <el-card class="form-group">
-    <FdpgFormItem :prop="`${identifier}.participantRole.role`" :rules="formRules.role">
+    <FdpgFormItem
+      :prop="identifier ? `${identifier}.participantRole.role` : 'participantRole.role'"
+      :rules="formRules.role"
+    >
       <el-radio-group
         v-model="participantRole.role"
         :data-testId="`${identifier}.participantRole.role`"
@@ -53,7 +56,7 @@ const props = defineProps({
 
   identifier: {
     type: String,
-    required: true,
+    required: false,
   },
 
   required: {

@@ -16,7 +16,7 @@
   <el-card v-if="!institute.miiLocation" class="form-group form-group-mb-40">
     <el-row :gutter="20">
       <el-col :sm="24">
-        <FdpgFormItem :prop="`${identifier}.institute.name`" :rules="formRules.name">
+        <FdpgFormItem :prop="identifier ? `${identifier}.institute.name` : 'institute.name'" :rules="formRules.name">
           <FdpgLabel html-for="proposal.fullCorrectNameOfTheInstitutionFacilityJurPerson" />
           <FdpgInput
             v-model="institute.name"
@@ -27,7 +27,10 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.streetAddress`" :rules="formRules.streetAddress">
+        <FdpgFormItem
+          :prop="identifier ? `${identifier}.institute.streetAddress` : 'institute.streetAddress'"
+          :rules="formRules.streetAddress"
+        >
           <FdpgLabel html-for="proposal.street" />
           <FdpgInput
             v-model="institute.streetAddress"
@@ -38,7 +41,10 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.houseNumber`" :rules="formRules.houseNumber">
+        <FdpgFormItem
+          :prop="identifier ? `${identifier}.institute.houseNumber` : 'institute.houseNumber'"
+          :rules="formRules.houseNumber"
+        >
           <FdpgLabel html-for="proposal.houseNumber" />
           <FdpgInput
             v-model="institute.houseNumber"
@@ -49,7 +55,10 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.postalCode`" :rules="formRules.postalCode">
+        <FdpgFormItem
+          :prop="identifier ? `${identifier}.institute.postalCode` : 'institute.postalCode'"
+          :rules="formRules.postalCode"
+        >
           <FdpgLabel html-for="proposal.postalCode" />
           <FdpgInput
             v-model="institute.postalCode"
@@ -60,7 +69,7 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.city`" :rules="formRules.city">
+        <FdpgFormItem :prop="identifier ? `${identifier}.institute.city` : 'institute.city'" :rules="formRules.city">
           <FdpgLabel html-for="proposal.city" />
           <FdpgInput
             v-model="institute.city"
@@ -71,7 +80,10 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.country`" :rules="formRules.country">
+        <FdpgFormItem
+          :prop="identifier ? `${identifier}.institute.country` : 'institute.country'"
+          :rules="formRules.country"
+        >
           <FdpgLabel html-for="proposal.location" />
           <FdpgSelect
             v-model="institute.country"
@@ -85,7 +97,7 @@
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem :prop="`${identifier}.institute.email`" :rules="formRules.email">
+        <FdpgFormItem :prop="identifier ? `${identifier}.institute.email` : 'institute.email'" :rules="formRules.email">
           <FdpgLabel html-for="proposal.emailAddress" />
           <FdpgInput
             v-model="institute.email"
@@ -132,7 +144,7 @@ const props = defineProps({
 
   identifier: {
     type: String,
-    required: true,
+    required: false,
   },
 })
 

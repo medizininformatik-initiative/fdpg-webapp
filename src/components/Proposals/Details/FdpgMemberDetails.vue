@@ -19,7 +19,7 @@
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
     <div class="section">
-      <h3 info="general.info" size="large">{{ $t('proposal.checkAttachments', { count: documents.length }) }}</h3>
+      <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
         :documents="documents"
         :proposal-id="proposalId"

@@ -80,6 +80,21 @@
       </div>
     </div>
   </div>
+  <el-row v-if="isFdpgMembers" class="participants-footer" type="flex" justify="end" align="middle">
+    <el-col :span="4" class="add-more-button-wrapper">
+      <el-button
+        link
+        class="add-more-button add-more-button--another-person"
+        data-testId="handleAddAnotherPerson"
+        @click="handleAddAnotherPerson"
+      >
+        <i class="el-icon-plus" aria-hidden="true" />
+        <span class="add-text">{{ t('proposal.addAnotherPerson') }}</span>
+      </el-button>
+    </el-col>
+  </el-row>
+
+  <AddParticipantDialog v-model="openParticipantDialog" @submit="handleParticipantSubmit" />
 </template>
 
 <script setup lang="ts">
@@ -88,7 +103,6 @@ import { useRoute } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
 import type { DropdownButton, DropdownItem } from '@/types/dropdown.types'
 import { useI18n } from 'vue-i18n'
-
 import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
@@ -99,6 +113,8 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { Countries } from '@/types/location.enum'
 import type { IParticipant } from '@/types/proposal.types'
+import AddParticipantDialog from './AddParticipantDialog.vue'
+import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
 
 const { params } = useRoute()
 const proposalId = params.id as string
@@ -130,6 +146,7 @@ const participantsCount = ref(0)
 const triggeredEmails = ref<string[]>([])
 const isEmailSendingInProgress = ref(false)
 const participantPanels = ref<boolean[]>([])
+const openParticipantDialog = ref<boolean>(false)
 
 const authStore = useAuthStore()
 
@@ -226,6 +243,10 @@ const getRegistrationPendingAction = (
     action: () => resendInvitation(identity),
     actionTitle: 'proposal.resendInvitation',
   }
+}
+
+const handleAddAnotherPerson = async () => {
+  openParticipantDialog.value = true
 }
 
 onBeforeMount(async () => {
@@ -358,14 +379,35 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
       }) ?? []
 
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
-    showSuccessMessage(
-      newRole === ParticipantRole.ResponsibleScientist
-        ? t('proposal.responsibleScientistUpdated')
-        : t('proposal.participantRoleUpdated'),
-    )
+    showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant role:', error)
-    showErrorMessage(t('proposal.errorUpdatingParticipantRole'))
+    showErrorMessage()
+  }
+}
+
+const handleParticipantSubmit = async (newParticipant: IParticipant) => {
+  try {
+    const currentProposal = proposalStore.currentProposal
+    if (!currentProposal) {
+      showErrorMessage(t('proposal.errorNoProposalFound'))
+      return
+    }
+
+    const participantToAdd = newParticipant
+
+    const participantToAddTransformed = mapParticipant(participantToAdd) as IParticipant
+
+    const updatedParticipants = [...(currentProposal.participants || []), participantToAddTransformed]
+    await proposalStore.updateParticipants(proposalId, updatedParticipants)
+
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error adding participant:', error)
+    showErrorMessage()
   }
 }
 </script>
@@ -547,11 +589,9 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
 
 .dropdown-tag--invitationPending {
   background-color: $gray-800;
-  z-index: 22 !important;
 }
 .dropdown-tag--registrationPending {
   background-color: $blue;
-  z-index: 21 !important;
 }
 .dropdown-tag--alreadyRegistered {
   background-color: $green;
@@ -572,5 +612,9 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
   text-overflow: ellipsis;
   max-width: 150px;
   display: inline-block;
+}
+.add-more-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

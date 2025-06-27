@@ -418,11 +418,6 @@ const proposalId = computed(() => proposalForm.value?._id as string)
 const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
 )
-const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
-const desiredStartTimeType = computed(
-  () => proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later',
-)
-
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
