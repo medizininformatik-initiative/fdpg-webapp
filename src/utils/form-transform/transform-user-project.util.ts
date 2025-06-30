@@ -4,7 +4,6 @@ import type {
   IAddressees,
   IBiosample,
   ICohort,
-  IDifeVariableSelectionData,
   IEthicVote,
   IFeasibility,
   IGeneralProjectInformation,

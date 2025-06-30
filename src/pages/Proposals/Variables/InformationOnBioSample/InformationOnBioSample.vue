@@ -11,12 +11,13 @@
       v-if="informationOnRequestedBioSamplesForm"
       :prop="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
     >
-      <Fdpgcheckbox
-        :value="informationOnRequestedBioSamplesForm.noSampleRequired"
+      <el-checkbox
+        v-model="informationOnRequestedBioSamplesForm.noSampleRequired"
         :data-testId="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
         :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-        label="proposal.noSampleRequired"
-        size="small"
+        :label="t('proposal.noSampleRequired')"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
       />
     </FdpgFormItem>
     <FdpgFormItem
@@ -128,12 +129,13 @@
             </FdpgFormItem>
 
             <FdpgFormItem :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].optionalBiosample`">
-              <Fdpgcheckbox
-                :value="biosample.optionalBiosample"
+              <el-checkbox
+                v-model="biosample.optionalBiosample"
                 :data-testId="'biosample.optionalBiosample__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                label="proposal.optionalBiosample"
-                size="small"
+                :label="t('proposal.optionalBiosample')"
+                :size="FdpgInputSize.Small"
+                class="fdpg-checkbox"
               />
             </FdpgFormItem>
           </el-col>
@@ -193,12 +195,13 @@
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransfer`"
             >
-              <Fdpgcheckbox
-                :value="biosample.externalLabTransfer"
+              <el-checkbox
+                v-model="biosample.externalLabTransfer"
                 :data-testId="'biosample.externalLabTransfer__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                label="proposal.externalLabTransfer"
-                size="small"
+                :label="t('proposal.externalLabTransfer')"
+                :size="FdpgInputSize.Small"
+                class="fdpg-checkbox"
               />
             </FdpgFormItem>
 
@@ -253,6 +256,8 @@ import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import FdpgRadio from '@/components/FdpgRadio.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { FdpgInputSize } from '@/types/component.types'
+
 const { t } = useI18n()
 
 const props = defineProps({
