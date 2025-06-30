@@ -316,20 +316,24 @@ export class ProposalService {
   }
 
   async getFeasibilityCsvByQueryId(proposalId: string, feasibilityQueryId: number, queryName: string): Promise<void> {
-    const response = await this.apiClient.post(`${this.basePath}/query/csv`, {
-      responseType: 'blob',
-      proposalId,
-      queryId: feasibilityQueryId,
-    })
+    const response = await this.apiClient.post(
+      `${this.basePath}/query/csv`,
+      { proposalId, queryId: feasibilityQueryId },
+      { responseType: 'blob' },
+    )
 
-    const url = window.URL.createObjectURL(new Blob([response.data]))
+    if (response.status === 200) {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
 
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${queryName}.zip`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    window.URL.revokeObjectURL(url)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${queryName}.zip`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    } else {
+      throw new Error('Could not fetch the feasibility csv')
+    }
   }
 }
