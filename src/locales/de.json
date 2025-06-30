@@ -726,7 +726,11 @@
     "cohortFile": "Kohorten Datei",
     "cohortName": "Kohortenname",
     "numberOfPatients": "Patientenanzahl",
-    "maxCohortsReached": "Maximale Kohortenanzahl erreicht"
+    "maxCohortsReached": "Maximale Kohortenanzahl erreicht",
+    "addParticipant": "Partnerprojekt hinzufügen",
+    "involvedRole": "Involvierte Rolle",
+    "cannotChangeOnlyResponsibleScientist": "Der einzig verantwortliche Wissenschaftler kann nicht geändert werden.",
+    "selectedCohorts": "Ausgewählte Kohorten"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

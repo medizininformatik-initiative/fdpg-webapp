@@ -43,11 +43,27 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
   ],
 }
 
-const cohortsDetailsCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'cohorts'> => ({
+const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   key: 'cohorts',
   cardLabel: 'proposal.cohortSelection',
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
+    {
+      label: 'proposal.selectedCohorts',
+      size: 24,
+      definitions: [
+        [
+          {
+            key: 'selectedCohorts',
+            kind: 'table',
+            columns: [
+              { key: 'label', label: 'proposal.cohortName' },
+              { key: 'numberOfPatients', label: 'proposal.numberOfPatients' },
+            ],
+          },
+        ],
+      ],
+    },
     {
       label: 'proposal.assessmentOfFeasibilityDetails',
       size: 24,
@@ -312,25 +328,6 @@ const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
-  key: 'cohorts',
-  cardLabel: 'proposal.cohortSelection',
-  loopOn: 'selectedCohorts',
-  terms: [
-    {
-      label: 'proposal.selectFeasibilityQuery',
-      size: 24,
-      definitions: [[{ key: 'label' }]],
-    },
-    {
-      label: 'proposal.selectFeasibilityQuery',
-      size: 24,
-      definitions: [[{ key: 'feasibilityQueryId' }]],
-    },
-  ],
-})
-
 const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'selectionOfCases',
   cardLabel: 'proposal.selectionOfCases',
@@ -378,7 +375,6 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
     addresseesCard(dataSources),
     typeOfUseCard(dataSources),
     cohortsCard(dataSources),
-    cohortsDetailsCard(dataSources),
     variableSelectionCard(dataSources),
     selectionOfCasesCard(dataSources),
   ] as any
