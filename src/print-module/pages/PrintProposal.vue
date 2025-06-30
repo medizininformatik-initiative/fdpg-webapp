@@ -167,7 +167,7 @@ function getVisibleSections(sections: any[]) {
     if (section.shouldHide) {
       return false
     }
-
+    // Special case for biosample section
     if (section.key === 'userProject' && section.sectionLabel === 'proposal.selectedBioSamples') {
       return shouldShowBiosampleSection(proposalData.value)
     }
