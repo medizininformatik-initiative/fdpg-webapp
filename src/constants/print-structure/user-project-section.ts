@@ -1,9 +1,6 @@
 import type {
   IDefinitionCard,
   IDefinitionCardArray,
-  IDefinitionSectionObject,
-  IDefinitionCardTerm,
-  DefinitionCards,
   DefinitionSection,
 } from '@/components/Shared/definition-card.types'
 import { MII_LOCATIONS } from '@/constants'
