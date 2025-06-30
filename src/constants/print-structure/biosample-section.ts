@@ -7,7 +7,7 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
-const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
+const informationOnRequestedBioSamplesCard: IDefinitionCard<IUserProject, 'informationOnRequestedBioSamples'> = {
   key: 'informationOnRequestedBioSamples',
   cardLabel: 'proposal.selectedBioSamples',
   terms: [
@@ -22,10 +22,9 @@ const informationOnRequestedBioSamplesCard = (dataSources: PlatformIdentifier[] 
       definitions: [[{ key: 'noSampleRequired', kind: 'boolean', true: 'proposal.yes', false: 'proposal.no' }]],
     },
   ],
-  kind: 'real',
-})
+}
 
-const biosamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
+const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequestedBioSamples', 'biosamples'> = {
   key: 'informationOnRequestedBioSamples',
   cardLabel: 'proposal.informationOnRequestedBioSamples',
   loopOn: 'biosamples',
@@ -81,12 +80,9 @@ const biosamplesCard = (dataSources: PlatformIdentifier[] = []) => ({
       definitions: [[{ key: 'externalLabTransferDetails' }]],
     },
   ],
-})
+}
 
-const biosampleCard = (dataSources: PlatformIdentifier[] = []) => [
-  informationOnRequestedBioSamplesCard(dataSources),
-  biosamplesCard(dataSources),
-]
+const biosampleCards = [informationOnRequestedBioSamplesCard, biosamplesCard]
 
 export const biosampleSection = (
   dataSources: PlatformIdentifier[] = [],
@@ -96,6 +92,6 @@ export const biosampleSection = (
     shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
     kind: 'object',
     key: 'userProject',
-    mapping: biosampleCard(dataSources),
+    mapping: biosampleCards,
   }
 }

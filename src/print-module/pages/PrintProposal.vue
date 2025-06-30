@@ -80,13 +80,14 @@ import { userProjectSection } from '@/constants/print-structure/user-project-sec
 import PrintCard from '@/print-module/components/PrintCard.vue'
 import type { DataPrivacyTextsContentKeys } from '@/types/data-privacy.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { ProposalTypeOfUse } from '@/types/proposal.types'
 import type { IProposal } from '@/types/proposal.types'
 import { transformForm } from '@/utils/form-transform'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 class FailedStateError extends Error {
-  constructor(message) {
+  constructor(message: string) {
     super(message)
     this.name = 'FailedStateError'
   }
@@ -162,7 +163,17 @@ const shouldHidePrintCard = (dto: any, hideIfOtherValueIsTruthy?: [string, strin
 }
 
 function getVisibleSections(sections: any[]) {
-  return sections.filter((section) => !section.shouldHide)
+  return sections.filter((section) => {
+    if (section.shouldHide) {
+      return false
+    }
+
+    if (section.key === 'userProject' && section.sectionLabel === 'proposal.selectedBioSamples') {
+      return shouldShowBiosampleSection(proposalData.value)
+    }
+
+    return true
+  })
 }
 
 function getVisibleCards(cards: any, dto: any) {
@@ -180,6 +191,19 @@ function getVisibleCards(cards: any, dto: any) {
 
 function getVisibleItems(items: any[], card: any) {
   return items
+}
+
+const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
+  if (!proposal) {
+    return false
+  }
+
+  const typeOfUse = proposal.userProject?.typeOfUse?.usage
+  if (!typeOfUse || !typeOfUse.includes(ProposalTypeOfUse.Biosample)) {
+    return false
+  }
+
+  return true
 }
 
 onMounted(() => setUp())
