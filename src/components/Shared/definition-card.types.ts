@@ -39,12 +39,21 @@ interface IBooleanDefinition<T> extends IBaseDefinition<T> {
   false: TranslationSchema
 }
 
+interface ITableDefinition<T> extends IBaseDefinition<T> {
+  kind: 'table'
+  columns: Array<{
+    key: string
+    label: TranslationSchema
+  }>
+}
+
 export type Definitions<T, L extends Record<string, Object> = {}> =
   | IContentDefinition<T>
   | ITranslatableDefinition<T>
   | IDateDefinition<T>
   | IBooleanDefinition<T>
   | ILookupDefinition<T, L>
+  | ITableDefinition<T>
 
 export interface IDefinitionCardTerm<T, L extends Record<string, Object> = {}> {
   label: TranslationSchema

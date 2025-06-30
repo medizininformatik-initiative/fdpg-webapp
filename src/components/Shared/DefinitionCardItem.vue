@@ -20,6 +20,17 @@
       {{ definition.lookupMap[value as string][definition.lookupKey] }}
     </template>
 
+    <template v-else-if="definition.kind === 'table'">
+      <el-table :data="value" style="width: 100%">
+        <el-table-column
+          v-for="column in definition.columns"
+          :key="column.key"
+          :prop="column.key"
+          :label="t(column.label)"
+        />
+      </el-table>
+    </template>
+
     <div v-else class="ql-editor" v-html="value"></div>
   </template>
 </template>
