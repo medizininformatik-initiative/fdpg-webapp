@@ -1,6 +1,6 @@
 <template>
   <FdpgLabel html-for="proposal.MII" size="large" class="mt-22" />
-  <el-card>
+  <el-card class="form-group">
     <el-row>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.cohorts.selectedCohorts">
