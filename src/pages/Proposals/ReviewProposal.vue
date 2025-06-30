@@ -131,7 +131,7 @@ import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
 import { projectUserSection } from '@/constants/print-structure/project-user-section'
 import useNotifications from '@/composables/use-notifications'
-import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
@@ -277,7 +277,25 @@ const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof 
 const HideReviewCheckbox = (section: any) => section.key === 'userProject' || section.key === 'biosample'
 
 function getVisibleSections(sections: any[]) {
-  return sections.filter((section) => !section.shouldHide)
+  return sections.filter((section) => {
+    if (section.shouldHide) {
+      return false
+    }
+    return true
+  })
+}
+
+const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
+  if (!proposal) {
+    return false
+  }
+
+  const typeOfUse = proposal.userProject?.typeOfUse?.usage
+  if (!typeOfUse || !typeOfUse.includes(ProposalTypeOfUse.Biosample)) {
+    return false
+  }
+
+  return true
 }
 
 function getVisibleCards(cards: any, dto: any) {
