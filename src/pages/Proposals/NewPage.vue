@@ -34,6 +34,23 @@
         </el-button>
       </div>
     </div>
+    <!-- Auto-save indicator -->
+    <div v-if="(proposalId || proposalForm?.projectAbbreviation?.trim()) && !isReviewMode" class="auto-save-indicator">
+      <span v-if="isAutoSaving" class="auto-save-status saving">
+        <i class="el-icon-loading"></i>
+        {{ t('general.autoSaving') }}
+      </span>
+      <span v-else-if="hasFormChanged" class="auto-save-status pending">
+        <i class="el-icon-clock"></i>
+        {{ t('general.autoSaving') }} (pending)
+      </span>
+      <span v-else class="auto-save-status saved">
+        <i class="el-icon-check"></i>
+        {{ t('general.autoSaved') }}
+      </span>
+      <!-- Test button for debugging -->
+      <el-button size="small" @click="testAutoSave" style="margin-left: 10px"> Test Auto-Save </el-button>
+    </div>
     <div class="form-container">
       <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
         <div v-show="activeStep === CreatPrposalSteps.DataSources">
@@ -47,6 +64,7 @@
                     data-test-id="proposalForm.projectAbbreviation"
                     placeholder="proposal.egWestStorm"
                     :disabled="isReviewMode"
+                    @input="handleFormInput"
                   />
                 </FdpgFormItem>
               </el-col>
@@ -338,6 +356,8 @@ import useDraftDownload from '@/composables/use-draft-download'
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
+import { debounce } from 'lodash-es'
+
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -410,6 +430,8 @@ const formRef = ref<FormInstance>()
 const fileList = ref([])
 
 const bypassDebounce = ref(false)
+const isAutoSaving = ref(false)
+const hasFormChanged = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
@@ -716,6 +738,82 @@ const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   })
 }
 
+// Auto-save function without validation
+const autoSaveDraft = async () => {
+  if (
+    proposalForm.value?.status !== undefined &&
+    proposalForm.value.status !== ProposalStatus.Draft &&
+    proposalForm.value.status !== ProposalStatus.Rework
+  ) {
+    return
+  }
+
+  // Don't auto-save if we're in the middle of a manual save
+  if (bypassDebounce.value) {
+    return
+  }
+
+  // Only auto-save if the form has actually changed
+  if (!hasFormChanged.value) {
+    return
+  }
+
+  // For new proposals, only auto-save if projectAbbreviation is filled
+  if (!proposalId.value && !proposalForm.value?.projectAbbreviation?.trim()) {
+    return
+  }
+
+  console.log('Auto-saving draft...') // Debug log
+  isAutoSaving.value = true
+
+  try {
+    if (proposalId.value) {
+      // Update existing proposal
+      const saveResult = await proposalStore.updateProposal(proposalId.value, {
+        ...getFormValues(),
+      })
+      proposalStore.currentProposal = transformForm(saveResult) as IProposal
+      console.log('Auto-save successful (update)') // Debug log
+    } else {
+      // For new proposals, validate projectAbbreviation
+      if (proposalForm.value?.projectAbbreviation?.trim()) {
+        // Validate projectAbbreviation field
+        let invalidFields: ValidateFieldsError | undefined
+        await formRef.value?.validateField(
+          ['projectAbbreviation'],
+          (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+            invalidFields = invalidFieldsResult
+          },
+        )
+        if (invalidFields && Object.keys(invalidFields).length > 0) {
+          raiseErrors(invalidFields)
+          return
+        }
+      }
+
+      // Create new proposal
+      const saveResult = await proposalStore.createProposal({
+        ...getFormValues(),
+        status: ProposalStatus.Draft,
+      })
+      proposalStore.currentProposal = transformForm(saveResult) as IProposal
+      console.log('Auto-save successful (create) - got proposalId:', saveResult._id) // Debug log
+
+      // Update proposalForm with the new ID from the store
+      await setUpPage()
+    }
+    hasFormChanged.value = false // Reset the change flag after successful save
+  } catch (error: any) {
+    // Silently fail for auto-save to avoid disrupting user experience
+    console.warn('Auto-save failed:', error.message)
+  } finally {
+    isAutoSaving.value = false
+  }
+}
+
+// Debounced auto-save function
+const debouncedAutoSave = debounce(autoSaveDraft, 2000) // 2 second delay
+
 // Update handleSaveDraft to check all fields
 const handleSaveDraft = async () => {
   if (
@@ -941,6 +1039,18 @@ watch(
   { immediate: true, deep: true },
 )
 
+// Auto-save watcher
+watch(
+  () => proposalForm.value,
+  () => {
+    if (proposalForm.value) {
+      hasFormChanged.value = true
+      debouncedAutoSave()
+    }
+  },
+  { deep: true },
+)
+
 onMounted(async () => {
   try {
     await proposalStore.setCurrentProposal(params.id as string)
@@ -1132,5 +1242,48 @@ onMounted(async () => {
 }
 .align-right {
   justify-content: end !important;
+}
+
+.auto-save-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  .auto-save-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+
+    &.saving {
+      color: #409eff;
+      background-color: #ecf5ff;
+
+      i {
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    &.pending {
+      color: #e6a23c;
+      background-color: #fdf6ec;
+    }
+
+    &.saved {
+      color: #67c23a;
+      background-color: #f0f9ff;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
