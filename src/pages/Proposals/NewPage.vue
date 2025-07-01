@@ -363,26 +363,44 @@ const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
   [CreatPrposalSteps.ProjectDetails]: [
-    'userProject.generalProjectInformation',
-    'userProject.feasibility',
-    'userProject.plannedPublication',
+    'userProject.generalProjectInformation.projectTitle',
+    'userProject.generalProjectInformation.desiredStartTime',
+    'userProject.generalProjectInformation.desiredStartTimeType',
+    'userProject.generalProjectInformation.projectDuration',
+    'userProject.generalProjectInformation.projectFunding',
+    'userProject.generalProjectInformation.fundingReferenceNumber',
+    'userProject.plannedPublication.publications',
   ],
-  [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
+  [CreatPrposalSteps.DataUsage]: [
+    'userProject.typeOfUse.usage',
+    'userProject.typeOfUse.dataPrivacyExtra',
+    'userProject.resourceAndRecontact',
+    'userProject.typeOfUse.difeUsage',
+    'userProject.typeOfUse.PseudonymizationInfo',
+  ],
   [CreatPrposalSteps.Variables]: [
     'requestedData.dataInfo',
-    'userProject.variableSelection.DIFE',
+    'userProject.variableSelection.DIFE.typeOfUse',
+    'userProject.variableSelection.DIFE.typeOfUseExplanation',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
   ],
   [CreatPrposalSteps.ResearchProject]: [
-    'userProject.projectDetails',
-    'userProject.ethicVote',
+    'userProject.projectDetails.simpleProjectDescription',
+    'userProject.projectDetails.department',
+    'userProject.projectDetails.scientificBackground',
+    'userProject.projectDetails.hypothesisAndQuestionProjectGoals',
+    'userProject.projectDetails.materialAndMethods',
+    'userProject.projectDetails.executiveSummaryUac',
+    'userProject.ethicVote.ethicsCommittee',
+    'userProject.ethicVote.ethicsVoteNumber',
+    'userProject.ethicVote.voteFromDate',
+    'userProject.ethicVote.ethicVoteUploads',
     'requestedData.desiredControlDataAmount',
     'requestedData.desiredDataAmount',
   ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
-    'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
     'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
@@ -494,11 +512,6 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
-      variableSelection: {
-        /*
-          handled in component
-        */
-      },
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
@@ -680,10 +693,61 @@ const handleTermsConfirm = async () => {
 const prevStep = () => {
   layoutStore.prevStep()
 }
-const nextStep = () => {
+const nextStep = async () => {
+  // Get current step fields and all actual form fields
+  const currentStepFields = stepFieldsMap[activeStep.value] || []
+  const allFields = formRef.value?.fields || []
+
+  if (currentStepFields.length > 0) {
+    let hasErrors = false
+
+    // Find all actual form fields that belong to current step
+    const actualStepFields = allFields.filter((field) =>
+      currentStepFields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+    )
+
+    console.log(
+      'nextStep - actualStepFields:',
+      actualStepFields.map((f) => f.prop),
+    )
+
+    // Validate each actual field in the current step
+    for (const field of actualStepFields) {
+      if (field.prop) {
+        try {
+          await formRef.value?.validateField([field.prop], (valid, invalidFields) => {
+            if (invalidFields && Object.keys(invalidFields).length > 0) {
+              hasErrors = true
+              console.log(`Validation error in field ${field.prop}:`, invalidFields)
+            }
+          })
+        } catch (error) {
+          hasErrors = true
+          console.log(`Validation exception for field ${field.prop}:`, error)
+        }
+      }
+    }
+
+    // Always update step status after validation (whether success or error)
+    await updateCurrentStepStatus()
+
+    // If there are validation errors in current step, don't proceed to next step
+    if (hasErrors) {
+      console.log('Validation errors found, not proceeding to next step')
+      return
+    }
+  } else {
+    // Update step status even if no fields to validate
+    await updateCurrentStepStatus()
+  }
+
   layoutStore.nextStep()
 }
 const handleSubmit = async () => {
+  // Validate all fields before submission
+  await formRef.value?.validate(() => {})
+  await waitForValidation()
+  await updateStepStatus()
   isSubmissionDialogOpen.value = true
 }
 
@@ -700,8 +764,23 @@ const updateStepStatus = async () => {
       fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
     )
 
-    // Check if all fields in this step are valid
-    const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
+    // Get all fields for this step that have any validation rules (required OR non-required)
+    const fieldsWithRules = stepFields.filter((field) => {
+      const appliedRules = {
+        componentRules: getRulesArray(field.rules),
+        formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+      }
+
+      const hasAnyRules = [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
+      return hasAnyRules
+    })
+
+    // Check if ALL fields with validation rules in this step are valid (no errors)
+    // Step is valid if:
+    // 1. There are fields with rules AND all of them have 'success' state, OR
+    // 2. There are no fields with rules (step has no validation)
+    const isStepValid =
+      fieldsWithRules.length === 0 || fieldsWithRules.every((field) => field.validateState === 'success')
     const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
 
     // Update the step status in layout store
@@ -709,33 +788,78 @@ const updateStepStatus = async () => {
   })
 }
 
-// Add validation on form validate event
-const onValidate = async (prop: FormItemProp, isValid: boolean) => {
-  await waitForValidation()
+const updateCurrentStepStatus = async () => {
+  if (!formRef.value) {
+    console.log('updateCurrentStepStatus: No formRef')
+    return
+  }
 
-  // Check which step the validated field belongs to
-  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-    if (fields.some((fieldPath) => prop.toString().startsWith(fieldPath))) {
-      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+  // Get all form fields
+  const allFields = formRef.value.fields || []
 
-      // Get all fields that belong to this step
-      const stepFields =
-        formRef.value?.fields.filter((field) =>
-          fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-        ) || []
+  // Get current step fields only
+  const currentStepFields = stepFieldsMap[activeStep.value] || []
 
-      const isStepValid =
-        stepFields.length > 0 &&
-        stepFields.every((field) => {
-          let validity
-          if (field.rules) validity = field.validateState == 'success'
-          else validity = field.validateState !== 'error'
-          return validity
-        })
-
-      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
-    }
+  console.log('updateCurrentStepStatus:', {
+    activeStep: activeStep.value,
+    activeStepName: CreatPrposalSteps[activeStep.value],
+    currentStepFields,
+    allFieldsCount: allFields.length,
   })
+
+  // Get all fields that belong to current step
+  const stepFields = allFields.filter((field) =>
+    currentStepFields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+  )
+
+  console.log(
+    'stepFields found:',
+    stepFields.map((f) => ({ prop: f.prop, validateState: f.validateState })),
+  )
+
+  // Get all fields for current step that have any validation rules (required OR non-required)
+  const fieldsWithRules = stepFields.filter((field) => {
+    const appliedRules = {
+      componentRules: getRulesArray(field.rules),
+      formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+    }
+
+    const hasAnyRules = [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
+    const hasRequired = [...appliedRules.formRules, ...appliedRules.componentRules].some((rule) => rule.required)
+    console.log(
+      `Field ${field.prop} - hasAnyRules: ${hasAnyRules}, hasRequired: ${hasRequired}, validateState: ${field.validateState}`,
+    )
+    return hasAnyRules
+  })
+
+  console.log(
+    'fieldsWithRules:',
+    fieldsWithRules.map((f) => ({ prop: f.prop, validateState: f.validateState })),
+  )
+
+  // Check if ALL fields with validation rules in current step are valid (no errors)
+  // Step is valid if:
+  // 1. There are fields with rules AND all of them have 'success' state, OR
+  // 2. There are no fields with rules (step has no validation)
+  const isStepValid =
+    fieldsWithRules.length === 0 || fieldsWithRules.every((field) => field.validateState === 'success')
+
+  console.log('isStepValid:', isStepValid)
+  console.log('Calling layoutStore.updateStepStatus with:', activeStep.value, isStepValid)
+
+  // Update only the current step status in layout store
+  // Convert the numeric enum value to the enum key name
+  const stepKey = CreatPrposalSteps[activeStep.value] as keyof typeof CreatPrposalSteps
+  console.log('stepKey:', stepKey)
+  layoutStore.updateStepStatus(stepKey, isStepValid)
+}
+
+let initialLoad = true
+
+const onValidate = async (prop: FormItemProp, isValid: boolean) => {
+  // No validation here - only update progress
+  if (initialLoad) return
+  await updateProgressOnly()
 }
 
 // Auto-save function without validation
@@ -775,32 +899,19 @@ const autoSaveDraft = async () => {
       proposalStore.currentProposal = transformForm(saveResult) as IProposal
       console.log('Auto-save successful (update)') // Debug log
     } else {
-      // For new proposals, validate projectAbbreviation
+      // For new proposals, only save if projectAbbreviation has content
       if (proposalForm.value?.projectAbbreviation?.trim()) {
-        // Validate projectAbbreviation field
-        let invalidFields: ValidateFieldsError | undefined
-        await formRef.value?.validateField(
-          ['projectAbbreviation'],
-          (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-            invalidFields = invalidFieldsResult
-          },
-        )
-        if (invalidFields && Object.keys(invalidFields).length > 0) {
-          raiseErrors(invalidFields)
-          return
-        }
+        // Create new proposal
+        const saveResult = await proposalStore.createProposal({
+          ...getFormValues(),
+          status: ProposalStatus.Draft,
+        })
+        proposalStore.currentProposal = transformForm(saveResult) as IProposal
+        console.log('Auto-save successful (create) - got proposalId:', saveResult._id) // Debug log
+
+        // Update proposalForm with the new ID from the store
+        await setUpPage()
       }
-
-      // Create new proposal
-      const saveResult = await proposalStore.createProposal({
-        ...getFormValues(),
-        status: ProposalStatus.Draft,
-      })
-      proposalStore.currentProposal = transformForm(saveResult) as IProposal
-      console.log('Auto-save successful (create) - got proposalId:', saveResult._id) // Debug log
-
-      // Update proposalForm with the new ID from the store
-      await setUpPage()
     }
     hasFormChanged.value = false // Reset the change flag after successful save
   } catch (error: any) {
@@ -811,10 +922,7 @@ const autoSaveDraft = async () => {
   }
 }
 
-// Debounced auto-save function
-const debouncedAutoSave = debounce(autoSaveDraft, 2000) // 2 second delay
-
-// Update handleSaveDraft to check all fields
+// Update handleSaveDraft to validate all fields
 const handleSaveDraft = async () => {
   if (
     proposalForm.value?.status !== undefined &&
@@ -825,12 +933,12 @@ const handleSaveDraft = async () => {
   }
   bypassDebounce.value = true
 
-  // Validate all fields to update step statuses
+  // Validate all fields and show errors
   await formRef.value?.validate(() => {})
   await waitForValidation()
   await updateStepStatus()
 
-  // First validate projectAbbreviation
+  // First validate projectAbbreviation specifically
   let invalidFields: ValidateFieldsError | undefined
   await formRef.value?.validateField(
     ['projectAbbreviation'],
@@ -841,6 +949,7 @@ const handleSaveDraft = async () => {
 
   if (invalidFields && Object.keys(invalidFields).length > 0) {
     raiseErrors(invalidFields)
+    bypassDebounce.value = false
     return
   }
 
@@ -871,8 +980,29 @@ const handleSaveDraft = async () => {
 }
 
 const authStore = useAuthStore()
+
+// Debounced auto-save function
+const debouncedAutoSave = debounce(autoSaveDraft, 2000) // 2 second delay
+
+// Auto-save watcher
+watch(
+  () => proposalForm.value,
+  () => {
+    if (initialLoad) return
+    layoutStore.setFormTouched(true)
+    if (proposalForm.value) {
+      hasFormChanged.value = true
+      debouncedAutoSave()
+      // Update progress without showing validation errors
+      updateProgressOnly()
+    }
+  },
+  { deep: true },
+)
+
 const setUpPage = async () => {
   proposalForm.value = transformForm(proposalStore.currentProposal, false, authStore.profile) as IProposal
+
   const lastDashboard = layoutStore.lastDashboard
   layoutStore.setBreadcrumbs([
     {
@@ -888,14 +1018,15 @@ const setUpPage = async () => {
     },
   ])
 
-  const isEditable =
-    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
-    proposalStore.currentProposal?.status === ProposalStatus.Rework
-  if (proposalForm.value._id && isEditable) {
-    formRef.value?.validate(() => {})
-  }
+  // const isEditable =
+  //   proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+  //   proposalStore.currentProposal?.status === ProposalStatus.Rework
+  // if (proposalForm.value._id && isEditable) {
+  //   formRef.value?.validate(() => {})
+  // }
 
   await nextTick()
+  initialLoad = false
 }
 
 const scrollToAnchor = async () => {
@@ -912,6 +1043,104 @@ const setValidationStatus = () => {
   isValidToSubmit.value = allFieldsValid.value && !!proposalId.value && !hasOpenTasks
 }
 
+// Function to track progress without showing validation errors
+const updateProgressOnly = async () => {
+  await nextTick()
+
+  if (formRef.value) {
+    const formRules = rules.value
+    const allFields = formRef.value.fields
+
+    if (!allFields) {
+      allFieldsValid.value = false
+      return
+    }
+
+    const requiredFields = allFields.filter((field) => {
+      const fieldPath = field.prop as string
+
+      const appliedRules = {
+        componentRules: getRulesArray(field.rules),
+        formRules: getFormRuleArrayFromPath(formRules, field.prop as string),
+      }
+      return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
+    })
+
+    layoutStore.setTotalRequiredFields(requiredFields.length)
+
+    // Count fields that are valid without triggering validation
+    const validFieldsList = []
+    const validatedFields = requiredFields.filter((field) => {
+      // Check if field has a meaningful value and is not in error state
+      const fieldPath = field.prop as string
+      const fieldValue = getFieldValue(fieldPath)
+      const isFilled = isFieldMeaningfullyFilled(fieldValue)
+      if (isFilled && field.validateState !== 'error') {
+        validFieldsList.push({ fieldPath, fieldValue })
+      }
+      return isFilled && field.validateState !== 'error'
+    }).length
+
+    console.log('Valid fields for progress:', validFieldsList)
+    layoutStore.setValidatedFields(validatedFields)
+
+    allFieldsValid.value =
+      requiredFields.every((field) => {
+        const fieldPath = field.prop as string
+        const fieldValue = getFieldValue(fieldPath)
+        return isFieldMeaningfullyFilled(fieldValue) && field.validateState !== 'error'
+      }) && allFields.every((field) => field.validateState !== 'error')
+  }
+}
+
+// Function to get field value by path
+const getFieldValue = (path: string) => {
+  if (!proposalForm.value) return undefined
+
+  const keys = path.split('.')
+  let current: any = proposalForm.value
+
+  for (const key of keys) {
+    if (current[key] === undefined) {
+      return undefined
+    }
+    current = current[key]
+  }
+
+  return current
+}
+
+// Function to check if a field has meaningful content
+const isFieldMeaningfullyFilled = (value: any): boolean => {
+  if (value === undefined || value === null) return false
+
+  // Handle strings
+  if (typeof value === 'string') {
+    return value.trim() !== ''
+  }
+
+  // Handle arrays
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+
+  // Handle objects
+  if (typeof value === 'object') {
+    // Check if object has any non-empty properties
+    return Object.keys(value).some((key) => {
+      const propValue = value[key]
+      if (propValue === undefined || propValue === null) return false
+      if (typeof propValue === 'string') return propValue.trim() !== ''
+      if (Array.isArray(propValue)) return propValue.length > 0
+      if (typeof propValue === 'object') return isFieldMeaningfullyFilled(propValue)
+      return true
+    })
+  }
+
+  // Handle numbers, booleans, etc.
+  return true
+}
+
 const waitForValidation = async () => {
   await nextTick()
 
@@ -924,6 +1153,7 @@ const waitForValidation = async () => {
       return
     }
 
+    // Get fields with any validation rules (for progress tracking, we still use required fields)
     const requiredFields = allFields.filter((field) => {
       const appliedRules = {
         componentRules: getRulesArray(field.rules),
@@ -959,9 +1189,8 @@ const waitForValidation = async () => {
     const validatedFields = requiredFields.filter((field) => field.validateState === 'success').length
     layoutStore.setValidatedFields(validatedFields)
 
-    allFieldsValid.value =
-      requiredFields.every((field) => field.validateState === 'success') &&
-      allFields.every((field) => field.validateState !== 'error')
+    // Form is valid when ALL fields (required and non-required) have no errors
+    allFieldsValid.value = allFields.every((field) => field.validateState !== 'error')
   }
 }
 
@@ -1039,19 +1268,11 @@ watch(
   { immediate: true, deep: true },
 )
 
-// Auto-save watcher
-watch(
-  () => proposalForm.value,
-  () => {
-    if (proposalForm.value) {
-      hasFormChanged.value = true
-      debouncedAutoSave()
-    }
-  },
-  { deep: true },
-)
-
 onMounted(async () => {
+  // Reset progress on mount
+  layoutStore.setTotalRequiredFields(0)
+  layoutStore.setValidatedFields(0)
+  layoutStore.setFormTouched(false)
   try {
     await proposalStore.setCurrentProposal(params.id as string)
     await setUpPage()
@@ -1095,8 +1316,8 @@ onMounted(async () => {
     }
   }
 
-  watch(() => proposalForm.value, waitForValidation, { deep: true })
-  await waitForValidation()
+  watch(() => proposalForm.value, updateProgressOnly, { deep: true })
+  await updateProgressOnly()
 
   watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
   setValidationStatus()

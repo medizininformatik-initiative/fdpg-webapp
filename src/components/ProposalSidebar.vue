@@ -55,6 +55,8 @@ const activeTab = computed(() => layoutStore.activeStep)
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
+const formTouched = computed(() => layoutStore.formTouched)
+
 const setActiveTab = (tab: CreatPrposalSteps) => {
   if (!layoutStore.isDatasourceSelected) return
   layoutStore.setActiveStep(tab)
@@ -92,6 +94,7 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
 }
 
 const progressPercentage = computed(() => {
+  if (!formTouched.value) return 0
   if (layoutStore.totalRequiredFields === 0) return 0
   return Math.round((layoutStore.validatedFields / layoutStore.totalRequiredFields) * 100)
 })
