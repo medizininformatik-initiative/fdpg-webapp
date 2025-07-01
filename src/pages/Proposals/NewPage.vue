@@ -361,7 +361,27 @@ import { debounce } from 'lodash-es'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
-  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
+  [CreatPrposalSteps.Variables]: [
+    'requestedData.dataInfo',
+    'userProject.variableSelection.DIFE.typeOfUse',
+    'userProject.variableSelection.DIFE.typeOfUseExplanation',
+    'userProject.informationOnRequestedBioSamples.laboratoryResources',
+    'userProject.informationOnRequestedBioSamples.biosamples',
+  ],
+  [CreatPrposalSteps.Casesohort]: [
+    'userProject.cohorts',
+    'userProject.selectionOfCases.difeSelectionOfCases',
+    'requestedData.patientInfo',
+    'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
+    'userProject.selectionOfCases.difeSelectionOfCases.otherExplanation',
+  ],
+  [CreatPrposalSteps.DataUsage]: [
+    'userProject.typeOfUse.usage',
+    'userProject.typeOfUse.dataPrivacyExtra',
+    'userProject.resourceAndRecontact',
+    'userProject.typeOfUse.difeUsage',
+    'userProject.typeOfUse.PseudonymizationInfo',
+  ],
   [CreatPrposalSteps.ProjectDetails]: [
     'userProject.generalProjectInformation.projectTitle',
     'userProject.generalProjectInformation.desiredStartTime',
@@ -371,20 +391,8 @@ const stepFieldsMap = {
     'userProject.generalProjectInformation.fundingReferenceNumber',
     'userProject.plannedPublication.publications',
   ],
-  [CreatPrposalSteps.DataUsage]: [
-    'userProject.typeOfUse.usage',
-    'userProject.typeOfUse.dataPrivacyExtra',
-    'userProject.resourceAndRecontact',
-    'userProject.typeOfUse.difeUsage',
-    'userProject.typeOfUse.PseudonymizationInfo',
-  ],
-  [CreatPrposalSteps.Variables]: [
-    'requestedData.dataInfo',
-    'userProject.variableSelection.DIFE.typeOfUse',
-    'userProject.variableSelection.DIFE.typeOfUseExplanation',
-    'userProject.informationOnRequestedBioSamples.laboratoryResources',
-    'userProject.informationOnRequestedBioSamples.biosamples',
-  ],
+  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
+
   [CreatPrposalSteps.ResearchProject]: [
     'userProject.projectDetails.simpleProjectDescription',
     'userProject.projectDetails.department',
@@ -398,13 +406,6 @@ const stepFieldsMap = {
     'userProject.ethicVote.ethicVoteUploads',
     'requestedData.desiredControlDataAmount',
     'requestedData.desiredDataAmount',
-  ],
-  [CreatPrposalSteps.Casesohort]: [
-    'userProject.cohorts',
-    'userProject.selectionOfCases.difeSelectionOfCases',
-    'requestedData.patientInfo',
-    'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
-    'userProject.selectionOfCases.difeSelectionOfCases.otherExplanation',
   ],
 }
 
@@ -694,51 +695,73 @@ const prevStep = () => {
   layoutStore.prevStep()
 }
 const nextStep = async () => {
-  // Get current step fields and all actual form fields
-  const currentStepFields = stepFieldsMap[activeStep.value] || []
+  // Define the actual step progression order
+  const stepProgressionOrder = [
+    CreatPrposalSteps.DataSources,
+    CreatPrposalSteps.Variables,
+    CreatPrposalSteps.Casesohort,
+    CreatPrposalSteps.DataUsage,
+    CreatPrposalSteps.ProjectDetails,
+    CreatPrposalSteps.ProjectParticipants,
+    CreatPrposalSteps.ResearchProject,
+  ]
+
+  // Get all steps up to and including current step based on actual progression
+  const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
+  const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1) // Include current step and all previous
+
   const allFields = formRef.value?.fields || []
+  let hasErrors = false
 
-  if (currentStepFields.length > 0) {
-    let hasErrors = false
+  console.log(
+    'nextStep - validating steps:',
+    stepsToValidate.map((step) => CreatPrposalSteps[step]),
+  )
 
-    // Find all actual form fields that belong to current step
-    const actualStepFields = allFields.filter((field) =>
-      currentStepFields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-    )
+  // Validate current step and all previous steps
+  for (const stepValue of stepsToValidate) {
+    const stepFields = stepFieldsMap[stepValue] || []
 
-    console.log(
-      'nextStep - actualStepFields:',
-      actualStepFields.map((f) => f.prop),
-    )
+    if (stepFields.length > 0) {
+      // Find all actual form fields that belong to this step
+      const actualStepFields = allFields.filter((field) =>
+        stepFields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+      )
 
-    // Validate each actual field in the current step
-    for (const field of actualStepFields) {
-      if (field.prop) {
-        try {
-          await formRef.value?.validateField([field.prop], (valid, invalidFields) => {
-            if (invalidFields && Object.keys(invalidFields).length > 0) {
-              hasErrors = true
-              console.log(`Validation error in field ${field.prop}:`, invalidFields)
-            }
-          })
-        } catch (error) {
-          hasErrors = true
-          console.log(`Validation exception for field ${field.prop}:`, error)
+      console.log(
+        `Validating step ${CreatPrposalSteps[stepValue]}:`,
+        actualStepFields.map((f) => f.prop),
+      )
+
+      // Validate each actual field in this step
+      for (const field of actualStepFields) {
+        if (field.prop) {
+          try {
+            await formRef.value?.validateField([field.prop], (valid, invalidFields) => {
+              if (invalidFields && Object.keys(invalidFields).length > 0) {
+                hasErrors = true
+                console.log(
+                  `Validation error in step ${CreatPrposalSteps[stepValue]}, field ${field.prop}:`,
+                  invalidFields,
+                )
+              }
+            })
+          } catch (error) {
+            hasErrors = true
+            console.log(`Validation exception in step ${CreatPrposalSteps[stepValue]}, field ${field.prop}:`, error)
+          }
         }
       }
     }
+  }
 
-    // Always update step status after validation (whether success or error)
-    await updateCurrentStepStatus()
+  // Update only the step statuses for steps we validated
+  await updateValidatedStepsStatus(stepsToValidate)
 
-    // If there are validation errors in current step, don't proceed to next step
-    if (hasErrors) {
-      console.log('Validation errors found, not proceeding to next step')
-      return
-    }
-  } else {
-    // Update step status even if no fields to validate
-    await updateCurrentStepStatus()
+  // If there are validation errors in any step, don't proceed to next step
+  if (hasErrors) {
+    console.log('Validation errors found in current or previous steps, not proceeding to next step')
+    return
   }
 
   layoutStore.nextStep()
@@ -852,6 +875,44 @@ const updateCurrentStepStatus = async () => {
   const stepKey = CreatPrposalSteps[activeStep.value] as keyof typeof CreatPrposalSteps
   console.log('stepKey:', stepKey)
   layoutStore.updateStepStatus(stepKey, isStepValid)
+}
+
+const updateValidatedStepsStatus = async (stepsToUpdate: number[]) => {
+  if (!formRef.value) return
+
+  // Get all form fields
+  const allFields = formRef.value.fields || []
+
+  // Update status for only the specified steps
+  stepsToUpdate.forEach((stepValue) => {
+    const stepFields = stepFieldsMap[stepValue] || []
+
+    // Get all fields that belong to this step
+    const fieldsForStep = allFields.filter((field) =>
+      stepFields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+    )
+
+    // Get all fields for this step that have any validation rules
+    const fieldsWithRules = fieldsForStep.filter((field) => {
+      const appliedRules = {
+        componentRules: getRulesArray(field.rules),
+        formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+      }
+
+      const hasAnyRules = [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
+      return hasAnyRules
+    })
+
+    // Check if ALL fields with validation rules in this step are valid
+    const isStepValid =
+      fieldsWithRules.length === 0 || fieldsWithRules.every((field) => field.validateState === 'success')
+
+    // Convert the numeric enum value to the enum key name
+    const stepKey = CreatPrposalSteps[stepValue] as keyof typeof CreatPrposalSteps
+
+    console.log(`Updating step ${stepKey} status:`, isStepValid)
+    layoutStore.updateStepStatus(stepKey, isStepValid)
+  })
 }
 
 let initialLoad = true
