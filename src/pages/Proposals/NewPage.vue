@@ -911,6 +911,9 @@ const updateValidatedStepsStatus = async (stepsToUpdate: number[]) => {
 
 let initialLoad = true
 
+// Add a flag to prevent watchers from interfering with initial validation
+let isInitialValidationComplete = false
+
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   // No validation here - only update progress
   if (initialLoad) return
@@ -1039,24 +1042,125 @@ const authStore = useAuthStore()
 // Debounced auto-save function
 const debouncedAutoSave = debounce(autoSaveDraft, 2000) // 2 second delay
 
-// Auto-save watcher
+// Auto-save watcher - MODIFY TO NOT INTERFERE WITH INITIAL VALIDATION
 watch(
   () => proposalForm.value,
   () => {
     if (initialLoad) return
-    layoutStore.setFormTouched(true)
     if (proposalForm.value) {
       hasFormChanged.value = true
       debouncedAutoSave()
-      // Update progress without showing validation errors
-      updateProgressOnly()
+
+      // Only call updateProgressOnly after initial validation is complete
+      if (isInitialValidationComplete) {
+        updateProgressOnly()
+      }
     }
   },
   { deep: true },
 )
 
+const validateFormSilently = async () => {
+  if (!formRef.value) {
+    console.log('❌ validateFormSilently: No formRef')
+    return
+  }
+
+  console.log('🔍 Starting validateFormSilently')
+
+  // Set a flag to track silent validation
+  ;(window as any).debugSilentValidation = true
+
+  // Get all form fields
+  const allFields = formRef.value.fields || []
+  console.log('🔍 Form fields found:', allFields.length)
+
+  // Check each step's fields silently
+  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
+    console.log(`🔍 Checking step ${step} with field paths:`, fields)
+
+    // Get all fields that belong to this step
+    const stepFields = allFields.filter((field) =>
+      fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
+    )
+    console.log(
+      `🔍 Found ${stepFields.length} step fields for ${step}:`,
+      stepFields.map((f) => f.prop),
+    )
+
+    // Get all fields for this step that have any validation rules
+    const fieldsWithRules = stepFields.filter((field) => {
+      const appliedRules = {
+        componentRules: getRulesArray(field.rules),
+        formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+      }
+
+      const hasAnyRules = [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
+      return hasAnyRules
+    })
+    console.log(`🔍 Found ${fieldsWithRules.length} fields with rules for ${step}`)
+
+    // Check if step is valid by examining field values directly (without triggering validation)
+    const isStepValid =
+      fieldsWithRules.length === 0 ||
+      fieldsWithRules.every((field) => {
+        const fieldPath = field.prop as string
+        const fieldValue = getFieldValue(fieldPath)
+
+        // Check if field has meaningful content
+        const isFilled = isFieldMeaningfullyFilled(fieldValue)
+
+        // For required fields, they must be filled
+        const appliedRules = {
+          componentRules: getRulesArray(field.rules),
+          formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+        }
+        const isRequired = [...appliedRules.formRules, ...appliedRules.componentRules].some((rule) => rule.required)
+
+        if (isRequired && !isFilled) {
+          return false
+        }
+
+        // For optional fields with rules, if they have content, check basic validity
+        if (isFilled) {
+          // Add basic validation checks here if needed
+          // For now, assume filled optional fields are valid
+          return true
+        }
+
+        // Empty optional fields are valid
+        return true
+      })
+
+    const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
+    console.log(`🔍 Step ${step} (${stepEnum}) validation status:`, isStepValid)
+
+    // Update the step status in layout store - set both valid and invalid states
+    // Convert step number to enum key name (filter out numeric keys from the enum)
+    const stepNumber = parseInt(step)
+    const stepKey = Object.keys(CreatPrposalSteps).find(
+      (key) => CreatPrposalSteps[key as keyof typeof CreatPrposalSteps] === stepNumber && isNaN(Number(key)),
+    ) as keyof typeof CreatPrposalSteps
+
+    console.log(`🔍 Setting ${step} (${stepKey}) validation to:`, isStepValid)
+    if (isStepValid) layoutStore.updateStepStatus(stepKey, isStepValid)
+  })
+
+  console.log('🔍 validateFormSilently completed')
+
+  // Clear the debug flag
+  ;(window as any).debugSilentValidation = false
+}
+
 const setUpPage = async () => {
+  console.log('🚀 Starting setUpPage')
+
   proposalForm.value = transformForm(proposalStore.currentProposal, false, authStore.profile) as IProposal
+  console.log('🚀 Proposal form data:', {
+    hasId: !!proposalForm.value._id,
+    projectAbbreviation: proposalForm.value.projectAbbreviation,
+    status: proposalForm.value.status,
+  })
 
   const lastDashboard = layoutStore.lastDashboard
   layoutStore.setBreadcrumbs([
@@ -1073,15 +1177,34 @@ const setUpPage = async () => {
     },
   ])
 
-  // const isEditable =
-  //   proposalStore.currentProposal?.status === ProposalStatus.Draft ||
-  //   proposalStore.currentProposal?.status === ProposalStatus.Rework
-  // if (proposalForm.value._id && isEditable) {
-  //   formRef.value?.validate(() => {})
-  // }
-
   await nextTick()
+  console.log('🚀 After first nextTick')
+
+  // Validate form silently to update step statuses for existing proposals
+  if (proposalForm.value._id) {
+    const isEditable =
+      proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+      proposalStore.currentProposal?.status === ProposalStatus.Rework
+
+    if (isEditable) {
+      console.log('🚀 About to call validateFormSilently')
+      await nextTick()
+      await validateFormSilently()
+      console.log('🚀 After validateFormSilently')
+
+      // Mark initial validation as complete AFTER silent validation
+      isInitialValidationComplete = true
+    } else {
+      // If not editable, still mark validation as complete
+      isInitialValidationComplete = true
+    }
+  } else {
+    // For new proposals, mark validation as complete immediately
+    isInitialValidationComplete = true
+  }
+
   initialLoad = false
+  console.log('🚀 setUpPage completed')
 }
 
 const scrollToAnchor = async () => {
@@ -1107,9 +1230,12 @@ const updateProgressOnly = async () => {
     const allFields = formRef.value.fields
 
     if (!allFields) {
+      console.log('❌ updateProgressOnly: No fields found')
       allFieldsValid.value = false
       return
     }
+
+    console.log('📊 updateProgressOnly: Processing', allFields.length, 'fields')
 
     const requiredFields = allFields.filter((field) => {
       const fieldPath = field.prop as string
@@ -1136,7 +1262,11 @@ const updateProgressOnly = async () => {
       return isFilled && field.validateState !== 'error'
     }).length
 
-    console.log('Valid fields for progress:', validFieldsList)
+    console.log('📊 Progress calculation:', {
+      totalRequired: requiredFields.length,
+      validFields: validatedFields,
+      validFieldsList: validFieldsList.map((f) => f.fieldPath),
+    })
     layoutStore.setValidatedFields(validatedFields)
 
     allFieldsValid.value =
@@ -1327,7 +1457,10 @@ onMounted(async () => {
   // Reset progress on mount
   layoutStore.setTotalRequiredFields(0)
   layoutStore.setValidatedFields(0)
-  layoutStore.setFormTouched(false)
+
+  // MOVE resetSteps() HERE - before any validation
+  layoutStore.resetSteps()
+
   try {
     await proposalStore.setCurrentProposal(params.id as string)
     await setUpPage()
@@ -1340,14 +1473,27 @@ onMounted(async () => {
   if (params.id) {
     try {
       await commentStore.fetchAll({ proposalId: params.id as string })
-      await setUpPage()
+
+      // After comments are loaded, ensure validation and progress are updated
+      const isEditable =
+        proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+        proposalStore.currentProposal?.status === ProposalStatus.Rework
+
+      if (isEditable) {
+        console.log('🔄 Re-running silent validation after comments loaded')
+        await nextTick()
+        await validateFormSilently()
+        await updateProgressOnly()
+      }
+
       await scrollToAnchor()
     } catch (error) {
       console.log(error)
       showErrorMessage()
     }
   }
-  layoutStore.resetSteps()
+
+  // REMOVE layoutStore.resetSteps() from here
 
   const isDateDefined =
     proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
@@ -1356,24 +1502,29 @@ onMounted(async () => {
   const isEditable =
     proposalStore.currentProposal?.status === ProposalStatus.Draft ||
     proposalStore.currentProposal?.status === ProposalStatus.Rework
-  if (params.id && isDateDefined && isEditable) {
+  if (params.id && isDateDefined && isEditable && formRef.value) {
     let invalidFields: ValidateFieldsError | undefined
-    await formRef.value?.validateField(
-      ['userProject.generalProjectInformation.desiredStartTime'],
-      (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-        invalidFields = invalidFieldsResult
-      },
-    )
+    try {
+      await formRef.value.validateField(
+        'userProject.generalProjectInformation.desiredStartTime',
+        (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+          invalidFields = invalidFieldsResult
+        },
+      )
 
-    if (invalidFields && Object.keys(invalidFields).length > 0) {
-      raiseErrors(invalidFields)
-      return
+      if (invalidFields && Object.keys(invalidFields).length > 0) {
+        raiseErrors(invalidFields)
+        return
+      }
+    } catch (error) {
+      console.log('Error validating desiredStartTime field:', error)
     }
   }
 
-  watch(() => proposalForm.value, updateProgressOnly, { deep: true })
+  // Update progress and set up watchers after silent validation is complete
   await updateProgressOnly()
 
+  watch(() => proposalForm.value, updateProgressOnly, { deep: true })
   watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
   setValidationStatus()
 })

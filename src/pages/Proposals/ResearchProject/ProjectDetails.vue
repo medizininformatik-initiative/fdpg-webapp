@@ -4,7 +4,7 @@
     <el-row>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription" v-if="isMIISelected">
-          <FdpgLabel html-for="proposal.simpleProjectDescription" />
+          <FdpgLabel html-for="proposal.simpleProjectDescription" required />
           <FdpgtextEditor
             v-model="projectDetailsForm.simpleProjectDescription"
             data-testId="projectDetailsForm.simpleProjectDescription"
@@ -17,7 +17,7 @@
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac" v-if="isMIISelected">
-          <FdpgLabel html-for="proposal.executiveSummaryUac" />
+          <FdpgLabel html-for="proposal.executiveSummaryUac" required />
           <FdpgtextEditor
             v-model="projectDetailsForm.executiveSummaryUac"
             data-testId="projectDetailsForm.executiveSummaryUac"
@@ -31,7 +31,7 @@
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.department" v-if="isMIISelected">
-          <FdpgLabel html-for="proposal.department" />
+          <FdpgLabel html-for="proposal.department" required />
           <FdpgSelect
             v-model="projectDetailsForm.department"
             multiple
@@ -49,6 +49,7 @@
           <FdpgLabel
             html-for="proposal.hypothesisAndQuestionProjectGoals"
             info="proposal.hypothesisAndQuestionProjectGoalsInfo"
+            required
           />
           <FdpgtextEditor
             v-model="projectDetailsForm.hypothesisAndQuestionProjectGoals"
@@ -63,7 +64,7 @@
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.scientificBackground">
-          <FdpgLabel html-for="proposal.scientificBackground" />
+          <FdpgLabel html-for="proposal.scientificBackground" required />
           <FdpgtextEditor
             v-model="projectDetailsForm.scientificBackground"
             data-testId="projectDetailsForm.scientificBackground"
@@ -76,7 +77,7 @@
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.materialAndMethods">
-          <FdpgLabel html-for="proposal.materialAndMethods" />
+          <FdpgLabel html-for="proposal.materialAndMethods" required />
           <FdpgtextEditor
             v-model="projectDetailsForm.materialAndMethods"
             data-testId="projectDetailsForm.materialAndMethods"

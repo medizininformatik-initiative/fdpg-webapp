@@ -45,17 +45,31 @@
 <script setup lang="ts">
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute } from 'vue-router'
 
 const { t } = useI18n()
+const route = useRoute()
 const layoutStore = useLayoutStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
-const formTouched = computed(() => layoutStore.formTouched)
+// Local formTouched state - becomes true once user has interacted
+const formTouched = ref(false)
+
+// Watch for any form interaction - once user has interacted, keep it true
+watch(
+  () => layoutStore.validatedFields,
+  (newValidatedFields, oldValidatedFields) => {
+    // If validatedFields increases, user has likely interacted with form
+    if (newValidatedFields > (oldValidatedFields || 0)) {
+      formTouched.value = true
+    }
+  },
+)
 
 const setActiveTab = (tab: CreatPrposalSteps) => {
   if (!layoutStore.isDatasourceSelected) return
@@ -83,20 +97,48 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
   const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
   const stepData = layoutStore.createProposalSteps.find((s) => s.step === stepEnum)
 
+  let status: 'success' | 'process' | 'wait' | 'error' = 'wait'
+
   if (stepData?.validation === true) {
-    return 'success'
+    status = 'success'
   } else if (stepData?.validation === false) {
-    return 'error'
+    status = 'error'
   } else if (activeTab.value === stepEnum) {
-    return 'process'
+    status = 'process'
   }
-  return 'wait'
+
+  console.log(`📋 Step ${step} status:`, {
+    stepEnum,
+    validation: stepData?.validation,
+    activeTab: activeTab.value,
+    status,
+  })
+
+  return status
 }
 
 const progressPercentage = computed(() => {
-  if (!formTouched.value) return 0
   if (layoutStore.totalRequiredFields === 0) return 0
-  return Math.round((layoutStore.validatedFields / layoutStore.totalRequiredFields) * 100)
+
+  const percentage = Math.round((layoutStore.validatedFields / layoutStore.totalRequiredFields) * 100)
+
+  // Check if this is an existing proposal by looking at the current route
+  const isExistingProposal = !!route.params.id
+
+  console.log('📊 Sidebar progress update:', {
+    totalRequired: layoutStore.totalRequiredFields,
+    validatedFields: layoutStore.validatedFields,
+    formTouched: formTouched.value,
+    isExistingProposal,
+    percentage,
+  })
+
+  // For NEW proposals: Only show progress if form has been touched
+  if (!isExistingProposal && !formTouched.value) return 0
+
+  // For EXISTING proposals: Always show progress (silent validation handles this)
+
+  return percentage
 })
 </script>
 
