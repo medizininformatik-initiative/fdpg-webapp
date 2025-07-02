@@ -272,7 +272,7 @@
           type="primary"
           data-test-id="nextStep"
           @click="nextStep"
-          :disabled="!proposalForm?.selectedDataSources?.length"
+          :disabled="!proposalForm?.selectedDataSources?.length || !proposalId"
           v-if="activeStep !== CreatPrposalSteps.ResearchProject"
           >{{ t('proposal.nextStep') }}</el-button
         >
@@ -696,15 +696,9 @@ const prevStep = () => {
 }
 const nextStep = async () => {
   // Define the actual step progression order
-  const stepProgressionOrder = [
-    CreatPrposalSteps.DataSources,
-    CreatPrposalSteps.Variables,
-    CreatPrposalSteps.Casesohort,
-    CreatPrposalSteps.DataUsage,
-    CreatPrposalSteps.ProjectDetails,
-    CreatPrposalSteps.ProjectParticipants,
-    CreatPrposalSteps.ResearchProject,
-  ]
+  const stepProgressionOrder = Object.keys(CreatPrposalSteps).map(
+    (key) => CreatPrposalSteps[key as keyof typeof CreatPrposalSteps],
+  )
 
   // Get all steps up to and including current step based on actual progression
   const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
