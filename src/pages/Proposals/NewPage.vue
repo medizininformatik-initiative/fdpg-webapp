@@ -960,6 +960,19 @@ const autoSaveDraft = async () => {
       // For new proposals, only save if projectAbbreviation has content
       if (proposalForm.value?.projectAbbreviation?.trim()) {
         // Create new proposal
+        let invalidFields: ValidateFieldsError | undefined
+        await formRef.value?.validateField(
+          ['projectAbbreviation'],
+          (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+            invalidFields = invalidFieldsResult
+          },
+        )
+
+        if (invalidFields && Object.keys(invalidFields).length > 0) {
+          raiseErrors(invalidFields)
+          bypassDebounce.value = false
+          return
+        }
         const saveResult = await proposalStore.createProposal({
           ...getFormValues(),
           status: ProposalStatus.Draft,
@@ -1047,6 +1060,8 @@ watch(
   () => proposalForm.value,
   () => {
     if (initialLoad) return
+    layoutStore.setFormTouched(true)
+
     if (proposalForm.value) {
       hasFormChanged.value = true
       debouncedAutoSave()
