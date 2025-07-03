@@ -95,13 +95,6 @@ const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' =
     status = 'process'
   }
 
-  console.log(`📋 Step ${step} status:`, {
-    stepEnum,
-    validation: stepData?.validation,
-    activeTab: activeTab.value,
-    status,
-  })
-
   return status
 }
 
