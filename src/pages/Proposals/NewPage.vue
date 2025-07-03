@@ -34,23 +34,7 @@
         </el-button>
       </div>
     </div>
-    <!-- Auto-save indicator -->
-    <div v-if="(proposalId || proposalForm?.projectAbbreviation?.trim()) && !isReviewMode" class="auto-save-indicator">
-      <span v-if="isAutoSaving" class="auto-save-status saving">
-        <i class="el-icon-loading"></i>
-        {{ t('general.autoSaving') }}
-      </span>
-      <span v-else-if="hasFormChanged" class="auto-save-status pending">
-        <i class="el-icon-clock"></i>
-        {{ t('general.autoSaving') }} (pending)
-      </span>
-      <span v-else class="auto-save-status saved">
-        <i class="el-icon-check"></i>
-        {{ t('general.autoSaved') }}
-      </span>
-      <!-- Test button for debugging -->
-      <el-button size="small" @click="testAutoSave" style="margin-left: 10px"> Test Auto-Save </el-button>
-    </div>
+
     <div class="form-container">
       <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
         <div v-show="activeStep === CreatPrposalSteps.DataSources">
@@ -848,8 +832,6 @@ const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   await updateProgressOnly()
 }
 
-// ==================== SAVE/AUTO-SAVE HELPER FUNCTIONS ====================
-
 // Helper function to check if auto-save should be skipped
 const shouldSkipAutoSave = () => {
   // Skip if proposal is not in editable state
@@ -1070,7 +1052,6 @@ const validateFormSilently = async () => {
   if (!formRef.value) {
     return
   }
-  console.log('validateFormSilently')
 
   const allFields = formRef.value.fields || []
 
@@ -1122,7 +1103,8 @@ const setUpPage = async () => {
   await nextTick()
 
   // Handle validation based on proposal type
-  if (proposalForm.value._id) {
+  if (params.id) {
+    // For existing proposals, perform initial validation
     await handleExistingProposalValidation()
   } else {
     // For new proposals, mark validation as complete immediately
@@ -1254,7 +1236,6 @@ const isFieldMeaningfullyFilled = (value: any): boolean => {
 
 const waitForValidation = async () => {
   await nextTick()
-  console.log('waitForValidation called')
 
   if (formRef.value) {
     const formRules = rules.value
@@ -1384,6 +1365,7 @@ onMounted(async () => {
   // Reset progress on mount
   layoutStore.setTotalRequiredFields(0)
   layoutStore.setValidatedFields(0)
+  layoutStore.setFormTouched(false)
 
   // MOVE resetSteps() HERE - before any validation
   layoutStore.resetSteps()
