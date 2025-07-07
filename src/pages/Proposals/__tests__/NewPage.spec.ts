@@ -131,7 +131,7 @@ describe('Newpage.vue', () => {
   describe('In any case', () => {
     let proposal: IProposal
 
-    beforeEach(() => {
+    beforeEach(async () => {
       vi.clearAllMocks()
       vi.spyOn(document, 'getElementById').mockReturnValue(anchorMock as any)
 
@@ -155,9 +155,7 @@ describe('Newpage.vue', () => {
     })
 
     it('fetches the comments', async () => {
-      vi.spyOn(commentStore, 'fetchAll').mockResolvedValue()
-      await wrapper.vm.$nextTick()
-
+      await flushPromises()
       expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
     })
 
@@ -479,7 +477,8 @@ describe('Newpage.vue', () => {
 
         const button = wrapper.find('[data-test-id="handleSubmit"]')
         expect(button.attributes('disabled')).toBeUndefined()
-        button.trigger('click')
+        await button.trigger('click')
+        await flushPromises()
         expect(wrapper.vm.isSubmissionDialogOpen).toBeTruthy()
       })
 
