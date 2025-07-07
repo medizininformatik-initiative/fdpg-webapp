@@ -9,7 +9,9 @@ declare module 'vue' {
   export interface GlobalComponents {
     AdminDashboard: typeof import('./src/components/Dashboard/AdminDashboard.vue')['default']
     AppendixInfo: typeof import('./src/components/AppendixInfo.vue')['default']
+    ContractAppendixList: typeof import('./src/components/Proposals/Details/ContractAppendixList.vue')['default']
     ContractParticipants: typeof import('./src/components/ContractParticipants.vue')['default']
+    copy: typeof import('./src/components/Proposals/Details/DocumentList copy.vue')['default']
     CurrentTask: typeof import('./src/components/TaskViewer/CurrentTask/CurrentTask.vue')['default']
     DashboardComponent: typeof import('./src/components/Dashboard/DashboardComponent.vue')['default']
     DeclineDialog: typeof import('./src/components/DeclineDialog.vue')['default']

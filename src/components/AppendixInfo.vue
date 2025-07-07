@@ -57,20 +57,47 @@
         />
       </el-col>
     </el-row>
+
+    <el-row>
+      <el-col :span="12">
+        <h2 class="section-title">
+          {{
+            $t('proposal.checkContractAppendix', {
+              count: contractAppendix.length,
+            })
+          }}
+        </h2>
+      </el-col>
+    </el-row>
+
+    <el-row>
+      <el-col>
+        <ContractAppendixList
+          :documents="contractAppendix"
+          :proposal-id="proposalId"
+          :is-loading="isContractAppendixLoading"
+          :is-disabled="false"
+          :two-columns="true"
+          empty-alert-text="proposal.noAttachmentsYet"
+          @remove="handleContractAppendixRemove"
+          @add="handleContractAppendixAdd"
+      /></el-col>
+    </el-row>
   </div>
 </template>
-
+// || status !== ProposalStatus.Contracting || !authStore.hasFdpgLevelPermissions()"
 <script setup lang="ts">
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { Role } from '@/types/oidc.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import ContractAppendixList from './Proposals/Details/ContractAppendixList.vue'
+import type { UploadFile } from 'element-plus'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
@@ -90,6 +117,8 @@ const hideContracts = computed(() => {
     ? statesWithoutContracts.includes(proposalStore.currentProposal?.status)
     : false
 })
+
+const status = computed(() => proposalStore.currentProposal?.status)
 
 const authStore = useAuthStore()
 const hideDocuments = computed(() => {
@@ -124,8 +153,21 @@ const {
 } = useUpload(proposalId, [UseCaseUpload.ContractDraft], showErrorMessage)
 
 const {
+  uploadsForType: contractAppendix,
+  handleRemoveFile: handleContractAppendixRemove,
+  handleUploadFile: handleContractAppendixUpload,
+  isAppendixLoading: isContractAppendixLoading,
+} = useUpload(proposalId, [DirectUpload.ContractAppendix], showErrorMessage)
+
+const {
   uploadsForType: contracts,
   handleRemoveFile: handleContractRemove,
   isAppendixLoading: isContractsLoading,
 } = useUpload(proposalId, [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract], showErrorMessage)
+
+const handleContractAppendixAdd = async (file: UploadFile) => {
+  console.log({ file })
+  await handleContractAppendixUpload(file)
+  await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
+}
 </script>

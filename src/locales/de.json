@@ -65,7 +65,8 @@
     "emailSettings": "E-Mail Einstellungen",
     "receiveProposalEmails": "E-Mails empfangen",
     "boolean_true": "Ja",
-    "boolean_false": "Nein"
+    "boolean_false": "Nein",
+    "upload": "Hochladen"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -329,6 +330,7 @@
     "resendInvitation": "Einladung erneut senden",
     "checkProjectForUniqueness": "Projekt auf Einzigartigkeit prüfen",
     "checkAttachments": "Anhänge prüfen ({count})",
+    "checkContractAppendix": "Vertragsanhänge ({count})",
     "checklistVerification": "Checkliste Prüfung ({checkedCount}/{optionsCount})",
     "checklistGenericError": "Die Checkliste konnte nicht gespeichert werden",
     "isRegistrationLinkSentLabel": "Ich habe einen Registrierungslink an den Antragsteller und alle beteiligten Wissenschaftler gesendet",
@@ -453,6 +455,7 @@
     "uploadType_FEASIBILITY_QUERY": "Machbarkeits-Anfrage",
     "uploadType_PROPOSAL_PDF": "Druckversion",
     "uploadType_Fallback": "Anhang",
+    "uploadType_CONTRACT_APPENDIX": "Vertragsanhang",
     "viewTodoInProposal": "Aufgabe im Antrag ansehen",
     "acceptContractDescriptionResearcher": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet der die Teilnahme von {numberOfApprovedLocations} Standorten vorsieht. Stimmen Sie den Vertrag zu indem Sie diesen mit Ihrer Unterschrift versehen hochladen oder lehnen Sie den Vertragsvorschlag ab.",
     "acceptContractDescriptionUac": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet. Stimmen Sie den Vertrag zu, geben Sie die Patientenzahl an die Sie liefern können und geben Sie eventuelle Vertragsauflagen mit an. Sobald der Antragsteller den Vertrag unterschrieben hat, können Sie den Vertrag gegenzeichnen.",
