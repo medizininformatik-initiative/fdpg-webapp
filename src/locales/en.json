@@ -734,7 +734,8 @@
     "addParticipant": "Add Participant",
     "involvedRole": "Involved Role",
     "cannotChangeOnlyResponsibleScientist": "The only responsible scientist cannot be changed.",
-    "selectedCohorts": "Selected Cohorts"
+    "selectedCohorts": "Selected Cohorts",
+    "editContract": "Update Contract"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

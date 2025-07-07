@@ -734,7 +734,8 @@
     "addParticipant": "Partnerprojekt hinzufügen",
     "involvedRole": "Involvierte Rolle",
     "cannotChangeOnlyResponsibleScientist": "Der einzig verantwortliche Wissenschaftler kann nicht geändert werden.",
-    "selectedCohorts": "Ausgewählte Kohorten"
+    "selectedCohorts": "Ausgewählte Kohorten",
+    "editContract": "Vetrag bearbeiten"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
