@@ -88,7 +88,6 @@ import { computed, ref } from 'vue'
 import { DirectUpload, type UploadType } from '@/types/upload.types'
 import { useI18n } from 'vue-i18n'
 import FdpgDialog from '@/components/FdpgDialog.vue'
-import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import type { UploadFile } from 'element-plus'
 
@@ -184,7 +183,7 @@ const addContractAppendix = async () => {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
 
 .upload-list {

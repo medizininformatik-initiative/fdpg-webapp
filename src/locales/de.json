@@ -123,7 +123,8 @@
     "LOCATION_CONTRACTING_DEADLINE_CHANGE": "Frist für Location Contracting wurde verändert",
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Frist für Datenlieferung wurde verändert",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Frist für Corrupted Data wurde verändert",
-    "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert"
+    "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert",
+    "CONTRACT_UPDATED": "Vetragsentwurf wurde aktualisiert"
   },
   "header": {
     "login": "Anmelden",

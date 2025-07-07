@@ -7,10 +7,7 @@
         :documents="documents"
         :proposal-id="proposalId"
         :is-loading="isDocumentsLoading"
-        :is-disabled="
-          proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
-          proposalStore.currentProposal?.status !== ProposalStatus.Rework
-        "
+        :is-disabled="status !== ProposalStatus.Draft && status !== ProposalStatus.Rework"
         :two-columns="true"
         empty-alert-text="proposal.noAttachmentsYet"
         @remove="handleDocumentRemove"
@@ -35,12 +32,11 @@
           :documents="contractDrafts"
           :proposal-id="proposalId"
           :is-loading="isContractDraftsLoading"
-          :is-disabled="
-            proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
-            proposalStore.currentProposal?.status !== ProposalStatus.Rework
-          "
+          :is-disabled="status !== ProposalStatus.Draft && status !== ProposalStatus.Rework"
+          :is-editable="status === ProposalStatus.Contracting && authStore.hasFdpgLevelPermissions()"
           empty-alert-text="proposal.noContractDraftsYet"
           @remove="handleContractDraftRemove"
+          @edit="handleContractDraftEditDialogOpen"
         />
       </el-col>
       <el-col :span="12">
@@ -84,6 +80,39 @@
       /></el-col>
     </el-row>
   </div>
+
+  <FdpgDialog v-model="editDialogOpen" :title="t('proposal.editContract')" width="50%">
+    <FdpgUpload
+      :is-loading="isContractDraftsLoading"
+      :is-disabled="false"
+      :hide-file-list="false"
+      :file-list="relevantEditContractDocuments"
+      @change="handleEditContractUpload"
+    >
+      <el-button class="upload-button" link>
+        {{ t('proposal.chooseAFile') }}
+        <template #icon>
+          <el-icon class="bi-paperclip"></el-icon>
+        </template>
+      </el-button>
+    </FdpgUpload>
+
+    <div v-if="!!uploadedFile" class="display-uploaded">
+      <el-icon class="bi-paperclip"></el-icon>
+      <div v>{{ uploadedFile.name }}</div>
+    </div>
+
+    <template #footer>
+      <span>
+        <el-button link @click="handleCloseDialog">
+          {{ t('general.cancel') }}
+        </el-button>
+        <el-button type="primary" @click="handleEditContract" :disabled="isContractDraftsLoading || !uploadedFile">
+          {{ t('general.save') }}
+        </el-button>
+      </span>
+    </template>
+  </FdpgDialog>
 </template>
 <script setup lang="ts">
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
@@ -91,17 +120,22 @@ import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { ProposalStatus } from '@/types/proposal.types'
+import { type IUpload, ProposalStatus } from '@/types/proposal.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ContractAppendixList from './Proposals/Details/ContractAppendixList.vue'
 import type { UploadFile } from 'element-plus'
+import FdpgDialog from './FdpgDialog.vue'
+import FdpgUpload from './FdpgUpload.vue'
+import { useI18n } from 'vue-i18n'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 
 const proposalStore = useProposalStore()
+
+const { t } = useI18n()
 
 const hideContracts = computed(() => {
   const statesWithoutContracts = [
@@ -165,8 +199,58 @@ const {
 } = useUpload(proposalId, [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract], showErrorMessage)
 
 const handleContractAppendixAdd = async (file: UploadFile) => {
-  console.log({ file })
   await handleContractAppendixUpload(file)
   await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
 }
+
+const editDialogOpen = ref<boolean>(false)
+const uploadedFile = ref<UploadFile | null>(null)
+const relevantEditContractDocuments = ref<IUpload[]>([])
+
+const handleContractDraftEditDialogOpen = (uploadId: string) => {
+  relevantEditContractDocuments.value = contractDrafts.value.filter((doc) => doc._id === uploadId)
+  handleOpenDialog()
+}
+
+const handleOpenDialog = () => {
+  editDialogOpen.value = true
+}
+
+const handleCloseDialog = () => {
+  uploadedFile.value = null
+  relevantEditContractDocuments.value = []
+  editDialogOpen.value = false
+}
+
+const handleEditContractUpload = async (file: UploadFile) => {
+  uploadedFile.value = file
+}
+
+const handleEditContract = async () => {
+  const [toBeReplaced] = relevantEditContractDocuments.value
+  const file = uploadedFile.value?.raw
+
+  if (!file || !toBeReplaced) {
+    showErrorMessage()
+    handleCloseDialog()
+  }
+
+  try {
+    await proposalStore.updateContracting(proposalId.value, file as File, toBeReplaced._id)
+    await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
+  } catch {
+    showErrorMessage()
+  }
+
+  handleCloseDialog()
+}
 </script>
+
+<style lang="scss" scoped>
+.display-uploaded {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+</style>

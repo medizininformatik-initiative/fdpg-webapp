@@ -123,7 +123,8 @@
     "LOCATION_CONTRACTING_DEADLINE_CHANGE": "Deadline for Location Contracting  was changed",
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Deadline for data delivery was changed",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Deadline for Corrupted Data was changed",
-    "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed"
+    "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed",
+    "CONTRACT_UPDATED": "Contact draft has been updated"
   },
   "header": {
     "login": "Login",

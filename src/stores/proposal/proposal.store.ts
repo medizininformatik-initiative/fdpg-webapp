@@ -143,6 +143,10 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.initContracting(id, file, selectedLocations)
     },
 
+    async updateContracting(id: string, file: File, contractDraftToBeReplacedId: string): Promise<void> {
+      await this.apiService.updateContracting(id, file, contractDraftToBeReplacedId)
+    },
+
     async uploadFile(id: string, file: File, type: DirectUpload): Promise<void> {
       const uploadResult = await this.apiService.uploadFile(id, file, type)
       if (this.currentProposal) {

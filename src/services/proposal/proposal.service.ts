@@ -119,12 +119,25 @@ export class ProposalService {
     return response.data
   }
 
-  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<IProposal> {
+  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<void> {
     const formData = new FormData()
     formData.append('file', file as Blob)
     formData.append('locations', JSON.stringify(locations))
 
     const response = await this.apiClient.put(`${this.basePath}/${id}/init-contracting`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  }
+
+  async updateContracting(id: string, file: File, contractDraftToBeReplacedId: string): Promise<void> {
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('uploadId', contractDraftToBeReplacedId)
+
+    const response = await this.apiClient.post(`${this.basePath}/${id}/update-contracting`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
