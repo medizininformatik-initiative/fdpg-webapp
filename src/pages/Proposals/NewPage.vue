@@ -1361,6 +1361,21 @@ watch(
   { immediate: true, deep: true },
 )
 
+watch(
+  () => activeStep.value,
+  async (newStep, oldStep) => {
+    if (newStep !== oldStep) {
+      const allFields = formRef.value?.fields || []
+      // Validate old step fields
+      const stepFieldPaths = stepFieldsMap[oldStep] || []
+      const oldStepFields = getStepFields(allFields, stepFieldPaths)
+      await validateStepFields(oldStepFields)
+      // Update step statuses
+      await updateValidatedStepsStatus([oldStep])
+    }
+  },
+)
+
 onMounted(async () => {
   // Reset progress on mount
   layoutStore.setTotalRequiredFields(0)
