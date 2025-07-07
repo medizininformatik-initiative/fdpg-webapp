@@ -76,7 +76,7 @@
           :documents="contractAppendix"
           :proposal-id="proposalId"
           :is-loading="isContractAppendixLoading"
-          :is-disabled="false"
+          :is-disabled="status !== ProposalStatus.Contracting || !authStore.hasFdpgLevelPermissions()"
           :two-columns="true"
           empty-alert-text="proposal.noAttachmentsYet"
           @remove="handleContractAppendixRemove"
@@ -85,7 +85,6 @@
     </el-row>
   </div>
 </template>
-// || status !== ProposalStatus.Contracting || !authStore.hasFdpgLevelPermissions()"
 <script setup lang="ts">
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import useNotifications from '@/composables/use-notifications'
