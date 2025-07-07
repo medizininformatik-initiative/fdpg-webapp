@@ -59,7 +59,7 @@
               {{ t('proposal.addCohortManual') }}
             </el-button>
           </div>
-          <div v-else class="cohort-limit-warning">
+          <div v-else-if="cohorts.length >= 49" class="cohort-limit-warning">
             <el-alert type="warning" :closable="false" show-icon>
               {{ t('proposal.maxCohortsReached') }}
             </el-alert>
@@ -86,11 +86,11 @@ import type { ISelectedCohort } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
-import { useFeasibilityStore } from '@/stores/feasibility.store'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
-const feasibilityStore = useFeasibilityStore()
+const proposalStore = useProposalStore()
 
 const props = defineProps({
   modelValue: {
@@ -145,7 +145,7 @@ const downloadCsv = async (id?: number, label?: string) => {
   }
 
   try {
-    await feasibilityStore.getCsvByQueryId(id, label)
+    await proposalStore.getFeasibilityCsvByQueryId(id, label)
   } catch (e) {
     showErrorMessage()
   }

@@ -297,7 +297,7 @@ export class ProposalService {
       }),
     )
 
-    const response = await this.apiClient.put(`${this.basePath}/${id}/cohort`, formData, {
+    const response = await this.apiClient.put(`${this.basePath}/${id}/cohort/manual`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -305,8 +305,35 @@ export class ProposalService {
     return response.data
   }
 
+  async addAutomaticCohort(proposalId: string, cohort: ISelectedCohort): Promise<ISelectedCohort> {
+    const response = await this.apiClient.put(`${this.basePath}/${proposalId}/cohort/automatic`, { newCohort: cohort })
+    return response.data
+  }
+
   async deleteCohort(id: string, cohortId: string): Promise<ISelectedCohort> {
     const result = await this.apiClient.delete(`${this.basePath}/${id}/cohort/${cohortId}`)
     return result.data
+  }
+
+  async getFeasibilityCsvByQueryId(proposalId: string, feasibilityQueryId: number, queryName: string): Promise<void> {
+    const response = await this.apiClient.post(
+      `${this.basePath}/query/csv`,
+      { proposalId, queryId: feasibilityQueryId },
+      { responseType: 'blob' },
+    )
+
+    if (response.status === 200) {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${queryName}.zip`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    } else {
+      throw new Error('Could not fetch the feasibility csv')
+    }
   }
 }

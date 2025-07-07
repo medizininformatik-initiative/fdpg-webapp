@@ -1,25 +1,37 @@
 <template>
-  <template v-if="value === undefined"> - </template>
-  <template v-else-if="definition.kind === 'translatable' && !definition.defaultValue">
-    {{ t(`${definition.prefix}${value}`) }}
-  </template>
-
-  <template v-else-if="definition.kind === 'date' && !definition.defaultValue">
-    {{ getLocaleDateString(value as string | Date) }}
-  </template>
-
-  <template v-else-if="definition.kind === 'boolean' && !definition.defaultValue">
-    {{ t(`${definition[value as string]}`) }}
-  </template>
-
-  <template v-else-if="definition.kind === 'lookup' && !definition.defaultValue">
-    {{ definition.lookupMap[value as string][definition.lookupKey] }}
-  </template>
-  <template v-else-if="definition.defaultValue">
-    {{ $t(definition.defaultValue) }}
+  <template v-if="value === undefined && !definition.defaultValue">-</template>
+  <template v-else-if="definition.defaultValue && !value">
+    {{ t(definition.defaultValue) }}
   </template>
   <template v-else>
-    <div class="ql-editor" v-html="value"></div>
+    <template v-if="definition.kind === 'translatable'">
+      {{ t(`${definition.prefix}${value}`) }}
+    </template>
+
+    <template v-else-if="definition.kind === 'date'">
+      {{ getLocaleDateString(value as string | Date) }}
+    </template>
+
+    <template v-else-if="definition.kind === 'boolean'">
+      {{ t(value ? definition.true : definition.false) }}
+    </template>
+
+    <template v-else-if="definition.kind === 'lookup'">
+      {{ definition.lookupMap[value as string][definition.lookupKey] }}
+    </template>
+
+    <template v-else-if="definition.kind === 'table'">
+      <el-table :data="value" style="width: 100%">
+        <el-table-column
+          v-for="column in definition.columns"
+          :key="column.key"
+          :prop="column.key"
+          :label="t(column.label)"
+        />
+      </el-table>
+    </template>
+
+    <div v-else class="ql-editor" v-html="value"></div>
   </template>
 </template>
 

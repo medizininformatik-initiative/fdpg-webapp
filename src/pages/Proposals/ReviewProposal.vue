@@ -9,25 +9,36 @@
       </div>
     </div>
 
-    <template v-for="(section, sIdx) in sections" :key="'section' + sIdx">
+    <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
+      <ReviewAreaLabel
+        headline="h2"
+        :title="section.sectionLabel"
+        :hide-review-checkbox="HideReviewCheckbox(section)"
+        :number="`${sIdx + 1}`"
+        v-if="section.key == 'participants'"
+      />
       <template v-if="section.kind === 'array' && proposalData">
-        <div v-for="(sectionItem, sectionItemIdx) in proposalData[section.key] as any[]" :key="'item' + sectionItemIdx">
+        <div
+          v-for="(sectionItem, sectionItemIdx) in getVisibleItems(proposalData[section.key], section)"
+          :key="'item' + sectionItemIdx"
+        >
           <section role="region" class="print-region">
             <ReviewAreaLabel
               :section-values="getSectionArrayProposalData(section, 'isDone', sectionItem)"
               :section-ids="getSectionArrayProposalData(section, '_id', sectionItem)"
               headline="h3"
               :title="getArrayLabelFromSection(section, sectionItem)"
+              :number="`${sIdx + 1}.${sectionItemIdx + 1}`"
             />
 
-            <template v-for="(card, cardIdx) in section.mapping" :key="'card' + cardIdx">
+            <template v-for="(card, cardIdx) in getVisibleCards(section.mapping, sectionItem)" :key="'card' + cardIdx">
               <ReviewCard
-                v-if="!shouldHideReviewCard(sectionItem, card.hideIfOtherValueIsTruthy) && !card.shouldHide"
                 :dto="sectionItem"
                 :card="card"
                 headline="h4"
                 :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
                 hide-review-checkbox
+                :number="`${sIdx + 1}.${sectionItemIdx + 1}.${cardIdx + 1}`"
               ></ReviewCard>
             </template>
           </section>
@@ -41,37 +52,45 @@
           :headline="section.card.cardLabel === null ? 'h2' : 'h3'"
           :headline-overwrite="section.sectionLabel"
           :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
+          :number="`${sIdx + 1}`"
         ></ReviewCard>
       </section>
 
       <template v-else-if="section.kind === 'object' && proposalData">
         <ReviewAreaLabel
-          v-if="isSinglePersonEntry(section)"
+          :hide-review-checkbox="HideReviewCheckbox(section)"
           class="form-label-mt-4"
           :section-values="getSectionObjectProposalData(section, 'isDone', proposalData)"
           :section-ids="getSectionObjectProposalData(section, '_id', proposalData)"
           headline="h2"
           :title="t(section.sectionLabel)"
+          :number="`${sIdx + 1}`"
         />
 
         <section
-          v-for="(card, cardIdx) in section.mapping"
+          v-for="(card, cardIdx) in getVisibleCards(section.mapping, proposalData[section.key])"
           :key="'objectCard' + cardIdx"
           role="region"
           class="print-region"
         >
           <ReviewCard
-            v-if="!shouldHideReviewCard(proposalData[section.key], card.hideIfOtherValueIsTruthy)"
             :dto="proposalData[section.key]"
             :card="card"
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
             :hide-review-checkbox="isSinglePersonEntry(section)"
+            :number="`${sIdx + 1}.${cardIdx + 1}`"
           ></ReviewCard>
         </section>
       </template>
     </template>
 
-    <ReviewLabel class="form-label-mt-4" title="proposal.appendix" headline="h2" :counter="uploadsForType.length" />
+    <ReviewLabel
+      class="form-label-mt-4"
+      title="proposal.appendix"
+      headline="h2"
+      :counter="uploadsForType.length"
+      :number="`${getVisibleSections(sections).length + 1}`"
+    />
     <DocumentList
       :documents="uploadsForType"
       :proposal-id="proposalId"
@@ -112,22 +131,25 @@ import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
 import { projectUserSection } from '@/constants/print-structure/project-user-section'
 import useNotifications from '@/composables/use-notifications'
-import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
 
 const authStore = useAuthStore()
 
-const sections: DefinitionSection<IProposal, keyof IProposal>[] = [
-  applicantSection,
-  projectResponsibilitySection,
-  projectUserSection,
-  participantSection,
-  userProjectSection(authStore.assignedDataSources),
-  requestedDataSection,
-  biosampleSection(authStore.assignedDataSources),
-]
+const sections = computed(
+  () =>
+    [
+      applicantSection,
+      projectResponsibilitySection,
+      projectUserSection,
+      participantSection,
+      userProjectSection(authStore.assignedDataSources),
+      requestedDataSection,
+      biosampleSection(authStore.assignedDataSources),
+    ] as DefinitionSection<IProposal, keyof IProposal>[],
+)
 
 const proposalData = ref<IProposal>()
 
@@ -198,16 +220,23 @@ const scrollToAnchor = async () => {
   }
 }
 
-const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: [string, string]) => {
-  if (!hideIfOtherValueIsTruthy) {
+const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: string[]) => {
+  if (!hideIfOtherValueIsTruthy || hideIfOtherValueIsTruthy.length === 0) {
     return false
   }
-  const [parentKey, secondLevelKey] = hideIfOtherValueIsTruthy
 
-  if (Array.isArray(dto?.[parentKey]?.[secondLevelKey])) {
-    return dto?.[parentKey]?.[secondLevelKey].length
+  let value = dto
+  for (const key of hideIfOtherValueIsTruthy) {
+    if (value === undefined || value === null) {
+      return false
+    }
+    value = value[key]
+  }
+
+  if (Array.isArray(value)) {
+    return value.length > 0
   } else {
-    return dto?.[parentKey]?.[secondLevelKey]
+    return !!value
   }
 }
 
@@ -231,7 +260,10 @@ const getSectionObjectProposalData = (
   section: IDefinitionSectionObject<IProposal, keyof IProposal>,
   property: string,
   proposalData?: IProposal,
-) => section.mapping.map((mapping) => (proposalData?.[section.key] as any)?.[mapping.key]).map((data) => data[property])
+) =>
+  getVisibleCards(section.mapping, proposalData?.[section.key])
+    .map((mapping: any) => (proposalData?.[section.key] as any)?.[mapping.key])
+    .map((data: any) => (data ? data[property] : undefined))
 
 const getSectionArrayProposalData = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
@@ -241,6 +273,51 @@ const getSectionArrayProposalData = (
 
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
+
+const HideReviewCheckbox = (section: any) => section.key === 'userProject' || section.key === 'biosample'
+
+function getVisibleSections(sections: any[]) {
+  return sections.filter((section) => {
+    if (section.shouldHide) {
+      return false
+    }
+    // Special case for biosample section
+    if (section.key === 'userProject' && section.sectionLabel === 'proposal.selectedBioSamples') {
+      return shouldShowBiosampleSection(proposalData.value)
+    }
+    return true
+  })
+}
+
+const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
+  if (!proposal) {
+    return false
+  }
+
+  const typeOfUse = proposal.userProject?.typeOfUse?.usage
+  if (!typeOfUse || !typeOfUse.includes(ProposalTypeOfUse.Biosample)) {
+    return false
+  }
+
+  return true
+}
+
+function getVisibleCards(cards: any, dto: any) {
+  return cards.filter((card: any) => {
+    if (shouldHideReviewCard(dto, card.hideIfOtherValueIsTruthy) || card.shouldHide) {
+      return false
+    }
+    if (card.loopOn) {
+      const loopData = dto[card.key]?.[card.loopOn]
+      return Array.isArray(loopData) && loopData.length > 0
+    }
+    return true
+  })
+}
+
+function getVisibleItems(items: any[], card: any) {
+  return items
+}
 
 onMounted(async () => {
   await fetchProposal()
@@ -269,49 +346,6 @@ onMounted(async () => {
     .label-checkbox {
       margin-left: auto;
     }
-  }
-
-  counter-reset: h2 h3 h4;
-  @supports not (-moz-appearance: none) {
-    h1 {
-      counter-reset: h2;
-    }
-
-    h2 {
-      counter-reset: h3;
-    }
-
-    h3 {
-      counter-reset: h4;
-    }
-  }
-
-  @supports (-moz-appearance: none) {
-    h1 {
-      counter-set: h2;
-    }
-
-    h2 {
-      counter-set: h3;
-    }
-
-    h3 {
-      counter-set: h4;
-    }
-  }
-  h2::before {
-    counter-increment: h2;
-    content: counter(h2) '. ';
-  }
-
-  h3::before {
-    counter-increment: h3;
-    content: counter(h2) '.' counter(h3) '. ';
-  }
-
-  h4::before {
-    counter-increment: h4;
-    content: counter(h2) '.' counter(h3) '.' counter(h4) '. ';
   }
 
   h1,

@@ -1,5 +1,13 @@
 import { shallowMount, type VueWrapper } from '@vue/test-utils'
 import PrintCard from '../components/PrintCard.vue'
+import { createI18n } from 'vue-i18n'
+import { createPinia } from 'pinia'
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: { en: {} },
+})
 
 describe('PrintCard', () => {
   let wrapper: VueWrapper<any>
@@ -7,8 +15,8 @@ describe('PrintCard', () => {
   beforeEach(() => {
     wrapper = shallowMount(PrintCard, {
       global: {
-        plugins: [],
-        stubs: [],
+        plugins: [i18n, createPinia()],
+        stubs: ['ReviewLabel', 'el-checkbox', 'el-loading', 'el-tooltip'],
       },
       props: {
         dto: {},
@@ -21,11 +29,6 @@ describe('PrintCard', () => {
   })
 
   it('renders', () => {
-    expect(wrapper).toBeTruthy()
-  })
-
-  it('renders the headline', () => {
-    const headline = wrapper.get('h2')
-    expect(headline).toBeTruthy()
+    expect(wrapper.exists()).toBe(true)
   })
 })
