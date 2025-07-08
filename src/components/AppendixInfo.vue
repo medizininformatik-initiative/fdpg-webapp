@@ -33,7 +33,7 @@
           :proposal-id="proposalId"
           :is-loading="isContractDraftsLoading"
           :is-disabled="!isEditable"
-          :is-editable="status === ProposalStatus.Contracting && authStore.hasFdpgLevelPermissions()"
+          :is-editable="isContractEditable"
           empty-alert-text="proposal.noContractDraftsYet"
           @remove="handleContractDraftRemove"
           @edit="handleContractDraftEditDialogOpen"
@@ -69,7 +69,7 @@
           :documents="contractAppendix"
           :proposal-id="proposalId"
           :is-loading="isContractAppendixLoading"
-          :is-disabled="status !== ProposalStatus.Contracting || !authStore.hasFdpgLevelPermissions()"
+          :is-disabled="!isContractEditable"
           :two-columns="true"
           empty-alert-text="proposal.noAttachmentsYet"
           @remove="handleContractAppendixRemove"
@@ -149,8 +149,10 @@ const hideContracts = computed(() => {
 })
 
 const status = computed(() => proposalStore.currentProposal?.status)
-
 const isEditable = computed(() => status.value === ProposalStatus.Draft || status.value === ProposalStatus.Rework)
+const isContractEditable = computed(
+  () => status.value === ProposalStatus.Contracting && authStore.hasFdpgLevelPermissions(),
+)
 
 const authStore = useAuthStore()
 const hideDocuments = computed(() => {
