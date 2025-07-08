@@ -44,6 +44,12 @@ export enum ParticipantType {
   DataAndBiosampleReceiver = 'DATA_AND_BIOSAMPLE_RECEIVER',
 }
 
+export enum ParticipantRole {
+  ParticipatingScientist = 'PARTICIPATING_SCIENTIST',
+  Researcher = 'RESEARCHER',
+  ResponsibleScientist = 'RESPONSIBLE_SCIENTIST',
+}
+
 export enum ProjectUserType {
   ApplicantAsPrivatePerson = 'APPLICANT_AS_PRIVATE_PERSON',
   OrganizationOfProjectResponsible = 'ORGANIZATION_OF_PROJECT_RESPONSIBLE',
@@ -62,6 +68,7 @@ export interface IResearcherIdentity extends IResearcher {
   isEmailVerified: boolean
   isRegistrationComplete: boolean
   participantType: ParticipantType
+  participantRole: string
   username: string
 }
 
@@ -80,10 +87,15 @@ export interface IParticipantCategory extends WithIdAndIsDone {
   category: ParticipantType
 }
 
+export interface IParticipantRole extends WithIdAndIsDone {
+  role: ParticipantRole
+}
+
 export interface IParticipant extends WithIdAndIsDone {
   researcher: IResearcher
   institute: IInstitute
   participantCategory: IParticipantCategory
+  participantRole: IParticipantRole
 }
 
 export interface IApplicant {
@@ -95,6 +107,7 @@ export interface IApplicant {
 export interface IProjectResponsible {
   institute: IInstitute
   participantCategory: IParticipantCategory
+  participantRole: IParticipantRole
   researcher: IResearcher
   projectResponsibility: IProjectResponsibility
 }

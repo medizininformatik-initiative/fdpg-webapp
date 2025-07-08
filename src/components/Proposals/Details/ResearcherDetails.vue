@@ -4,12 +4,14 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
-    <ContractParticipants v-if="showContractingParticipants" />
-    <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos
       :is-disabled="proposalStore.currentProposal?.isLocked || isParticipatingScientist"
       :project-todos="projectTodos"
     ></ProjectTodos>
+    <ContractParticipants v-if="showContractingParticipants" />
+    <LocationVotePanel v-if="showLocationVotePanel" />
+    <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
+
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"

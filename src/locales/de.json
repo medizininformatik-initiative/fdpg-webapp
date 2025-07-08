@@ -725,7 +725,12 @@
     "saveProposalBeforeUploadingCohorts": "Bitte speichern sie den Antrag bevor sie eine Kohorte manuell hinzufügen",
     "cohortFile": "Kohorten Datei",
     "cohortName": "Kohortenname",
-    "numberOfPatients": "Patientenanzahl"
+    "numberOfPatients": "Patientenanzahl",
+    "maxCohortsReached": "Maximale Kohortenanzahl erreicht",
+    "addParticipant": "Partnerprojekt hinzufügen",
+    "involvedRole": "Involvierte Rolle",
+    "cannotChangeOnlyResponsibleScientist": "Der einzig verantwortliche Wissenschaftler kann nicht geändert werden.",
+    "selectedCohorts": "Ausgewählte Kohorten"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

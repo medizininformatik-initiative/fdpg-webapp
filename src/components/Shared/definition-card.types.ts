@@ -39,12 +39,21 @@ interface IBooleanDefinition<T> extends IBaseDefinition<T> {
   false: TranslationSchema
 }
 
+interface ITableDefinition<T> extends IBaseDefinition<T> {
+  kind: 'table'
+  columns: Array<{
+    key: string
+    label: TranslationSchema
+  }>
+}
+
 export type Definitions<T, L extends Record<string, Object> = {}> =
   | IContentDefinition<T>
   | ITranslatableDefinition<T>
   | IDateDefinition<T>
   | IBooleanDefinition<T>
   | ILookupDefinition<T, L>
+  | ITableDefinition<T>
 
 export interface IDefinitionCardTerm<T, L extends Record<string, Object> = {}> {
   label: TranslationSchema
@@ -117,6 +126,7 @@ export interface IDefinitionSectionObject<Parent, Key extends keyof Parent> {
   kind: 'object'
   key: Key
   mapping: DefinitionCards<Parent, Key>[]
+  shouldHide?: boolean
 }
 
 export interface IDefinitionSectionObjectVirtual<Parent, Key extends keyof Parent> {
@@ -142,6 +152,7 @@ export interface IDefinitionSectionArray<
   key: Key
   arrayLabelKey: ArrayLabelKey
   mapping: IDefinitionCard<ArrElement<Parent[Key]>, any>[]
+  shouldHide?: boolean
 }
 
 export interface IDefinitionSectionSingle<Parent, Key extends keyof Parent> {
@@ -149,6 +160,7 @@ export interface IDefinitionSectionSingle<Parent, Key extends keyof Parent> {
   kind: 'single'
   key: Key
   card: IDefinitionCard<ArrElement<Parent[Key]>, any> | IDefinitionCardVirtual<ArrElement<Parent[Key]>, any>
+  shouldHide?: boolean
 }
 
 export type DefinitionSection<Parent, Key extends keyof Parent> =

@@ -725,7 +725,12 @@
     "saveProposalBeforeUploadingCohorts": "Please save the proposal beforehand at least once, after that manual uploads will be enabled.",
     "cohortFile": "Cohort File",
     "cohortName": "Cohort Name",
-    "numberOfPatients": "Patient count"
+    "numberOfPatients": "Patient count",
+    "maxCohortsReached": "Max cohort count reached",
+    "addParticipant": "Add Participant",
+    "involvedRole": "Involved Role",
+    "cannotChangeOnlyResponsibleScientist": "The only responsible scientist cannot be changed.",
+    "selectedCohorts": "Selected Cohorts"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

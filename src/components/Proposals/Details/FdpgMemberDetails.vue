@@ -4,6 +4,7 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+    <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
 
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
@@ -15,11 +16,10 @@
       @saveDeadlines="handleSaveDeadlines"
     ></FdpgChangeDeadlines>
 
-    <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
     <div class="section">
-      <h3 info="general.info" size="large">{{ $t('proposal.checkAttachments', { count: documents.length }) }}</h3>
+      <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
         :documents="documents"
         :proposal-id="proposalId"
@@ -31,10 +31,14 @@
       />
     </div>
 
-    <FdpgMemberCohortSelection
+    <ReviewMemberCohortSelection
       v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
-      :enable-edit="status === ProposalStatus.FdpgCheck"
+      :enable-edit="
+        [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck, ProposalStatus.LocationCheck].includes(
+          status,
+        )
+      "
       @add-cohort="addCohort"
       @remove-cohort="removeCohort"
     />
@@ -106,13 +110,12 @@ import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import type { MiiLocation } from '@/types/location.enum'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
-import FdpgMemberCohortSelection from '@/pages/Proposals/Casesohort/FdpgMemberCohortSelection.vue'
+import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const messageBoxStore = useMessageBoxStore()

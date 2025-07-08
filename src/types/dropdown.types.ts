@@ -26,11 +26,13 @@ export type DropdownItem = IDropdownImgItem | IDropdownIconItem | IDropdownBasic
 export interface IDropdownButtonTranslatable {
   isTranslatable: true
   label: TranslationSchema
+  disabled?: boolean
 }
 
 export interface IDropdownButtonDefault {
   isTranslatable: false
   label: string
+  disabled?: boolean
 }
 
 export type DropdownBaseType = IDropdownButtonTranslatable | IDropdownButtonDefault

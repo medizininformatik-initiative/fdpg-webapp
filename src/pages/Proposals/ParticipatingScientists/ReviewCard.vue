@@ -1,11 +1,12 @@
 <template>
-  <template v-if="dto[card.key] && !card.shouldHide && (!card.loopOn || dto[card.key][card.loopOn]?.length)">
+  <template v-if="dto[card.key]">
     <ReviewLabel
       :is-done="dto[card.key].isDone"
       class="form-label-mt-4"
       :title="card.cardLabel ?? headlineOverwrite"
       :section-id="dto[card.key]._id"
       :headline="headline"
+      :number="number"
       :hide-review-checkbox="hideReviewCheckbox"
     />
 
@@ -47,6 +48,10 @@ defineProps({
   card: {
     type: Object as PropType<DefinitionCards<any, any> | DefinitionCardsVirtual<any, any>>,
     required: true,
+  },
+  number: {
+    type: String,
+    default: '',
   },
   isDone: {
     type: Boolean,

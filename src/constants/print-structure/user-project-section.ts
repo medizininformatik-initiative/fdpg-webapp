@@ -1,9 +1,6 @@
 import type {
   IDefinitionCard,
   IDefinitionCardArray,
-  IDefinitionSectionObject,
-  IDefinitionCardTerm,
-  DefinitionCards,
   DefinitionSection,
 } from '@/components/Shared/definition-card.types'
 import { MII_LOCATIONS } from '@/constants'
@@ -43,11 +40,27 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
   ],
 }
 
-const cohortsDetailsCard = (dataSources: PlatformIdentifier[] = []): IDefinitionCard<IUserProject, 'cohorts'> => ({
+const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
+  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   key: 'cohorts',
   cardLabel: 'proposal.cohortSelection',
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
   terms: [
+    {
+      label: 'proposal.selectedCohorts',
+      size: 24,
+      definitions: [
+        [
+          {
+            key: 'selectedCohorts',
+            kind: 'table',
+            columns: [
+              { key: 'label', label: 'proposal.cohortName' },
+              { key: 'numberOfPatients', label: 'proposal.numberOfPatients' },
+            ],
+          },
+        ],
+      ],
+    },
     {
       label: 'proposal.assessmentOfFeasibilityDetails',
       size: 24,
@@ -312,25 +325,6 @@ const variableSelectionCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const cohortsCard = (dataSources: PlatformIdentifier[] = []) => ({
-  shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
-  key: 'cohorts',
-  cardLabel: 'proposal.cohortSelection',
-  loopOn: 'selectedCohorts',
-  terms: [
-    {
-      label: 'proposal.selectFeasibilityQuery',
-      size: 24,
-      definitions: [[{ key: 'label' }]],
-    },
-    {
-      label: 'proposal.selectFeasibilityQuery',
-      size: 24,
-      definitions: [[{ key: 'feasibilityQueryId' }]],
-    },
-  ],
-})
-
 const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   key: 'selectionOfCases',
   cardLabel: 'proposal.selectionOfCases',
@@ -366,21 +360,21 @@ const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const userProjectCards = (dataSources: PlatformIdentifier[] = []) => [
-  generalProjectInformationCard,
-  projectDetailsCard(dataSources),
-  ethicVoteCard(dataSources),
-  recontactCard(dataSources),
-  propertyRightsCard(dataSources),
-  plannedPublicationCardEmpty,
-  plannedPublicationCard,
-  addresseesCard(dataSources),
-  typeOfUseCard(dataSources),
-  cohortsCard(dataSources),
-  cohortsDetailsCard(dataSources),
-  variableSelectionCard(dataSources),
-  selectionOfCasesCard(dataSources),
-]
+const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
+  [
+    generalProjectInformationCard,
+    projectDetailsCard(dataSources),
+    ethicVoteCard(dataSources),
+    recontactCard(dataSources),
+    propertyRightsCard(dataSources),
+    plannedPublicationCardEmpty,
+    plannedPublicationCard,
+    addresseesCard(dataSources),
+    typeOfUseCard(dataSources),
+    cohortsCard(dataSources),
+    variableSelectionCard(dataSources),
+    selectionOfCasesCard(dataSources),
+  ] as any
 
 export const userProjectSection = (
   dataSources: PlatformIdentifier[] = [],

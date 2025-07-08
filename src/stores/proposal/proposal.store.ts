@@ -15,6 +15,7 @@ import type {
   IEditAdditionalLocationProposalInformation,
   IUpload,
   ISelectedCohort,
+  IParticipant,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -372,8 +373,29 @@ export const useProposalStore = defineStore('Proposal', {
       return { insertedCohort, uploadedFile }
     },
 
+    async addAutomaticCohort(proposalId: string, newCohort: ISelectedCohort): Promise<ISelectedCohort> {
+      return await this.apiService.addAutomaticCohort(proposalId, newCohort)
+    },
+
     async deleteCohort(proposalId: string, cohortId: string): Promise<ISelectedCohort> {
       return await this.apiService.deleteCohort(proposalId, cohortId)
+    },
+
+    async getFeasibilityCsvByQueryId(feasibilityQueryId: number, queryName: string): Promise<void> {
+      if (!this.currentProposal?._id) {
+        throw new Error('No persisted proposal selected')
+      }
+
+      await this.apiService.getFeasibilityCsvByQueryId(this.currentProposal?._id, feasibilityQueryId, queryName)
+    },
+    async updateParticipants(id: string, participants: IParticipant[]): Promise<void> {
+      const updatedProposal = await this.apiService.updateParticipants(id, participants)
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          participants: updatedProposal.participants,
+        }
+      }
     },
   },
 

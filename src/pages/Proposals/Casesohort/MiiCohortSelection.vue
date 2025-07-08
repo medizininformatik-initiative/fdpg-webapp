@@ -1,6 +1,6 @@
 <template>
   <FdpgLabel html-for="proposal.MII" size="large" class="mt-22" />
-  <el-card>
+  <el-card class="form-group">
     <el-row>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.cohorts.selectedCohorts">
@@ -123,7 +123,6 @@ import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { UseCaseUpload } from '@/types/upload.types'
-import { useFeasibilityStore } from '@/stores/feasibility.store'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -152,8 +151,6 @@ const props = defineProps({
     default: false,
   },
 })
-
-const feasibilityStore = useFeasibilityStore()
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id)
@@ -192,8 +189,24 @@ const updateFiles = (file: IUpload, mode: 'add' | 'remove') => {
   }
 }
 
-const handleAutomaticAdd = (newCohorts: ISelectedCohort[]) => {
-  newCohorts.forEach(addCohort)
+const handleAutomaticAdd = async (newCohorts: ISelectedCohort[]) => {
+  const _proposalId = proposalStore.currentProposal?._id
+
+  try {
+    if (_proposalId) {
+      const results = await Promise.allSettled(
+        newCohorts.map(async (cohort) => await proposalStore.addAutomaticCohort(_proposalId, cohort)),
+      )
+
+      results
+        .filter((r) => r.status === 'fulfilled')
+        .map((r) => (r as PromiseFulfilledResult<any>).value)
+        .forEach(addCohort)
+    }
+  } catch {
+    showErrorMessage()
+  }
+
   closeAutomaticDialog()
 }
 
@@ -249,7 +262,7 @@ const downloadCsv = async (id?: number, label?: string) => {
     return
   }
   try {
-    await feasibilityStore.getCsvByQueryId(id, label)
+    await proposalStore.getFeasibilityCsvByQueryId(id, label)
   } catch (e) {
     showErrorMessage()
   }
@@ -259,12 +272,21 @@ const handleDelete = async (deletedCohort: ISelectedCohort) => {
   const _proposalId = proposalId.value
 
   try {
-    if (_proposalId && deletedCohort._id && deletedCohort.uploadId) {
+    if (_proposalId && deletedCohort._id) {
       await proposalStore.deleteCohort(_proposalId, deletedCohort._id)
-      updateFiles(
-        { _id: deletedCohort.uploadId, fileName: '', fileSize: 0, type: UseCaseUpload.FeasibilityQuery, createdAt: '' },
-        'remove',
-      )
+
+      if (deletedCohort.uploadId) {
+        updateFiles(
+          {
+            _id: deletedCohort.uploadId,
+            fileName: '',
+            fileSize: 0,
+            type: UseCaseUpload.FeasibilityQuery,
+            createdAt: '',
+          },
+          'remove',
+        )
+      }
     }
   } catch (e) {
     showErrorMessage()

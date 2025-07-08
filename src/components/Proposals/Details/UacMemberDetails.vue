@@ -3,10 +3,18 @@
     <DetailTopBar :buttons="topBarButtons"></DetailTopBar>
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
+    <ReviewMemberCohortSelection
+      v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
+      v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
+      :enable-edit="false"
+      @add-cohort="() => {}"
+      @remove-cohort="() => {}"
+    />
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+    <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
+
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
-    <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
     <ProjectHistory />
 
@@ -55,6 +63,8 @@ import type { UploadFile } from 'element-plus'
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
 const { t } = useI18n()
 const showPublications = ref(false)
