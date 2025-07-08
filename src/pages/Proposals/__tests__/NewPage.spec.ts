@@ -1,3 +1,6 @@
+const MOCK_PROPOSAL_ID = 'proposalId'
+const MOCK_PARAMS = { id: MOCK_PROPOSAL_ID }
+
 import { Role } from '@/types/oidc.types'
 import { createTestingPinia } from '@pinia/testing'
 import { flushPromises, shallowMount } from '@vue/test-utils'
@@ -51,10 +54,11 @@ vi.mock('@/plugins/i18n', () => ({
 
 vi.mock('vue-router', () => {
   const pushMock = vi.fn()
+  const MOCK_ID = 'proposalId'
   return {
     createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
     createWebHistory: vi.fn(),
-    useRoute: vi.fn().mockReturnValue({ query: { anchor: 'anchorId' }, params: { id: 'proposalId' } }),
+    useRoute: vi.fn().mockReturnValue({ query: { anchor: 'anchorId' }, params: { id: MOCK_ID } }),
     useRouter: vi.fn(() => ({
       push: pushMock,
     })),
@@ -92,9 +96,10 @@ const mountComponent = (withPinia = true) => {
         'el-button': false,
         'el-card': false,
         'el-form-item': false,
+        LeadHeader: false,
       },
       mocks: {
-        params: { id: 'proposalId' }, // Mock router params
+        params: MOCK_PARAMS,
       },
     },
     props: {
@@ -123,11 +128,6 @@ describe('Newpage.vue', () => {
     scrollIntoView: vi.fn(),
   }
 
-  const getButtonByText = (text: string) => {
-    const buttons = wrapper.findAll('button')
-    return buttons.filter((button) => button.text() === text)[0]
-  }
-
   describe('In any case', () => {
     let proposal: IProposal
 
@@ -151,12 +151,16 @@ describe('Newpage.vue', () => {
     })
 
     it('sets the currentProposal', () => {
-      expect(proposalStore.setCurrentProposal).toHaveBeenCalledWith('proposalId')
+      expect(proposalStore.setCurrentProposal).toHaveBeenCalledWith(MOCK_PROPOSAL_ID)
     })
 
     it('fetches the comments', async () => {
+      vi.spyOn(commentStore, 'fetchAll').mockResolvedValue()
+      await wrapper.vm.$nextTick()
+      // Ensure all promises resolve
       await flushPromises()
-      expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
+
+      expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: MOCK_PROPOSAL_ID })
     })
 
     it('scrolls to the anchor', async () => {
@@ -166,9 +170,9 @@ describe('Newpage.vue', () => {
 
     it('navigates to the detail page on detail button press', async () => {
       const router = useRouter()
-      const button = wrapper.find('[data-test-id="projectDetails"]')
+      const button = wrapper.find('[data-testId="button__projectDetails"]')
       await button.trigger('click')
-      expect(router.push).toHaveBeenCalledWith({ name: RouteName.ProposalDetails, params: { id: proposal._id } })
+      expect(router.push).toHaveBeenCalledWith({ name: RouteName.ProposalDetails, params: { id: MOCK_PROPOSAL_ID } })
     })
   })
 
@@ -178,7 +182,7 @@ describe('Newpage.vue', () => {
       let proposal: IProposal
       beforeEach(() => {
         proposal = JSON.parse(
-          JSON.stringify({ ...mockProposal, status: status, _id: status ? 'proposalId' : undefined }),
+          JSON.stringify({ ...mockProposal, status: status, _id: status ? MOCK_PROPOSAL_ID : undefined }),
         )
         wrapper = mountComponent() as any
         proposalStore = vi.mocked(useProposalStore())
@@ -229,7 +233,7 @@ describe('Newpage.vue', () => {
 
         it.skipIf(!status)('updates the proposal', async () => {
           expect(proposalStore.updateProposal).toHaveBeenCalledWith(
-            'proposalId',
+            MOCK_PROPOSAL_ID,
             expect.objectContaining({ status, projectAbbreviation: proposal.projectAbbreviation }),
           )
         })
@@ -279,7 +283,7 @@ describe('Newpage.vue', () => {
 
         it.skipIf(!status)('updates the proposal', async () => {
           expect(proposalStore.updateProposal).toHaveBeenCalledWith(
-            'proposalId',
+            MOCK_PROPOSAL_ID,
             expect.objectContaining({
               status: ProposalStatus.FdpgCheck,
               projectAbbreviation: proposal.projectAbbreviation,
@@ -339,7 +343,7 @@ describe('Newpage.vue', () => {
       })
     })
 
-    describe.each([undefined, 'proposalId'])('Failed to save as draft', (proposalId?: string) => {
+    describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to save as draft', (proposalId?: string) => {
       beforeEach(() => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())
@@ -360,7 +364,7 @@ describe('Newpage.vue', () => {
       })
     })
 
-    describe.each([undefined, 'proposalId'])('Failed to submit', (proposalId?: string) => {
+    describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to submit', (proposalId?: string) => {
       beforeEach(() => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())
@@ -394,7 +398,7 @@ describe('Newpage.vue', () => {
       })
     })
 
-    describe.each([undefined, 'proposalId'])('Failed on validation', (proposalId?: string) => {
+    describe.each([undefined, MOCK_PROPOSAL_ID])('Failed on validation', (proposalId?: string) => {
       beforeEach(async () => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())

@@ -18,7 +18,7 @@
         class="card-remove-button"
         @click="handleRemoveParticipant(index)"
         ><i class="fa fa-minus-circle" aria-hidden="true" /><span>{{
-          $t('proposal.removeParticipant')
+          t('proposal.removeParticipant')
         }}</span></el-button
       >
 
@@ -46,8 +46,17 @@
         :ParticipatingScientists="true"
       ></ProjectParticipantCategory>
 
+      <ProjectParticipantRole
+        v-model="participant.participantRole"
+        :review-mode="reviewMode"
+        :form-ref="formRef"
+        :identifier="`participants.${index}`"
+        required
+      ></ProjectParticipantRole>
+
       <section style="display: flex; flex-direction: column; gap: 0.3em">
         <TaskViewer :object-id="participant.participantCategory._id" />
+        <TaskViewer :object-id="participant.participantRole._id" />
         <!-- Legacy: participant main object should not receive comments -->
         <TaskViewer :object-id="participant._id" />
       </section>
@@ -62,7 +71,7 @@
     @click="handleAddAnotherPerson"
   >
     <i class="el-icon-plus" aria-hidden="true" />
-    <span class="add-text">{{ $t('proposal.addAnotherPerson') }}</span>
+    <span class="add-text">{{ t('proposal.addAnotherPerson') }}</span>
   </el-button>
 </template>
 
@@ -75,8 +84,10 @@ import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ProjectInstitute from '../ProjectInstitute.vue'
 import ProjectParticipantCategory from '../ProjectParticipantCategory.vue'
+import ProjectParticipantRole from '../ProjectParticipantRole.vue'
 import ProjectResearcher from '../ProjectResearcher.vue'
 import ParticipatingScientistsCollapsed from './ParticipatingScientistsCollapsed.vue'
 
@@ -101,6 +112,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
+const { t } = useI18n()
 const participants = useVModel(props, 'modelValue', emit)
 
 const activePanelKey = ref(0)

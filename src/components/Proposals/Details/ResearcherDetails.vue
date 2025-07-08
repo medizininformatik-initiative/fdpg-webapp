@@ -10,6 +10,8 @@
     ></ProjectTodos>
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
+    <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
+
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"

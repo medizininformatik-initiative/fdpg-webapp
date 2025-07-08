@@ -1,7 +1,16 @@
 import FdpgDropdown from '../FdpgDropdown.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('vue-i18n', () => ({
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockReturnValue('Test'),
+    locale: {
+      value: 'de-DE',
+    },
+  })),
+}))
 
 describe('FdpgDropdown.vue', () => {
   let wrapper: VueWrapper
@@ -11,13 +20,13 @@ describe('FdpgDropdown.vue', () => {
         showDropdownIcon: true,
         button: {
           isTranslatable: true,
-          label: 'TranslationSchema',
+          label: 'general.title',
           kind: 'basic',
         },
         items: [
           {
-            label: 'TranslationSchema',
-            action: () => { },
+            label: 'header.login',
+            action: () => {},
             kind: 'basic',
           },
         ],

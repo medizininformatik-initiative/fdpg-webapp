@@ -1,9 +1,9 @@
 <template>
   <Menu v-slot="{ open }" as="div" class="menu">
-    <MenuButton class="menu-button">
+    <MenuButton class="menu-button" :disabled="button.disabled" :aria-label="button.label">
       <img v-if="button.kind === 'img'" :src="button.src" aria-hidden="true" alt="" width="16" height="16" />
       <span v-if="button.kind === 'icon'" class="icon" :class="button.iconClass" aria-hidden="true" />
-      <template v-if="button.isTranslatable">{{ $t(button.label) }}</template>
+      <template v-if="button.isTranslatable">{{ t(button.label) }}</template>
       <template v-else>{{ button.label }}</template>
       <slot> </slot>
       <span
@@ -26,7 +26,7 @@
             style="margin-right: 5px"
           />
           <span v-if="item.kind === 'icon'" class="icon" :class="item.iconClass" aria-hidden="true" />
-          {{ $t(item.label) }}</span
+          {{ t(item.label) }}</span
         >
       </MenuItem>
     </MenuItems>
@@ -37,6 +37,9 @@
 import type { DropdownButton, DropdownItem } from '@/types/dropdown.types'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import type { PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps({
   showDropdownIcon: {
@@ -61,7 +64,6 @@ defineProps({
   display: inline-block;
   position: relative;
   text-align: left;
-  z-index: 20;
 }
 
 .menu-button {
@@ -98,6 +100,7 @@ defineProps({
   border-radius: var(--el-popover-border-radius, 4px);
   border: 1px solid var(--el-border-color-light);
   box-shadow: 0 2px 11px 0 $gray-500;
+  z-index: 1000;
 }
 
 .menu-item {

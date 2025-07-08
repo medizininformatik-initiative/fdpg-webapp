@@ -2,7 +2,7 @@
   <Dialog class="fdpg-dialog" as="div" :open="value" @close="setIsOpen">
     <DialogOverlay class="dialog-overlay" />
     <section class="panel-wrapper">
-      <DialogPanel class="panel">
+      <DialogPanel class="panel" :style="{ maxWidth: width }">
         <slot name="header">
           <DialogTitle as="h2" class="header">{{ title }}</DialogTitle>
         </slot>
@@ -38,6 +38,10 @@ const props = defineProps({
   footerJustify: {
     type: String,
     default: 'flex-end',
+  },
+  width: {
+    type: String,
+    default: '700px',
   },
 })
 const value = useVModel(props, 'modelValue', emit)
@@ -93,7 +97,6 @@ const setIsOpen = (newValue: boolean) => {
     padding: 20px;
     background: white;
     width: 100%;
-    max-width: 700px;
   }
   .footer {
     display: flex;
