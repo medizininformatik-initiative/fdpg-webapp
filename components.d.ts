@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddParticipantDialog: typeof import('./src/components/AddParticipantDialog.vue')['default']
     AdminDashboard: typeof import('./src/components/Dashboard/AdminDashboard.vue')['default']
     AppendixInfo: typeof import('./src/components/AppendixInfo.vue')['default']
     ContractAppendixList: typeof import('./src/components/Proposals/Details/ContractAppendixList.vue')['default']
@@ -38,9 +39,6 @@ declare module 'vue' {
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDivider: typeof import('element-plus/es')['ElDivider']
-    ElDropdown: typeof import('element-plus/es')['ElDropdown']
-    ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
-    ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElHeader: typeof import('element-plus/es')['ElHeader']
@@ -106,6 +104,7 @@ declare module 'vue' {
     FdpgUpload: typeof import('./src/components/FdpgUpload.vue')['default']
     ImageList: typeof import('./src/components/Proposals/Details/ImageList.vue')['default']
     InitiateContractDialog: typeof import('./src/components/InitiateContractDialog.vue')['default']
+    LeadHeader: typeof import('./src/components/Shared/LeadHeader.vue')['default']
     LocationDashboard: typeof import('./src/components/Dashboard/LocationDashboard.vue')['default']
     LocationSelect: typeof import('./src/components/LocationSelect.vue')['default']
     LocationVotePanel: typeof import('./src/components/LocationVotePanel.vue')['default']

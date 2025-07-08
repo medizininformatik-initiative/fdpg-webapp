@@ -8,7 +8,7 @@
   />
   <el-card class="form-group">
     <FdpgFormItem
-      :prop="`${identifier}.participantCategory.category`"
+      :prop="identifier ? `${identifier}.participantCategory.category` : 'participantCategory.category'"
       :rules="ParticipatingScientists ? formRules.category : undefined"
     >
       <el-radio-group
@@ -80,7 +80,7 @@ const props = defineProps({
 
   identifier: {
     type: String,
-    required: true,
+    required: false,
   },
 
   required: {

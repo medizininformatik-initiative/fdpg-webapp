@@ -5,10 +5,10 @@
     </h6>
     <div class="form-group-wrapper--collapsed__actions">
       <el-button v-if="!reviewMode" link @click="handleRemoveParticipant(index)">
-        {{ $t('general.delete') }}
+        {{ t('general.delete') }}
       </el-button>
       <el-button link @click="handleEditParticipant(index)">
-        {{ reviewMode ? $t('general.view') : $t('general.edit') }}
+        {{ reviewMode ? t('general.view') : t('general.edit') }}
       </el-button>
     </div>
   </div>
@@ -88,6 +88,7 @@ onMounted(() => {
       `participants.${props.index}.institute.country`,
       `participants.${props.index}.institute.email`,
       `participants.${props.index}.participantCategory.category`,
+      `participants.${props.index}.participantRole.role`,
     ],
     (_, invalidFields) => {
       isValid.value = checkIsFormValid(invalidFields)

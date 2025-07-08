@@ -16,6 +16,7 @@ import type {
   IEditAdditionalLocationProposalInformation,
   FdpgChecklistItemUpdateResponse,
   ISelectedCohort,
+  IParticipant,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -348,5 +349,9 @@ export class ProposalService {
     } else {
       throw new Error('Could not fetch the feasibility csv')
     }
+  }
+  async updateParticipants(id: string, participants: IParticipant[]): Promise<IProposal> {
+    const response = await this.apiClient.patch(`${this.basePath}/${id}/participants`, { participants })
+    return response.data
   }
 }
