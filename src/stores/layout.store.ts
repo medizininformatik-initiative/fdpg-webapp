@@ -13,6 +13,7 @@ interface ILayoutStore {
   isDatasourceSelected: boolean
   totalRequiredFields: number
   validatedFields: number
+  formTouched: boolean
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
@@ -38,6 +39,7 @@ export const useLayoutStore = defineStore('layout', {
     isDatasourceSelected: false,
     totalRequiredFields: 0,
     validatedFields: 0,
+    formTouched: false,
   }),
 
   actions: {
@@ -108,6 +110,9 @@ export const useLayoutStore = defineStore('layout', {
           mainWrapper.scrollTo(0, 0)
         }
       }, 100)
+    },
+    setFormTouched(touched: boolean) {
+      this.formTouched = touched
     },
   },
 })
