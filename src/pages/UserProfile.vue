@@ -99,6 +99,11 @@ const personalCard: IDefinitionCardVirtual<IOidc, 'profile'> = {
       size: 12,
       definitions: [[{ key: 'email' }]],
     },
+    {
+      label: 'general.receiveProposalEmails',
+      size: 12,
+      definitions: [[{ key: 'receiveProposalEmails', kind: 'translatable', prefix: 'general.boolean_' }]],
+    },
   ],
   actions: [
     {

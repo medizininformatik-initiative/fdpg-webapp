@@ -17,6 +17,7 @@ export class UserService {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+      receiveProposalEmails: true,
     }
     await this.apiClient.post(this.basePath, createPayload)
   }

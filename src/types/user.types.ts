@@ -11,6 +11,7 @@ export interface ICreateUser {
   location?: MiiLocation
   clientId: string
   redirectUri?: string
+  receiveProposalEmails: boolean
 }
 
 export interface IUpdateUser {
@@ -19,4 +20,5 @@ export interface IUpdateUser {
   firstName: string
   lastName: string
   affiliation: string
+  receiveProposalEmails: boolean
 }

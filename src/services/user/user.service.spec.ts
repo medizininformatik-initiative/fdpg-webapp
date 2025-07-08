@@ -25,6 +25,7 @@ describe('UserService', () => {
       title: 'string',
       firstName: 'string',
       lastName: 'string',
+      receiveProposalEmails: true,
       affiliation: 'string',
       email: 'string',
       isExisting: true,
@@ -42,6 +43,7 @@ describe('UserService', () => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+      receiveProposalEmails: true,
     } as ICreateUser
     await service.create(user)
     expect(apiClient.post).toHaveBeenCalledWith(`${basePath}`, createPayload)

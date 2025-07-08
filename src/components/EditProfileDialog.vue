@@ -68,6 +68,21 @@
             </FdpgFormItem>
           </el-col>
         </el-row>
+
+        <el-row :gutter="20">
+          <el-col :sm="12">
+            <FdpgFormItem prop="receiveProposalEmails">
+              <FdpgLabel required html-for="general.emailSettings" />
+              <el-checkbox
+                v-model="profileForm.receiveProposalEmails"
+                :size="FdpgInputSize.Small"
+                class="fdpg-checkbox"
+              >
+                {{ $t('general.receiveProposalEmails') }}</el-checkbox
+              >
+            </FdpgFormItem>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
 
@@ -107,6 +122,7 @@ import FdpgInput from './FdpgInput.vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgSelect from './FdpgSelect.vue'
 import FdpgDialog from './FdpgDialog.vue'
+import { FdpgInputSize } from '@/types/component.types'
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContract'])
 
 const props = defineProps<{
@@ -127,6 +143,7 @@ const profileForm = reactive<IUpdateUser>({
   firstName: '',
   lastName: '',
   affiliation: '',
+  receiveProposalEmails: false,
 })
 
 const rules = reactive<Record<string, any>>({
@@ -153,6 +170,7 @@ watch(
         profileForm.firstName = authStore.profile.given_name
         profileForm.lastName = authStore.profile.family_name
         profileForm.affiliation = authStore.profile.affiliation
+        profileForm.receiveProposalEmails = authStore.profile.receiveProposalEmails
       }
 
       // To disable the button, we need to trigger the validation.
