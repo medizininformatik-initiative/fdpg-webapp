@@ -7,7 +7,7 @@
         :documents="documents"
         :proposal-id="proposalId"
         :is-loading="isDocumentsLoading"
-        :is-disabled="status !== ProposalStatus.Draft && status !== ProposalStatus.Rework"
+        :is-disabled="!isEditable"
         :two-columns="true"
         empty-alert-text="proposal.noAttachmentsYet"
         @remove="handleDocumentRemove"
@@ -32,7 +32,7 @@
           :documents="contractDrafts"
           :proposal-id="proposalId"
           :is-loading="isContractDraftsLoading"
-          :is-disabled="status !== ProposalStatus.Draft && status !== ProposalStatus.Rework"
+          :is-disabled="!isEditable"
           :is-editable="status === ProposalStatus.Contracting && authStore.hasFdpgLevelPermissions()"
           empty-alert-text="proposal.noContractDraftsYet"
           @remove="handleContractDraftRemove"
@@ -44,10 +44,7 @@
           :documents="contracts"
           :proposal-id="proposalId"
           :is-loading="isContractsLoading"
-          :is-disabled="
-            proposalStore.currentProposal?.status !== ProposalStatus.Draft &&
-            proposalStore.currentProposal?.status !== ProposalStatus.Rework
-          "
+          :is-disabled="!isEditable"
           empty-alert-text="proposal.noContractsYet"
           @remove="handleContractRemove"
         />
@@ -152,6 +149,8 @@ const hideContracts = computed(() => {
 })
 
 const status = computed(() => proposalStore.currentProposal?.status)
+
+const isEditable = computed(() => status.value === ProposalStatus.Draft || status.value === ProposalStatus.Rework)
 
 const authStore = useAuthStore()
 const hideDocuments = computed(() => {
