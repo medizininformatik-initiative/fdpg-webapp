@@ -15,6 +15,7 @@ import type {
   IEditAdditionalLocationProposalInformation,
   IUpload,
   ISelectedCohort,
+  IParticipant,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -386,6 +387,15 @@ export const useProposalStore = defineStore('Proposal', {
       }
 
       await this.apiService.getFeasibilityCsvByQueryId(this.currentProposal?._id, feasibilityQueryId, queryName)
+    },
+    async updateParticipants(id: string, participants: IParticipant[]): Promise<void> {
+      const updatedProposal = await this.apiService.updateParticipants(id, participants)
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          participants: updatedProposal.participants,
+        }
+      }
     },
   },
 

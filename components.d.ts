@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AddParticipantDialog: typeof import('./src/components/AddParticipantDialog.vue')['default']
     AdminDashboard: typeof import('./src/components/Dashboard/AdminDashboard.vue')['default']
     AppendixInfo: typeof import('./src/components/AppendixInfo.vue')['default']
     ContractParticipants: typeof import('./src/components/ContractParticipants.vue')['default']
