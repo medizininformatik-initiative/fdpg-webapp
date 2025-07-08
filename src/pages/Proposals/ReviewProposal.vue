@@ -1,14 +1,6 @@
 <template>
   <section class="review-proposal">
-    <div class="lead">
-      <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
-      <div>
-        <el-button type="primary" size="large" @click="openDetails" data-testId="button__projectDetails">{{
-          t('proposal.projectDetails')
-        }}</el-button>
-      </div>
-    </div>
-
+    <LeadHeader />
     <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
       <ReviewAreaLabel
         headline="h2"
@@ -135,6 +127,7 @@ import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
+import LeadHeader from '@/components/Shared/LeadHeader.vue'
 
 const authStore = useAuthStore()
 
@@ -170,13 +163,6 @@ const { uploadsForType } = useUpload(proposalId, [
 const { showErrorMessage } = useNotifications()
 
 const { t } = useI18n()
-
-const openDetails = () => {
-  router.push({
-    name: RouteName.ProposalDetails,
-    params: { id: params.id },
-  })
-}
 
 const fetchProposal = async () => {
   try {
@@ -329,18 +315,7 @@ onMounted(async () => {
 <style lang="scss">
 .review-proposal {
   margin-bottom: 5em;
-
-  .lead {
-    margin-bottom: 37px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    .title {
-      margin: 0;
-      font-size: 32px;
-    }
-  }
+  position: relative;
 
   .review-label {
     .label-checkbox {
