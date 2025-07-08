@@ -157,6 +157,8 @@ describe('Newpage.vue', () => {
     it('fetches the comments', async () => {
       vi.spyOn(commentStore, 'fetchAll').mockResolvedValue()
       await wrapper.vm.$nextTick()
+      // Ensure all promises resolve
+      await flushPromises()
 
       expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: MOCK_PROPOSAL_ID })
     })
