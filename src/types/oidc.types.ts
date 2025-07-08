@@ -17,6 +17,7 @@ export interface IFdpgBaseUser {
   title?: string
   salutation: Salutation
   affiliation: string
+  receiveProposalEmails: any
 }
 
 export interface IUserFromDataSource extends IFdpgBaseUser {
