@@ -1,18 +1,8 @@
 <template>
   <el-container class="fdpg-new-proposal-page">
-    <div class="lead">
-      <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
+    <LeadHeader />
+    <div class="lead align-right">
       <div>
-        <el-button
-          type="primary"
-          size="large"
-          data-test-id="projectDetails"
-          link
-          @click="openDetails"
-          v-if="proposalId"
-        >
-          <i class="bi bi-info-square"></i>
-        </el-button>
         <el-button
           v-if="!proposalStore.currentProposal || !isReviewMode"
           @click="handleSaveDraft"
@@ -23,10 +13,6 @@
         >
           <img src="@/assets/img/proposal/save.svg" alt="save btn" />
         </el-button>
-      </div>
-    </div>
-    <div class="lead align-right">
-      <div>
         <el-button type="primary" link @click="toggleShoppingList" data-test-id="shoppingList">
           <el-badge :value="proposalForm?.selectedDataSources.length" class="item">
             <i class="fa-solid fa-rectangle-list"></i>
@@ -342,6 +328,7 @@ import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
 import { debounce } from 'lodash-es'
 
+import LeadHeader from '@/components/Shared/LeadHeader.vue'
 // Map each step to its corresponding form fields
 const stepFieldsMap = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -594,14 +581,6 @@ const isDifeSelected = computed(() => {
   return platform?.value?.includes(PlatformIdentifier.DIFE)
 })
 
-const openDetails = () => {
-  if (proposalId.value) {
-    router.push({
-      name: RouteName.ProposalDetails,
-      params: { id: proposalId.value },
-    })
-  }
-}
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
@@ -1459,17 +1438,13 @@ onMounted(async () => {
 
   flex-direction: column;
   padding-bottom: 100px;
+  position: relative;
 
   .lead {
     margin-bottom: 37px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .title {
-      margin: 0;
-      font-size: 32px;
-    }
   }
 
   .abbreviation {
