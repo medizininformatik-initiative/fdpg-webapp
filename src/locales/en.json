@@ -65,7 +65,8 @@
     "emailSettings": "E-Mail Settings",
     "receiveProposalEmails": "Receive E-Mails",
     "boolean_true": "Yes",
-    "boolean_false": "No"
+    "boolean_false": "No",
+    "upload": "Upload"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -122,7 +123,8 @@
     "LOCATION_CONTRACTING_DEADLINE_CHANGE": "Deadline for Location Contracting  was changed",
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Deadline for data delivery was changed",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Deadline for Corrupted Data was changed",
-    "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed"
+    "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed",
+    "CONTRACT_UPDATED": "Contact draft has been updated"
   },
   "header": {
     "login": "Login",
@@ -329,6 +331,7 @@
     "resendInvitation": "Resend invitation",
     "checkProjectForUniqueness": "Check project for uniqueness",
     "checkAttachments": "Check attachments ({count})",
+    "checkContractAppendix": "Contract appendix ({count})",
     "checklistVerification": "Checklist verification ({checkedCount}/{optionsCount})",
     "checklistGenericError": "It was not possible to save the checklist",
     "isRegistrationLinkSentLabel": "I have sent a registration link to the applicant and all participating scientists",
@@ -453,6 +456,7 @@
     "uploadType_FEASIBILITY_QUERY": "Feasibility Query",
     "uploadType_PROPOSAL_PDF": "Printversion",
     "uploadType_Fallback": "Appendix",
+    "uploadType_CONTRACT_APPENDIX": "Contract Appendix",
     "viewTodoInProposal": "View Todo in Proposal",
     "acceptContractDescriptionResearcher": "The Research Data Portal has sent you a contract proposal that provides for the participation of {numberOfApprovedLocations} sites. Approve the contract by uploading it with your signature or reject the contract proposal.",
     "acceptContractDescriptionUac": "The Research Data Portal has sent you a contract proposal. Agree to the contract, specify the number of patients you can deliver, and include any contract requirements. Once the applicant has signed the contract, you can countersign the contract.",
@@ -730,7 +734,8 @@
     "addParticipant": "Add Participant",
     "involvedRole": "Involved Role",
     "cannotChangeOnlyResponsibleScientist": "The only responsible scientist cannot be changed.",
-    "selectedCohorts": "Selected Cohorts"
+    "selectedCohorts": "Selected Cohorts",
+    "editContract": "Update Contract"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
