@@ -154,7 +154,7 @@ const userRole = computed<Role | undefined>(() => {
   return authStore.singleKnownRole
 })
 const isFdpgMembers = computed(() => {
-  return userRole.value === Role.FdpgMember || userRole.value === Role.DataSourceMember
+  return userRole.value === Role.FdpgMember
 })
 
 const isResearcher = computed(() => {
