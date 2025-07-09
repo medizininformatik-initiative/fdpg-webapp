@@ -652,7 +652,7 @@
     "TNZ": "TNZ",
     "selectionOfVariablesHeader": "Selection of variables",
     "informationOnMiiSelectionForVariableSelectionStepHeader": "MII",
-    "informationOnMiiSelectionForVariableSelectionStepBody": "Your variable selection will be saved together with your cohort. Please proceed with Cohort selection",
+    "informationOnMiiSelectionForVariableSelectionStepBody": "Your variable selection will be saved together with your cohort. Please proceed with Cohort selection.",
     "informationOnDifeSelectionForVariableSelectionStepHeader": "DIFE",
     "difeTypeOfUse_MORBIDITY_ANALYSIS": "Morbidity analysis including follow-up round (please specify)",
     "difeTypeOfUse_MORTALITY_ANALYSIS": "Mortality analysis including follow-up round (please specify)",
@@ -670,7 +670,7 @@
     "toSelectVariable": "Search for associated variables",
     "noDataSourcesSelected": "No Data source selected",
     "userProjectVariableSelectionDifeTypeOfUse": "DIFE type of use",
-    "userProjectVariableSelectionDifeTypeOfUseExplanation": "DIFE type of use explanation",
+    "userProjectVariableSelectionDifeTypeOfUseExplanation": "explanation type of use",
     "typeOfUse_DATA_SHIELD": "DataSHIELD",
     "typeOfUse_EXTERNAL_SR": "External Server",
     "typeOfUse_INTERNAL_SR": "Internal SAS/R server",
@@ -735,7 +735,8 @@
     "involvedRole": "Involved Role",
     "cannotChangeOnlyResponsibleScientist": "The only responsible scientist cannot be changed.",
     "selectedCohorts": "Selected Cohorts",
-    "editContract": "Update Contract"
+    "editContract": "Update Contract",
+    "removeParticipantModalDescription": "Do you really want to remove this researcher?"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

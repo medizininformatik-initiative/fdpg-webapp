@@ -115,6 +115,7 @@ import { Countries } from '@/types/location.enum'
 import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 
 const { params } = useRoute()
 const proposalId = params.id as string
@@ -149,6 +150,7 @@ const participantPanels = ref<boolean[]>([])
 const openParticipantDialog = ref<boolean>(false)
 
 const authStore = useAuthStore()
+const messageBoxStore = useMessageBoxStore()
 
 const userRole = computed<Role | undefined>(() => {
   return authStore.singleKnownRole
@@ -172,7 +174,10 @@ const participants = computed<ParticipantPanelType>(() => {
         isDisabled: triggeredEmails.value.includes(info.email),
       }
       if (info.isRegistrationComplete) {
-        acc.alreadyRegistered.push(result)
+        acc.alreadyRegistered.push({
+          ...result,
+          ...(info.addedByFdpg ? removeParticipantAction(info.participantId) : {}),
+        })
       } else if (info.isExisting) {
         acc.registrationPending.push({
           ...result,
@@ -249,6 +254,45 @@ const handleAddAnotherPerson = async () => {
   openParticipantDialog.value = true
 }
 
+const removeParticipantAction = (id: string | undefined): ParticipantAction => {
+  return {
+    action: () => handleRemoveParticipant(id),
+    actionTitle: 'proposal.removeParticipant',
+  }
+}
+const handleRemoveParticipant = async (id: string | undefined): Promise<void> => {
+  return new Promise((resolve) => {
+    messageBoxStore.setMessageBoxInfo({
+      cancelButtonText: 'general.cancel',
+      cancelButtonClass: 'el-button--text',
+      showCancelButton: true,
+      title: 'proposal.removeParticipant',
+      message: 'proposal.removeParticipantModalDescription',
+      confirmButtonText: 'proposal.acceptContractDizModalAction',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          await removeParticipant(id)
+        }
+        resolve()
+      },
+    })
+  })
+}
+const removeParticipant = async (id: string | undefined) => {
+  if (!id) {
+    showErrorMessage(t('proposal.errorNoParticipantId'))
+    return
+  }
+  try {
+    await proposalStore.removeParticipant(proposalId, id)
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error removing participant:', error)
+    showErrorMessage()
+  }
+}
 onBeforeMount(async () => {
   try {
     researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)

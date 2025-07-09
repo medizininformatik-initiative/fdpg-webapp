@@ -70,6 +70,8 @@ export interface IResearcherIdentity extends IResearcher {
   participantType: ParticipantType
   participantRole: string
   username: string
+  addedByFdpg?: boolean
+  participantId?: string // This is used to identify the researcher in the proposal
 }
 
 export interface IInstitute extends WithIdAndIsDone {
@@ -96,6 +98,7 @@ export interface IParticipant extends WithIdAndIsDone {
   institute: IInstitute
   participantCategory: IParticipantCategory
   participantRole: IParticipantRole
+  addedByFdpg?: boolean
 }
 
 export interface IApplicant {

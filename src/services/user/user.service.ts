@@ -1,7 +1,7 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import { Role } from '@/types/oidc.types'
 import type { IResearcherIdentity } from '@/types/proposal.types'
-import type { ICreateUser, IUpdateUser } from '@/types/user.types'
+import type { ICreateUser, IUpdateUser, IUserEmailsResponse, IUserEmailsQuery, IKeycloakUser } from '@/types/user.types'
 
 export class UserService {
   private basePath = '/users'
@@ -43,5 +43,20 @@ export class UserService {
     }
 
     await this.apiClient.put(`${this.basePath}/${userId}/password-reset`, resendPayload)
+  }
+  async getEmails(query?: IUserEmailsQuery): Promise<IUserEmailsResponse> {
+    const params = new URLSearchParams()
+    if (query?.includeInvalidEmails) {
+      params.append('includeInvalidEmails', 'true')
+    }
+
+    const url = params.toString() ? `${this.basePath}/emails?${params.toString()}` : `${this.basePath}/emails`
+    const response = await this.apiClient.get<IUserEmailsResponse>(url)
+    return response.data
+  }
+
+  async getUserByEmail(email: string): Promise<IKeycloakUser> {
+    const response = await this.apiClient.get<IKeycloakUser>(`${this.basePath}/by-email/${encodeURIComponent(email)}`)
+    return response.data
   }
 }
