@@ -11,9 +11,12 @@
           <FdpgSelect
             v-model="researcher.email"
             :data-testId="identifier ? `${identifier}.researcher.email` : 'researcher.email'"
-            :options="formatedExistingUserEmails"
+            :options="emailOptions"
             placeholder="proposal.emailAddress"
             filterable
+            remote
+            :remote-method="searchEmails"
+            :loading="isSearching"
             class="form-select"
             @change="getUserByEmail"
           />
@@ -107,6 +110,7 @@ import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } 
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import useNotifications from '@/composables/use-notifications'
 
@@ -131,11 +135,7 @@ const props = defineProps({
     type: String,
     required: false,
   },
-  existingUserEmails: {
-    type: Array as PropType<string[]>,
-    required: false,
-    default: () => [],
-  },
+
   readonly: {
     type: Boolean,
     default: false,
@@ -154,10 +154,10 @@ const formRules = {
   affiliation: [maxLengthValidationFunc(1000)],
   email: [requiredValidationFunc('string'), emailValidationFunc(), maxLengthValidationFunc(500)],
 }
-const formatedExistingUserEmails = props.existingUserEmails.map((email) => ({
-  label: email,
-  value: email,
-}))
+// Email search functionality
+const emailOptions = ref<{ label: string; value: string }[]>([])
+const isSearching = ref(false)
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
 const getUserByEmail = async (email: string) => {
   if (!email) {
     return
@@ -173,6 +173,41 @@ const getUserByEmail = async (email: string) => {
     showErrorMessage('Error fetching user by email: ' + error)
   }
 }
+
+const searchEmails = async (query: string) => {
+  if (!query || query.trim().length < 3) {
+    emailOptions.value = []
+    return
+  }
+
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+
+  // Debounce search
+  searchTimeout = setTimeout(async () => {
+    isSearching.value = true
+    try {
+      const response = await userStore.searchEmailsByPrefix(query.trim())
+      emailOptions.value = response.emails.map((email) => ({
+        label: email,
+        value: email,
+      }))
+    } catch (error) {
+      showErrorMessage('Error searching emails: ' + error)
+      emailOptions.value = []
+    } finally {
+      isSearching.value = false
+    }
+  }, 300)
+}
+
+// Cleanup timeout on component unmount
+onUnmounted(() => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+})
 </script>
 <style lang="scss">
 .form-select {

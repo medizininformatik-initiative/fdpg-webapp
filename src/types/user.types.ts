@@ -29,7 +29,7 @@ export interface IUserEmailsResponse {
 }
 
 export interface IUserEmailsQuery {
-  includeInvalidEmails?: boolean
+  startsWith?: string
 }
 
 export interface IKeycloakUser {

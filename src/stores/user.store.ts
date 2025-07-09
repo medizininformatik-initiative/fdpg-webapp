@@ -1,6 +1,6 @@
 import { UserService } from '@/services/user/user.service'
 import type { IResearcherIdentity } from '@/types/proposal.types'
-import type { IKeycloakUser, IUpdateUser } from '@/types/user.types'
+import type { IKeycloakUser, IUpdateUser, IUserEmailsResponse } from '@/types/user.types'
 import { defineStore } from 'pinia'
 
 export interface IUserState {
@@ -27,9 +27,8 @@ export const useUserStore = defineStore('User', {
     async resetPassword(userId: string): Promise<void> {
       await this.apiService.resetPassword(userId)
     },
-    async getEmails(includeInvalidEmails?: boolean): Promise<string[]> {
-      const query = includeInvalidEmails ? { includeInvalidEmails: true } : undefined
-      const response = await this.apiService.getEmails(query)
+    async getEmails(): Promise<string[]> {
+      const response = await this.apiService.getEmails()
       return response.emails
     },
     async getUserByEmail(email: string): Promise<IKeycloakUser | null> {
@@ -38,6 +37,9 @@ export const useUserStore = defineStore('User', {
       }
       const user = await this.apiService.getUserByEmail(email)
       return user
+    },
+    async searchEmailsByPrefix(prefix: string): Promise<IUserEmailsResponse> {
+      return await this.apiService.searchEmailsByPrefix(prefix)
     },
   },
 })

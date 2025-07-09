@@ -11,7 +11,6 @@
           v-model="participant.researcher"
           :form-ref="dialogFormRef"
           readonly
-          :existing-user-emails="existingUserEmails"
           @userSelected="keycloakUser = $event"
         />
         <ProjectInstitute v-model="participant.institute" :form-ref="dialogFormRef" readonly />
@@ -80,8 +79,6 @@ const createInitialParticipant = (): IParticipant => ({
 const dialogVisible = useVModel(props, 'modelValue', emit)
 const dialogFormRef = ref<FormInstance>()
 const { t } = useI18n()
-const existingUserEmails = ref<string[]>([])
-const userStore = useUserStore()
 
 const participant = ref<IParticipant>(createInitialParticipant())
 const keycloakUser = ref<IKeycloakUser | null>(null)
@@ -127,14 +124,6 @@ watch(
     }
   },
 )
-
-onMounted(async () => {
-  try {
-    existingUserEmails.value = await userStore.getEmails(false)
-  } catch (error) {
-    showErrorMessage(t('general.errorFetchingEmails'))
-  }
-})
 </script>
 
 <style lang="scss" scoped>

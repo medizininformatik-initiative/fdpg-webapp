@@ -46,13 +46,25 @@ export class UserService {
   }
   async getEmails(query?: IUserEmailsQuery): Promise<IUserEmailsResponse> {
     const params = new URLSearchParams()
-    if (query?.includeInvalidEmails) {
-      params.append('includeInvalidEmails', 'true')
+    if (query?.startsWith) {
+      params.append('startsWith', query.startsWith)
     }
 
     const url = params.toString() ? `${this.basePath}/emails?${params.toString()}` : `${this.basePath}/emails`
     const response = await this.apiClient.get<IUserEmailsResponse>(url)
     return response.data
+  }
+
+  async getEmailsOnly(query?: IUserEmailsQuery): Promise<string[]> {
+    const response = await this.getEmails(query)
+    return response.emails
+  }
+
+  async searchEmailsByPrefix(prefix: string): Promise<IUserEmailsResponse> {
+    if (!prefix || prefix.trim().length === 0) {
+      throw new Error('Prefix must be at least 1 character')
+    }
+    return this.getEmails({ startsWith: prefix.trim() })
   }
 
   async getUserByEmail(email: string): Promise<IKeycloakUser> {

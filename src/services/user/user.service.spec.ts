@@ -98,19 +98,6 @@ describe('UserService', () => {
     expect(result).toEqual(mockResponse)
   })
 
-  it('should get emails with includeInvalidEmails parameter', async () => {
-    const mockResponse: IUserEmailsResponse = {
-      emails: ['user1@example.com', 'user2@example.com', 'user3@example.com'],
-      total: 3,
-    }
-    apiClient.get.mockResolvedValue({ data: mockResponse })
-
-    const result = await service.getEmails({ includeInvalidEmails: true })
-
-    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?includeInvalidEmails=true`)
-    expect(result).toEqual(mockResponse)
-  })
-
   it('should get user by email', async () => {
     const email = 'test@example.com'
     const mockUser: IKeycloakUser = {
@@ -155,5 +142,64 @@ describe('UserService', () => {
 
     expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/by-email/${encodeURIComponent(email)}`)
     expect(result).toEqual(mockUser)
+  })
+
+  it('should get emails with startsWith parameter', async () => {
+    const mockResponse: IUserEmailsResponse = {
+      emails: ['test@example.com', 'testing@example.com'],
+      total: 2,
+    }
+    apiClient.get.mockResolvedValue({ data: mockResponse })
+
+    const result = await service.getEmails({ startsWith: 'tes' })
+
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?startsWith=tes`)
+    expect(result).toEqual(mockResponse)
+  })
+
+  it('should search emails by prefix', async () => {
+    const mockResponse: IUserEmailsResponse = {
+      emails: ['abc@example.com', 'abcd@example.com'],
+      total: 2,
+    }
+    apiClient.get.mockResolvedValue({ data: mockResponse })
+
+    const result = await service.searchEmailsByPrefix('abc')
+
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?startsWith=abc`)
+    expect(result).toEqual(mockResponse)
+  })
+
+  it('should throw error when prefix is empty', async () => {
+    await expect(service.searchEmailsByPrefix('')).rejects.toThrow('Prefix must be at least 1 character')
+  })
+
+  it('should accept prefixes of different lengths', async () => {
+    const mockResponse: IUserEmailsResponse = {
+      emails: ['a@example.com', 'abcd@example.com'],
+      total: 2,
+    }
+    apiClient.get.mockResolvedValue({ data: mockResponse })
+
+    await service.searchEmailsByPrefix('a')
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?startsWith=a`)
+
+    await service.searchEmailsByPrefix('abcd')
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?startsWith=abcd`)
+  })
+
+  it('should handle query parameters correctly', async () => {
+    const mockResponse: IUserEmailsResponse = {
+      emails: ['test@example.com'],
+      total: 1,
+    }
+    apiClient.get.mockResolvedValue({ data: mockResponse })
+
+    const result = await service.getEmails({
+      startsWith: 'tes',
+    })
+
+    expect(apiClient.get).toHaveBeenCalledWith(`${basePath}/emails?startsWith=tes`)
+    expect(result).toEqual(mockResponse)
   })
 })
