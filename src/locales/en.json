@@ -124,7 +124,10 @@
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Deadline for data delivery was changed",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Deadline for Corrupted Data was changed",
     "FINISHED_PROJECT_DEADLINE_CHANGE": "Deadline for Project end was changed",
-    "CONTRACT_UPDATED": "Contact draft has been updated"
+    "CONTRACT_UPDATED": "Contact draft has been updated",
+    "PARTICIPANT_ADDED": "Participant {location} was added to the project",
+    "PARTICIPANT_REMOVED": "Participant {location} was removed from the project",
+    "PARTICIPANT_UPDATED": "Participants were updated"
   },
   "header": {
     "login": "Login",
