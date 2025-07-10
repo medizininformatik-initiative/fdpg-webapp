@@ -80,7 +80,13 @@
       </div>
     </div>
   </div>
-  <el-row v-if="isFdpgMembers" class="participants-footer" type="flex" justify="end" align="middle">
+  <el-row
+    v-if="isFdpgMembers && isProposalStatusValidToChange"
+    class="participants-footer"
+    type="flex"
+    justify="end"
+    align="middle"
+  >
     <el-col :span="4" class="add-more-button-wrapper">
       <el-button
         link
@@ -101,7 +107,7 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
-import type { DropdownButton, DropdownItem } from '@/types/dropdown.types'
+import type { DropdownItem } from '@/types/dropdown.types'
 import { useI18n } from 'vue-i18n'
 import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
@@ -111,7 +117,6 @@ import type { IResearcherIdentity } from '@/types/proposal.types'
 import { ParticipantType, ParticipantRole, ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { Countries } from '@/types/location.enum'
 import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
@@ -161,6 +166,21 @@ const isFdpgMembers = computed(() => {
 
 const isResearcher = computed(() => {
   return userRole.value === Role.Researcher
+})
+
+const isProposalStatusValidToChange = computed(() => {
+  return (
+    proposalStore.currentProposal?.status &&
+    [
+      ProposalStatus.LocationCheck,
+      ProposalStatus.Contracting,
+      ProposalStatus.ExpectDataDelivery,
+      ProposalStatus.DataResearch,
+      ProposalStatus.DataCorrupt,
+      ProposalStatus.FinishedProject,
+      ProposalStatus.ReadyToArchive,
+    ].includes(proposalStore.currentProposal.status)
+  )
 })
 
 const participants = computed<ParticipantPanelType>(() => {
