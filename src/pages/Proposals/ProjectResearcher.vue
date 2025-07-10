@@ -105,15 +105,15 @@ import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
-import type { IResearcher } from '@/types/proposal.types'
+import type { IApplicant, IResearcher } from '@/types/proposal.types'
 import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import { ref, onUnmounted } from 'vue'
+import { ref, onUnmounted, computed } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import useNotifications from '@/composables/use-notifications'
-
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IResearcher>,
@@ -142,6 +142,7 @@ const props = defineProps({
   },
 })
 const userStore = useUserStore()
+const proposalStore = useProposalStore()
 const emit = defineEmits(['update:modelValue', 'userSelected'])
 const { showErrorMessage } = useNotifications()
 
@@ -154,10 +155,18 @@ const formRules = {
   affiliation: [maxLengthValidationFunc(1000)],
   email: [requiredValidationFunc('string'), emailValidationFunc(), maxLengthValidationFunc(500)],
 }
-// Email search functionality
 const emailOptions = ref<{ label: string; value: string }[]>([])
 const isSearching = ref(false)
 let searchTimeout: ReturnType<typeof setTimeout> | null = null
+
+const currentApplicantEmail = computed(() => proposalStore.currentProposal?.applicant?.researcher?.email ?? '')
+const currentParticipantsEmails = computed(() => {
+  return (
+    proposalStore.currentProposal?.participants
+      .filter((p) => p.researcher?.email)
+      .map((p) => p.researcher.email.toLowerCase()) ?? []
+  )
+})
 const getUserByEmail = async (email: string) => {
   if (!email) {
     return
@@ -189,10 +198,11 @@ const searchEmails = async (query: string) => {
     isSearching.value = true
     try {
       const response = await userStore.searchEmailsByPrefix(query.trim())
-      emailOptions.value = response.emails.map((email) => ({
-        label: email,
-        value: email,
-      }))
+      const currentEmail = currentApplicantEmail.value.toLowerCase()
+      emailOptions.value = response.emails
+        .filter((email) => email.toLowerCase() !== currentEmail)
+        .filter((email) => !currentParticipantsEmails.value.includes(email.toLowerCase()))
+        .map((email) => ({ label: email, value: email }))
     } catch (error) {
       showErrorMessage('Error searching emails: ' + error)
       emailOptions.value = []

@@ -25,7 +25,7 @@
             align="middle"
           >
             <el-col :span="4">{{ participant.fullName }}</el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <FdpgDropdown
                 :button="{
                   label: '',
@@ -44,7 +44,7 @@
                 }}</span>
               </FdpgDropdown>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <FdpgDropdown
                 :button="{
                   label: '',
@@ -61,7 +61,7 @@
                 <span class="dropdown-lable">{{ t('roles.participantRole_' + participant.participantRole) }}</span>
               </FdpgDropdown>
             </el-col>
-            <el-col :span="5">{{ participant.email }}</el-col>
+            <el-col :span="7">{{ participant.email }}</el-col>
             <el-col :span="5" class="action-column">
               <el-button
                 v-if="participant.action && participant.actionTitle && participantPanels[index] && isFdpgMembers"
@@ -627,8 +627,8 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
   min-height: 32px;
   height: 32px;
   line-height: 32px;
-  min-width: 200px;
-  max-width: 100%;
+  min-width: 120px;
+  max-width: 160px;
 }
 
 .dropdown-tag--invitationPending {
