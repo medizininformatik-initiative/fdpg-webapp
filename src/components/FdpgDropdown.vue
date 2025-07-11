@@ -7,7 +7,7 @@
       <template v-else>{{ button.label }}</template>
       <slot> </slot>
       <span
-        v-if="showDropdownIcon"
+        v-if="showDropdownIcon && !button.disabled"
         class="caret-icon fa fa-caret-down"
         :class="open && 'caret-icon--open'"
         aria-hidden="true"

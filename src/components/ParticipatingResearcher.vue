@@ -80,13 +80,7 @@
       </div>
     </div>
   </div>
-  <el-row
-    v-if="isFdpgMembers && isProposalStatusValidToChange"
-    class="participants-footer"
-    type="flex"
-    justify="end"
-    align="middle"
-  >
+  <el-row v-if="isFdpgMembers && fdpgCanEdit" class="participants-footer" type="flex" justify="end" align="middle">
     <el-col :span="4" class="add-more-button-wrapper">
       <el-button
         link
@@ -167,8 +161,15 @@ const isFdpgMembers = computed(() => {
 const isResearcher = computed(() => {
   return userRole.value === Role.Researcher
 })
+const researcherCanEdit = computed(
+  () =>
+    proposalStore.currentProposal?.status &&
+    [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
+      proposalStore.currentProposal.status,
+    ),
+)
 
-const isProposalStatusValidToChange = computed(() => {
+const fdpgCanEdit = computed(() => {
   return (
     proposalStore.currentProposal?.status &&
     [
@@ -182,6 +183,9 @@ const isProposalStatusValidToChange = computed(() => {
     ].includes(proposalStore.currentProposal.status)
   )
 })
+const userHasPermission = computed(
+  () => (isFdpgMembers.value && fdpgCanEdit.value) || (isResearcher.value && researcherCanEdit.value),
+)
 
 const participants = computed<ParticipantPanelType>(() => {
   return researcherIdentities.value.reduce(
@@ -218,15 +222,6 @@ const participants = computed<ParticipantPanelType>(() => {
     } as ParticipantPanelType,
   )
 })
-const userHasPermission = computed(
-  () =>
-    isFdpgMembers.value ||
-    (isResearcher.value &&
-      proposalStore.currentProposal?.status &&
-      [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
-        proposalStore.currentProposal.status,
-      )),
-)
 
 const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
   return {
