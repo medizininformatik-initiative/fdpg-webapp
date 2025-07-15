@@ -29,7 +29,8 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
-import { transformCohorts } from '@/utils/form-transform/transform-user-project.util'
+import type { IDizDetails } from '@/types/proposal.types'
+
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -409,6 +410,25 @@ export const useProposalStore = defineStore('Proposal', {
           participants: updatedProposal.participants,
         }
       }
+    },
+
+    async createDizDetails(proposalId: string, data: IDizDetails): Promise<void> {
+      await this.apiService.createDizDetails(proposalId, data)
+
+      this.setCurrentProposal(proposalId)
+    },
+
+    async updateDizDetails(proposalId: string, dizDetailsId: string, data: IDizDetails): Promise<IDizDetails> {
+      const updatedDizDetails = await this.apiService.updateDizDetails(proposalId, dizDetailsId, data)
+
+      if (this.currentProposal && this.currentProposal._id === proposalId) {
+        const index = this.currentProposal.dizDetails?.findIndex((detail) => detail._id === dizDetailsId)
+        if (index !== undefined && index !== -1 && this.currentProposal.dizDetails) {
+          this.currentProposal.dizDetails[index] = updatedDizDetails
+        }
+      }
+
+      return updatedDizDetails
     },
   },
 

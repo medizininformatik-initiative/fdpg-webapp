@@ -470,6 +470,13 @@ export interface IAdditionalLocationProposalInformation {
 
 export type IEditAdditionalLocationProposalInformation = Omit<IAdditionalLocationProposalInformation, 'location'>
 
+export interface IDizDetails {
+  _id?: string
+  location: MiiLocation
+  localProjectIdentifier?: string
+  documentationLinks: string
+}
+
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
   DizApproved = 'DIZ_APPROVED',
@@ -553,6 +560,7 @@ export interface IProposal {
 
   // LOCATION Tasks <----
   additionalLocationInformation: IAdditionalLocationProposalInformation[]
+  dizDetails: IDizDetails[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
   locationConditionDraft: IConditionalApproval[]
