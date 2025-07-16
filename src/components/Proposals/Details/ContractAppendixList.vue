@@ -17,10 +17,16 @@
           >
             <div class="upload-file">
               <p class="upload-file__name">{{ fileName }}</p>
-              <p class="upload-file__size">{{ $t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
+              <p class="upload-file__size">{{ t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
             </div>
             <div class="upload-button-row">
-              <el-button link class="file-button" :disabled="isLoading">
+              <el-button
+                link
+                class="file-button"
+                :disabled="isLoading"
+                @click="handleDownload(_id)"
+                @keydown.enter="handleDownload(_id)"
+              >
                 <i class="bi bi-download" aria-hidden="true" />
               </el-button>
               <el-button v-if="!isDisabled" class="file-button" :disabled="isLoading" @click.stop="handleRemove(_id)">
@@ -31,26 +37,28 @@
         </div>
       </div>
       <el-button v-if="relevantDocuments.length > 2" link @click="handleTogglePanel">
-        {{ isCollapsed ? $t('dashboard.showMore') : $t('dashboard.showLess') }}
+        {{ isCollapsed ? t('dashboard.showMore') : t('dashboard.showLess') }}
       </el-button>
     </template>
 
     <p v-else-if="emptyAlertText" class="documents--empty">
-      {{ $t(emptyAlertText) }}
+      {{ t(emptyAlertText) }}
     </p>
 
     <el-button v-if="relevantDocuments.length < 10 && !isDisabled" type="primary" link @click="handleOpenDialog">
-      {{ $t('general.upload') }}
+      {{ t('general.upload') }}
     </el-button>
   </div>
 
   <FdpgDialog v-model="uploadDialogOpen" :title="t('proposal.uploadType_CONTRACT_APPENDIX')" width="50%">
     <FdpgUpload
-      :is-loading="false"
-      :is-disabled="false"
-      :hide-file-list="false"
+      :is-loading="isLoading"
+      :is-disabled="isDisabled"
       :file-list="relevantDocuments"
+      :accept="SupportedMimetype"
       @change="handleUpload"
+      :proposal-id="proposalId"
+      @remove="handleRemove"
     >
       <el-button class="upload-button" link>
         {{ t('proposal.chooseAFile') }}
@@ -62,7 +70,7 @@
 
     <div v-if="!!uploadedFile" class="display-uploaded">
       <el-icon class="bi-paperclip"></el-icon>
-      <div v>{{ uploadedFile.name }}</div>
+      <div>{{ uploadedFile.name }}</div>
     </div>
 
     <template #footer>
@@ -70,7 +78,7 @@
         <el-button link @click="handleCloseDialog">
           {{ t('general.cancel') }}
         </el-button>
-        <el-button type="primary" @click="addContractAppendix" :disabled="isLoading || !uploadedFile">
+        <el-button type="primary" @click="addContractAppendix" :disabled="isLoading || !uploadedFile?.raw">
           {{ t('general.save') }}
         </el-button>
       </span>
@@ -90,6 +98,7 @@ import { useI18n } from 'vue-i18n'
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import type { UploadFile } from 'element-plus'
+import ESupportedMimetype from '@/types/supported-mimetype.enum'
 
 const props = defineProps({
   documents: {
@@ -131,6 +140,10 @@ const isCollapsed = ref<boolean>(true)
 const uploadDialogOpen = ref<boolean>(false)
 const uploadedFile = ref<UploadFile | null>(null)
 
+const SupportedMimetype = computed(() => {
+  return Object.values(ESupportedMimetype).join(',')
+})
+
 const handleTogglePanel = () => {
   isCollapsed.value = !isCollapsed.value
 }
@@ -144,7 +157,7 @@ const handleCloseDialog = () => {
   uploadDialogOpen.value = false
 }
 
-const displayTypeMap: Record<UploadType, TranslationSchema> = {
+const displayTypeMap: Partial<Record<UploadType, TranslationSchema>> = {
   CONTRACT_APPENDIX: 'proposal.uploadType_CONTRACT_APPENDIX',
 }
 type MappedType = IUpload & { displayType: TranslationSchema }

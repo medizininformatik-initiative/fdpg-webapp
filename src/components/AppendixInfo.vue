@@ -85,6 +85,9 @@
       :hide-file-list="false"
       :file-list="relevantEditContractDocuments"
       @change="handleEditContractUpload"
+      :accept="SupportedMimetype"
+      :proposal-id="proposalId"
+      @remove="handleContractDraftRemove"
     >
       <el-button class="upload-button" link>
         {{ t('proposal.chooseAFile') }}
@@ -96,7 +99,7 @@
 
     <div v-if="!!uploadedFile" class="display-uploaded">
       <el-icon class="bi-paperclip"></el-icon>
-      <div v>{{ uploadedFile.name }}</div>
+      <div>{{ uploadedFile.name }}</div>
     </div>
 
     <template #footer>
@@ -126,6 +129,7 @@ import type { UploadFile } from 'element-plus'
 import FdpgDialog from './FdpgDialog.vue'
 import FdpgUpload from './FdpgUpload.vue'
 import { useI18n } from 'vue-i18n'
+import ESupportedMimetype from '@/types/supported-mimetype.enum'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
@@ -160,6 +164,10 @@ const hideDocuments = computed(() => {
   const isFdpgMember = authStore.hasFdpgLevelPermissions()
 
   return isFdpgCheck && isFdpgMember
+})
+
+const SupportedMimetype = computed(() => {
+  return Object.values(ESupportedMimetype).join(',')
 })
 
 const { showErrorMessage } = useNotifications()

@@ -88,7 +88,7 @@ const isCollapsed = ref<boolean>(true)
 const handleTogglePanel = () => {
   isCollapsed.value = !isCollapsed.value
 }
-const displayTypeMap: Record<UploadType, TranslationSchema> = {
+const displayTypeMap: Partial<Record<UploadType, TranslationSchema>> = {
   CONTRACT_CONDITION: 'proposal.uploadType_CONTRACT_CONDITION',
   CONTRACT_DRAFT: 'proposal.uploadType_CONTRACT_DRAFT',
   ETHIC_VOTE: 'proposal.uploadType_ETHIC_VOTE',
