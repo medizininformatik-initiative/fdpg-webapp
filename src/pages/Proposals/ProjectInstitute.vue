@@ -9,11 +9,11 @@
         placeholder="proposal.countryPlaceholder"
         filterable
         :options="locationOptions"
-        :disabled="reviewMode || institute.isDone"
+        :disabled="reviewMode || institute.isDone || readonly"
       />
     </FdpgFormItem>
   </el-card>
-  <el-card v-if="!institute.miiLocation" class="form-group form-group-mb-40">
+  <el-card v-if="!institute.miiLocation && !readonly" class="form-group form-group-mb-40">
     <el-row :gutter="20">
       <el-col :sm="24">
         <FdpgFormItem :prop="identifier ? `${identifier}.institute.name` : 'institute.name'" :rules="formRules.name">
@@ -91,7 +91,7 @@
             :test-id-extension="'__' + identifier"
             placeholder="proposal.countryPlaceholder"
             filterable
-            :options="countryOptions($t)"
+            :options="countryOptions(t)"
             :disabled="reviewMode || institute.isDone"
           />
         </FdpgFormItem>
@@ -145,6 +145,10 @@ const props = defineProps({
   identifier: {
     type: String,
     required: false,
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 })
 

@@ -25,7 +25,7 @@
             align="middle"
           >
             <el-col :span="4">{{ participant.fullName }}</el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <FdpgDropdown
                 :button="{
                   label: '',
@@ -44,7 +44,7 @@
                 }}</span>
               </FdpgDropdown>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="4">
               <FdpgDropdown
                 :button="{
                   label: '',
@@ -61,7 +61,7 @@
                 <span class="dropdown-lable">{{ t('roles.participantRole_' + participant.participantRole) }}</span>
               </FdpgDropdown>
             </el-col>
-            <el-col :span="5">{{ participant.email }}</el-col>
+            <el-col :span="7">{{ participant.email }}</el-col>
             <el-col :span="5" class="action-column">
               <el-button
                 v-if="participant.action && participant.actionTitle && participantPanels[index] && isFdpgMembers"
@@ -80,7 +80,7 @@
       </div>
     </div>
   </div>
-  <el-row v-if="isFdpgMembers" class="participants-footer" type="flex" justify="end" align="middle">
+  <el-row v-if="isFdpgMembers && fdpgCanEdit" class="participants-footer" type="flex" justify="end" align="middle">
     <el-col :span="4" class="add-more-button-wrapper">
       <el-button
         link
@@ -101,7 +101,7 @@
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
-import type { DropdownButton, DropdownItem } from '@/types/dropdown.types'
+import type { DropdownItem } from '@/types/dropdown.types'
 import { useI18n } from 'vue-i18n'
 import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
@@ -111,10 +111,10 @@ import type { IResearcherIdentity } from '@/types/proposal.types'
 import { ParticipantType, ParticipantRole, ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { Countries } from '@/types/location.enum'
 import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 
 const { params } = useRoute()
 const proposalId = params.id as string
@@ -149,6 +149,7 @@ const participantPanels = ref<boolean[]>([])
 const openParticipantDialog = ref<boolean>(false)
 
 const authStore = useAuthStore()
+const messageBoxStore = useMessageBoxStore()
 
 const userRole = computed<Role | undefined>(() => {
   return authStore.singleKnownRole
@@ -160,6 +161,31 @@ const isFdpgMembers = computed(() => {
 const isResearcher = computed(() => {
   return userRole.value === Role.Researcher
 })
+const researcherCanEdit = computed(
+  () =>
+    proposalStore.currentProposal?.status &&
+    [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
+      proposalStore.currentProposal.status,
+    ),
+)
+
+const fdpgCanEdit = computed(() => {
+  return (
+    proposalStore.currentProposal?.status &&
+    [
+      ProposalStatus.LocationCheck,
+      ProposalStatus.Contracting,
+      ProposalStatus.ExpectDataDelivery,
+      ProposalStatus.DataResearch,
+      ProposalStatus.DataCorrupt,
+      ProposalStatus.FinishedProject,
+      ProposalStatus.ReadyToArchive,
+    ].includes(proposalStore.currentProposal.status)
+  )
+})
+const userHasPermission = computed(
+  () => (isFdpgMembers.value && fdpgCanEdit.value) || (isResearcher.value && researcherCanEdit.value),
+)
 
 const participants = computed<ParticipantPanelType>(() => {
   return researcherIdentities.value.reduce(
@@ -172,7 +198,10 @@ const participants = computed<ParticipantPanelType>(() => {
         isDisabled: triggeredEmails.value.includes(info.email),
       }
       if (info.isRegistrationComplete) {
-        acc.alreadyRegistered.push(result)
+        acc.alreadyRegistered.push({
+          ...result,
+          ...(info.addedByFdpg ? removeParticipantAction(info.participantId) : {}),
+        })
       } else if (info.isExisting) {
         acc.registrationPending.push({
           ...result,
@@ -193,15 +222,6 @@ const participants = computed<ParticipantPanelType>(() => {
     } as ParticipantPanelType,
   )
 })
-const userHasPermission = computed(
-  () =>
-    isFdpgMembers.value ||
-    (isResearcher.value &&
-      proposalStore.currentProposal?.status &&
-      [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
-        proposalStore.currentProposal.status,
-      )),
-)
 
 const getInvitationPendingAction = (identity: Omit<IResearcherIdentity, 'username'>): ParticipantAction => {
   return {
@@ -249,6 +269,45 @@ const handleAddAnotherPerson = async () => {
   openParticipantDialog.value = true
 }
 
+const removeParticipantAction = (id: string | undefined): ParticipantAction => {
+  return {
+    action: () => handleRemoveParticipant(id),
+    actionTitle: 'proposal.removeParticipant',
+  }
+}
+const handleRemoveParticipant = async (id: string | undefined): Promise<void> => {
+  return new Promise((resolve) => {
+    messageBoxStore.setMessageBoxInfo({
+      cancelButtonText: 'general.cancel',
+      cancelButtonClass: 'el-button--text',
+      showCancelButton: true,
+      title: 'proposal.removeParticipant',
+      message: 'proposal.removeParticipantModalDescription',
+      confirmButtonText: 'proposal.acceptContractDizModalAction',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          await removeParticipant(id)
+        }
+        resolve()
+      },
+    })
+  })
+}
+const removeParticipant = async (id: string | undefined) => {
+  if (!id) {
+    showErrorMessage(t('proposal.errorNoParticipantId'))
+    return
+  }
+  try {
+    await proposalStore.removeParticipant(proposalId, id)
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+    showSuccessMessage()
+  } catch (error) {
+    console.error('Error removing participant:', error)
+    showErrorMessage()
+  }
+}
 onBeforeMount(async () => {
   try {
     researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
@@ -583,8 +642,8 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
   min-height: 32px;
   height: 32px;
   line-height: 32px;
-  min-width: 200px;
-  max-width: 100%;
+  min-width: 120px;
+  max-width: 160px;
 }
 
 .dropdown-tag--invitationPending {

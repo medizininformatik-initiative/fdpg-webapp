@@ -401,6 +401,15 @@ export const useProposalStore = defineStore('Proposal', {
         }
       }
     },
+    async removeParticipant(id: string, participantId: string): Promise<void> {
+      const updatedProposal = await this.apiService.removeParticipant(id, participantId)
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          participants: updatedProposal.participants,
+        }
+      }
+    },
   },
 
   getters: {

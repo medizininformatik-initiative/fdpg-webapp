@@ -1,7 +1,7 @@
 <template>
   <section role="region">
     <h2 class="section-title">
-      {{ $t('proposal.historyOfTheProject') }}
+      {{ t('proposal.historyOfTheProject') }}
     </h2>
     <div class="project-history">
       <p v-for="({ date, label }, index) in historyList" :key="`history-item-${index}`" class="project-history__item">
@@ -28,6 +28,12 @@ const historyList = computed(() => {
         const translationParameter: Record<string, string> = {}
         if (item.type === ProjectHistoryType.FdpgLocationVoteReverted && item.location) {
           translationParameter['location'] = item.location
+        }
+        if (
+          (item.type === ProjectHistoryType.ParticipantAdded || item.type === ProjectHistoryType.ParticipantRemoved) &&
+          item.data?.participantName
+        ) {
+          translationParameter['participantName'] = item.data.participantName as string
         }
         return {
           date: item.createdAt

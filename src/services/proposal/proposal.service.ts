@@ -354,4 +354,8 @@ export class ProposalService {
     const response = await this.apiClient.patch(`${this.basePath}/${id}/participants`, { participants })
     return response.data
   }
+  async removeParticipant(id: string, participantId: string): Promise<IProposal> {
+    const response = await this.apiClient.delete(`${this.basePath}/${id}/participants/${participantId}`)
+    return response.data
+  }
 }

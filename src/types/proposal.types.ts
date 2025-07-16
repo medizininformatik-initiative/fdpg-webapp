@@ -70,6 +70,8 @@ export interface IResearcherIdentity extends IResearcher {
   participantType: ParticipantType
   participantRole: string
   username: string
+  addedByFdpg?: boolean
+  participantId?: string // This is used to identify the researcher in the proposal
 }
 
 export interface IInstitute extends WithIdAndIsDone {
@@ -96,6 +98,7 @@ export interface IParticipant extends WithIdAndIsDone {
   institute: IInstitute
   participantCategory: IParticipantCategory
   participantRole: IParticipantRole
+  addedByFdpg?: boolean
 }
 
 export interface IApplicant {
@@ -324,6 +327,9 @@ export enum ProjectHistoryType {
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
   FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
+  ParticipantAdded = 'PARTICIPANT_ADDED',
+  ParticipantRemoved = 'PARTICIPANT_REMOVED',
+  ParticipantUpdated = 'PARTICIPANT_UPDATED',
 }
 
 export enum UploadFileType {
@@ -363,6 +369,7 @@ export interface IProposalHistory {
   type: ProjectHistoryType
   proposalVersion: { minor: number; major: number }
   location?: MiiLocation
+  data?: Record<string, string | number>
 }
 interface IPublicationBase {
   title: string

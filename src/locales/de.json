@@ -66,7 +66,8 @@
     "receiveProposalEmails": "E-Mails empfangen",
     "boolean_true": "Ja",
     "boolean_false": "Nein",
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "noData": "Keine Daten."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -124,7 +125,10 @@
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Frist für Datenlieferung wurde verändert",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Frist für Corrupted Data wurde verändert",
     "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert",
-    "CONTRACT_UPDATED": "Vetragsentwurf wurde aktualisiert"
+    "CONTRACT_UPDATED": "Vertragsentwurf wurde aktualisiert",
+    "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
+    "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
+    "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert"
   },
   "header": {
     "login": "Anmelden",
@@ -405,7 +409,7 @@
     "specifyTheAmountOfData": "Datenmenge angeben",
     "asADataProviderYouMustSpecifyAQuantity": "Bitte geben sie die Patienten-/Fallzahl an",
     "dataVolume": "Datenmenge (Anzahl Patienten/Fälle)",
-    "proposedDataVolume": "Gelieferte Datenmenge",
+    "proposedDataVolume": "Angebotene Datenmenge",
     "pendingVotes": "Antworten austehend ({count})",
     "uacAcceptedLocations": "Zugesagt ({count})",
     "uacAcceptedUnderConditions": "Zugesagt unter Auflagen ({count})",
@@ -652,7 +656,7 @@
     "TNZ": "TNZ",
     "selectionOfVariablesHeader": "Auswahl der Variablen",
     "informationOnMiiSelectionForVariableSelectionStepHeader": "MII",
-    "informationOnMiiSelectionForVariableSelectionStepBody": "Ihre Variablenauswahl wird zusammen mit Ihrer Kohorte gespeichert. Bitte fahren Sie mit der Kohortenauswahl fort",
+    "informationOnMiiSelectionForVariableSelectionStepBody": "Ihre Variablenauswahl wird zusammen mit Ihrer Kohorte gespeichert. Bitte fahren Sie mit der Kohortenauswahl fort.",
     "informationOnDifeSelectionForVariableSelectionStepHeader": "DIFE",
     "difeTypeOfUse_MORBIDITY_ANALYSIS": "Morbiditätsanalyse einschließlich Follow-up-Runde (bitte angeben)",
     "difeTypeOfUse_MORTALITY_ANALYSIS": "Mortalitätsanalyse einschließlich Follow-up-Runde (bitte angeben)",
@@ -669,14 +673,14 @@
     "continueWithDataSource": "Weitere Datenquellen hinzufügen",
     "toSelectVariable": "zugehörige Variablen suchen",
     "noDataSourcesSelected": "Keine Datenquelle ausgewählt",
-    "userProjectVariableSelectionDifeTypeOfUse": "DIFE type of use",
-    "userProjectVariableSelectionDifeTypeOfUseExplanation": "DIFE type of use explanation",
+    "userProjectVariableSelectionDifeTypeOfUse": "DIFE Art der Datennutzung",
+    "userProjectVariableSelectionDifeTypeOfUseExplanation": "Erläuterung zur Art der Datennutzung",
     "typeOfUse_DATA_SHIELD": "DataSHIELD",
     "typeOfUse_EXTERNAL_SR": "External Server",
     "typeOfUse_INTERNAL_SR": "Internal SAS/R server",
     "keywordsPlaceholder": "Bitte geben Sie alle Schlüsselwörter ein, die sich auf den Vorschlag beziehen",
     "keywords": "Keywords",
-    "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Kontrollgruppe)",
+    "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Beobachtungsgruppe)",
     "projectRecontact": "Rekontaktierung",
     "pseudonymizationInfo": "Angaben zur gewünschten Pseudonymisierung der Datensätze",
     "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten/ein und derselben Patientin sollten unabhängig von der\nbehandelnden Einrichtung dasselbe Pseudonym bekommen (Record-Linkage)",
@@ -735,7 +739,14 @@
     "involvedRole": "Involvierte Rolle",
     "cannotChangeOnlyResponsibleScientist": "Der einzig verantwortliche Wissenschaftler kann nicht geändert werden.",
     "selectedCohorts": "Ausgewählte Kohorten",
-    "editContract": "Vetrag bearbeiten"
+    "editContract": "Vetrag bearbeiten",
+    "removeParticipantModalDescription": "Wollen Sie diesen Forscher wirklich entfernen?",
+    "DizDetail": "DIZ-Details",
+    "dizDetailsTitle": "Lokale Dokumentation",
+    "localProjectIdentifier": "Lokale Projektkennung",
+    "documentationLinks": "Kommentare",
+    "dizDetailsUpdated": "DIZ-Detail aktualisiert.",
+    "dizDetailsCreated": "DIZ-Detail erstellt."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -753,8 +764,8 @@
     "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
     "changeRoleModalTitle": "Falsche Rolle",
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
-    "participantRole_PARTICIPATING_SCIENTIST": "Teilnehmer Wissenschaftler",
-    "participantRole_RESEARCHER": "Forschende",
+    "participantRole_PARTICIPATING_SCIENTIST": "Beteiligte Wissenschaftler (keine Editorfunktion)",
+    "participantRole_RESEARCHER": "Bearbeiter",
     "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
   },
   "countries": {
