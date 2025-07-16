@@ -38,8 +38,14 @@ export const useUserStore = defineStore('User', {
       const user = await this.apiService.getUserByEmail(email)
       return user
     },
-    async searchEmailsByPrefix(prefix: string): Promise<IUserEmailsResponse> {
-      return await this.apiService.searchEmailsByPrefix(prefix)
+    async searchEmailsByPrefix(prefix: string, excludeEmails: string[] = []): Promise<IUserEmailsResponse> {
+      const data = await this.apiService.searchEmailsByPrefix(prefix)
+      if (excludeEmails.length > 0) {
+        const excludeSet = new Set(excludeEmails.map((email) => email.toLowerCase()))
+
+        data.emails = data.emails.filter((email) => !excludeSet.has(email.toLowerCase()))
+      }
+      return data
     },
   },
 })

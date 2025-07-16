@@ -67,7 +67,7 @@
     "boolean_true": "Ja",
     "boolean_false": "Nein",
     "upload": "Hochladen",
-    "noData": "keine Daten."
+    "noData": "Keine Daten."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -125,7 +125,7 @@
     "EXPECT_DATA_DELIVERY_DEADLINE_CHANGE": "Frist für Datenlieferung wurde verändert",
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Frist für Corrupted Data wurde verändert",
     "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert",
-    "CONTRACT_UPDATED": "Vetragsentwurf wurde aktualisiert",
+    "CONTRACT_UPDATED": "Vertragsentwurf wurde aktualisiert",
     "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
     "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
     "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert"
@@ -742,7 +742,7 @@
     "editContract": "Vetrag bearbeiten",
     "removeParticipantModalDescription": "Wollen Sie diesen Forscher wirklich entfernen?",
     "DizDetail": "DIZ-Details",
-    "dizDetailsTitle": "lokale Dokumentation",
+    "dizDetailsTitle": "Lokale Dokumentation",
     "localProjectIdentifier": "Lokale Projektkennung",
     "documentationLinks": "Kommentare",
     "dizDetailsUpdated": "DIZ-Detail aktualisiert.",
@@ -765,7 +765,7 @@
     "changeRoleModalTitle": "Falsche Rolle",
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
     "participantRole_PARTICIPATING_SCIENTIST": "Beteiligte Wissenschaftler (keine Editorfunktion)",
-    "participantRole_RESEARCHER": "Bearbeiter ",
+    "participantRole_RESEARCHER": "Bearbeiter",
     "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
   },
   "countries": {

@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import { useVModel } from '@vueuse/core'
-import { defineEmits, defineProps, onMounted, ref, watch } from 'vue'
+import { defineEmits, defineProps, ref, watch } from 'vue'
 import ProjectInstitute from '@/pages/Proposals/ProjectInstitute.vue'
 import ProjectParticipantCategory from '@/pages/Proposals/ProjectParticipantCategory.vue'
 import ProjectParticipantRole from '@/pages/Proposals/ProjectParticipantRole.vue'
@@ -45,10 +45,7 @@ import { useI18n } from 'vue-i18n'
 import type { IParticipant } from '@/types/proposal.types'
 import { ParticipantType, ParticipantRole } from '@/types/proposal.types'
 import type { FormInstance } from 'element-plus'
-import { useUserStore } from '@/stores/user.store'
-import useNotifications from '@/composables/use-notifications'
 import type { IKeycloakUser } from '@/types/user.types'
-import { pa } from 'element-plus/es/locale'
 
 const emit = defineEmits(['update:modelValue', 'submit'])
 
@@ -97,7 +94,6 @@ watch(
   },
   { deep: true },
 )
-const { showErrorMessage } = useNotifications()
 
 const handleClose = () => {
   dialogVisible.value = false

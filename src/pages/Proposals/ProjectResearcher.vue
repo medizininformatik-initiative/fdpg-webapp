@@ -105,7 +105,7 @@ import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
-import type { IApplicant, IResearcher } from '@/types/proposal.types'
+import type { IResearcher } from '@/types/proposal.types'
 import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
@@ -114,6 +114,8 @@ import { ref, onUnmounted, computed } from 'vue'
 import { useUserStore } from '@/stores/user.store'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { useDebounceFn } from '@vueuse/core'
+
 const props = defineProps({
   modelValue: {
     type: Object as PropType<IResearcher>,
@@ -157,7 +159,6 @@ const formRules = {
 }
 const emailOptions = ref<{ label: string; value: string }[]>([])
 const isSearching = ref(false)
-let searchTimeout: ReturnType<typeof setTimeout> | null = null
 
 const currentApplicantEmail = computed(() => proposalStore.currentProposal?.applicant?.researcher?.email ?? '')
 const currentParticipantsEmails = computed(() => {
@@ -183,41 +184,27 @@ const getUserByEmail = async (email: string) => {
   }
 }
 
-const searchEmails = async (query: string) => {
+const handleEmailSearch = async (query: string) => {
   if (!query || query.trim().length < 3) {
     emailOptions.value = []
     return
   }
 
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
-  }
+  isSearching.value = true
+  try {
+    const excludeEmails = [currentApplicantEmail.value, ...currentParticipantsEmails.value]
 
-  // Debounce search
-  searchTimeout = setTimeout(async () => {
-    isSearching.value = true
-    try {
-      const response = await userStore.searchEmailsByPrefix(query.trim())
-      const currentEmail = currentApplicantEmail.value.toLowerCase()
-      emailOptions.value = response.emails
-        .filter((email) => email.toLowerCase() !== currentEmail)
-        .filter((email) => !currentParticipantsEmails.value.includes(email.toLowerCase()))
-        .map((email) => ({ label: email, value: email }))
-    } catch (error) {
-      showErrorMessage('Error searching emails: ' + error)
-      emailOptions.value = []
-    } finally {
-      isSearching.value = false
-    }
-  }, 300)
+    const response = await userStore.searchEmailsByPrefix(query.trim(), excludeEmails)
+    emailOptions.value = response.emails.map((email) => ({ label: email, value: email }))
+  } catch (error) {
+    showErrorMessage('Error searching emails: ' + error)
+    emailOptions.value = []
+  } finally {
+    isSearching.value = false
+  }
 }
 
-// Cleanup timeout on component unmount
-onUnmounted(() => {
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
-  }
-})
+const searchEmails = useDebounceFn(handleEmailSearch, 300)
 </script>
 <style lang="scss">
 .form-select {
