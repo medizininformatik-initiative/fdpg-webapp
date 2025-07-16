@@ -14,7 +14,7 @@
           {{ t('general.create') }}
         </el-button>
       </div>
-      <el-collapse v-else v-model="activeCollapse" class="diz-collapse">
+      <el-collapse v-else v-model="activeCollapse">
         <el-collapse-item :title="t('proposal.dizDetailsTitle')" name="diz-details">
           <template #title>
             <h3 tabindex="0" role="button">
@@ -23,7 +23,7 @@
           </template>
 
           <div class="table-container">
-            <el-table :data="allDizDetails" stripe style="width: 100%" class="diz-table">
+            <el-table :data="allDizDetails" stripe style="width: 100%">
               <el-table-column
                 prop="localProjectIdentifier"
                 :label="t('proposal.localProjectIdentifier')"
@@ -39,7 +39,7 @@
 
               <el-table-column prop="documentationLinks" :label="t('proposal.documentationLinks')" min-width="300">
                 <template #default="{ row }">
-                  <div v-if="row.documentationLinks" class="documentation-links" v-html="row.documentationLinks"></div>
+                  <div v-if="row.documentationLinks" v-html="row.documentationLinks"></div>
                   <span v-else class="empty-value">—</span>
                 </template>
               </el-table-column>
@@ -56,6 +56,13 @@
         </el-collapse-item>
       </el-collapse>
     </section>
+    <template v-for="(projectTodo, index) in projectTodos" :key="`todo-${index}`">
+      <ProjectTodoLargeItem
+        :is-disabled="isDisabled || projectTodo.readonly"
+        :has-actions="projectTodo.type === 'decision' || projectTodo.type === 'condition-check'"
+        :project-todo="projectTodo"
+      ></ProjectTodoLargeItem>
+    </template>
     <!-- Create/Edit Modal -->
     <el-dialog
       v-model="showFormModal"
@@ -75,7 +82,6 @@
             <FdpgTextEditor
               v-model="formData.documentationLinks"
               type="textarea"
-              :rows="6"
               :placeholder="t('proposal.documentationLinks')"
             />
           </FdpgFormItem>
@@ -95,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { Document } from '@element-plus/icons-vue'
@@ -107,9 +113,13 @@ import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from './FdpgInput.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import type { FormInstance, FormRules } from 'element-plus'
+import ProjectTodoLargeItem from '@/components/ProjectTodoLargeItem.vue'
+import type { IProjectTodo } from '@/types/project-todo.interface'
 
 const props = defineProps({
   editable: { type: Boolean, default: false },
+  projectTodos: { type: Array as PropType<IProjectTodo[]> },
+  isDisabled: { type: Boolean, default: false },
 })
 
 const { t } = useI18n()
@@ -129,7 +139,6 @@ const formData = reactive({
   documentationLinks: '',
 })
 
-// Form validation rules
 const rules: FormRules = {
   documentationLinks: [
     { required: true, message: t('general.requiredField'), trigger: 'blur' },
@@ -138,7 +147,6 @@ const rules: FormRules = {
   localProjectIdentifier: [{ max: 500, message: t('general.maxCharacters', { max: 500 }), trigger: 'blur' }],
 }
 
-// Computed properties
 const proposalId = computed(() => route.params.id as string)
 const userLocation = computed(() => {
   const profile = authStore.profile
@@ -189,7 +197,6 @@ const handleSave = async () => {
   isSubmitting.value = true
   try {
     if (editingItem.value) {
-      // Update existing DIZ details
       if (!editingItem.value._id) {
         throw new Error('Missing DIZ details ID for update.')
       }
@@ -201,7 +208,6 @@ const handleSave = async () => {
       })
       showSuccessMessage(t('proposal.dizDetailsUpdated'))
     } else {
-      // Create new DIZ details
       await proposalStore.createDizDetails(proposalId.value, {
         localProjectIdentifier: formData.localProjectIdentifier || undefined,
         documentationLinks: formData.documentationLinks,
@@ -278,6 +284,9 @@ const handleSave = async () => {
       display: none;
     }
   }
+  :deep(.check-proposal-card) {
+    background-color: white;
+  }
 }
 
 .empty-state {
@@ -294,66 +303,5 @@ const handleSave = async () => {
     color: $gray-900;
     margin-bottom: 20px;
   }
-}
-
-.table-container {
-  .table-header {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-bottom: 16px;
-    padding: 0 4px;
-
-    .table-info {
-      color: $gray-800;
-      font-size: 0.9rem;
-    }
-  }
-
-  .diz-table {
-    .project-identifier {
-      font-weight: 500;
-      color: $blue;
-    }
-
-    .documentation-links {
-      line-height: 1.4;
-      max-height: 80px;
-      overflow-y: auto;
-
-      :deep(a) {
-        color: $blue;
-        text-decoration: none;
-        word-break: break-all;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
-
-    .empty-value {
-      color: $gray-800;
-      font-style: italic;
-    }
-
-    .update-date {
-      color: $gray-900;
-      font-size: 0.9rem;
-    }
-  }
-}
-
-:deep(.el-dialog__body) {
-  padding: 20px;
-}
-
-:deep(.el-collapse-item__header) {
-  padding-left: 20px;
-  padding-right: 20px;
-}
-
-:deep(.el-collapse-item__content) {
-  padding: 20px;
 }
 </style>
