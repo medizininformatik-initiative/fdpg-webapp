@@ -31,9 +31,9 @@ const historyList = computed(() => {
         }
         if (
           (item.type === ProjectHistoryType.ParticipantAdded || item.type === ProjectHistoryType.ParticipantRemoved) &&
-          item.participantName
+          item.data?.participantName
         ) {
-          translationParameter['participantName'] = item.participantName
+          translationParameter['participantName'] = item.data.participantName as string
         }
         return {
           date: item.createdAt

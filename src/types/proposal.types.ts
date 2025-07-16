@@ -369,7 +369,7 @@ export interface IProposalHistory {
   type: ProjectHistoryType
   proposalVersion: { minor: number; major: number }
   location?: MiiLocation
-  participantName?: string
+  data?: Record<string, string | number>
 }
 interface IPublicationBase {
   title: string
