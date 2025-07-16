@@ -66,7 +66,8 @@
     "receiveProposalEmails": "E-Mails empfangen",
     "boolean_true": "Ja",
     "boolean_false": "Nein",
-    "upload": "Hochladen"
+    "upload": "Hochladen",
+    "noData": "keine Daten."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -125,8 +126,8 @@
     "DATA_CORRUPTED_DEADLINE_CHANGE": "Frist für Corrupted Data wurde verändert",
     "FINISHED_PROJECT_DEADLINE_CHANGE": "Frist für Projektende wurde verändert",
     "CONTRACT_UPDATED": "Vetragsentwurf wurde aktualisiert",
-    "PARTICIPANT_ADDED": "Teilnehmer {location} wurde zum Projekt hinzugefügt",
-    "PARTICIPANT_REMOVED": "Teilnehmer {location} wurde vom Projekt entfernt",
+    "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
+    "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
     "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert"
   },
   "header": {
@@ -408,7 +409,7 @@
     "specifyTheAmountOfData": "Datenmenge angeben",
     "asADataProviderYouMustSpecifyAQuantity": "Bitte geben sie die Patienten-/Fallzahl an",
     "dataVolume": "Datenmenge (Anzahl Patienten/Fälle)",
-    "proposedDataVolume": "Gelieferte Datenmenge",
+    "proposedDataVolume": "Angebotene Datenmenge",
     "pendingVotes": "Antworten austehend ({count})",
     "uacAcceptedLocations": "Zugesagt ({count})",
     "uacAcceptedUnderConditions": "Zugesagt unter Auflagen ({count})",
@@ -739,7 +740,13 @@
     "cannotChangeOnlyResponsibleScientist": "Der einzig verantwortliche Wissenschaftler kann nicht geändert werden.",
     "selectedCohorts": "Ausgewählte Kohorten",
     "editContract": "Vetrag bearbeiten",
-    "removeParticipantModalDescription": "Wollen Sie diesen Forscher wirklich entfernen?"
+    "removeParticipantModalDescription": "Wollen Sie diesen Forscher wirklich entfernen?",
+    "DizDetail": "DIZ-Details",
+    "dizDetailsTitle": "lokale Dokumentation",
+    "localProjectIdentifier": "Lokale Projektkennung",
+    "documentationLinks": "Kommentare",
+    "dizDetailsUpdated": "DIZ-Detail aktualisiert.",
+    "dizDetailsCreated": "DIZ-Detail erstellt."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -757,8 +764,8 @@
     "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
     "changeRoleModalTitle": "Falsche Rolle",
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
-    "participantRole_PARTICIPATING_SCIENTIST": "Teilnehmer Wissenschaftler",
-    "participantRole_RESEARCHER": "Forschende",
+    "participantRole_PARTICIPATING_SCIENTIST": "Beteiligte Wissenschaftler (keine Editorfunktion)",
+    "participantRole_RESEARCHER": "Bearbeiter ",
     "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
   },
   "countries": {
