@@ -321,7 +321,7 @@ const getCheckContractTodo = (afterLocationCheck = false): IProjectTodo[] => {
               conditionReasoning: conditionalApproval.conditionReasoning,
             }
           : conditionDraft) ?? { conditionReasoning: '', dataAmount: uacVote.dataAmount },
-        readonly: afterLocationCheck ? true : !isEditable,
+        readonly: afterLocationCheck ? currentProposal.status !== ProposalStatus.Contracting : !isEditable,
         additionalData: { isDraft: !!conditionDraft },
       },
     ]
@@ -443,7 +443,9 @@ const getAdditionalLocationInformationTodo = (afterLocationCheck = false): IProj
         updateAdditionalInformation(additionalInformation),
       type: 'additional-location-information',
       additionalInformation: additionalLocationInformation,
-      readonly: proposal.status !== ProposalStatus.LocationCheck,
+      readonly: afterLocationCheckStatuses
+        ? proposal.status !== ProposalStatus.Contracting
+        : proposal.status !== ProposalStatus.LocationCheck,
     },
   ]
 }
