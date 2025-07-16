@@ -1,16 +1,17 @@
 <template>
   <el-select
     v-model="selected"
-    :placeholder="$t(placeholder)"
+    :placeholder="t(placeholder)"
     class="fdpg-select"
     :loading="isLoading"
-    :loading-text="loadingText ? $t(loadingText) : loadingText"
-    :no-data-text="noDataText ? $t(noDataText) : noDataText"
+    :loading-text="loadingText ? t(loadingText) : loadingText"
+    :no-data-text="noDataText ? t(noDataText) : noDataText"
     :disabled="disabled"
+    v-bind="$attrs"
   >
     <template #header v-if="shouldDisplayCheckAll">
       <el-checkbox v-model="checkAll" @change="handleCheckAll">
-        {{ $t('general.selectAll') }}
+        {{ t('general.selectAll') }}
       </el-checkbox>
     </template>
 
@@ -30,6 +31,7 @@ import { computed, ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useVModel } from '@vueuse/core'
 import type { CheckboxValueType } from 'element-plus'
+import { useI18n } from 'vue-i18n'
 
 export interface SelectOption {
   label: string
@@ -86,6 +88,7 @@ const props = defineProps({
     default: false,
   },
 })
+const { t } = useI18n()
 
 const emit = defineEmits(['update:modelValue'])
 

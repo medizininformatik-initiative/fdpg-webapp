@@ -199,6 +199,7 @@ export const mapParticipant = (participant?: DeepPartial<IParticipant>): DeepPar
     institute: transformParticipantInstitute(participant?.institute),
     participantCategory: transformParticipantCategory(participant?.participantCategory),
     participantRole: transformParticipantRole(participant?.participantRole),
+    addedByFdpg: participant?.addedByFdpg ?? false,
   }
 }
 export const transformParticipants = (participants?: DeepPartial<IParticipant[]>): DeepPartial<IParticipant[]> => {
