@@ -1301,17 +1301,6 @@ const getFormRuleArrayFromPath = (obj: Record<string, any>, path?: string) => {
 }
 
 const toggleShoppingList = () => {
-  // Scroll the main content container to the top
-  const mainElement = document.querySelector('.el-main')
-  if (mainElement) {
-    mainElement.scrollTo({ top: 0, behavior: 'smooth' })
-  } else {
-    // Fallback if main element not found
-    const formContainer = document.querySelector('.form-container')
-    if (formContainer) {
-      formContainer.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }
   layoutStore.toggleShoppingList()
 }
 
@@ -1563,6 +1552,9 @@ onMounted(async () => {
       transform: rotate(90deg);
     }
   }
+}
+.shopping-list-open {
+  position: unset;
 }
 .align-right {
   justify-content: end !important;

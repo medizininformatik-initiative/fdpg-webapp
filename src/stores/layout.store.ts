@@ -92,6 +92,22 @@ export const useLayoutStore = defineStore('layout', {
       this.activeStep = CreatPrposalSteps.DataSources
     },
     toggleShoppingList() {
+      // Toggle the shopping list open/close state
+      const mainWrapper = document.querySelector('.fdpg-new-proposal-page')
+      if (mainWrapper) {
+        mainWrapper.classList.toggle('shopping-list-open')
+      }
+      // Scroll the main content container to the top
+      const mainElement = document.querySelector('.el-main')
+      if (mainElement) {
+        mainElement.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        // Fallback if main element not found
+        const formContainer = document.querySelector('.form-container')
+        if (formContainer) {
+          formContainer.scrollTo({ top: 0, behavior: 'smooth' })
+        }
+      }
       this.isShoppingListOpen = !this.isShoppingListOpen
     },
     setDatasourceSelected(isSelected: boolean) {
