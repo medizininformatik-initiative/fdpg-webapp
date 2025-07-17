@@ -92,23 +92,19 @@ export const useLayoutStore = defineStore('layout', {
       this.activeStep = CreatPrposalSteps.DataSources
     },
     toggleShoppingList() {
-      // Toggle the shopping list open/close state
       const mainWrapper = document.querySelector('.fdpg-new-proposal-page')
+      this.isShoppingListOpen = !this.isShoppingListOpen
+
       if (mainWrapper) {
-        mainWrapper.classList.toggle('shopping-list-open')
-      }
-      // Scroll the main content container to the top
-      const mainElement = document.querySelector('.el-main')
-      if (mainElement) {
-        mainElement.scrollTo({ top: 0, behavior: 'smooth' })
-      } else {
-        // Fallback if main element not found
-        const formContainer = document.querySelector('.form-container')
-        if (formContainer) {
-          formContainer.scrollTo({ top: 0, behavior: 'smooth' })
+        if (this.isShoppingListOpen) {
+          mainWrapper.classList.add('shopping-list-open')
+        } else {
+          setTimeout(() => {
+            mainWrapper.classList.remove('shopping-list-open')
+          }, 500)
         }
       }
-      this.isShoppingListOpen = !this.isShoppingListOpen
+      this.scrollToTop()
     },
     setDatasourceSelected(isSelected: boolean) {
       this.isDatasourceSelected = isSelected
