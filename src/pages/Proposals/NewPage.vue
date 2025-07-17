@@ -947,8 +947,14 @@ const handleSaveDraft = async () => {
 
   bypassDebounce.value = true
 
-  const isValidationSuccessful = await performFormValidation()
-  if (!isValidationSuccessful) {
+  const stepProgressionOrder = getStepProgressionOrder()
+  const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
+  const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
+  const allFields = formRef.value?.fields || []
+  const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+  await updateValidatedStepsStatus(stepsToValidate)
+  if (hasValidationErrors) {
+    bypassDebounce.value = false
     return
   }
 
