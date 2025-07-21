@@ -449,9 +449,10 @@ export interface IConditionalApproval {
   uploadId?: string
   conditionReasoning?: string
   _id: string
-  createdAt: string
+  createdAt: Date
   reviewedAt?: string
   signedAt?: string
+  isLate?: boolean
 }
 
 export interface IUacApproval {
@@ -459,8 +460,9 @@ export interface IUacApproval {
   dataAmount: number
   isContractSigned?: boolean
   _id: string
-  createdAt: string
+  createdAt: Date
   signedAt?: string
+  isLate?: boolean
 }
 export interface IAdditionalLocationProposalInformation {
   location: MiiLocation
@@ -635,7 +637,8 @@ export interface IDeclineReason {
   type: DeclineType
   reason?: string
   location: MiiLocation
-  createdAt: string
+  createdAt: Date
+  isLate?: boolean
 }
 
 export enum DeclineType {

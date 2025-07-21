@@ -4,7 +4,7 @@
       <h3 tabindex="0">
         <span class="indicator indicator--gray"></span
         >{{
-          $t('proposal.pendingVotes', {
+          t('proposal.pendingVotes', {
             count: pendingVotesCount,
           })
         }}
@@ -12,13 +12,13 @@
 
       <h3 tabindex="1">
         <span class="indicator indicator--green"></span
-        >{{ $t('proposal.uacAcceptedLocations', { count: uacApprovalsCount }) }}
+        >{{ t('proposal.uacAcceptedLocations', { count: uacApprovalsCount }) }}
       </h3>
 
       <h3 tabindex="2">
         <span class="indicator indicator--gray"></span
         >{{
-          $t('proposal.uacAcceptedUnderConditions', {
+          t('proposal.uacAcceptedUnderConditions', {
             count: conditionalApprovalsCount,
           })
         }}
@@ -26,7 +26,7 @@
 
       <h3 tabindex="3">
         <span class="indicator indicator--red"></span
-        >{{ $t('proposal.uacRejected', { count: requestedButExcludedLocationsCount }) }}
+        >{{ t('proposal.uacRejected', { count: requestedButExcludedLocationsCount }) }}
       </h3>
     </section>
 
@@ -35,7 +35,7 @@
         <template #title>
           <h3 tabindex="0" role="button">
             <span class="indicator" :class="table.indicator"></span
-            >{{ $t(table.title, { count: table.content.length }) }}
+            >{{ t(table.title, { count: table.content.length }) }}
           </h3>
         </template>
 
@@ -47,16 +47,17 @@
               :data="table.content.slice(0, fullViewTables[tableIdx] ? table.content.length : 3)"
               style="width: 100%"
               :cell-style="() => ({ 'border-bottom': 0 })"
+              :row-class-name="(row) => (row.row.isLate ? 'delayed' : '')"
             >
               <el-table-column v-if="table.tableId === TableId.Excluded" type="expand">
                 <template #default="props">
                   <section role="region" class="decline-reason">
-                    <h4>{{ $t('proposal.locationVoteExcludeReasonSectionTitle') }}</h4>
+                    <h4>{{ t('proposal.locationVoteExcludeReasonSectionTitle') }}</h4>
                     <dl v-if="props.row.declineReason" class="decline-reason__data">
-                      <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForType') }}</dt>
-                      <dd>{{ $t(`proposal.locationVoteExcludeReasonType_${props.row.declineReason.type}`) }}</dd>
+                      <dt>{{ t('proposal.locationVoteExcludeReasonTitleForType') }}</dt>
+                      <dd>{{ t(`proposal.locationVoteExcludeReasonType_${props.row.declineReason.type}`) }}</dd>
 
-                      <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForDate') }}</dt>
+                      <dt>{{ t('proposal.locationVoteExcludeReasonTitleForDate') }}</dt>
                       <dd>
                         {{
                           new Date(props.row.declineReason.createdAt).toLocaleDateString(undefined, {
@@ -66,7 +67,7 @@
                           })
                         }}
                       </dd>
-                      <dt>{{ $t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
+                      <dt>{{ t('proposal.locationVoteExcludeReasonTitleForReason') }}</dt>
                       <dd><div class="ql-editor" v-html="props.row.declineReason?.reason"></div></dd>
                     </dl>
 
@@ -79,13 +80,13 @@
                 <el-table-column
                   v-if="(column.prop !== 'dataAmount' || !table.hideDataVolume) && column.prop !== 'revert'"
                   :prop="column.prop"
-                  :label="$t(column.label)"
+                  :label="t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
                 />
                 <el-table-column
                   v-if="column.prop === 'revert' && !table.hideRevert && authStore.hasFdpgLevelPermissions()"
-                  :label="$t(column.label)"
+                  :label="t(column.label)"
                   :width="column.width"
                   :min-width="column.minWidth"
                 >
@@ -112,7 +113,7 @@
               ></el-table-column>
             </el-table>
 
-            <div v-else class="box-wrapper no-location-placeholder">{{ $t('proposal.noLocationInCurrentState') }}</div>
+            <div v-else class="box-wrapper no-location-placeholder">{{ t('proposal.noLocationInCurrentState') }}</div>
 
             <div
               v-if="table.content.length > 3"
@@ -121,7 +122,7 @@
               @click="showMore(tableIdx)"
               @keyup.enter="showMore(tableIdx)"
             >
-              <span>{{ fullViewTables[tableIdx] ? $t('dashboard.showLess') : $t('dashboard.showMore') }}</span>
+              <span>{{ fullViewTables[tableIdx] ? t('dashboard.showLess') : t('dashboard.showMore') }}</span>
               <span v-if="!fullViewTables[tableIdx]"> ({{ table.content.length - 3 }})</span>
               <i :class="fullViewTables[tableIdx] ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" tabindex="0" />
             </div>
@@ -130,7 +131,7 @@
           <section v-if="table.conditionalApprovals" role="region" class="box-wrapper contract-conditions">
             <h3>
               <i :class="'bi-file-earmark-check'" aria-hidden="true" />{{
-                $t('proposal.locationConditions', { count: table.conditionalApprovals.length })
+                t('proposal.locationConditions', { count: table.conditionalApprovals.length })
               }}
             </h3>
             <el-collapse class="contract-condition-row contract-condition-collapse-parent">
@@ -140,10 +141,10 @@
                     {{ MII_LOCATIONS[conditionalApproval.location].display }}
                     <div class="condition-interaction">
                       <div class="condition-data-amount">
-                        {{ $t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
+                        {{ t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
                       </div>
                       <div class="condition-status" :class="conditionalApproval.statusTagStyle">
-                        {{ $t(conditionalApproval.statusTagText) }}
+                        {{ t(conditionalApproval.statusTagText) }}
                       </div>
 
                       <div v-if="authStore.hasFdpgLevelPermissions()" class="condition-actions">
@@ -186,7 +187,7 @@
           </section>
         </template>
 
-        <div v-else class="box-wrapper no-location-placeholder">{{ $t('proposal.noLocationInCurrentState') }}</div>
+        <div v-else class="box-wrapper no-location-placeholder">{{ t('proposal.noLocationInCurrentState') }}</div>
       </el-collapse-item>
     </el-collapse>
   </section>
@@ -209,7 +210,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
-import FdpgTextEditor from './FdpgTextEditor.vue'
+import { DueDateEnum } from '@/types/due-date.enum'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -246,6 +247,7 @@ interface ITableData {
   declineReason?: IDeclineReason
   revert?: boolean
   location?: MiiLocation
+  isLate?: boolean
 }
 
 type StatusTagStyle = 'pending' | 'accepted' | 'rejected'
@@ -302,12 +304,17 @@ const conditionalApprovalsCount = computed(() => proposalStore.currentProposal?.
 const requestedButExcludedLocationsCount = computed(
   () => proposalStore.currentProposal?.requestedButExcludedLocationsCount ?? 0,
 )
+const locationCheckDueDate = computed<Date | null>(() => {
+  const locationCheckDeadline = proposalStore.currentProposal?.deadlines?.[DueDateEnum.DUE_DAYS_LOCATION_CHECK]
+  return locationCheckDeadline ? new Date(locationCheckDeadline) : null
+})
 
 const mapTableData = (
   rowId: number,
   location: MiiLocation,
   dataAmount?: number,
   declineReason?: IDeclineReason,
+  isLate?: boolean,
 ): ITableData => {
   return {
     rowId,
@@ -316,7 +323,17 @@ const mapTableData = (
     dataAmount,
     declineReason,
     location,
+    isLate,
   }
+}
+
+// for checking if the row is delayed in old proposals that do not have isLate field
+const isDelayed = (createdAt: Date | undefined) => {
+  const locationCheckDueDateValue = locationCheckDueDate.value
+  if (!locationCheckDueDateValue) return false
+
+  const rowDate = new Date(createdAt ?? '')
+  return rowDate > locationCheckDueDateValue
 }
 
 const mapConditionalApproval = (conditionalApproval: IConditionalApproval): IConditionalPanel => {
@@ -330,7 +347,7 @@ const mapConditionalApproval = (conditionalApproval: IConditionalApproval): ICon
     status = { text: 'proposal.conditionPending', style: 'pending' }
   }
 
-  const upload = uploadsMap.value[conditionalApproval.uploadId]
+  const upload = conditionalApproval.uploadId ? uploadsMap.value[conditionalApproval.uploadId] : ({} as IUpload)
 
   return {
     ...conditionalApproval,
@@ -414,8 +431,8 @@ const tables = computed<IPanelVoteConfig[]>(() => {
         hideDataVolume: false,
         hideRevert: currentProposal?.status === ProposalStatus.LocationCheck ? false : true,
         indicator: `indicator--${indicator}`,
-        content: filteredConditionData.map(({ location, dataAmount }, index) =>
-          mapTableData(index, location, dataAmount),
+        content: filteredConditionData.map(({ location, dataAmount, isLate, createdAt }, index) =>
+          mapTableData(index, location, dataAmount, undefined, isLate ?? isDelayed(createdAt)),
         ),
         conditionalApprovals: isConditional
           ? (currentProposal?.conditionalApprovals
@@ -445,7 +462,13 @@ const tables = computed<IPanelVoteConfig[]>(() => {
     indicator: `indicator--${excludedLocations.indicator}`,
     content: excludedLocations.data.map((location, index) => {
       const declineReason = currentProposal?.declineReasons.find((reasonItem) => reasonItem.location === location)
-      return mapTableData(index, location, undefined, declineReason)
+      return mapTableData(
+        index,
+        location,
+        undefined,
+        declineReason,
+        declineReason?.isLate ?? isDelayed(declineReason?.createdAt),
+      )
     }),
   }
   panels.push(rejectedTable)
@@ -780,5 +803,9 @@ onMounted(() => {
   :deep(.el-table__expand-icon--expanded) {
     outline-offset: -3px;
   }
+}
+
+:deep(.delayed) {
+  color: $red-100 !important;
 }
 </style>
