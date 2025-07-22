@@ -947,8 +947,14 @@ const handleSaveDraft = async () => {
 
   bypassDebounce.value = true
 
-  const isValidationSuccessful = await performFormValidation()
-  if (!isValidationSuccessful) {
+  const stepProgressionOrder = getStepProgressionOrder()
+  const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
+  const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
+  const allFields = formRef.value?.fields || []
+  const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+  await updateValidatedStepsStatus(stepsToValidate)
+  if (hasValidationErrors) {
+    bypassDebounce.value = false
     return
   }
 
@@ -1295,17 +1301,6 @@ const getFormRuleArrayFromPath = (obj: Record<string, any>, path?: string) => {
 }
 
 const toggleShoppingList = () => {
-  // Scroll the main content container to the top
-  const mainElement = document.querySelector('.el-main')
-  if (mainElement) {
-    mainElement.scrollTo({ top: 0, behavior: 'smooth' })
-  } else {
-    // Fallback if main element not found
-    const formContainer = document.querySelector('.form-container')
-    if (formContainer) {
-      formContainer.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }
   layoutStore.toggleShoppingList()
 }
 
@@ -1557,6 +1552,9 @@ onMounted(async () => {
       transform: rotate(90deg);
     }
   }
+}
+.shopping-list-open {
+  position: unset;
 }
 .align-right {
   justify-content: end !important;
