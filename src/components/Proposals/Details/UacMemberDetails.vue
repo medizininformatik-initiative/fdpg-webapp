@@ -12,7 +12,7 @@
     />
     <ProjectStatus :proposal-status="status"></ProjectStatus>
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
-
+    <DIZDetailSection></DIZDetailSection>
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectPublications v-if="showPublications"></ProjectPublications>
@@ -65,6 +65,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import DIZDetailSection from '@/components/DIZDetailSection.vue'
 
 const { t } = useI18n()
 const showPublications = ref(false)

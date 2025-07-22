@@ -12,7 +12,7 @@
     />
     <ProjectStatus :proposal-status="status"></ProjectStatus>
     <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
-
+    <DIZDetailSection editable :project-todos="locationTodos" :is-disabled="proposalStore.currentProposal?.isLocked" />
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectPublications v-if="showPublications"></ProjectPublications>
@@ -76,7 +76,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
-
+import DIZDetailSection from '@/components/DIZDetailSection.vue'
 const { t } = useI18n()
 const showPublications = ref(false)
 const messageBoxStore = useMessageBoxStore()
@@ -98,6 +98,9 @@ const showContractingParticipants = computed(() => {
 })
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
+})
+const locationTodos = computed((): IProjectTodo[] => {
+  return [...getCheckContractTodo(true), ...getAdditionalLocationInformationTodo(true)]
 })
 
 const currentProposalStatus = [
@@ -244,11 +247,32 @@ const getSignTodo = (): IProjectTodo[] => {
   }
 }
 
-const getCheckContractTodo = (): IProjectTodo[] => {
+const getCheckContractTodo = (afterLocationCheck = false): IProjectTodo[] => {
   const currentProposal = proposalStore.currentProposal
-
   if (!currentProposal) {
     return []
+  }
+
+  // Define statuses that are after LocationCheck
+  const afterLocationCheckStatuses = [
+    ProposalStatus.Contracting,
+    ProposalStatus.ExpectDataDelivery,
+    ProposalStatus.DataResearch,
+    ProposalStatus.DataCorrupt,
+    ProposalStatus.ReadyToArchive,
+    ProposalStatus.FinishedProject,
+    ProposalStatus.Archived,
+    ProposalStatus.Rejected,
+  ]
+
+  if (afterLocationCheck) {
+    if (!currentProposal.status || !afterLocationCheckStatuses.includes(currentProposal.status)) {
+      return []
+    }
+  } else {
+    if (currentProposal.status !== ProposalStatus.LocationCheck) {
+      return []
+    }
   }
 
   const hasLocationCheckStats = (status?: LocationState) =>
@@ -297,7 +321,7 @@ const getCheckContractTodo = (): IProjectTodo[] => {
               conditionReasoning: conditionalApproval.conditionReasoning,
             }
           : conditionDraft) ?? { conditionReasoning: '', dataAmount: uacVote.dataAmount },
-        readonly: !isEditable,
+        readonly: afterLocationCheck ? currentProposal.status !== ProposalStatus.Contracting : !isEditable,
         additionalData: { isDraft: !!conditionDraft },
       },
     ]
@@ -375,7 +399,7 @@ const getApproveTodo = (): IProjectTodo[] => {
   }
 }
 
-const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
+const getAdditionalLocationInformationTodo = (afterLocationCheck = false): IProjectTodo[] => {
   const proposal = proposalStore.currentProposal
   if (!proposal) {
     return []
@@ -385,7 +409,27 @@ const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
     return []
   }
 
-  const isLocationCheckStatus = proposal.status === ProposalStatus.LocationCheck
+  const afterLocationCheckStatuses = [
+    ProposalStatus.Contracting,
+    ProposalStatus.ExpectDataDelivery,
+    ProposalStatus.DataResearch,
+    ProposalStatus.DataCorrupt,
+    ProposalStatus.ReadyToArchive,
+    ProposalStatus.FinishedProject,
+    ProposalStatus.Archived,
+    ProposalStatus.Rejected,
+  ]
+
+  if (afterLocationCheck) {
+    if (!proposal.status || !afterLocationCheckStatuses.includes(proposal.status)) {
+      return []
+    }
+  } else {
+    if (proposal.status !== ProposalStatus.LocationCheck) {
+      return []
+    }
+  }
+
   const additionalLocationInformation = proposal.additionalLocationInformation[0] ?? {
     legalBasis: false,
     locationPublicationName: '',
@@ -399,7 +443,9 @@ const getAdditionalLocationInformationTodo = (): IProjectTodo[] => {
         updateAdditionalInformation(additionalInformation),
       type: 'additional-location-information',
       additionalInformation: additionalLocationInformation,
-      readonly: !isLocationCheckStatus,
+      readonly: afterLocationCheckStatuses
+        ? proposal.status !== ProposalStatus.Contracting
+        : proposal.status !== ProposalStatus.LocationCheck,
     },
   ]
 }
