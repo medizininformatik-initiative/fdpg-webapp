@@ -12,9 +12,10 @@
     "test:unit": "vitest --coverage",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "i18n:build": "node ./src/scripts/build-lang-files.js && prettier --parser json-stringify --write src/locales/*.json",
+    "i18n:build": "node ./src/scripts/build-lang-files.js && prettier --parser json-stringify --write src/locales/*.json && node ./src/scripts/auto-fix-translation-files.js",
     "i18n:report": "vue-cli-service i18n:report --src \"./src/**/*.?(js|vue)\" --locales \"./src/locales/**/*.json\"",
-    "prebuild": "npm run i18n:build"
+    "prebuild": "npm run i18n:build",
+    "auto-fix-translations": "node src/scripts/auto-fix-translation-files.js"
   },
   "dependencies": {
     "@braintree/sanitize-url": "^7.1.0",
