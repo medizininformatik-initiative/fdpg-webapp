@@ -7,7 +7,7 @@ function fixStringValues(obj) {
     // Escape invalid control characters except \n and \t
     let fixed = obj.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
     // Replace all @ with ' (at) '
-    fixed = fixed.replace(/@/g, ' (at) ');
+    fixed = fixed.replace(/@/g, ' (at)');
     return fixed;
   } else if (Array.isArray(obj)) {
     return obj.map(fixStringValues);
