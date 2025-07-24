@@ -1,16 +1,16 @@
 <template>
   <h1 class="title">
-    {{ $t('general.userProfile') }}
+    {{ t('general.userProfile') }}
   </h1>
 
-  <h2>{{ $t('general.userProfilePersonalData') }}</h2>
+  <h2>{{ t('general.userProfilePersonalData') }}</h2>
   <DefinitionCard :card="personalCard" :dto="authStore"></DefinitionCard>
 
-  <h2>{{ $t('general.userProfileOrganizationData') }}</h2>
+  <h2>{{ t('general.userProfileOrganizationData') }}</h2>
 
   <div class="info-box">
     <span class="icon fa-solid fa-circle-info" aria-hidden="true" />
-    <span>{{ $t('general.changeOrganizationHint') }}</span>
+    <span>{{ t('general.changeOrganizationHint') }}</span>
   </div>
   <DefinitionCard
     v-if="organizationCardConfig && organizationCardConfig.card && organizationCardConfig.dto"
@@ -31,7 +31,9 @@ import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store
 import { useUserStore } from '@/stores/user.store'
 import type { IOidc, IOidcProfile, IUserFromExternalOrganization, IUserFromMii } from '@/types/oidc.types'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const userStore = useUserStore()
 const messageBoxStore = useMessageBoxStore()

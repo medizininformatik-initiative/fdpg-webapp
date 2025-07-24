@@ -126,4 +126,9 @@ const getValue = (dtoAccess, content) => {
 .action-row {
   margin-top: 1.5em;
 }
+ul li {
+  :deep(.card-item-value) {
+    padding: 12px 0;
+  }
+}
 </style>
