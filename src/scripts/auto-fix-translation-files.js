@@ -6,8 +6,8 @@ function fixStringValues(obj) {
   if (typeof obj === 'string') {
     // Escape invalid control characters except \n and \t
     let fixed = obj.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
-    // Replace all @ with ' (at) '
-    fixed = fixed.replace(/@/g, ' (at)');
+    // Replace all @ with {'@'}
+    fixed = fixed.replace(/@/g, `{'@'}`);
     return fixed;
   } else if (Array.isArray(obj)) {
     return obj.map(fixStringValues);
@@ -49,7 +49,7 @@ function fixTranslationFile(filePath) {
 const translationDir = path.join(__dirname, '../locales');
 const files = ['en.json', 'de.json'];
 
-console.log('🚀 Translation File Fixer (escape invalid chars, replace @ with (at))\n');
+console.log('🚀 Translation File Fixer (escape invalid chars, replace @ with {\'@\'})\n');
 let allFixed = true;
 files.forEach(file => {
   const filePath = path.join(translationDir, file);
@@ -64,7 +64,7 @@ files.forEach(file => {
 
 if (allFixed) {
   console.log('\n✅ All files processed successfully!');
-  console.log('🎉 All invalid chars escaped and @ replaced with (at) in JSON');
+  console.log('🎉 All invalid chars escaped and @ replaced with {\'@\'} in JSON');
 } else {
   console.log('\n❌ Some files could not be processed.');
 }
