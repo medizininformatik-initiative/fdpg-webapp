@@ -30,8 +30,8 @@
               v-for="usage in modelValue.usage"
               :key="usage"
               class="privacy-note"
-              :text="configStore.dataPrivacy[props.platform]?.messages[usage].text[locale as 'en' | 'de'] ?? ''"
-              :headline="configStore.dataPrivacy[props.platform]?.messages[usage].headline[locale as 'en' | 'de'] ?? ''"
+              :text="configStore.dataPrivacy[props.platform]?.messages[usage].text ?? ''"
+              :headline="configStore.dataPrivacy[props.platform]?.messages[usage].headline ?? ''"
             />
           </dl>
 

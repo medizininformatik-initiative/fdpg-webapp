@@ -27,8 +27,8 @@
           <dl>
             <TypeOfUseDataPrivacyItem
               class="privacy-note"
-              :text="configStore.dataPrivacy[props.platform]?.messages.all?.text[locale as 'en' | 'de'] ?? ''"
-              :headline="configStore.dataPrivacy[props.platform]?.messages.all?.headline[locale as 'en' | 'de'] ?? ''"
+              :text="configStore.dataPrivacy[props.platform]?.messages.all?.text ?? ''"
+              :headline="configStore.dataPrivacy[props.platform]?.messages.all?.headline ?? ''"
             />
           </dl>
         </div>
