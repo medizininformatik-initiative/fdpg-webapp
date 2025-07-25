@@ -1,24 +1,26 @@
 <template>
-  <h1 class="title">
-    {{ t('general.userProfile') }}
-  </h1>
+  <section class="section user-profile">
+    <h1 class="title">
+      {{ t('general.userProfile') }}
+    </h1>
 
-  <h2>{{ t('general.userProfilePersonalData') }}</h2>
-  <DefinitionCard :card="personalCard" :dto="authStore"></DefinitionCard>
+    <h2>{{ t('general.userProfilePersonalData') }}</h2>
+    <DefinitionCard :card="personalCard" :dto="authStore"></DefinitionCard>
 
-  <h2>{{ t('general.userProfileOrganizationData') }}</h2>
+    <h2>{{ t('general.userProfileOrganizationData') }}</h2>
 
-  <div class="info-box">
-    <span class="icon fa-solid fa-circle-info" aria-hidden="true" />
-    <span>{{ t('general.changeOrganizationHint') }}</span>
-  </div>
-  <DefinitionCard
-    v-if="organizationCardConfig && organizationCardConfig.card && organizationCardConfig.dto"
-    :card="organizationCardConfig.card"
-    :dto="organizationCardConfig.dto"
-  ></DefinitionCard>
+    <div class="info-box">
+      <span class="icon fa-solid fa-circle-info" aria-hidden="true" />
+      <span>{{ t('general.changeOrganizationHint') }}</span>
+    </div>
+    <DefinitionCard
+      v-if="organizationCardConfig && organizationCardConfig.card && organizationCardConfig.dto"
+      :card="organizationCardConfig.card"
+      :dto="organizationCardConfig.dto"
+    ></DefinitionCard>
 
-  <EditProfileDialog v-model="isEditProfileDialogOpen" />
+    <EditProfileDialog v-model="isEditProfileDialogOpen" />
+  </section>
 </template>
 <script setup lang="ts">
 import EditProfileDialog from '@/components/EditProfileDialog.vue'
@@ -180,19 +182,23 @@ const externalOrganizationCard: IDefinitionCardVirtual<IOidcProfile & IUserFromE
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;
 
-.title {
-  font-size: 32px;
-  margin-top: 0;
-  margin-bottom: 3px;
-}
+.user-profile {
+  margin-bottom: 30px;
 
-.info-box {
-  padding: 0 1.3em;
-  margin-bottom: 0.5em;
+  .title {
+    font-size: 32px;
+    margin-top: 0;
+    margin-bottom: 3px;
+  }
 
-  .icon {
-    margin-right: 0.5em;
-    color: $blue;
+  .info-box {
+    padding: 0 1.3em;
+    margin-bottom: 0.5em;
+
+    .icon {
+      margin-right: 0.5em;
+      color: $blue;
+    }
   }
 }
 </style>
