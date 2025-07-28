@@ -46,14 +46,6 @@
         :ParticipatingScientists="true"
       ></ProjectParticipantCategory>
 
-      <ProjectParticipantRole
-        v-model="participant.participantRole"
-        :review-mode="reviewMode"
-        :form-ref="formRef"
-        :identifier="`participants.${index}`"
-        required
-      ></ProjectParticipantRole>
-
       <section style="display: flex; flex-direction: column; gap: 0.3em">
         <TaskViewer :object-id="participant.participantCategory._id" />
         <TaskViewer :object-id="participant.participantRole._id" />
@@ -87,7 +79,6 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import ProjectInstitute from '../ProjectInstitute.vue'
 import ProjectParticipantCategory from '../ProjectParticipantCategory.vue'
-import ProjectParticipantRole from '../ProjectParticipantRole.vue'
 import ProjectResearcher from '../ProjectResearcher.vue'
 import ParticipatingScientistsCollapsed from './ParticipatingScientistsCollapsed.vue'
 
