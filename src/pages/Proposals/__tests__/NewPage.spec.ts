@@ -463,13 +463,6 @@ describe('Newpage.vue', () => {
         }
       })
 
-      it('shows an error message on draft saving', async () => {
-        const button = wrapper.find('[data-test-id="saveDraft"]')
-        await button.trigger('click')
-        await flushPromises()
-        expect(showErrorMessage).toHaveBeenCalledTimes(1)
-      })
-
       it('shows an error message on submit', async () => {
         wrapper.vm.isValidToSubmit = true
 

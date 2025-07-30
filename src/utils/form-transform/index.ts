@@ -135,5 +135,6 @@ export const transformForm = (
     conditionalApprovalsCount: form?.conditionalApprovalsCount,
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
+    dizDetails: form?.dizDetails ?? [],
   }
 }

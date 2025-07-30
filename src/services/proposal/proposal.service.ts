@@ -17,6 +17,7 @@ import type {
   FdpgChecklistItemUpdateResponse,
   ISelectedCohort,
   IParticipant,
+  IDizDetails,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -356,6 +357,16 @@ export class ProposalService {
   }
   async removeParticipant(id: string, participantId: string): Promise<IProposal> {
     const response = await this.apiClient.delete(`${this.basePath}/${id}/participants/${participantId}`)
+    return response.data
+  }
+
+  async createDizDetails(proposalId: string, data: IDizDetails): Promise<IDizDetails> {
+    const response = await this.apiClient.post(`${this.basePath}/${proposalId}/diz-details`, data)
+    return response.data
+  }
+
+  async updateDizDetails(proposalId: string, dizDetailsId: string, data: IDizDetails): Promise<IDizDetails> {
+    const response = await this.apiClient.put(`${this.basePath}/${proposalId}/diz-details/${dizDetailsId}`, data)
     return response.data
   }
 }

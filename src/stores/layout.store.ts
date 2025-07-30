@@ -92,7 +92,19 @@ export const useLayoutStore = defineStore('layout', {
       this.activeStep = CreatPrposalSteps.DataSources
     },
     toggleShoppingList() {
+      const mainWrapper = document.querySelector('.fdpg-new-proposal-page')
       this.isShoppingListOpen = !this.isShoppingListOpen
+
+      if (mainWrapper) {
+        if (this.isShoppingListOpen) {
+          mainWrapper.classList.add('shopping-list-open')
+        } else {
+          setTimeout(() => {
+            mainWrapper.classList.remove('shopping-list-open')
+          }, 500)
+        }
+      }
+      this.scrollToTop()
     },
     setDatasourceSelected(isSelected: boolean) {
       this.isDatasourceSelected = isSelected
