@@ -350,21 +350,24 @@ describe('UseTableAccessibility', () => {
         isHeaderRowFocusCalled: true,
         isBodyFocusCalled: false,
         isPreviousFocusCalled: false,
+        description: 'should focus header row when target is table body',
       },
       {
         classList: ['el-tag'],
         isHeaderRowFocusCalled: false,
         isBodyFocusCalled: true,
         isPreviousFocusCalled: false,
+        description: 'should focus table body when target has el-tag class',
       },
       {
         classList: [],
         isHeaderRowFocusCalled: false,
         isBodyFocusCalled: false,
         isPreviousFocusCalled: true,
+        description: 'should focus previous element when target has no specific class',
       },
     ]
-    test.each(testcases)('should move the focus backwards to the previous focusable element', (testcase) => {
+    test.each(testcases)('$description', (testcase) => {
       const addListenerMock = vi.fn().mockImplementation(() => {})
 
       const eventMock = {
@@ -408,20 +411,19 @@ describe('UseTableAccessibility', () => {
       if (testcase.isHeaderRowFocusCalled) {
         expect(keyboardNavigation.setFocus).toBeCalledWith(headerRow)
         expect(eventMock.preventDefault).toBeCalledTimes(1)
+        expect(keyboardNavigation.focusPreviousElement).not.toHaveBeenCalled()
       } else if (testcase.isBodyFocusCalled) {
         expect(keyboardNavigation.setFocus).toBeCalledWith(tableBody)
         expect(addListenerMock).toBeCalledTimes(1)
-        expect(keyboardNavigation.setFocus).toBeCalled()
+        expect(keyboardNavigation.focusPreviousElement).not.toHaveBeenCalled()
 
         focusTableBody(eventMock as any as Event)
-
         expect(addListenerMock).toBeCalledTimes(1)
         expect(keyboardNavigation.setFocus).toBeCalledTimes(2)
       } else if (testcase.isPreviousFocusCalled) {
-        expect(keyboardNavigation.focusPreviousElement).toBeCalledWith(eventMock, appMock)
-      } else {
-        expect(keyboardNavigation.setFocus).toBeCalledWith(0)
-        expect(keyboardNavigation.focusPreviousElement).toBeCalledTimes(0)
+        expect(keyboardNavigation.focusPreviousElement).toHaveBeenCalledTimes(1)
+        expect(keyboardNavigation.setFocus).not.toHaveBeenCalled()
+        expect(eventMock.preventDefault).toHaveBeenCalledTimes(1)
       }
     })
   })

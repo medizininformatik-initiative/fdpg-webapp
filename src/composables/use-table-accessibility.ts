@@ -81,6 +81,7 @@ export default () => {
     } else if (classes.includes('el-tag')) {
       focusTableBody(event)
     } else {
+      event.preventDefault()
       const app = document.getElementById('app')
       keyboardNavigation.focusPreviousElement(event, app)
     }
