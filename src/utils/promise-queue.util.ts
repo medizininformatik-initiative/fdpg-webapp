@@ -1,63 +1,116 @@
-export class SimpleQueue {
-  private tasks: (() => Promise<any>)[] = []
-  private isRunning = false
+interface QueueItem<T> {
+  task: () => Promise<T>
+  resolve: (value: T) => void
+  reject: (reason?: any) => void
+}
 
-  async add<T>(promiseFunction: () => Promise<T>): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.tasks.push(async () => {
-        try {
-          const result = await promiseFunction()
-          resolve(result)
-        } catch (error) {
-          reject(error)
-        }
-      })
+export class PromiseQueue {
+  // The queue can hold tasks with different return types, so `QueueItem<any>` is used internally.
+  // Type safety is enforced by the public `add` method's generic signature.
+  #queue: QueueItem<any>[] = []
+  #isProcessing = false
 
-      this.run()
+  /**
+   * Adds a promise-returning function to the queue.
+   * @param task A function that returns a promise.
+   * @returns A promise that resolves or rejects with the result of the task.
+   * @template T
+   */
+  public add<T>(task: () => Promise<T>): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      // Add the task and its promise handlers to the queue.
+      this.#queue.push({ task, resolve, reject })
+      // Start processing if not already running.
+      this.#process()
     })
   }
 
-  private async run() {
-    if (this.isRunning || this.tasks.length === 0) return
+  /**
+   * Gets the current number of tasks waiting in the queue.
+   */
+  public get size(): number {
+    return this.#queue.length
+  }
 
-    this.isRunning = true
-
-    while (this.tasks.length > 0) {
-      const task = this.tasks.shift()!
-      await task()
+  /**
+   * Processes the queue sequentially.
+   */
+  async #process(): Promise<void> {
+    // If another process call is already running, exit.
+    if (this.#isProcessing) {
+      return
     }
 
-    this.isRunning = false
+    // Mark the queue as processing.
+    this.#isProcessing = true
+
+    // Process tasks as long as the queue is not empty.
+    while (this.#queue.length > 0) {
+      // The non-null assertion (!) is safe here because of the `while` loop's condition.
+      const { task, resolve, reject } = this.#queue.shift()!
+
+      try {
+        // Await the task's completion.
+        const result = await task()
+        // Resolve the promise that was returned by the add() method.
+        resolve(result)
+      } catch (error) {
+        // Reject the promise if the task fails.
+        reject(error)
+      }
+    }
+
+    // Mark the queue as no longer processing.
+    this.#isProcessing = false
   }
 
   clear() {
-    this.tasks = []
-  }
-
-  get pending() {
-    return this.tasks.length
+    this.#queue = []
   }
 }
 
 export class UpdateQueue<T = any> {
-  private queue = new SimpleQueue()
-  private latestItems = new Map<string, T>()
+  private queue = new PromiseQueue()
+  private latestItems = new Map<
+    string,
+    {
+      item: T
+      updateFunction: (item: T) => Promise<any>
+      promises: { resolve: (value: any) => void; reject: (reason?: any) => void }[]
+    }
+  >()
   private processing = false
 
   async update(item: T, updateFunction: (item: T) => Promise<any>): Promise<any> {
     const itemId = this.getId(item)
 
-    // Store the latest version of this item
-    this.latestItems.set(itemId, item)
+    return new Promise((resolve, reject) => {
+      // Get existing entry or create new one
+      const existing = this.latestItems.get(itemId)
 
-    // Always trigger processing (this was the bug - it should always try to process)
-    return this.processUpdates(updateFunction)
+      if (existing) {
+        // Update the item and function, add this promise to the list
+        existing.item = item
+        existing.updateFunction = updateFunction
+        existing.promises.push({ resolve, reject })
+      } else {
+        // Create new entry
+        this.latestItems.set(itemId, {
+          item,
+          updateFunction,
+          promises: [{ resolve, reject }],
+        })
+      }
+
+      // Always trigger processing
+      this.processUpdates()
+    })
   }
 
-  private async processUpdates(updateFunction: (item: T) => Promise<any>): Promise<any> {
+  private async processUpdates(): Promise<void> {
     // If already processing, just return - the current processing will handle new items
     if (this.processing) {
-      return Promise.resolve()
+      return
     }
 
     this.processing = true
@@ -69,10 +122,15 @@ export class UpdateQueue<T = any> {
         this.latestItems.clear()
 
         // Process each item sequentially
-        for (const [itemId, item] of itemsToProcess) {
+        for (const [itemId, { item, updateFunction, promises }] of itemsToProcess) {
           try {
-            await this.queue.add(() => updateFunction(item))
-          } catch (error) {}
+            const result = await this.queue.add(() => updateFunction(item))
+            // Resolve all promises for this item
+            promises.forEach(({ resolve }) => resolve(result))
+          } catch (error) {
+            // Reject all promises for this item
+            promises.forEach(({ reject }) => reject(error))
+          }
         }
       }
     } finally {
@@ -85,12 +143,17 @@ export class UpdateQueue<T = any> {
   }
 
   clear() {
+    // Reject all pending promises
+    for (const [, { promises }] of this.latestItems) {
+      promises.forEach(({ reject }) => reject(new Error('Queue cleared')))
+    }
+
     this.latestItems.clear()
     this.queue.clear()
     this.processing = false
   }
 
   get pending() {
-    return this.latestItems.size + this.queue.pending
+    return this.latestItems.size + this.queue.size
   }
 }

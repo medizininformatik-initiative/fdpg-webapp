@@ -109,9 +109,8 @@ import FdpgTextEditor from './FdpgTextEditor.vue'
 import FdpgRadio from './FdpgRadio.vue'
 import { FdpgInputSize } from '@/types/component.types'
 import FdpgCheckbox from './FdpgCheckbox.vue'
-import { defineProps, defineEmits, onUnmounted } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import { debounce } from 'lodash-es'
-import { UpdateQueue } from '@/utils/promise-queue.util'
 
 const props = defineProps({
   tableData: {
@@ -125,7 +124,6 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:listItem'])
-const updateQueue = new UpdateQueue()
 
 const debouncedHandleOptionChange = debounce((row) => {
   handleOptionChange(row)
@@ -137,7 +135,7 @@ const haveActualText = (htmlContent) => {
   return strippedContent.length > 0
 }
 
-const handleOptionChange = async (row) => {
+const handleOptionChange = (row) => {
   const item = { ...row }
 
   if (row.answer.length) {
@@ -149,19 +147,9 @@ const handleOptionChange = async (row) => {
   } else {
     item.isAnswered = false
   }
-  try {
-    await updateQueue.update(item, (item) => {
-      emit('update:listItem', item)
-      return Promise.resolve()
-    })
-  } catch (error) {
-    console.error('Failed to update:', error)
-  }
-}
 
-onUnmounted(() => {
-  updateQueue.clear()
-})
+  emit('update:listItem', item)
+}
 </script>
 
 <style lang="scss">
