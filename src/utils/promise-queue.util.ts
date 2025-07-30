@@ -71,65 +71,49 @@ export class PromiseQueue {
 
 export class UpdateQueue<T = any> {
   private queue = new PromiseQueue()
-  private latestItems = new Map<
-    string,
-    {
-      item: T
-      updateFunction: (item: T) => Promise<any>
-      promises: { resolve: (value: any) => void; reject: (reason?: any) => void }[]
-    }
-  >()
+  private latestItems = new Map<string, T>()
   private processing = false
+  private latestUpdateFunction: ((item: T) => Promise<any>) | null = null
 
   async update(item: T, updateFunction: (item: T) => Promise<any>): Promise<any> {
     const itemId = this.getId(item)
 
-    return new Promise((resolve, reject) => {
-      // Get existing entry or create new one
-      const existing = this.latestItems.get(itemId)
+    // Store the latest version of this item
+    this.latestItems.set(itemId, item)
 
-      if (existing) {
-        // Update the item and function, add this promise to the list
-        existing.item = item
-        existing.updateFunction = updateFunction
-        existing.promises.push({ resolve, reject })
-      } else {
-        // Create new entry
-        this.latestItems.set(itemId, {
-          item,
-          updateFunction,
-          promises: [{ resolve, reject }],
-        })
-      }
+    // Store the latest update function
+    this.latestUpdateFunction = updateFunction
 
-      // Always trigger processing
-      this.processUpdates()
-    })
+    // Always trigger processing
+    return this.processUpdates()
   }
 
-  private async processUpdates(): Promise<void> {
+  private async processUpdates(): Promise<any> {
     // If already processing, just return - the current processing will handle new items
     if (this.processing) {
-      return
+      return Promise.resolve()
     }
 
     this.processing = true
 
     try {
+      // Small delay to allow batching of rapid updates
+      await new Promise((resolve) => setTimeout(resolve, 0))
+
       while (this.latestItems.size > 0) {
         // Get all current items to process
         const itemsToProcess = Array.from(this.latestItems.entries())
+        const currentUpdateFunction = this.latestUpdateFunction
         this.latestItems.clear()
 
-        // Process each item sequentially
-        for (const [itemId, { item, updateFunction, promises }] of itemsToProcess) {
-          try {
-            const result = await this.queue.add(() => updateFunction(item))
-            // Resolve all promises for this item
-            promises.forEach(({ resolve }) => resolve(result))
-          } catch (error) {
-            // Reject all promises for this item
-            promises.forEach(({ reject }) => reject(error))
+        // Process each item sequentially with the latest update function
+        if (currentUpdateFunction) {
+          for (const [itemId, item] of itemsToProcess) {
+            try {
+              await this.queue.add(() => currentUpdateFunction(item))
+            } catch (error) {
+              // Silently ignore errors to prevent one item from stopping others
+            }
           }
         }
       }
@@ -143,14 +127,10 @@ export class UpdateQueue<T = any> {
   }
 
   clear() {
-    // Reject all pending promises
-    for (const [, { promises }] of this.latestItems) {
-      promises.forEach(({ reject }) => reject(new Error('Queue cleared')))
-    }
-
     this.latestItems.clear()
     this.queue.clear()
     this.processing = false
+    this.latestUpdateFunction = null
   }
 
   get pending() {
