@@ -22,8 +22,8 @@ interface IDataPrivacyTexts extends Record<ProposalTypeOfUse, IDataPrivacyTextsC
 }
 
 interface IDataPrivacyTextsContent {
-  headline: IMessages
-  text: IMessages
+  headline: string
+  text: string
 }
 
 interface IMessages {

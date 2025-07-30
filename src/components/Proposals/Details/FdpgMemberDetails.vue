@@ -102,7 +102,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -117,6 +117,7 @@ import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { UpdateQueue } from '@/utils/promise-queue.util'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -649,13 +650,28 @@ const handleSaveDeadlines = async (deadlines: Deadlines) => {
   }
 }
 
+const updateQueue = new UpdateQueue()
+
 const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
   if (!proposalId.value) {
     console.error('Proposal ID is missing')
     return
   }
-  proposalStore.updateFdpgChecklist(proposalId.value, item)
+
+  updateQueue.update(item, async (item) => {
+    try {
+      await proposalStore.updateFdpgChecklist(proposalId.value, item)
+      return Promise.resolve()
+    } catch (error) {
+      showErrorMessage('Failed to update checklist item')
+      throw error
+    }
+  })
 }
+
+onUnmounted(() => {
+  updateQueue.clear()
+})
 
 const isChecklistDone = computed(() => {
   const checklist = proposalStore.currentProposal?.fdpgChecklist

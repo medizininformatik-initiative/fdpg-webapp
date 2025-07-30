@@ -1,15 +1,16 @@
 <template>
-  <dt>{{ headline }}</dt>
-  <dd ref="expandableText" class="privacy-text" :class="{ expanded: isExpanded }">{{ text }}</dd>
+  <dt>{{ t(headline) }}</dt>
+  <dd ref="expandableText" class="privacy-text" :class="{ expanded: isExpanded }">{{ t(text) }}</dd>
   <div class="button-row">
     <el-button v-if="isExpandingNeeded" link @click="toggleExpand">
-      {{ $t(isExpanded ? 'dashboard.showLess' : 'dashboard.showMore') }}
+      {{ t(isExpanded ? 'dashboard.showLess' : 'dashboard.showMore') }}
     </el-button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 defineProps({
   headline: {
@@ -21,6 +22,7 @@ defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const isExpanded = ref(false)
 const toggleExpand = () => {

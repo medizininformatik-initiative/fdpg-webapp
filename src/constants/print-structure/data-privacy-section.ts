@@ -17,12 +17,12 @@ const privacyByUsageCard: IDefinitionCardArrayVirtual<IVirtualWrap<IDataPrivacyO
     {
       label: 'proposal.typeOfUse',
       size: 24,
-      definitions: [[{ key: 'headline' }]],
+      definitions: [[{ key: 'headline', kind: 'translatable', prefix: '' }]],
     },
     {
       label: 'proposal.dataPrivacy',
       size: 24,
-      definitions: [[{ key: 'text' }]],
+      definitions: [[{ key: 'text', kind: 'translatable', prefix: '' }]],
     },
   ],
 }
