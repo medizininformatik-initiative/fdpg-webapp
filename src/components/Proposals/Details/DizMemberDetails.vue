@@ -443,7 +443,7 @@ const getAdditionalLocationInformationTodo = (afterLocationCheck = false): IProj
         updateAdditionalInformation(additionalInformation),
       type: 'additional-location-information',
       additionalInformation: additionalLocationInformation,
-      readonly: afterLocationCheckStatuses
+      readonly: afterLocationCheck
         ? proposal.status !== ProposalStatus.Contracting
         : proposal.status !== ProposalStatus.LocationCheck,
     },
