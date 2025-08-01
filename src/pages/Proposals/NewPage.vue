@@ -991,16 +991,25 @@ watch(
 )
 
 // Helper function to check if field is valid by value
-const isFieldValidByValue = (field: any): boolean => {
+const isFieldValidByValue = async (field: any): Promise<boolean> => {
   const fieldPath = field.prop as string
   const fieldValue = getFieldValue(fieldPath)
   const isFilled = isFieldMeaningfullyFilled(fieldValue)
 
   const appliedRules = getAppliedRules(field)
-  const isRequired = [...appliedRules.formRules, ...appliedRules.componentRules].some((rule) => rule.required)
+  const allRules = [...appliedRules.formRules, ...appliedRules.componentRules]
+  const isRequired = allRules.some((rule) => rule.required)
+
+  // Special case for desiredStartTime - check if it's actually required based on desiredStartTimeType
+  if (fieldPath === 'userProject.generalProjectInformation.desiredStartTime') {
+    await formRef.value?.validateField(
+      'userProject.generalProjectInformation.desiredStartTime',
+      (_isValid: boolean) => {},
+    )
+  }
 
   // Required fields must be filled
-  if (isRequired && !isFilled) {
+  if ((isRequired && !isFilled) || field.validateState == 'error') {
     return false
   }
 
@@ -1009,7 +1018,7 @@ const isFieldValidByValue = (field: any): boolean => {
 }
 
 // Helper function to validate step silently
-const validateStepSilently = (stepNumber: number, allFields: any[]): boolean => {
+const validateStepSilently = async (stepNumber: number, allFields: any[]): Promise<boolean> => {
   const stepFieldPaths = stepFieldsMap[stepNumber] || []
   const stepFields = getStepFields(allFields, stepFieldPaths)
   const fieldsWithRules = stepFields.filter(fieldHasRules)
@@ -1018,7 +1027,9 @@ const validateStepSilently = (stepNumber: number, allFields: any[]): boolean => 
     return true
   }
 
-  return fieldsWithRules.every(isFieldValidByValue)
+  // Use Promise.all to wait for all async validations to complete
+  const validationResults = await Promise.all(fieldsWithRules.map((field) => isFieldValidByValue(field)))
+  return validationResults.every((result) => result)
 }
 
 // Helper function to get step key from step number
@@ -1036,14 +1047,14 @@ const validateFormSilently = async () => {
   const allFields = formRef.value.fields || []
 
   // Validate each step silently
-  Object.keys(stepFieldsMap).forEach((step) => {
+  for (const step of Object.keys(stepFieldsMap)) {
     const stepNumber = parseInt(step)
-    const isStepValid = validateStepSilently(stepNumber, allFields)
+    const isStepValid = await validateStepSilently(stepNumber, allFields)
     if (isStepValid) {
       const stepKey = getStepKeyFromNumber(stepNumber)
       layoutStore.updateStepStatus(stepKey, isStepValid)
     }
-  })
+  }
 }
 
 // Helper function to set up breadcrumbs
@@ -1382,8 +1393,6 @@ onMounted(async () => {
       showErrorMessage()
     }
   }
-
-  // REMOVE layoutStore.resetSteps() from here
 
   const isDateDefined =
     proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
