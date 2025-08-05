@@ -59,7 +59,7 @@
             class="fdpg-input__tag"
             data-testId="generalProjectInformationForm.keywords"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
-            :placeholder="$t('proposal.keywordsPlaceholder')"
+            :placeholder="t('proposal.keywordsPlaceholder')"
             aria-label="Please click the Enter key after input"
           />
         </FdpgFormItem>
@@ -117,7 +117,9 @@ import type { IGeneralProjectInformation } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import useNotifications from '@/composables/use-notifications'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   modelValue: {
@@ -134,14 +136,37 @@ const props = defineProps({
     default: false,
   },
 })
+
+const { showInfoMessage } = useNotifications()
+const { t } = useI18n()
+
 const emit = defineEmits(['update:modelValue'])
 
-const generalProjectInformationForm = useVModel(props, 'modelValue', emit) as unknown as IGeneralProjectInformation
+const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
 const projectFundingEditor = ref()
+
+watch(
+  () => generalProjectInformationForm.value,
+  () => {
+    const startDate = generalProjectInformationForm.value.desiredStartTime
+    const startType = generalProjectInformationForm.value.desiredStartTimeType
+    const startDatePassed = startType === 'later' && new Date(startDate).getTime() < new Date().getTime()
+
+    if (!props.reviewMode && startDatePassed) {
+      generalProjectInformationForm.value = {
+        ...generalProjectInformationForm.value,
+        desiredStartTime: '',
+        desiredStartTimeType: 'immediate',
+      }
+
+      showInfoMessage(t('proposal.autoDesiredStartDateAdjustment'))
+    }
+  },
+)
 
 const handleStartTimeTypeChange = (newValue: string) => {
   if (newValue === 'immediate') {
-    generalProjectInformationForm.desiredStartTime = ''
+    generalProjectInformationForm.value = { ...generalProjectInformationForm.value, desiredStartTime: '' }
     setTimeout(() => {
       if (props.formRef) {
         props.formRef.validateField('userProject.generalProjectInformation.desiredStartTime')
