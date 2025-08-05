@@ -312,7 +312,7 @@
     "informationOnTheRequestedDataInfo": "Bitte geben Sie hier für alle Variablen eine stichwortartige Beschreibung in verständlicher, klinischer Sprache an (z.B. Geschlecht (m/w), Diagnose: Code, Feststellungsdatum, Laboruntersuchung: Code, Durchführungsdatum). Jedes in der elektronischen Merkmalsselektion aufgeführte Merkmal sollte dabei aufgeführt werden. Diese Beschreibung ist vorrangig für die UAC-Mitglieder gedacht.",
     "patientInfo": "Textuelle Beschreibung der Patientenauswahl/Einschlusskriterien und Ausschlusskriterien",
     "pleaseEnterYourDetailsForPatientSelectionHere": "verständliche klinische Sprache, z.B. Geschlecht (m/w), Alter > 17 Jahre, Diagnosecode E10-14",
-    "informationOnDataSelection": "Bitte geben Sie nur zusätzliche Informationen zur Datenselektion an, die im Datenportal nicht abgebildet werden konnten oder nehmen Sie Klarstellungen vor.",
+    "informationOnDataSelection": "Bitte geben Sie hier für alle Variablen eine stichwortartige Beschreibung in verständlicher, klinischer Sprache an. Diese Beschreibung ist vorrangig für die UAC-Mitglieder gedacht.",
     "pleaseEnterYourDataSelectionInformationHere": "z.B. Geschlecht (m/w), Diagnose: Code, Feststellungsdatum, Laboruntersuchung: Code, Durchführungsdatum",
     "attachmentsOptional": "Anhänge (optional)",
     "pleaseUploadAdditionalAttachmentsHere": "Bitte fügen Sie weitere Anhänge dem Antrag bei.",
@@ -336,7 +336,7 @@
     "checkProjectForUniqueness": "Projekt auf Einzigartigkeit prüfen",
     "checkAttachments": "Anhänge prüfen ({count})",
     "checkContractAppendix": "Vertragsanhänge ({count})",
-    "projectProperties": "Projekteigenschaften",
+    "projectProperties": "Projekteigenschaften ({checkedCount}/{optionsCount})",
     "checklistVerification": "Checkliste Prüfung ({checkedCount}/{optionsCount})",
     "checklistGenericError": "Die Checkliste konnte nicht gespeichert werden",
     "isRegistrationLinkSentLabel": "Ich habe einen Registrierungslink an den Antragsteller und alle beteiligten Wissenschaftler gesendet",
@@ -637,7 +637,7 @@
     "internalCheckNotesPlaceholder": "Notizen im Format: Datum: dd.mm.yyyy\n Bearbeiter: <>\n <Bearbeitungsstand/Hinweise>",
     "desiredStartTime_immediate": "Sobald wie möglich",
     "desiredStartTime_later": "Anderer Zeitpunkt",
-    "executiveSummaryUac": "Projektzusammenfassung für die Use and Access Committees (UACs)",
+    "executiveSummaryUac": "Executive summary - Projektzusammenfassung für die Use and Access Committees (UACs)",
     "literature": "Literatur",
     "literaturePlaceholder": "Bitte geben Sie alle aufgeführten Literaturreferenzen an.",
     "biometricPlaceholder": "Bitte beschreiben Sie Ihr Vorgehen bei Schätzung der Fallzahl und benötigter Effektstärke (Power).",
@@ -761,7 +761,8 @@
     "MiiDataPrivacyTitle_Centralized": "Rechtsgrundlagen für zentrale Analysen",
     "MiiDataPrivacyText_Centralized": "Beim vorliegenden Anwendungsfall handelt es sich um eine zentrale Analyse (Data Sharing, Daten-Herausgeben), bei der personenbezogene Gesundheitsdaten die Standorte verlassen. Eine Durchführung ist in der Regel auf Basis einer informierten Einwilligung (des Broad Consent) möglich. Die Rechtsgrundlage wird im übergreifenden Datenschutzkonzept der MII in Abschnitt 3.2.3 erläutert.",
     "MiiDataPrivacyTitle_Distributed": "Rechtsgrundlagen für Verteilte Analysen",
-    "MiiDataPrivacyText_Distributed": "Beim vorliegenden Anwendungsfall handelt es sich um eine verteilte Analyse, bei der keine personenbezogenen Gesundheitsdaten die Standorte verlassen. Gemäß Abschnitt 3.2.2 des übergreifenden Datenschutzkonzepts der MII ist für die lokale Verarbeitung keine weitere Rechtsgrundlage notwendig. Dennoch ist bekannt, dass die Auffassung hierzu nach Bundesland und Standort variieren kann. In dem Abschnitt wird daher auf weitere Möglichkeiten wie Landeskrankenhaus- oder Landesdatenschutzgesetze oder, falls nicht anders möglich, auf den Broad Consent verwiesen. Die lokalen Datenschutzbeauftragten der Standorte sind für den jeweiligen Standort auskunftsfähig, ob überhaupt und wenn ja welche weitere Rechtsgrundlage zum Einsatz kommt."
+    "MiiDataPrivacyText_Distributed": "Beim vorliegenden Anwendungsfall handelt es sich um eine verteilte Analyse, bei der keine personenbezogenen Gesundheitsdaten die Standorte verlassen. Gemäß Abschnitt 3.2.2 des übergreifenden Datenschutzkonzepts der MII ist für die lokale Verarbeitung keine weitere Rechtsgrundlage notwendig. Dennoch ist bekannt, dass die Auffassung hierzu nach Bundesland und Standort variieren kann. In dem Abschnitt wird daher auf weitere Möglichkeiten wie Landeskrankenhaus- oder Landesdatenschutzgesetze oder, falls nicht anders möglich, auf den Broad Consent verwiesen. Die lokalen Datenschutzbeauftragten der Standorte sind für den jeweiligen Standort auskunftsfähig, ob überhaupt und wenn ja welche weitere Rechtsgrundlage zum Einsatz kommt.",
+    "autoDesiredStartDateAdjustment": "Das Startdatum des Projektes wurde automatisch angepasst"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
