@@ -312,7 +312,7 @@
     "informationOnTheRequestedDataInfo": "Please provide a brief description of all variables in understandable clinical language (e.g. gender (m/f), diagnosis: code, date of diagnosis, laboratory test: code, date of test). Every characteristic listed in the electronic characteristic selection should be included. This description is primarily intended for UAC members.",
     "patientInfo": "Textual description of patient selection/inclusion criteria and exclusion criteria",
     "pleaseEnterYourDetailsForPatientSelectionHere": "comprehensible clinical language, e.g. gender (m/f), age > 17 years, diagnosis code E10-14",
-    "informationOnDataSelection": "Please only provide additional information on data selection that could not be displayed in the data portal, or provide clarifications.",
+    "informationOnDataSelection": "Please provide a brief description of all variables in understandable clinical language. This description is primarily intended for UAC members.",
     "pleaseEnterYourDataSelectionInformationHere": "e.g. gender (m/f), diagnosis: code, date of diagnosis, laboratory test: code, date of test",
     "attachmentsOptional": "Attachments (optional)",
     "pleaseUploadAdditionalAttachmentsHere": "Please attach any additional attachments to the application.",
@@ -637,7 +637,7 @@
     "internalCheckNotesPlaceholder": "Notes in format: Date: dd.mm.yyyy\n Processed by: <> \n <Processing status/notes>",
     "desiredStartTime_immediate": "As soon as possible",
     "desiredStartTime_later": "Other time",
-    "executiveSummaryUac": "Project summary for the Use and Access Committees (UACs)",
+    "executiveSummaryUac": "Executive summary - Project summary for the Use and Access Committees (UACs)",
     "literature": "Literatur",
     "literaturePlaceholder": "Please provide all listed literature references.",
     "biometricPlaceholder": "Please describe your approach to estimating the number of cases and the required effect size (power).",
@@ -761,7 +761,8 @@
     "MiiDataPrivacyTitle_Centralized": "Legal basis for central analyses",
     "MiiDataPrivacyText_Centralized": "The requested use case is a central analysis (data sharing) in which personal health data leave the sites. Usually, implementation is possible on the basis of an informed consent (broad consent). The legal basis is explained in the overarching data protection concept of the MII in section 3.2.3.",
     "MiiDataPrivacyTitle_Distributed": "Legal basis for distributed analyses",
-    "MiiDataPrivacyText_Distributed": "The requested use case is a distributed analysis where no personal health data leave the sites. According to section 3.2.2 of the overarching data protection concept of the MII, no further legal basis is necessary for local processing. Nevertheless, it is known that the view on this can vary by federal state and location. The section therefore refers to other options such as state hospital or local data protection laws or, if not otherwise possible, Broad Consent. The local data protection officers of the sites are able to provide information as to whether another legal basis is used at all and, if so, which one."
+    "MiiDataPrivacyText_Distributed": "The requested use case is a distributed analysis where no personal health data leave the sites. According to section 3.2.2 of the overarching data protection concept of the MII, no further legal basis is necessary for local processing. Nevertheless, it is known that the view on this can vary by federal state and location. The section therefore refers to other options such as state hospital or local data protection laws or, if not otherwise possible, Broad Consent. The local data protection officers of the sites are able to provide information as to whether another legal basis is used at all and, if so, which one.",
+    "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
