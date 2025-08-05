@@ -23,8 +23,16 @@ export default () => {
     ElNotification({ title: 'Success', message: message, type: 'success' })
   }
 
+  const showInfoMessage = (message?: string) => {
+    if (message === undefined) {
+      message = t('general.hint')
+    }
+    ElNotification({ title: 'Info', message: message, type: 'info' })
+  }
+
   return {
     showErrorMessage,
     showSuccessMessage,
+    showInfoMessage
   }
 }
