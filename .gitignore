@@ -4,6 +4,9 @@ node_modules
 /print-frontend
 /reports
 
+# Auto-generated component types
+components.d.ts
+
 # local env files
 .env.local
 .env.*.local
@@ -25,3 +28,4 @@ pnpm-debug.log*
 /test-results/
 /playwright-report/
 /playwright/.cache/
+components.d.ts

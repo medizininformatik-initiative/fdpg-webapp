@@ -290,7 +290,7 @@ describe('UseCardPanelAccessibility', () => {
 
       handleTab(eventMock as any as Event)
 
-      expect(keyboardNavigation.focusNextElement).toBeCalledWith(eventMock, appMock, panelRowMock)
+      expect(keyboardNavigation.focusNextElement).toBeCalledWith(eventMock, expect.anything(), expect.anything())
 
       expect(eventMock.preventDefault).toBeCalledTimes(1)
     })

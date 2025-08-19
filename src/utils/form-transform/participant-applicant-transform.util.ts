@@ -111,7 +111,7 @@ const transformParticipantRole = (participantRole?: DeepPartial<IParticipantRole
   return {
     _id: participantRole?._id,
     isDone: participantRole?.isDone ?? false,
-    role: participantRole?.role,
+    role: participantRole?.role ?? ParticipantRole.ParticipatingScientist,
   }
 }
 
