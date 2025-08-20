@@ -89,11 +89,16 @@ describe('UpdateQueue', () => {
       return item
     })
 
-    // Intentionally catch the rejection from the first item to avoid unhandled rejection in test runner
-    await expect(queue.update({ id: '1', shouldFail: true }, updateFunction)).rejects.toBeInstanceOf(Error)
-    await expect(queue.update({ id: '2', shouldFail: false }, updateFunction)).resolves.toBeDefined()
+    // Add both items quickly to ensure they're processed in the same batch
+    const promise1 = queue.update({ id: '1', shouldFail: true }, updateFunction)
+    const promise2 = queue.update({ id: '2', shouldFail: false }, updateFunction)
 
+    // Wait for processing to complete
     await vi.runAllTimersAsync()
+
+    // Check that the first item failed and second succeeded
+    await expect(promise1).rejects.toBeInstanceOf(Error)
+    await expect(promise2).resolves.toBeDefined()
 
     // Should process the successful item despite the error
     expect(processedItems).toHaveLength(1)
