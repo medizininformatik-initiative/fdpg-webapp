@@ -495,7 +495,6 @@ const rules = ref<Record<string, any>>({
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       ethicsVoteNumber: [requiredValidationFunc('string'), maxLengthValidationFunc(100)],
       voteFromDate: requiredValidationFunc(),
-      ethicVoteUploads: requiredUploadFunc(ethicVoteUploads),
     },
     resourceAndRecontact: {
       hasEnoughResources: null,
