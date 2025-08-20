@@ -34,7 +34,6 @@
                     data-test-id="proposalForm.projectAbbreviation"
                     placeholder="proposal.egWestStorm"
                     :disabled="isReviewMode"
-                    @input="handleFormInput"
                   />
                 </FdpgFormItem>
               </el-col>
@@ -330,7 +329,7 @@ import { debounce } from 'lodash-es'
 
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
 // Map each step to its corresponding form fields
-const stepFieldsMap = {
+const stepFieldsMap: Record<number, string[]> = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
   [CreatPrposalSteps.Variables]: [
     'requestedData.dataInfo',
@@ -709,6 +708,9 @@ const nextStep = async () => {
   // Validate all steps up to current step
   const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
 
+  // Ensure validation states have settled before computing step status
+  await waitForValidation()
+
   // Update step statuses
   await updateValidatedStepsStatus(stepsToValidate)
 
@@ -744,10 +746,24 @@ const handleSubmit = async () => {
   isSubmissionDialogOpen.value = true
 }
 
-// Helper function to check if step is valid based on field states
+// Helper function to check if step is valid based on field states and values
 const isStepValidByFieldStates = (stepFields: any[]) => {
   const fieldsWithRules = stepFields.filter(fieldHasRules)
-  return fieldsWithRules.length === 0 || fieldsWithRules.every((field) => field.validateState === 'success')
+
+  if (fieldsWithRules.length === 0) return true
+
+  for (const field of fieldsWithRules) {
+    // Hard failure if any field is explicitly in error
+    if (field.validateState === 'error') return false
+
+    // If field has succeeded, continue
+    if (field.validateState === 'success') continue
+
+    // If field hasn't been validated yet, fall back to value-based check
+    if (!isFieldValidByValue(field)) return false
+  }
+
+  return true
 }
 
 // Helper function to get step key from step value
@@ -951,12 +967,12 @@ const handleSaveDraft = async () => {
   const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
   const allFields = formRef.value?.fields || []
   const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+  // Ensure all field validateStates are updated before updating step status
+  await waitForValidation()
   await updateValidatedStepsStatus(stepsToValidate)
   if (hasValidationErrors) {
     bypassDebounce.value = false
-    return
   }
-
   await saveProposalWithMessage()
   await setUpPage()
 
@@ -1055,8 +1071,8 @@ const setupBreadcrumbs = () => {
     },
     {
       name: RouteName.ProposalDetails,
-      params: proposalForm.value._id ? { id: proposalForm.value._id } : undefined,
-      displayName: proposalForm.value.projectAbbreviation
+      params: proposalForm.value?._id ? { id: proposalForm.value._id } : undefined,
+      displayName: proposalForm.value?.projectAbbreviation
         ? proposalForm.value.projectAbbreviation
         : 'proposal.mIIUsageApplicationForm',
     },
@@ -1338,6 +1354,8 @@ watch(
       const stepFieldPaths = stepFieldsMap[oldStep] || []
       const oldStepFields = getStepFields(allFields, stepFieldPaths)
       await validateStepFields(oldStepFields)
+      // Wait for validation to settle before updating status
+      await waitForValidation()
       // Update step statuses
       await updateValidatedStepsStatus([oldStep])
     }

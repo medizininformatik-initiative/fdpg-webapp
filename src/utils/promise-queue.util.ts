@@ -71,21 +71,35 @@ export class PromiseQueue {
 
 export class UpdateQueue<T = any> {
   private queue = new PromiseQueue()
-  private latestItems = new Map<string, T>()
+  private latestItems = new Map<string, { item: T; generation: number }>()
   private processing = false
   private latestUpdateFunction: ((item: T) => Promise<any>) | null = null
+  private waiters = new Map<
+    string,
+    Array<{ generation: number; resolve: (value: any) => void; reject: (reason?: any) => void }>
+  >()
+  private generationById = new Map<string, number>()
 
   async update(item: T, updateFunction: (item: T) => Promise<any>): Promise<any> {
     const itemId = this.getId(item)
 
     // Store the latest version of this item
-    this.latestItems.set(itemId, item)
+    const nextGeneration = (this.generationById.get(itemId) ?? 0) + 1
+    this.generationById.set(itemId, nextGeneration)
+    this.latestItems.set(itemId, { item, generation: nextGeneration })
 
     // Store the latest update function
     this.latestUpdateFunction = updateFunction
 
-    // Always trigger processing
-    return this.processUpdates()
+    const itemPromise = new Promise((resolve, reject) => {
+      const list = this.waiters.get(itemId) ?? []
+      list.push({ generation: nextGeneration, resolve, reject })
+      this.waiters.set(itemId, list)
+    })
+
+    void this.processUpdates()
+
+    return itemPromise
   }
 
   private async processUpdates(): Promise<any> {
@@ -108,17 +122,24 @@ export class UpdateQueue<T = any> {
 
         // Process each item sequentially with the latest update function
         if (currentUpdateFunction) {
-          for (const [itemId, item] of itemsToProcess) {
+          for (const [itemId, { item, generation }] of itemsToProcess) {
             try {
-              await this.queue.add(() => currentUpdateFunction(item))
+              const result = await this.queue.add(() => currentUpdateFunction(item))
+              this.resolveWaitersUpToGeneration(itemId, generation, result)
             } catch (error) {
-              // Silently ignore errors to prevent one item from stopping others
+              // Reject waiters for this item, but continue with other items
+              this.rejectWaitersUpToGeneration(itemId, generation, error)
             }
           }
         }
       }
     } finally {
       this.processing = false
+      // If new items were enqueued during the tiny window after the last check,
+      // ensure we spin the processor again to drain them.
+      if (this.latestItems.size > 0) {
+        void this.processUpdates()
+      }
     }
   }
 
@@ -131,9 +152,51 @@ export class UpdateQueue<T = any> {
     this.queue.clear()
     this.processing = false
     this.latestUpdateFunction = null
+    this.waiters.clear()
+    this.generationById.clear()
   }
 
   get pending() {
     return this.latestItems.size + this.queue.size
+  }
+
+  private resolveWaitersUpToGeneration(itemId: string, generation: number, value: any) {
+    const list = this.waiters.get(itemId)
+    if (!list || list.length === 0) return
+    const remaining: typeof list = []
+    for (const waiter of list) {
+      if (waiter.generation <= generation) {
+        try {
+          waiter.resolve(value)
+        } catch {}
+      } else {
+        remaining.push(waiter)
+      }
+    }
+    if (remaining.length > 0) {
+      this.waiters.set(itemId, remaining)
+    } else {
+      this.waiters.delete(itemId)
+    }
+  }
+
+  private rejectWaitersUpToGeneration(itemId: string, generation: number, reason: any) {
+    const list = this.waiters.get(itemId)
+    if (!list || list.length === 0) return
+    const remaining: typeof list = []
+    for (const waiter of list) {
+      if (waiter.generation <= generation) {
+        try {
+          waiter.reject(reason)
+        } catch {}
+      } else {
+        remaining.push(waiter)
+      }
+    }
+    if (remaining.length > 0) {
+      this.waiters.set(itemId, remaining)
+    } else {
+      this.waiters.delete(itemId)
+    }
   }
 }

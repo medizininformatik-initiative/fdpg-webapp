@@ -268,6 +268,53 @@ export const useProposalStore = defineStore('Proposal', {
       }
     }, 500),
 
+    async updateFdpgChecklistImmediate(
+      id: string,
+      checklist: Partial<IFdpgChecklist>,
+      errorCb?: (...args: any) => void,
+    ): Promise<void> {
+      const typedStore = this as unknown as IProposalState
+
+      try {
+        const updatedItem = await typedStore.apiService.updateFdpgChecklist(id, checklist)
+        const currentProposal = typedStore.currentProposal
+
+        if (!currentProposal || !updatedItem || !currentProposal.fdpgChecklist) return
+
+        const checklistData = currentProposal.fdpgChecklist
+
+        if ('isRegistrationLinkSent' in updatedItem) {
+          checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('fdpgInternalCheckNotes' in updatedItem) {
+          checklistData.fdpgInternalCheckNotes =
+            updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
+        } else if ('_id' in updatedItem) {
+          const targetFields = ['checkListVerification', 'projectProperties'] as const
+
+          for (const field of targetFields) {
+            const list = checklistData[field]
+            const index = list?.findIndex((item) => item._id === updatedItem._id)
+            if (index !== -1 && list) {
+              list[index] = {
+                ...list[index],
+                ...updatedItem,
+              }
+              break
+            }
+          }
+        }
+
+        typedStore.currentProposal = {
+          ...currentProposal,
+          fdpgChecklist: checklistData,
+        }
+      } catch (error) {
+        if (errorCb) {
+          errorCb(error)
+        }
+      }
+    },
+
     async updateFdpgChecklist(
       id: string,
       checklist: Partial<IFdpgChecklist>,

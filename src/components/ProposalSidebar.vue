@@ -48,10 +48,12 @@ import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 
 const { t } = useI18n()
 const route = useRoute()
 const layoutStore = useLayoutStore()
+const proposalStore = useProposalStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
 
@@ -60,7 +62,7 @@ const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 const formTouched = computed(() => layoutStore.formTouched)
 
 const setActiveTab = (tab: CreatPrposalSteps) => {
-  if (!layoutStore.isDatasourceSelected) return
+  if (!layoutStore.isDatasourceSelected || !proposalStore.currentProposal?._id) return
   layoutStore.setActiveStep(tab)
 }
 

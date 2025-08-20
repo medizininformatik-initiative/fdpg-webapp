@@ -181,18 +181,6 @@ watch(
   { deep: true },
 )
 
-const filteredDueDates = computed(() => {
-  return Object.fromEntries(
-    Object.keys(proposalStore.currentProposal?.deadlines || {})
-      .filter(
-        (dueDateKey) =>
-          proposalStore.currentProposal?.status &&
-          statusToDueDatesMap[proposalStore.currentProposal.status]?.includes(dueDateKey as DueDateEnum),
-      )
-      .map((key) => [key, (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key]]),
-  )
-})
-
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
   await initContracting(selectedLocations, file?.raw)
@@ -652,15 +640,15 @@ const handleSaveDeadlines = async (deadlines: Deadlines) => {
 
 const updateQueue = new UpdateQueue()
 
-const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
+const updateChecklistItem = async (item: Partial<IFdpgChecklist>) => {
   if (!proposalId.value) {
     console.error('Proposal ID is missing')
     return
   }
 
-  updateQueue.update(item, async (item) => {
+  await updateQueue.update(item, async (item) => {
     try {
-      await proposalStore.updateFdpgChecklist(proposalId.value, item)
+      await proposalStore.updateFdpgChecklistImmediate(proposalId.value, item)
       return Promise.resolve()
     } catch (error) {
       showErrorMessage('Failed to update checklist item')
