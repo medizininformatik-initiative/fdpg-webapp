@@ -90,15 +90,19 @@ describe('UpdateQueue', () => {
     })
 
     // Add both items quickly to ensure they're processed in the same batch
-    const promise1 = queue.update({ id: '1', shouldFail: true }, updateFunction)
-    const promise2 = queue.update({ id: '2', shouldFail: false }, updateFunction)
+    const promise1 = queue.update({ id: '1', shouldFail: true }, updateFunction).catch((error) => error)
+    const promise2 = queue.update({ id: '2', shouldFail: false }, updateFunction).catch((error) => error)
 
-    // Wait for processing to complete
+    // Wait for all timers to ensure processing is complete
     await vi.runAllTimersAsync()
 
-    // Check that the first item failed and second succeeded
-    await expect(promise1).rejects.toBeInstanceOf(Error)
-    await expect(promise2).resolves.toBeDefined()
+    // Wait for both promises to settle
+    const [result1, result2] = await Promise.all([promise1, promise2])
+
+    // Verify that the first item failed and second succeeded
+    expect(result1).toBeInstanceOf(Error)
+    expect(result1.message).toBe('Update failed')
+    expect(result2).toEqual({ id: '2', shouldFail: false })
 
     // Should process the successful item despite the error
     expect(processedItems).toHaveLength(1)
