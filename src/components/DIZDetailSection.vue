@@ -39,7 +39,7 @@
 
               <el-table-column prop="documentationLinks" :label="t('proposal.documentationLinks')" min-width="300">
                 <template #default="{ row }">
-                  <div v-if="row.documentationLinks" v-html="row.documentationLinks"></div>
+                  <div v-if="row.documentationLinks" v-html="row.documentationLinks" class="quill-editor"></div>
                   <span v-else class="empty-value">—</span>
                 </template>
               </el-table-column>
