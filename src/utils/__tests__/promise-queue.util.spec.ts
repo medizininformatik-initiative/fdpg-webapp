@@ -89,8 +89,9 @@ describe('UpdateQueue', () => {
       return item
     })
 
-    queue.update({ id: '1', shouldFail: true }, updateFunction)
-    queue.update({ id: '2', shouldFail: false }, updateFunction)
+    // Intentionally catch the rejection from the first item to avoid unhandled rejection in test runner
+    await expect(queue.update({ id: '1', shouldFail: true }, updateFunction)).rejects.toBeInstanceOf(Error)
+    await expect(queue.update({ id: '2', shouldFail: false }, updateFunction)).resolves.toBeDefined()
 
     await vi.runAllTimersAsync()
 
