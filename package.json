@@ -26,7 +26,6 @@
     "axios": "^1.10.0",
     "bootstrap-icons": "^1.13.1",
     "element-plus": "^2.10.4",
-    "element-theme-chalk": "^2.15.14",
     "lodash-es": "^4.17.21",
     "pinia": "^3.0.3",
     "public-google-sheets-parser": "^1.5.4",
