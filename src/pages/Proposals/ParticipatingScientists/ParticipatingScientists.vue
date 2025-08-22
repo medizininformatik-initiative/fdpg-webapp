@@ -44,6 +44,7 @@
         :form-ref="formRef"
         :identifier="`participants.${index}`"
         :ParticipatingScientists="true"
+        required
       ></ProjectParticipantCategory>
 
       <section style="display: flex; flex-direction: column; gap: 0.3em">
