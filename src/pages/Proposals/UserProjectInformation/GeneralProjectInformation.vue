@@ -146,19 +146,15 @@ const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
 const projectFundingEditor = ref()
 
 watch(
-  () => generalProjectInformationForm.value,
-  () => {
-    const startDate = generalProjectInformationForm.value.desiredStartTime
-    const startType = generalProjectInformationForm.value.desiredStartTimeType
-    const startDatePassed = startType === 'later' && new Date(startDate).getTime() < new Date().getTime()
+  () => [generalProjectInformationForm.value.desiredStartTime, props.reviewMode],
+  ([desiredStartTime, reviewMode]) => {
+    const startTimestamp = new Date(desiredStartTime as unknown as string).getTime()
+    const isValidDate = !Number.isNaN(startTimestamp)
+    const now = Date.now()
 
-    if (!props.reviewMode && startDatePassed) {
-      generalProjectInformationForm.value = {
-        ...generalProjectInformationForm.value,
-        desiredStartTime: '',
-        desiredStartTimeType: 'immediate',
-      }
-
+    if (!reviewMode && isValidDate && startTimestamp < now) {
+      generalProjectInformationForm.value.desiredStartTime = ''
+      generalProjectInformationForm.value.desiredStartTimeType = 'immediate'
       showInfoMessage(t('proposal.autoDesiredStartDateAdjustment'))
     }
   },
@@ -166,7 +162,7 @@ watch(
 
 const handleStartTimeTypeChange = (newValue: string) => {
   if (newValue === 'immediate') {
-    generalProjectInformationForm.value = { ...generalProjectInformationForm.value, desiredStartTime: '' }
+    generalProjectInformationForm.value.desiredStartTime = ''
     setTimeout(() => {
       if (props.formRef) {
         props.formRef.validateField('userProject.generalProjectInformation.desiredStartTime')
