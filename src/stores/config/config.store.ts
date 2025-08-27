@@ -1,7 +1,7 @@
 import { ConfigService } from '@/services/config/config.service'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IDataSource } from '@/types/proposal.types'
+import type { IAlertConfigGet, IDataSource } from '@/types/proposal.types'
 import type { ITermsConfigGet } from '@/types/terms.types'
 import { defineStore } from 'pinia'
 
@@ -10,6 +10,7 @@ export interface IConfigState {
   termsAndConditions: Partial<Record<PlatformIdentifier, ITermsConfigGet>>
   dataPrivacy: Partial<Record<PlatformIdentifier, IDataPrivacyConfigGet>>
   dataSources: Record<PlatformIdentifier, IDataSource>
+  alertConfig: IAlertConfigGet
 }
 
 export const useConfigStore = defineStore('Config', {
@@ -29,6 +30,11 @@ export const useConfigStore = defineStore('Config', {
         externalLink: '',
       },
     },
+    alertConfig: {
+      logo: '',
+      isVisible: false,
+      message: '',
+    },
   }),
 
   actions: {
@@ -46,6 +52,10 @@ export const useConfigStore = defineStore('Config', {
     async getDataSources(): Promise<void> {
       const result = await this.apiService.getDataSources()
       this.dataSources = result as unknown as Record<PlatformIdentifier, IDataSource>
+    },
+    async getAlertConfig(): Promise<void> {
+      const data = await this.apiService.getAlertConfig()
+      this.alertConfig = data
     },
   },
 })

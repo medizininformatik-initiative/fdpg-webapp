@@ -685,3 +685,8 @@ export interface ICohort extends WithIdAndIsDone {
   selectedCohorts: ISelectedCohort[]
   details?: string
 }
+export interface IAlertConfigGet {
+  logo: string
+  message: string
+  isVisible: boolean
+}
