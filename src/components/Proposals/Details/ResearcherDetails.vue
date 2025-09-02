@@ -239,6 +239,16 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     isHidden: !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
+  {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isDisabled: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        await proposalStore.exportAllUploadsAsZip()
+      }
+    },
+  },
 ])
 
 const getCommentTodos = (comments: ICommentDetail[]): IProjectTodo[] => {

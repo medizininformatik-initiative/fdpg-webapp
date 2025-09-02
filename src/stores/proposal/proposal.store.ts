@@ -477,6 +477,13 @@ export const useProposalStore = defineStore('Proposal', {
 
       return updatedDizDetails
     },
+    async exportAllUploadsAsZip(): Promise<void> {
+      if (!this.currentProposal?._id) {
+        throw new Error('No persisted proposal selected')
+      }
+
+      await this.apiService.exportAllUploadsAsZip(this.currentProposal?._id)
+    },
   },
 
   getters: {

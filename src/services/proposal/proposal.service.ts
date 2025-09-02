@@ -369,4 +369,45 @@ export class ProposalService {
     const response = await this.apiClient.put(`${this.basePath}/${proposalId}/diz-details/${dizDetailsId}`, data)
     return response.data
   }
+
+  async exportAllUploadsAsZip(proposalId: string): Promise<void> {
+    const response = await this.apiClient.post(
+      `${this.basePath}/${proposalId}/uploads/export`,
+      {},
+      { responseType: 'blob' },
+    )
+
+    if (response.status === 200) {
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+
+      const contentDisposition = response.headers['content-disposition'] || response.headers['Content-Disposition']
+      const xFilename = response.headers['x-filename'] || response.headers['X-Filename']
+
+      let filename = 'proposal-uploads.zip'
+
+      if (xFilename) {
+        filename = xFilename
+      } else if (contentDisposition) {
+        // Try RFC 5987 format first: filename*=UTF-8''encoded-filename
+        const rfc5987Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
+        if (rfc5987Match && rfc5987Match[1]) {
+          filename = decodeURIComponent(rfc5987Match[1])
+        } else {
+          const standardMatch = contentDisposition.match(/filename="?([^"]+)"?/)
+          if (standardMatch && standardMatch[1]) {
+            filename = standardMatch[1]
+          }
+        }
+      }
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
+    } else {
+      throw new Error('Could not export proposal uploads')
+    }
+  }
 }
