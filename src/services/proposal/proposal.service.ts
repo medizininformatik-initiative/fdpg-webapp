@@ -371,43 +371,62 @@ export class ProposalService {
   }
 
   async exportAllUploadsAsZip(proposalId: string): Promise<void> {
-    const response = await this.apiClient.post(
-      `${this.basePath}/${proposalId}/uploads/export`,
-      {},
-      { responseType: 'blob' },
-    )
+    try {
+      const response = await this.apiClient.post(
+        `${this.basePath}/${proposalId}/uploads/export`,
+        {},
+        { responseType: 'blob' },
+      )
 
-    if (response.status === 200) {
-      const url = window.URL.createObjectURL(new Blob([response.data]))
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
 
-      const contentDisposition = response.headers['content-disposition'] || response.headers['Content-Disposition']
-      const xFilename = response.headers['x-filename'] || response.headers['X-Filename']
+        const contentDisposition = response.headers['content-disposition'] || response.headers['Content-Disposition']
+        const xFilename = response.headers['x-filename'] || response.headers['X-Filename']
 
-      let filename = 'proposal-uploads.zip'
+        let filename = 'proposal-uploads.zip'
 
-      if (xFilename) {
-        filename = xFilename
-      } else if (contentDisposition) {
-        // Try RFC 5987 format first: filename*=UTF-8''encoded-filename
-        const rfc5987Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
-        if (rfc5987Match && rfc5987Match[1]) {
-          filename = decodeURIComponent(rfc5987Match[1])
-        } else {
-          const standardMatch = contentDisposition.match(/filename="?([^"]+)"?/)
-          if (standardMatch && standardMatch[1]) {
-            filename = standardMatch[1]
+        if (xFilename) {
+          filename = xFilename
+        } else if (contentDisposition) {
+          // Try RFC 5987 format first: filename*=UTF-8''encoded-filename
+          const rfc5987Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
+          if (rfc5987Match && rfc5987Match[1]) {
+            filename = decodeURIComponent(rfc5987Match[1])
+          } else {
+            const standardMatch = contentDisposition.match(/filename="?([^"]+)"?/)
+            if (standardMatch && standardMatch[1]) {
+              filename = standardMatch[1]
+            }
           }
         }
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } else {
+        throw new Error('Could not export proposal uploads')
       }
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      document.body.removeChild(a)
-      window.URL.revokeObjectURL(url)
-    } else {
-      throw new Error('Could not export proposal uploads')
+    } catch (error: any) {
+      if (error.response) {
+        const status = error.response.status
+        let errorData = error.response.data
+        if (errorData instanceof Blob) {
+          try {
+            const text = await errorData.text()
+            errorData = JSON.parse(text)
+          } catch (parseError) {
+            console.warn('Could not parse error response as JSON:', parseError)
+          }
+        }
+        const errorMessage = errorData?.message || errorData?.error || `Export failed with status ${status}`
+        throw new Error(errorMessage)
+      } else {
+        throw new Error(error.message || 'An unexpected error occurred while exporting files')
+      }
     }
   }
 }

@@ -762,7 +762,8 @@
     "MiiDataPrivacyText_Centralized": "Beim vorliegenden Anwendungsfall handelt es sich um eine zentrale Analyse (Data Sharing, Daten-Herausgeben), bei der personenbezogene Gesundheitsdaten die Standorte verlassen. Eine Durchführung ist in der Regel auf Basis einer informierten Einwilligung (des Broad Consent) möglich. Die Rechtsgrundlage wird im übergreifenden Datenschutzkonzept der MII in Abschnitt 3.2.3 erläutert.",
     "MiiDataPrivacyTitle_Distributed": "Rechtsgrundlagen für Verteilte Analysen",
     "MiiDataPrivacyText_Distributed": "Beim vorliegenden Anwendungsfall handelt es sich um eine verteilte Analyse, bei der keine personenbezogenen Gesundheitsdaten die Standorte verlassen. Gemäß Abschnitt 3.2.2 des übergreifenden Datenschutzkonzepts der MII ist für die lokale Verarbeitung keine weitere Rechtsgrundlage notwendig. Dennoch ist bekannt, dass die Auffassung hierzu nach Bundesland und Standort variieren kann. In dem Abschnitt wird daher auf weitere Möglichkeiten wie Landeskrankenhaus- oder Landesdatenschutzgesetze oder, falls nicht anders möglich, auf den Broad Consent verwiesen. Die lokalen Datenschutzbeauftragten der Standorte sind für den jeweiligen Standort auskunftsfähig, ob überhaupt und wenn ja welche weitere Rechtsgrundlage zum Einsatz kommt.",
-    "autoDesiredStartDateAdjustment": "Das Startdatum des Projektes wurde automatisch angepasst"
+    "autoDesiredStartDateAdjustment": "Das Startdatum des Projektes wurde automatisch angepasst",
+    "exportAttachments": "Anhänge exportieren"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

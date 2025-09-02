@@ -479,10 +479,15 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async exportAllUploadsAsZip(): Promise<void> {
       if (!this.currentProposal?._id) {
-        throw new Error('No persisted proposal selected')
+        throw new Error('No proposal selected for export')
       }
 
-      await this.apiService.exportAllUploadsAsZip(this.currentProposal?._id)
+      try {
+        await this.apiService.exportAllUploadsAsZip(this.currentProposal._id)
+      } catch (error: any) {
+        // Re-throw the error with additional context if needed
+        throw new Error(error.message || 'Failed to export proposal files')
+      }
     },
   },
 
