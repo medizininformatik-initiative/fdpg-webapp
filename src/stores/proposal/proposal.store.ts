@@ -481,13 +481,7 @@ export const useProposalStore = defineStore('Proposal', {
       if (!this.currentProposal?._id) {
         throw new Error('No proposal selected for export')
       }
-
-      try {
-        await this.apiService.exportAllUploadsAsZip(this.currentProposal._id)
-      } catch (error: any) {
-        // Re-throw the error with additional context if needed
-        throw new Error(error.message || 'Failed to export proposal files')
-      }
+      await this.apiService.exportAllUploadsAsZip(this.currentProposal._id)
     },
   },
 
