@@ -214,7 +214,6 @@ const handleContractAppendixAdd = async (file: UploadFile) => {
 
 const editDialogOpen = ref<boolean>(false)
 const uploadedFile = ref<UploadFile | null>(null)
-// const relevantEditContractDocuments = ref<IUpload[]>([])
 const uploadId = ref<string | null>(null)
 const relevantEditContractDocuments = computed<IUpload[]>(() => {
   return contractDrafts.value.filter((doc) => doc._id === uploadId.value)
