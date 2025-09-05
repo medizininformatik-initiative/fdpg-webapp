@@ -353,6 +353,12 @@ const handleFinishProjectDeclineClick = () => {
   })
 }
 
+const handleDownloadLocationCsvClick = async () => {
+  if (proposalId.value) {
+    await proposalStore.downloadLocationCsv(proposalId.value)
+  }
+}
+
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
 const handleExportProposalPdfClick = async () => {
@@ -536,6 +542,13 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'left',
     isDisabled: proposalStore.currentProposal?.isLocked,
     isHidden: status.value !== ProposalStatus.FinishedProject,
+  },
+  {
+    label: 'proposal.downloadLocationCsv',
+    testId: 'button__downloadLocationCsv',
+    action: handleDownloadLocationCsvClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
 ])
 
