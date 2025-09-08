@@ -7,17 +7,17 @@
         :color="percentColors"
       />
       <p class="uac-vote">
-        {{ $t('dashboard.uacVote') }}: <span>{{ `${voteCount}/${proposal.requestedLocationsCount}` }}</span>
+        {{ t('dashboard.uacVote') }}: <span>{{ `${voteCount}/${proposal.requestedLocationsCount}` }}</span>
       </p>
     </el-col>
     <el-col :span="12">
       <el-progress
         text-inside
-        :percentage="(proposal.totalPromisedDataAmount / proposal.desiredDataAmount) * 100"
+        :percentage="(proposal.totalPromisedDataAmount / (proposal.desiredDataAmount ?? 1)) * 100"
         :color="percentColors"
       />
       <p class="uac-data">
-        <span>{{ `${proposal.totalPromisedDataAmount}/${proposal.desiredDataAmount}` }}</span>
+        <span>{{ `${proposal.totalPromisedDataAmount}/${proposal.desiredDataAmount ?? 0}` }}</span>
       </p>
     </el-col>
   </el-row>
@@ -25,8 +25,9 @@
 
 <script setup lang="ts">
 import type { IProposalDetail } from '@/types/proposal.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   proposal: {
@@ -34,6 +35,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const percentColors = [
   { color: '#e52117', percentage: 50 },
