@@ -110,11 +110,14 @@
       </el-col>
     </el-row>
   </el-card>
+  <TaskViewer :object-id="cohort._id" />
+  <TaskViewer :object-id="proposalStore.currentProposal?.userProject?.feasibility?._id" />
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { FormInstance, UploadFile } from 'element-plus'
 import type { ICohort, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
