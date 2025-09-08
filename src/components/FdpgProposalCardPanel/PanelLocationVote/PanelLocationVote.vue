@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" class="vote">
+  <el-row :gutter="20" class="vote" v-if="isMII">
     <el-col :span="12">
       <el-progress
         text-inside
@@ -24,6 +24,7 @@
 </template>
 
 <script setup lang="ts">
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposalDetail } from '@/types/proposal.types'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
@@ -45,6 +46,9 @@ const percentColors = [
 
 const voteCount = computed(() => {
   return props.proposal.requestedButExcludedCount + props.proposal.uacApprovedCount
+})
+const isMII = computed(() => {
+  return props.proposal.selectedDataSources.includes(PlatformIdentifier.Mii)
 })
 </script>
 
