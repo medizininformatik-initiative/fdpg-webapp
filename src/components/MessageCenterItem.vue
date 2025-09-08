@@ -30,10 +30,10 @@
 
     <section v-if="couldAnswer || hasFdpgLevelPermissions" role="region">
       <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
-        {{ $t('proposal.answerComment') }}
+        {{ t('proposal.answerComment') }}
       </el-button>
       <el-button v-if="hasFdpgLevelPermissions" link :disabled="isAnswerMode" @click="markAsDone">
-        {{ message.isDone ? $t('proposal.markAsOpen') : $t('proposal.markAsDone') }}
+        {{ message.isDone ? t('proposal.markAsOpen') : t('proposal.markAsDone') }}
       </el-button>
     </section>
   </section>
