@@ -29,11 +29,13 @@
         </el-col>
       </el-row>
     </el-card>
+    <TaskViewer :object-id="variableSelectionDataForm?._id" />
   </template>
 </template>
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
+import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IDifeVariableSelectionData, IVariableSelectionData } from '@/types/proposal.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, watch } from 'vue'
