@@ -507,6 +507,13 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
+    label: 'proposal.downloadLocationCsv',
+    testId: 'button__downloadLocationCsv',
+    action: handleDownloadLocationCsvClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
+  {
     type: 'primary',
     label: 'proposal.initiateContract',
     testId: 'button__initiateContract',
@@ -542,13 +549,6 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'left',
     isDisabled: proposalStore.currentProposal?.isLocked,
     isHidden: status.value !== ProposalStatus.FinishedProject,
-  },
-  {
-    label: 'proposal.downloadLocationCsv',
-    testId: 'button__downloadLocationCsv',
-    action: handleDownloadLocationCsvClick,
-    position: 'right',
-    isDisabled: proposalStore.currentProposal?.isLocked,
   },
 ])
 

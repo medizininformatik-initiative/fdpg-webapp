@@ -375,11 +375,10 @@ export class ProposalService {
     if (response.status === 200) {
       const { downloadUrl, filename } = response.data
 
-      // Create a temporary link to trigger the download
       const a = document.createElement('a')
       a.href = downloadUrl
       a.download = filename
-      a.target = '_blank' // Open in new tab as fallback
+      a.target = '_blank'
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
