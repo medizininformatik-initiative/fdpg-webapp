@@ -31,12 +31,14 @@
       </div>
     </FdpgFormItem>
   </el-card>
+  <TaskViewer :object-id="difeSelectionOfCasesForm._id" />
 </template>
 
 <script setup lang="ts">
 import type { PropType, Ref } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import { DifeSelectionOfCasesEntries, type IDifeSelectionOfCases } from '@/types/proposal.types'
+import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useVModel } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'

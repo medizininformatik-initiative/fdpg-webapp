@@ -67,7 +67,8 @@
     "boolean_true": "Yes",
     "boolean_false": "No",
     "upload": "Upload",
-    "noData": "No Data."
+    "noData": "No Data.",
+    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -260,7 +261,7 @@
     "notRequired": "Ethics vote not yet available",
     "ethicsCommittee": "Ethics Committee",
     "ethicsVoteNumber": "Ethics vote number",
-    "voteFromDate": "Ehikvotum from",
+    "voteFromDate": "Ethics votum from",
     "appendix": "Appendix",
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Please attach proof of the ethics vote to the application.",
     "chooseAFile": "Choose a file",
@@ -664,8 +665,8 @@
     "difeTypeOfUse_OTHER": "Other analysis (please specify accodingly)",
     "difeTypeOfUseExplanationPlaceholder": "Please specify your selection",
     "difeTypeOfUseSelectionPlaceholder": "Please select",
-    "dife_title": "Daten aus der Versorgung aus (Universitäts)kliniken| DIFE",
-    "mii_title": "Daten aus der Versorgung aus (Universitäts)kliniken| MII",
+    "dife_title": "European Prospective Investigation into Cancer and Nutrition - Potsdam",
+    "mii_title": "Data from routine care (University) clinica| MII",
     "dife_description": "The European Prospective Investigation into Cancer and Nutrition (EPIC)-Potsdam Study is a population-based prospective cohort study. It includes around 27,500 participants. At the start of the study in 1994, the women were 35 to 64 years old and the men were 40 to 64 years old. With its extensive database, the EPIC-Potsdam study serves as the basis for population-based epidemiological research at the DIfE. The research results help to create the scientific basis for possible preventive measures and to improve the health of the population.",
     "mii_description": "The aim of the Medical Informatics Initiative of the Federal Ministry of Education and Research is to make data from routine care available digitally, reliably and quickly for medical research. Through IT-supported analyses of this data, research helps to better recognize and treat diseases and to prevent them as effectively as possible. In the future, information about comparable medical cases or the results of current studies can also be made available to the treating physicians. In this way, this information can be used for the best possible therapy decision.",
     "dife_link": "https://health-study-hub.de/resource/nfdi4health-9",
@@ -762,7 +763,9 @@
     "MiiDataPrivacyText_Centralized": "The requested use case is a central analysis (data sharing) in which personal health data leave the sites. Usually, implementation is possible on the basis of an informed consent (broad consent). The legal basis is explained in the overarching data protection concept of the MII in section 3.2.3.",
     "MiiDataPrivacyTitle_Distributed": "Legal basis for distributed analyses",
     "MiiDataPrivacyText_Distributed": "The requested use case is a distributed analysis where no personal health data leave the sites. According to section 3.2.2 of the overarching data protection concept of the MII, no further legal basis is necessary for local processing. Nevertheless, it is known that the view on this can vary by federal state and location. The section therefore refers to other options such as state hospital or local data protection laws or, if not otherwise possible, Broad Consent. The local data protection officers of the sites are able to provide information as to whether another legal basis is used at all and, if so, which one.",
-    "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted"
+    "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted",
+    "exportAttachments": "Export attachments",
+    "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures."
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

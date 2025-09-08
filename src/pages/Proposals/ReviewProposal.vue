@@ -99,6 +99,8 @@
       :two-columns="true"
       empty-alert-text="proposal.noAttachmentsYet"
     />
+
+    <OrphanedTaskViewer />
   </section>
 </template>
 
@@ -106,6 +108,7 @@
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import ReviewLabel from '@/components/ReviewLabel.vue'
 import ReviewAreaLabel from '@/components/ReviewAreaLabel.vue'
+import OrphanedTaskViewer from '@/components/TaskViewer/OrphanedTaskViewer.vue'
 import type {
   DefinitionSection,
   IDefinitionSectionArray,
