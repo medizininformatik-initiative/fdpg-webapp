@@ -48,7 +48,7 @@ const voteCount = computed(() => {
   return props.proposal.requestedButExcludedCount + props.proposal.uacApprovedCount
 })
 const isMII = computed(() => {
-  return props.proposal.selectedDataSources.includes(PlatformIdentifier.Mii)
+  return props.proposal.selectedDataSources?.includes(PlatformIdentifier.Mii)
 })
 </script>
 
