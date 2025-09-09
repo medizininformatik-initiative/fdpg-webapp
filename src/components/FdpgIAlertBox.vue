@@ -5,7 +5,7 @@
         <span class="alert-text">{{ message }}</span>
       </template>
       <template #icon>
-        <img :src="logo || '/favicon.png'" alt="" class="alert-logo" />
+        <img :src="logoBase64" alt="" class="alert-logo" />
       </template>
     </el-alert>
   </div>
@@ -14,7 +14,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   message: string
-  logo?: string
+  logoBase64: string
 }>()
 </script>
 <style scoped lang="scss">

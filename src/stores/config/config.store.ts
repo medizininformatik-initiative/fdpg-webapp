@@ -31,7 +31,7 @@ export const useConfigStore = defineStore('Config', {
       },
     },
     alertConfig: {
-      logo: '',
+      logoBase64: '',
       isVisible: false,
       message: '',
     },

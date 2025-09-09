@@ -686,7 +686,7 @@ export interface ICohort extends WithIdAndIsDone {
   details?: string
 }
 export interface IAlertConfigGet {
-  logo: string
+  logoBase64: string
   message: string
   isVisible: boolean
 }

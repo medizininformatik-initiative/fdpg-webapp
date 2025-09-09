@@ -1,6 +1,6 @@
 <template>
   <div class="fdpg-dashboard-page">
-    <FdpgIAlertBox v-if="alertConfig.isVisible" :message="alertConfig.message" :logo="alertConfig.logo" />
+    <FdpgIAlertBox v-if="alertConfig.isVisible" :message="alertConfig.message" :logoBase64="alertConfig.logoBase64" />
     <FdpgDashboardActions :actions="dashboardActions"></FdpgDashboardActions>
     <div class="header">
       <div>
