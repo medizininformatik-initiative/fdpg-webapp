@@ -1,7 +1,7 @@
 <template>
   <div v-if="!(hideDocuments && hideContracts)" class="section">
     <template v-if="!hideDocuments">
-      <h2 class="section-title">{{ $t('proposal.appendix') }} ({{ documents.length }})</h2>
+      <h2 class="section-title">{{ t('proposal.appendix') }} ({{ documents.length }})</h2>
 
       <DocumentList
         :documents="documents"
@@ -17,12 +17,12 @@
     <el-row v-if="!hideContracts" :gutter="39">
       <el-col :span="12">
         <h2 class="section-title">
-          {{ $t('proposal.draftContracts') }}
+          {{ t('proposal.draftContracts') }}
         </h2>
       </el-col>
       <el-col :span="12">
         <h2 class="section-title">
-          {{ $t('proposal.contracts') }}
+          {{ t('proposal.contracts') }}
         </h2>
       </el-col>
     </el-row>
@@ -55,7 +55,7 @@
       <el-col :span="12">
         <h2 class="section-title">
           {{
-            $t('proposal.checkContractAppendix', {
+            t('proposal.checkContractAppendix', {
               count: contractAppendix.length,
             })
           }}
@@ -170,7 +170,7 @@ const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
 
-const { showErrorMessage } = useNotifications()
+const { showErrorMessage, showSuccessMessage } = useNotifications()
 const {
   uploadsForType: documents,
   handleRemoveFile: handleDocumentRemove,
@@ -214,10 +214,13 @@ const handleContractAppendixAdd = async (file: UploadFile) => {
 
 const editDialogOpen = ref<boolean>(false)
 const uploadedFile = ref<UploadFile | null>(null)
-const relevantEditContractDocuments = ref<IUpload[]>([])
+const uploadId = ref<string | null>(null)
+const relevantEditContractDocuments = computed<IUpload[]>(() => {
+  return contractDrafts.value.filter((doc) => doc._id === uploadId.value)
+})
 
-const handleContractDraftEditDialogOpen = (uploadId: string) => {
-  relevantEditContractDocuments.value = contractDrafts.value.filter((doc) => doc._id === uploadId)
+const handleContractDraftEditDialogOpen = (id: string) => {
+  uploadId.value = id
   handleOpenDialog()
 }
 
@@ -227,7 +230,7 @@ const handleOpenDialog = () => {
 
 const handleCloseDialog = () => {
   uploadedFile.value = null
-  relevantEditContractDocuments.value = []
+  uploadId.value = null
   editDialogOpen.value = false
 }
 
@@ -236,22 +239,23 @@ const handleEditContractUpload = async (file: UploadFile) => {
 }
 
 const handleEditContract = async () => {
-  const [toBeReplaced] = relevantEditContractDocuments.value
   const file = uploadedFile.value?.raw
 
-  if (!file || !toBeReplaced) {
+  if (!file || !uploadId.value) {
     showErrorMessage()
     handleCloseDialog()
-  }
+  } else {
+    try {
+      await proposalStore.updateContracting(proposalId.value, file as File, uploadId.value)
+      showSuccessMessage(t('general.submitted'))
 
-  try {
-    await proposalStore.updateContracting(proposalId.value, file as File, toBeReplaced._id)
-    await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
-  } catch {
-    showErrorMessage()
-  }
+      await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
+    } catch {
+      showErrorMessage()
+    }
 
-  handleCloseDialog()
+    handleCloseDialog()
+  }
 }
 </script>
 
