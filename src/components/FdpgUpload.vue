@@ -44,6 +44,7 @@ import type { UploadFile, UploadRawFile } from 'element-plus'
 import type { PropType } from 'vue'
 import DocumentList from './Proposals/Details/DocumentList.vue'
 import ImageList from './Proposals/Details/ImageList.vue'
+import { hi } from 'element-plus/es/locale'
 
 const props = defineProps({
   fileList: {
