@@ -88,6 +88,7 @@
       :accept="SupportedMimetype"
       :proposal-id="proposalId"
       @remove="handleContractDraftRemove"
+      :hideRemoveButton="true"
     >
       <el-button class="upload-button" link>
         {{ t('proposal.chooseAFile') }}
@@ -130,6 +131,7 @@ import FdpgDialog from './FdpgDialog.vue'
 import FdpgUpload from './FdpgUpload.vue'
 import { useI18n } from 'vue-i18n'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
+import { tr } from 'element-plus/es/locale'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)

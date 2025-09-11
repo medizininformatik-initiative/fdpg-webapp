@@ -22,6 +22,7 @@
       :is-disabled="isDisabled"
       :empty-alert-text="emptyAlertText"
       @remove="handleRemove"
+      :hide-remove-button="hideRemoveButton"
     />
     <ImageList
       v-if="!hideFileList && mode === 'picture'"
@@ -43,6 +44,7 @@ import type { UploadFile, UploadRawFile } from 'element-plus'
 import type { PropType } from 'vue'
 import DocumentList from './Proposals/Details/DocumentList.vue'
 import ImageList from './Proposals/Details/ImageList.vue'
+import { hi } from 'element-plus/es/locale'
 
 const props = defineProps({
   fileList: {
@@ -94,6 +96,11 @@ const props = defineProps({
   mode: {
     type: String as PropType<'document' | 'picture'>,
     default: 'document',
+  },
+  hideRemoveButton: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
 })
 

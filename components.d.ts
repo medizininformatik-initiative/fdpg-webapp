@@ -86,6 +86,7 @@ declare module 'vue' {
     FdpgFormItem: typeof import('./src/components/FdpgFormItem.vue')['default']
     FdpgHeader: typeof import('./src/components/FdpgHeader.vue')['default']
     FdpgHeaderRole: typeof import('./src/components/FdpgHeaderRole.vue')['default']
+    FdpgIAlertBox: typeof import('./src/components/FdpgIAlertBox.vue')['default']
     FdpgInfoPopover: typeof import('./src/components/FdpgInfoPopover.vue')['default']
     FdpgInput: typeof import('./src/components/FdpgInput.vue')['default']
     FdpgInternalCheckNote: typeof import('./src/components/FdpgInternalCheckNote.vue')['default']

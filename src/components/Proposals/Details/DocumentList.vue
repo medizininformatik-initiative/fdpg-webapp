@@ -21,7 +21,12 @@
             <el-button v-if="isEditable" class="file-button" :disabled="isLoading" @click.stop="handleEdit(_id)">
               <i class="fa fa-pencil" aria-hidden="true" />
             </el-button>
-            <el-button v-if="!isDisabled" class="file-button" :disabled="isLoading" @click.stop="handleRemove(_id)">
+            <el-button
+              v-if="!isDisabled && !hideRemoveButton"
+              class="file-button"
+              :disabled="isLoading"
+              @click.stop="handleRemove(_id)"
+            >
               <i class="fa fa-trash" aria-hidden="true" />
             </el-button>
           </div>
@@ -77,6 +82,11 @@ const props = defineProps({
   twoColumns: {
     type: Boolean,
     default: false,
+  },
+  hideRemoveButton: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
 })
 
