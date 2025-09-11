@@ -173,7 +173,8 @@
     "editedXDaysAgo": "Bearbeitet vor {x} Tagen",
     "noRole": "Es tut uns leid. Derzeit haben Sie keine zugewiesene Rolle und können das Portal noch nicht nutzen. Nach Ihrer Registrierung findet ein manueller Freischaltungsschritt statt. Sie werden informiert, wenn dieser erfolgt ist. Je nach Aufkommen kann dies 1-2 Tage dauern.",
     "xOngoingProjectContracts": "{x} laufende Projektverträge",
-    "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge"
+    "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
+    "registerProject": "Projekt registrieren"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -781,6 +782,7 @@
     "HEADER_UacMember": "UAC",
     "HEADER_Admin": "Admin",
     "HEADER_DataSourceMember": "Data Source Member",
+    "HEADER_RegisteringMember": "RegisteringMember",
     "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
     "changeRoleModalTitle": "Falsche Rolle",
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",

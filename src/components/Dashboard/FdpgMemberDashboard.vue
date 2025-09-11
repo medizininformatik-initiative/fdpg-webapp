@@ -3,19 +3,24 @@
     <div class="header">
       <div class="lead">
         <h2 class="title">
-          {{ $t(header.main) }}
+          {{ t(header.main) }}
         </h2>
         <p class="description">
-          {{ $t(header.sub, { x: proposalCount.total }) }}
+          {{ t(header.sub, { x: proposalCount.total }) }}
         </p>
       </div>
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <el-button type="primary" class="register-project-button" @click="openRegisterProjectDialog">
+          {{ t('dashboard.registerProject') }}
+        </el-button>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+        />
+      </div>
     </div>
     <template v-for="(panel, index) in panels" :key="'panel' + index">
       <FdpgProposalCardPanel
@@ -49,9 +54,12 @@ import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { sortOptions } from './constants'
+import { useI18n } from 'vue-i18n'
+import { open } from 'fs'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 
 interface Header {
@@ -95,6 +103,10 @@ const { panels, proposalCount } = usePanels(routeName)
 const handleRowClick = ({ id }) => {
   router.push({ name: RouteName.ProposalDetails, params: { id } })
 }
+
+const openRegisterProjectDialog = () => {
+  router.push({ name: RouteName.RegisterProject })
+}
 </script>
 
 <style lang="scss" scoped>
@@ -117,6 +129,16 @@ const handleRowClick = ({ id }) => {
       .description {
         font-weight: 600;
         margin: 0;
+      }
+    }
+    .sort {
+      display: flex;
+      justify-content: space-between;
+      max-width: 500px;
+      align-items: center;
+      width: 100%;
+      .register-project-button {
+        margin-top: 14px;
       }
     }
   }
