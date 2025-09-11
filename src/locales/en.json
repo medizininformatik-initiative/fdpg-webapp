@@ -173,7 +173,8 @@
     "editedXDaysAgo": "Edited {x} days ago",
     "noRole": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days.",
     "xOngoingProjectContracts": "{x} ongoing project contracts",
-    "xCompletedProjectContracts": "{x} completed project contracts"
+    "xCompletedProjectContracts": "{x} completed project contracts",
+    "registerProject": "Register a project"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -765,7 +766,8 @@
     "MiiDataPrivacyText_Distributed": "The requested use case is a distributed analysis where no personal health data leave the sites. According to section 3.2.2 of the overarching data protection concept of the MII, no further legal basis is necessary for local processing. Nevertheless, it is known that the view on this can vary by federal state and location. The section therefore refers to other options such as state hospital or local data protection laws or, if not otherwise possible, Broad Consent. The local data protection officers of the sites are able to provide information as to whether another legal basis is used at all and, if so, which one.",
     "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted",
     "exportAttachments": "Export attachments",
-    "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures."
+    "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures.",
+    "downloadLocationCsv": "Download conditions"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -780,6 +782,7 @@
     "HEADER_UacMember": "UAC",
     "HEADER_Admin": "Admin",
     "HEADER_DataSourceMember": "Data Source Member",
+    "HEADER_RegisteringMember": "RegisteringMember",
     "changeRoleModalText": "This role doesn't have right access. do you want to change role and try again to access?",
     "changeRoleModalTitle": "Wrong role",
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",

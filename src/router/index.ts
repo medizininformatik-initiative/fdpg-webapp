@@ -85,6 +85,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Proposals/ReviewProposal.vue'),
         props: true,
       },
+      {
+        path: '/register',
+        name: RouteName.RegisterProject,
+        component: () => import('@/pages/RegisterProject.vue'),
+        meta: {
+          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
+        },
+      },
     ],
   },
   {
