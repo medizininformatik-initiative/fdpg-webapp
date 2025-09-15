@@ -88,6 +88,7 @@
       :accept="SupportedMimetype"
       :proposal-id="proposalId"
       @remove="handleContractDraftRemove"
+      :hideRemoveButton="true"
     >
       <el-button class="upload-button" link>
         {{ t('proposal.chooseAFile') }}
