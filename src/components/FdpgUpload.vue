@@ -22,6 +22,7 @@
       :is-disabled="isDisabled"
       :empty-alert-text="emptyAlertText"
       @remove="handleRemove"
+      :hide-remove-button="hideRemoveButton"
     />
     <ImageList
       v-if="!hideFileList && mode === 'picture'"
@@ -94,6 +95,11 @@ const props = defineProps({
   mode: {
     type: String as PropType<'document' | 'picture'>,
     default: 'document',
+  },
+  hideRemoveButton: {
+    type: Boolean,
+    default: false,
+    required: false,
   },
 })
 
