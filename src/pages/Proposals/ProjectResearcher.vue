@@ -168,6 +168,12 @@ const currentParticipantsEmails = computed(() => {
       .map((p) => p.researcher.email.toLowerCase()) ?? []
   )
 })
+const currentResponsibleEmail = computed(() => {
+  if (proposalStore.currentProposal?.projectResponsible.projectResponsibility.applicantIsProjectResponsible) {
+    return
+  }
+  return proposalStore.currentProposal?.projectResponsible.researcher?.email.toLocaleLowerCase()
+})
 const getUserByEmail = async (email: string) => {
   if (!email) {
     return
@@ -192,7 +198,11 @@ const handleEmailSearch = async (query: string) => {
 
   isSearching.value = true
   try {
-    const excludeEmails = [currentApplicantEmail.value, ...currentParticipantsEmails.value]
+    const excludeEmails = [
+      currentApplicantEmail.value,
+      ...currentParticipantsEmails.value,
+      currentResponsibleEmail.value ?? '',
+    ]
 
     const response = await userStore.searchEmailsByPrefix(query.trim(), excludeEmails)
     emailOptions.value = response.emails.map((email) => ({ label: email, value: email }))
