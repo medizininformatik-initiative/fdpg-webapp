@@ -13,11 +13,11 @@
     <el-col :span="12">
       <el-progress
         text-inside
-        :percentage="(proposal.totalPromisedDataAmount / (proposal.desiredDataAmount ?? 1)) * 100"
+        :percentage="(proposal.totalPromisedDataAmount / proposal.desiredDataAmount) * 100"
         :color="percentColors"
       />
       <p class="uac-data">
-        <span>{{ `${proposal.totalPromisedDataAmount}/${proposal.desiredDataAmount ?? 0}` }}</span>
+        <span>{{ `${proposal.totalPromisedDataAmount}/${proposal.desiredDataAmount}` }}</span>
       </p>
     </el-col>
   </el-row>
