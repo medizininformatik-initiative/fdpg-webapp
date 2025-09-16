@@ -353,6 +353,12 @@ const handleFinishProjectDeclineClick = () => {
   })
 }
 
+const handleDownloadLocationCsvClick = async () => {
+  if (proposalId.value) {
+    await proposalStore.downloadLocationCsv(proposalId.value)
+  }
+}
+
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
 const handleExportProposalPdfClick = async () => {
@@ -434,6 +440,20 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        try {
+          await proposalStore.exportAllUploadsAsZip()
+        } catch (error: any) {
+          showErrorMessage(error.message)
+        }
+      }
+    },
+  },
+  {
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
@@ -499,6 +519,13 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
     isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
+  },
+  {
+    label: 'proposal.downloadLocationCsv',
+    testId: 'button__downloadLocationCsv',
+    action: handleDownloadLocationCsvClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',

@@ -215,6 +215,20 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        try {
+          await proposalStore.exportAllUploadsAsZip()
+        } catch (error: any) {
+          showErrorMessage(error.message)
+        }
+      }
+    },
+  },
+  {
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),

@@ -644,6 +644,7 @@ export interface IProposalDetail {
   locationState: LocationState
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
+  selectedDataSources: PlatformIdentifier[]
 }
 
 export interface IDeclineReason {
