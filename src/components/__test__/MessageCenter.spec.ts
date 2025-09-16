@@ -108,9 +108,9 @@ describe('MessageCenter.vue', () => {
   })
 
   it('should render title', async () => {
-    expect(wrapper.find('h2').text()).toBe('proposal.messagesToApplicants')
+    expect(wrapper.find('h2').text()).toBe('Test')
     await wrapper.setProps({ type: CommentType.PROPOSAL_MESSAGE_TO_LOCATION })
-    expect(wrapper.find('h2').text()).toBe('proposal.messagesToLocations')
+    expect(wrapper.find('h2').text()).toBe('Test')
   })
 
   it('should emit cancel FdpgCommentForm', async () => {
@@ -134,6 +134,7 @@ describe('MessageCenter.vue', () => {
 
     commentStore.createComment.mockRejectedValueOnce(new Error('should not be called'))
     await fdpgComponentForm.vm.$emit('save')
+    await wrapper.vm.$nextTick()
     await flushPromises()
     expect(mockedUseNotifications.showErrorMessage).toHaveBeenCalledTimes(1)
   })

@@ -67,7 +67,8 @@
     "boolean_true": "Ja",
     "boolean_false": "Nein",
     "upload": "Hochladen",
-    "noData": "Keine Daten."
+    "noData": "Keine Daten.",
+    "deleteConfirmation": "Sind Sie sicher, dass Sie diese verwaiste Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -763,7 +764,9 @@
     "MiiDataPrivacyTitle_Distributed": "Rechtsgrundlagen für Verteilte Analysen",
     "MiiDataPrivacyText_Distributed": "Beim vorliegenden Anwendungsfall handelt es sich um eine verteilte Analyse, bei der keine personenbezogenen Gesundheitsdaten die Standorte verlassen. Gemäß Abschnitt 3.2.2 des übergreifenden Datenschutzkonzepts der MII ist für die lokale Verarbeitung keine weitere Rechtsgrundlage notwendig. Dennoch ist bekannt, dass die Auffassung hierzu nach Bundesland und Standort variieren kann. In dem Abschnitt wird daher auf weitere Möglichkeiten wie Landeskrankenhaus- oder Landesdatenschutzgesetze oder, falls nicht anders möglich, auf den Broad Consent verwiesen. Die lokalen Datenschutzbeauftragten der Standorte sind für den jeweiligen Standort auskunftsfähig, ob überhaupt und wenn ja welche weitere Rechtsgrundlage zum Einsatz kommt.",
     "autoDesiredStartDateAdjustment": "Das Startdatum des Projektes wurde automatisch angepasst",
-    "exportAttachments": "Anhänge exportieren"
+    "exportAttachments": "Anhänge exportieren",
+    "orphanedTasksDescription": "Diese Aufgaben beziehen sich auf Objekte, die im Vorschlag nicht mehr vorhanden sind. Sie können aus alten Datenstrukturen stammen.",
+    "downloadLocationCsv": "Auflagen herunterladen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
