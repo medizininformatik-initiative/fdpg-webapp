@@ -105,7 +105,7 @@ const handleRowClick = ({ id }) => {
 }
 
 const openRegisterProjectDialog = () => {
-  router.push({ name: RouteName.RegisterProject })
+  router.push({ name: RouteName.RegisterNewProject })
 }
 </script>
 

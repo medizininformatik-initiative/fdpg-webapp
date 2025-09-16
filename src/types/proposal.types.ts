@@ -131,6 +131,11 @@ export interface IGeneralProjectInformation extends WithIdAndIsDone {
   fundingReferenceNumber: string
   desiredStartTimeType: string | undefined
   keywords: string[]
+  projectStart: string
+  projectCategory: string
+  projectCatchphrases: string[]
+  diagnoses: string[]
+  procedures: string[]
 }
 
 export interface IProjectDetails extends WithIdAndIsDone {

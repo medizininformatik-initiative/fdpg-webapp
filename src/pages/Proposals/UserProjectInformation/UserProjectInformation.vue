@@ -4,6 +4,7 @@
       v-model="userProjectForm.generalProjectInformation"
       :review-mode="reviewMode"
       :form-ref="formRef"
+      :is-registering-form="isRegisteringForm"
     />
     <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" v-if="isMIISelected" />
     <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
@@ -52,6 +53,10 @@ const props = defineProps({
   platform: {
     type: Array as PropType<PlatformIdentifier[]>,
     required: true,
+  },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
   },
 })
 

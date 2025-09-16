@@ -100,6 +100,83 @@
           />
         </FdpgFormItem>
       </el-col>
+
+      <!-- Register-specific fields -->
+      <template v-if="isRegisteringForm">
+        <el-col :sm="24">
+          <FdpgFormItem prop="userProject.generalProjectInformation.projectStart">
+            <FdpgLabel html-for="proposal.projectStart" />
+            <FdpgInput
+              v-model="generalProjectInformationForm.projectStart"
+              data-testId="generalProjectInformationForm.projectStart"
+              placeholder="proposal.pleaseEnterProjectStart"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+            />
+          </FdpgFormItem>
+        </el-col>
+
+        <el-col :sm="24" :md="12">
+          <FdpgFormItem prop="userProject.generalProjectInformation.projectCategory">
+            <FdpgLabel required html-for="proposal.projectCategory" />
+            <el-select
+              v-model="generalProjectInformationForm.projectCategory"
+              data-testId="generalProjectInformationForm.projectCategory"
+              placeholder="proposal.pleaseSelectProjectCategory"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="category in projectCategories"
+                :key="category.value"
+                :label="category.label"
+                :value="category.value"
+              />
+            </el-select>
+          </FdpgFormItem>
+        </el-col>
+
+        <el-col :sm="24" :md="12">
+          <FdpgFormItem prop="userProject.generalProjectInformation.projectCatchphrases">
+            <FdpgLabel html-for="proposal.projectCatchphrases" />
+            <el-input-tag
+              v-model="generalProjectInformationForm.projectCatchphrases"
+              class="fdpg-input__tag"
+              data-testId="generalProjectInformationForm.projectCatchphrases"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+              :placeholder="t('proposal.projectCatchphrasesPlaceholder')"
+              aria-label="Please click the Enter key after input"
+            />
+          </FdpgFormItem>
+        </el-col>
+
+        <el-col :sm="24">
+          <FdpgFormItem prop="userProject.generalProjectInformation.diagnoses">
+            <FdpgLabel html-for="proposal.diagnoses" />
+            <el-input-tag
+              v-model="generalProjectInformationForm.diagnoses"
+              class="fdpg-input__tag"
+              data-testId="generalProjectInformationForm.diagnoses"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+              :placeholder="t('proposal.diagnosesPlaceholder')"
+              aria-label="Please click the Enter key after input"
+            />
+          </FdpgFormItem>
+        </el-col>
+
+        <el-col :sm="24">
+          <FdpgFormItem prop="userProject.generalProjectInformation.procedures">
+            <FdpgLabel html-for="proposal.procedures" />
+            <el-input-tag
+              v-model="generalProjectInformationForm.procedures"
+              class="fdpg-input__tag"
+              data-testId="generalProjectInformationForm.procedures"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+              :placeholder="t('proposal.proceduresPlaceholder')"
+              aria-label="Please click the Enter key after input"
+            />
+          </FdpgFormItem>
+        </el-col>
+      </template>
     </el-row>
   </el-card>
 
@@ -112,12 +189,13 @@ import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
+import FdpgInput from '@/components/FdpgInput.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IGeneralProjectInformation } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import useNotifications from '@/composables/use-notifications'
 import { useI18n } from 'vue-i18n'
 
@@ -135,6 +213,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const { showInfoMessage } = useNotifications()
@@ -144,6 +226,20 @@ const emit = defineEmits(['update:modelValue'])
 
 const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
 const projectFundingEditor = ref()
+
+// Project categories for register form (10 categories as specified in PDF)
+const projectCategories = computed(() => [
+  { value: 'category1', label: t('proposal.projectCategory1') },
+  { value: 'category2', label: t('proposal.projectCategory2') },
+  { value: 'category3', label: t('proposal.projectCategory3') },
+  { value: 'category4', label: t('proposal.projectCategory4') },
+  { value: 'category5', label: t('proposal.projectCategory5') },
+  { value: 'category6', label: t('proposal.projectCategory6') },
+  { value: 'category7', label: t('proposal.projectCategory7') },
+  { value: 'category8', label: t('proposal.projectCategory8') },
+  { value: 'category9', label: t('proposal.projectCategory9') },
+  { value: 'category10', label: t('proposal.projectCategory10') },
+])
 
 watch(
   () => [generalProjectInformationForm.value.desiredStartTime, props.reviewMode],
