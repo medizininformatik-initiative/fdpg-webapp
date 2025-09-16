@@ -11,6 +11,7 @@ export enum RouteName {
   Completed = 'Completed',
   UserProfile = 'UserProfile',
   RegisterProject = 'RegisterProject',
+  RegisterNewProject = 'RegisterNewProject',
 }
 
 export type FdpgDashboardRoutes = RouteName.Dashboard | RouteName.Pending | RouteName.Ongoing | RouteName.Completed

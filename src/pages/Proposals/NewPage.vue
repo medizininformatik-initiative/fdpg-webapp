@@ -57,7 +57,11 @@
           />
           <FdpgLabel html-for="proposal.MII" v-if="isMIISelected" size="large"></FdpgLabel>
 
-          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
+          <RequestedData
+            v-model="proposalForm.requestedData"
+            :review-mode="isReviewMode"
+            v-if="isMIISelected && !isRegisteringForm"
+          />
           <MiiVariableSelection v-if="isMIISelected" />
 
           <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
@@ -147,6 +151,7 @@
             :file-list="fileList"
             :review-mode="isReviewMode"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
           />
         </div>
 
@@ -428,7 +433,12 @@ const isSubmissionDialogOpen = ref(false)
 const activeStep = computed(() => {
   return layoutStore.activeStep
 })
-
+const isRegisteringForm = computed(() => {
+  return (
+    router.currentRoute.value.name === RouteName.RegisterNewProject ||
+    router.currentRoute.value.name === RouteName.RegisterProject
+  )
+})
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
@@ -482,6 +492,12 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
+      // Register-specific fields
+      projectStart: isRegisteringForm.value ? [maxLengthValidationFunc(1000)] : [],
+      projectCategory: isRegisteringForm.value ? [requiredValidationFunc('string')] : [],
+      projectCatchphrases: isRegisteringForm.value ? [] : [],
+      diagnoses: isRegisteringForm.value ? [] : [],
+      procedures: isRegisteringForm.value ? [] : [],
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
@@ -493,6 +509,8 @@ const rules = ref<Record<string, any>>({
       hypothesisAndQuestionProjectGoals: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       materialAndMethods: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       executiveSummaryUac: [requiredValidationFunc('string'), maxLengthValidationFunc(3000)],
+      // Register-specific field - literature is already in the component
+      literature: isRegisteringForm.value ? [maxLengthValidationFunc(10000)] : [],
     },
     ethicVote: {
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],

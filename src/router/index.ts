@@ -85,14 +85,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Proposals/ReviewProposal.vue'),
         props: true,
       },
-      {
-        path: '/register',
-        name: RouteName.RegisterProject,
-        component: () => import('@/pages/RegisterProject.vue'),
-        meta: {
-          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
-        },
-      },
     ],
   },
   {
@@ -118,6 +110,36 @@ const routes: RouteRecordRaw[] = [
         props: true,
         meta: {
           roles: [Role.Researcher],
+        },
+      },
+      {
+        path: '/register/create',
+        name: RouteName.RegisterNewProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
+      },
+      {
+        path: '/register/:id',
+        name: RouteName.RegisterProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
         },
       },
     ],
