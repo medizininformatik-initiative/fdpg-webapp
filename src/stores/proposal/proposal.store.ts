@@ -477,6 +477,12 @@ export const useProposalStore = defineStore('Proposal', {
 
       return updatedDizDetails
     },
+    async exportAllUploadsAsZip(): Promise<void> {
+      if (!this.currentProposal?._id) {
+        throw new Error('No proposal selected for export')
+      }
+      await this.apiService.exportAllUploadsAsZip(this.currentProposal._id)
+    },
     async downloadLocationCsv(proposalId: string): Promise<void> {
       await this.apiService.downloadLocationCsv(proposalId)
     },
