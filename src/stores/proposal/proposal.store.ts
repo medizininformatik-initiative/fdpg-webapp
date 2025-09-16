@@ -477,6 +477,9 @@ export const useProposalStore = defineStore('Proposal', {
 
       return updatedDizDetails
     },
+    async downloadLocationCsv(proposalId: string): Promise<void> {
+      await this.apiService.downloadLocationCsv(proposalId)
+    },
   },
 
   getters: {

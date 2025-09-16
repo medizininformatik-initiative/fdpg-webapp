@@ -369,4 +369,39 @@ export class ProposalService {
     const response = await this.apiClient.put(`${this.basePath}/${proposalId}/diz-details/${dizDetailsId}`, data)
     return response.data
   }
+  async downloadLocationCsv(proposalId: string): Promise<void> {
+    const response = await this.apiClient.get(`${this.basePath}/${proposalId}/locations/csv`)
+
+    if (response.status === 200) {
+      const { downloadUrl, filename } = response.data
+
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = filename
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    } else {
+      throw new Error('Could not generate location CSV download link')
+    }
+  }
+  async catch(error: any) {
+    if (error.response) {
+      const status = error.response.status
+      let errorData = error.response.data
+      if (errorData instanceof Blob) {
+        try {
+          const text = await errorData.text()
+          errorData = JSON.parse(text)
+        } catch (parseError) {
+          console.warn('Could not parse error response as JSON:', parseError)
+        }
+      }
+      const errorMessage = errorData?.message || errorData?.error || `Export failed with status ${status}`
+      throw new Error(errorMessage)
+    } else {
+      throw new Error(error.message || 'An unexpected error occurred while exporting files')
+    }
+  }
 }
