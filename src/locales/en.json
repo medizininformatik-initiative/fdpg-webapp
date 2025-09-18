@@ -72,6 +72,7 @@
   },
   "sidebar": {
     "dashboard": "Dashboard",
+    "published": "Published",
     "contact": "Contact",
     "privacyNotice": "Privacy",
     "terms": "TERMS",
@@ -755,6 +756,7 @@
     "CSV": "CSV",
     "FHIR": "FHIR",
     "biosampleTypeDetails": "Details on the type of biosample",
+    "addBiosample": "Add Biosample",
     "externalLabTransferDetails": "Details on the transfer to an external laboratory",
     "MIItypeOfUse": "MII-NUM-DIZ Type of data usage",
     "DIFEtypeOfUse": "DIFE type of use",

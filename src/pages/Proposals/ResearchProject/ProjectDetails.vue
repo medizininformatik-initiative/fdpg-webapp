@@ -15,8 +15,8 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac" v-if="isMIISelected">
+      <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
+        <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
           <FdpgLabel html-for="proposal.executiveSummaryUac" required />
           <FdpgtextEditor
             v-model="projectDetailsForm.executiveSummaryUac"
@@ -29,8 +29,8 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24">
-        <FdpgFormItem prop="userProject.projectDetails.department" v-if="isMIISelected">
+      <el-col :sm="24" v-if="isMIISelected">
+        <FdpgFormItem prop="userProject.projectDetails.department">
           <FdpgLabel html-for="proposal.department" required />
           <FdpgSelect
             v-model="projectDetailsForm.department"
@@ -101,7 +101,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24" v-if="isMIISelected">
+      <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
         <FdpgFormItem prop="userProject.projectDetails.biometric">
           <FdpgLabel html-for="proposal.biometric" />
           <FdpgtextEditor
@@ -114,7 +114,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24" v-if="isMIISelected">
+      <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
         <FdpgFormItem prop="requestedData.desiredDataAmount">
           <FdpgLabel html-for="proposal.informationOnDesiredDataAmount" />
           <FdpgNumberInput
@@ -125,7 +125,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24" v-if="isMIISelected">
+      <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
         <FdpgFormItem prop="requestedData.desiredControlDataAmount">
           <FdpgLabel html-for="proposal.informationOnDesiredControlDataAmount" />
           <FdpgNumberInput
@@ -184,6 +184,10 @@ const props = defineProps({
   requestedData: {
     type: Object as PropType<IRequestedData>,
     required: true,
+  },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
   },
 })
 

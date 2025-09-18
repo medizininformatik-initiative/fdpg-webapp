@@ -23,7 +23,7 @@
           </el-checkbox-group>
         </FdpgFormItem>
 
-        <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
+        <div v-if="shouldDisplayDataPrivacyTextField && !isRegisteringForm" class="data-privacy-wrapper">
           <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
           <dl>
             <TypeOfUseDataPrivacyItem
@@ -86,6 +86,10 @@ const props = defineProps({
     type: Object as PropType<FormInstance>,
     required: false,
     default: () => undefined,
+  },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
   },
 })
 

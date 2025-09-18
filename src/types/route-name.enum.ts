@@ -3,6 +3,7 @@ export enum RouteName {
   Dashboard = 'Dashboard',
   Pending = 'Pending',
   Archive = 'Archive',
+  Published = 'Published',
   CreateProposal = 'CreateProposal',
   EditProposal = 'EditProposal',
   ProposalDetails = 'ProposalDetails',

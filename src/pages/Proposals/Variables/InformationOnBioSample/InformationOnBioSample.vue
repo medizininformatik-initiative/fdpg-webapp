@@ -6,7 +6,7 @@
     size="medium"
     :section-id="informationOnRequestedBioSamplesForm!._id"
   />
-  <el-card class="form-group">
+  <el-card class="form-group" v-if="!isRegisteringForm">
     <FdpgFormItem
       v-if="informationOnRequestedBioSamplesForm"
       :prop="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
@@ -63,6 +63,7 @@
       >
         <el-row :gutter="20">
           <el-col :sm="24">
+            <!-- Biosample Type - Always shown -->
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].type`"
               :rules="biosampleRules.type"
@@ -89,11 +90,13 @@
                 </FdpgRadio>
               </el-radio-group>
             </FdpgFormItem>
+
+            <!-- Biosample Type Details - Always shown -->
             <FdpgFormItem
-              v-if="!reviewMode && !informationOnRequestedBioSamplesForm.isDone"
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].typeDetails`"
-              :rules="biosampleRules.typeDetails"
+              :rules="isRegisteringForm ? [] : biosampleRules.typeDetails"
             >
+              <FdpgLabel html-for="proposal.biosampleTypeDetails" />
               <FdpgInput
                 v-model="biosample.typeDetails"
                 :data-testId="'biosample.typeDetails__' + index"
@@ -102,7 +105,9 @@
               />
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+
+          <!-- Requirements, Count, Optional - Only for non-register forms -->
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].requirements`"
               :rules="biosampleRules.requirements"
@@ -139,6 +144,8 @@
               />
             </FdpgFormItem>
           </el-col>
+
+          <!-- Sample Code - Always shown -->
           <el-col :sm="24">
             <FdpgFormItem :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].sampleCode`">
               <FdpgLabel html-for="proposal.sampleCode" />
@@ -175,7 +182,9 @@
               </el-checkbox-group>
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+
+          <!-- Method and External Lab Transfer - Only for non-register forms -->
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].method`"
               :rules="biosampleRules.method"
@@ -191,7 +200,7 @@
               />
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransfer`"
             >
@@ -274,6 +283,11 @@ const props = defineProps({
   },
 
   reviewMode: {
+    type: Boolean,
+    default: false,
+  },
+
+  isRegisteringForm: {
     type: Boolean,
     default: false,
   },
