@@ -4,7 +4,7 @@
     :platform="PlatformIdentifier.DIFE"
     :formRef="formRef"
     v-model="typeOfUseForm"
-    v-if="isDifeSelected"
+    v-if="isDifeSelected && !isRegisteringForm"
   />
   <MIITypeOfUse
     :reviewMode="reviewMode"
@@ -12,10 +12,11 @@
     :formRef="formRef"
     v-model="typeOfUseForm"
     v-if="isMiiSelected"
+    :is-registering-form="isRegisteringForm"
   />
 
   <PseudonymizationInfo
-    v-if="isMiiSelected"
+    v-if="isMiiSelected && !isRegisteringForm"
     :reviewMode="reviewMode"
     :formRef="formRef"
     v-model="typeOfUseForm.pseudonymizationInfo"
@@ -50,6 +51,10 @@ const props = defineProps({
     type: Object as PropType<FormInstance>,
     required: false,
     default: () => undefined,
+  },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
   },
 })
 

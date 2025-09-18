@@ -62,6 +62,13 @@
             :review-mode="isReviewMode"
             v-if="isMIISelected && !isRegisteringForm"
           />
+
+          <RegisterVariableSelection
+            v-model="proposalForm.userProject.generalProjectInformation"
+            :review-mode="isReviewMode"
+            v-if="isRegisteringForm"
+          />
+
           <MiiVariableSelection v-if="isMIISelected" />
 
           <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
@@ -93,10 +100,11 @@
             v-model="proposalForm.userProject.informationOnRequestedBioSamples"
             :review-mode="isReviewMode"
             :form-ref="formRef"
+            :is-registering-form="isRegisteringForm"
           />
         </div>
 
-        <div v-show="activeStep === CreatPrposalSteps.Casesohort">
+        <div v-show="activeStep === CreatPrposalSteps.Casesohort" v-if="!isRegisteringForm">
           <DifeSelectionOfCases
             v-if="isDifeSelected"
             v-model="proposalForm.userProject.selectionOfCases.difeSelectionOfCases"
@@ -127,15 +135,16 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
           />
           <ProjectRecontact
             v-model="proposalForm.userProject.resourceAndRecontact"
             :review-mode="isReviewMode"
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
           />
 
           <TargetFormat
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
             :platform="platform"
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
@@ -192,6 +201,7 @@
             :form-ref="formRef"
             :proposalId="proposalId"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
           />
           <EthicVote
             v-model="proposalForm.userProject.ethicVote"
@@ -334,6 +344,7 @@ import useDraftDownload from '@/composables/use-draft-download'
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
+import RegisterVariableSelection from './Variables/RegisterVariableSelection.vue'
 import { debounce } from 'lodash-es'
 
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
@@ -598,6 +609,11 @@ const isDifeSelected = computed(() => {
 
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
+
+  // Set isRegister flag for registering forms
+  if (isRegisteringForm.value) {
+    formData.isRegister = true
+  }
 
   // If MII is not selected, remove MII-specific fields
   if (!isMIISelected.value) {

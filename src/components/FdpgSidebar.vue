@@ -43,7 +43,7 @@ interface Menu {
   [key: string]: SidebarMenu[]
 }
 
-const fdpgRoleSidebar = [
+const fdpgRoleSidebar: SidebarMenu[] = [
   {
     kind: MenuType.Route,
     to: RouteName.Dashboard,
@@ -63,6 +63,11 @@ const fdpgRoleSidebar = [
     kind: MenuType.Route,
     to: RouteName.Completed,
     title: 'general.completed',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Published,
+    title: 'sidebar.published',
   },
   {
     kind: MenuType.Route,
@@ -136,6 +141,12 @@ const mainMenuMap: Menu = {
       to: RouteName.Dashboard,
       title: 'sidebar.dashboard',
       icon: 'bi bi-folder-fill',
+    },
+    {
+      kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
     },
   ],
 }

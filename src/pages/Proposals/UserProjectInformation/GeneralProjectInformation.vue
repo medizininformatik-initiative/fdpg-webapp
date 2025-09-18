@@ -13,7 +13,7 @@
           />
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24" :md="12">
+      <el-col :sm="24" :md="12" v-if="!isRegisteringForm">
         <FdpgFormItem
           prop="userProject.generalProjectInformation.desiredStartTimeType"
           data-testId="generalProjectInformationForm.desiredStartTimeType"
@@ -46,7 +46,7 @@
             v-model="generalProjectInformationForm.desiredStartTime"
             data-testId="generalProjectInformationForm.desiredStartTime"
             placeholder="proposal.pleaseEnterTheStartTime"
-            :min-date="new Date()"
+            :min-date="limitedStartDate"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
           />
         </FdpgFormItem>
@@ -104,18 +104,6 @@
       <!-- Register-specific fields -->
       <template v-if="isRegisteringForm">
         <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.projectStart">
-            <FdpgLabel html-for="proposal.projectStart" />
-            <FdpgInput
-              v-model="generalProjectInformationForm.projectStart"
-              data-testId="generalProjectInformationForm.projectStart"
-              placeholder="proposal.pleaseEnterProjectStart"
-              :disabled="reviewMode || generalProjectInformationForm.isDone"
-            />
-          </FdpgFormItem>
-        </el-col>
-
-        <el-col :sm="24" :md="12">
           <FdpgFormItem prop="userProject.generalProjectInformation.projectCategory">
             <FdpgLabel required html-for="proposal.projectCategory" />
             <el-select
@@ -132,48 +120,6 @@
                 :value="category.value"
               />
             </el-select>
-          </FdpgFormItem>
-        </el-col>
-
-        <el-col :sm="24" :md="12">
-          <FdpgFormItem prop="userProject.generalProjectInformation.projectCatchphrases">
-            <FdpgLabel html-for="proposal.projectCatchphrases" />
-            <el-input-tag
-              v-model="generalProjectInformationForm.projectCatchphrases"
-              class="fdpg-input__tag"
-              data-testId="generalProjectInformationForm.projectCatchphrases"
-              :disabled="reviewMode || generalProjectInformationForm.isDone"
-              :placeholder="t('proposal.projectCatchphrasesPlaceholder')"
-              aria-label="Please click the Enter key after input"
-            />
-          </FdpgFormItem>
-        </el-col>
-
-        <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.diagnoses">
-            <FdpgLabel html-for="proposal.diagnoses" />
-            <el-input-tag
-              v-model="generalProjectInformationForm.diagnoses"
-              class="fdpg-input__tag"
-              data-testId="generalProjectInformationForm.diagnoses"
-              :disabled="reviewMode || generalProjectInformationForm.isDone"
-              :placeholder="t('proposal.diagnosesPlaceholder')"
-              aria-label="Please click the Enter key after input"
-            />
-          </FdpgFormItem>
-        </el-col>
-
-        <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.procedures">
-            <FdpgLabel html-for="proposal.procedures" />
-            <el-input-tag
-              v-model="generalProjectInformationForm.procedures"
-              class="fdpg-input__tag"
-              data-testId="generalProjectInformationForm.procedures"
-              :disabled="reviewMode || generalProjectInformationForm.isDone"
-              :placeholder="t('proposal.proceduresPlaceholder')"
-              aria-label="Please click the Enter key after input"
-            />
           </FdpgFormItem>
         </el-col>
       </template>
@@ -195,7 +141,7 @@ import type { IGeneralProjectInformation } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import useNotifications from '@/composables/use-notifications'
 import { useI18n } from 'vue-i18n'
 
@@ -241,6 +187,13 @@ const projectCategories = computed(() => [
   { value: 'category10', label: t('proposal.projectCategory10') },
 ])
 
+const limitedStartDate = computed(() => {
+  if (!props.isRegisteringForm) {
+    const date = new Date()
+    return date
+  }
+  return
+})
 watch(
   () => [generalProjectInformationForm.value.desiredStartTime, props.reviewMode],
   ([desiredStartTime, reviewMode]) => {
@@ -270,6 +223,11 @@ const handleStartTimeTypeChange = (newValue: string) => {
     }, 0)
   }
 }
+onMounted(() => {
+  if (props.isRegisteringForm) {
+    generalProjectInformationForm.value.desiredStartTimeType = 'later'
+  }
+})
 </script>
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;

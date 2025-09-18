@@ -6,13 +6,17 @@
       :form-ref="formRef"
       :is-registering-form="isRegisteringForm"
     />
-    <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" v-if="isMIISelected" />
+    <ProjectResources
+      v-model="userProjectForm.resourceAndRecontact"
+      :review-mode="reviewMode"
+      v-if="isMIISelected && !isRegisteringForm"
+    />
     <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
     <PlannedPublications
       v-model="userProjectForm.plannedPublication"
       :review-mode="reviewMode"
       :form-ref="formRef"
-      v-if="isMIISelected"
+      v-if="isMIISelected && !isRegisteringForm"
     />
   </div>
 </template>

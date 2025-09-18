@@ -69,6 +69,16 @@ const routes: RouteRecordRaw[] = [
           roles: [Role.FdpgMember, Role.DataSourceMember, Role.Researcher, Role.DizMember, Role.UacMember],
         },
       },
+      {
+        path: '/published',
+        name: RouteName.Published,
+        component: () => import('@/pages/PublishedPage.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [Role.FdpgMember, Role.DataSourceMember, Role.RegisteringMember],
+        },
+      },
 
       {
         path: '/proposals/:id/details',

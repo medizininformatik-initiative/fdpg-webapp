@@ -139,9 +139,14 @@ const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const isSubmitting = ref(false)
+const isRegisteringForm = computed(() => proposalStore.currentProposal?.isRegister || false)
 
 const openReviewPage = () => {
-  router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  if (isRegisteringForm.value) {
+    router.push({ name: RouteName.RegisterProject, params: { id: params.id } })
+  } else {
+    router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  }
 }
 
 const openLockModal = () => {

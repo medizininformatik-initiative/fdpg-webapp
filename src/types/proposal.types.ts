@@ -581,6 +581,8 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+
+  isRegister?: boolean
 }
 
 export enum FdpgTaskType {
