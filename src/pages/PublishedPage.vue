@@ -5,14 +5,18 @@
         <h2 class="project-overview">{{ t('sidebar.published') }}</h2>
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
-
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <el-button type="primary" class="register-project-button" @click="openRegisterProjectDialog">
+          {{ t('dashboard.registerProject') }}
+        </el-button>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+        />
+      </div>
     </div>
     <FdpgProposalCardPanel
       :panel="panel"
@@ -65,6 +69,16 @@ onMounted(() => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 29px;
+  .sort {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    align-items: center;
+    width: 100%;
+    .register-project-button {
+      margin-top: 14px;
+    }
+  }
 }
 
 .project-overview {
