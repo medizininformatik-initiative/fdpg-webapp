@@ -187,7 +187,7 @@ const progressPercentage = computed(() => {
   .logo {
     width: 179px;
     margin-left: 29px;
-    height: $header-height;
+    height: 220px;
   }
 
   .proposal-menu {
