@@ -9,10 +9,10 @@
     </div>
     <el-tabs v-model="activeTab" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane :label="t('general.locations')" name="locations">
-        <LocationOverviewTable />
+        <LocationOverviewTable :locations="locationsRef" />
       </el-tab-pane>
-      <el-tab-pane :label="t('general.changelogs')" name="changelogs">
-        <LocationChangelogOverview />
+      <el-tab-pane :label="t('general.changelogs') + (pendingCount > 0 ? ` (${pendingCount})` : '')" name="changelogs">
+        <LocationChangelogOverview :changelogs="changelogRef" />
       </el-tab-pane>
       <el-tab-pane :label="t('general.pendingChanges')" name="pendingChanges">
         <LocationChangelogApproval />
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { useLocationStore } from '@/stores/locations/location.store'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 const { t } = useI18n()
 const locationStore = useLocationStore()
 
@@ -32,6 +32,7 @@ import { useI18n } from 'vue-i18n'
 import LocationOverviewTable from './LocationOverviewTable.vue'
 import LocationChangelogOverview from './LocationChangelogOverview.vue'
 import LocationChangelogApproval from './LocationChangelogApproval.vue'
+import { LocationSyncChangeLogStatus, type ILocation, type ILocationSyncChangelog } from '@/types/location.types'
 
 const activeTab = ref('locations')
 
@@ -39,7 +40,26 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event)
 }
 
-onMounted(async () => {})
+const locationsRef: Ref<ILocation[]> = ref([])
+const changelogRef: Ref<ILocationSyncChangelog[]> = ref([])
+const pendingCount = computed(
+  () => changelogRef.value.filter((c) => c.status === LocationSyncChangeLogStatus.PENDING).length,
+)
+
+onMounted(async () => {
+  const locations = await locationStore.getAll()
+  locationsRef.value = locations
+
+  const changelogs = await locationStore.getAllChangelogs()
+  changelogRef.value = changelogs
+    .map((changelog) => {
+      changelog.created = new Date(changelog.created)
+      return changelog
+    })
+    .sort((a, b) => b.created.getTime() - a.created.getTime())
+
+  console.log({ changelogs })
+})
 </script>
 
 <style lang="scss" scoped>

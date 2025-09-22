@@ -1,5 +1,5 @@
 import { ApiClient } from '@/httpClients/api/api.client'
-import type { ILocation, ILocationSyncChangelog } from '@/types/location.type'
+import type { ILocation, ILocationSyncChangelog } from '@/types/location.types'
 
 export class LocationService {
   private basePath = '/locations'
