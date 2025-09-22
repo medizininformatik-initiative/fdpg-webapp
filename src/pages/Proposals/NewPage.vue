@@ -38,7 +38,10 @@
                 </FdpgFormItem>
               </el-col>
               <el-col :sm="24">
-                <DataSourceSelection v-model="proposalForm.selectedDataSources"></DataSourceSelection>
+                <DataSourceSelection
+                  v-model="proposalForm.selectedDataSources"
+                  :proposal-id="proposalForm._id"
+                ></DataSourceSelection>
               </el-col>
             </el-row>
           </div>
@@ -320,6 +323,7 @@ import ShoppingList from './DataSources/ShoppingList.vue'
 import TargetFormat from './DataUsage/TargetFormat.vue'
 import ProjectRecontact from './DataUsage/ProjectRecontact.vue'
 import SubmissionDialog from '@/components/SubmissionDialog.vue'
+import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import useDraftDownload from '@/composables/use-draft-download'
 
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
@@ -391,9 +395,9 @@ defineProps({
 const { t } = useI18n()
 
 const layoutStore = useLayoutStore()
+const commentStore = useCommentStore()
 const router = useRouter()
 const { params, query } = useRoute()
-const commentStore = useCommentStore()
 
 const proposalForm = ref<IProposal>()
 const platform = computed(() => {
@@ -494,7 +498,6 @@ const rules = ref<Record<string, any>>({
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       ethicsVoteNumber: [requiredValidationFunc('string'), maxLengthValidationFunc(100)],
       voteFromDate: requiredValidationFunc(),
-      ethicVoteUploads: requiredUploadFunc(ethicVoteUploads),
     },
     resourceAndRecontact: {
       hasEnoughResources: null,

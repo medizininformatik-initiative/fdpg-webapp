@@ -1,10 +1,11 @@
 <template>
   <div class="fdpg-dashboard-page">
+    <FdpgIAlertBox v-if="alertConfig.isVisible" :message="alertConfig.message" :logoBase64="alertConfig.logoBase64" />
     <FdpgDashboardActions :actions="dashboardActions"></FdpgDashboardActions>
     <div class="header">
       <div>
-        <h2 class="project-overview">{{ $t('dashboard.projectOverview') }}</h2>
-        <p class="project-count">{{ $t('dashboard.projects', { count: proposalCount.total }) }}</p>
+        <h2 class="project-overview">{{ t('dashboard.projectOverview') }}</h2>
+        <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
 
       <FdpgSortSelect
@@ -32,14 +33,20 @@ import usePanels from '@/composables/use-panels'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IDashboardAction } from '@/types/dashboard-actions.interface'
 import { RouteName } from '@/types/route-name.enum'
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FdpgSortSelect from '../FdpgSortSelect.vue'
 import { sortOptions } from './constants'
+import { useI18n } from 'vue-i18n'
+import FdpgIAlertBox from '../FdpgIAlertBox.vue'
+import { useConfigStore } from '@/stores/config/config.store'
 
 const router = useRouter()
 const route = useRoute()
+const { t } = useI18n()
+const configStore = useConfigStore()
 const routeName = computed(() => route.name || RouteName.Dashboard)
+const alertConfig = computed(() => configStore.alertConfig)
 
 const dashboardActions: IDashboardAction[] = [
   {
@@ -71,6 +78,9 @@ const createProposal = () => {
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
 }
+onMounted(() => {
+  configStore.getAlertConfig()
+})
 </script>
 
 <style lang="scss" scoped>

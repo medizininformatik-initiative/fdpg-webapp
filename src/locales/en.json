@@ -67,7 +67,8 @@
     "boolean_true": "Yes",
     "boolean_false": "No",
     "upload": "Upload",
-    "noData": "No Data."
+    "noData": "No Data.",
+    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone."
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -260,7 +261,7 @@
     "notRequired": "Ethics vote not yet available",
     "ethicsCommittee": "Ethics Committee",
     "ethicsVoteNumber": "Ethics vote number",
-    "voteFromDate": "Ehikvotum from",
+    "voteFromDate": "Ethics votum from",
     "appendix": "Appendix",
     "pleaseAttachProofOfTheEthicsVoteToTheApplication": "Please attach proof of the ethics vote to the application.",
     "chooseAFile": "Choose a file",
@@ -762,7 +763,10 @@
     "MiiDataPrivacyText_Centralized": "The requested use case is a central analysis (data sharing) in which personal health data leave the sites. Usually, implementation is possible on the basis of an informed consent (broad consent). The legal basis is explained in the overarching data protection concept of the MII in section 3.2.3.",
     "MiiDataPrivacyTitle_Distributed": "Legal basis for distributed analyses",
     "MiiDataPrivacyText_Distributed": "The requested use case is a distributed analysis where no personal health data leave the sites. According to section 3.2.2 of the overarching data protection concept of the MII, no further legal basis is necessary for local processing. Nevertheless, it is known that the view on this can vary by federal state and location. The section therefore refers to other options such as state hospital or local data protection laws or, if not otherwise possible, Broad Consent. The local data protection officers of the sites are able to provide information as to whether another legal basis is used at all and, if so, which one.",
-    "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted"
+    "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted",
+    "exportAttachments": "Export attachments",
+    "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures.",
+    "downloadLocationCsv": "Download conditions"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

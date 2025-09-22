@@ -116,6 +116,7 @@ const setInputFocus = () => {
 <style lang="scss" scoped>
 .action-row {
   margin-top: 0.5rem;
+  margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
 }

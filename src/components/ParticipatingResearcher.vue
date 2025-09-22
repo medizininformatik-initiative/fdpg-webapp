@@ -200,7 +200,9 @@ const participants = computed<ParticipantPanelType>(() => {
       if (info.isRegistrationComplete) {
         acc.alreadyRegistered.push({
           ...result,
-          ...(info.addedByFdpg ? removeParticipantAction(info.participantId) : {}),
+          ...(info.addedByFdpg && info.participantRole !== ParticipantRole.ResponsibleScientist
+            ? removeParticipantAction(info.participantId)
+            : {}),
         })
       } else if (info.isExisting) {
         acc.registrationPending.push({

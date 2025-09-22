@@ -11,11 +11,13 @@
         @change="handleDataSourceChange(i)"
       />
     </div>
+    <TaskViewer v-if="proposalId" :object-id="proposalId" />
   </div>
 </template>
 
 <script setup lang="ts">
 import FdpgLabel from '@/components/FdpgLabel.vue'
+import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import DataSourceItem from './DataSourceItem.vue'
 import type { IDataSourceDto } from '@/types/proposal.types'
 import { onMounted, ref, defineExpose, computed } from 'vue'
@@ -27,6 +29,10 @@ const props = defineProps({
   modelValue: {
     type: Array as () => PlatformIdentifier[],
     required: true,
+  },
+  proposalId: {
+    type: String,
+    required: false,
   },
 })
 const emit = defineEmits(['update:modelValue'])

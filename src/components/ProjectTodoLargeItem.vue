@@ -15,7 +15,7 @@
           :data-testId="projectTodo.testId + '__false'"
           @click="projectTodo.action(false)"
         >
-          <i class="el-icon-close" aria-hidden="true" />
+          <i class="fa-solid fa-xmark"></i>
         </el-button>
         <el-button
           :disabled="isDisabled || positiveChildDisableButton"
@@ -23,7 +23,7 @@
           :data-testId="projectTodo.testId + '__true'"
           @click="projectTodo.action(true, uacCondition?.dataAmount, uacCondition?.conditionReasoning)"
         >
-          <i class="el-icon-check" aria-hidden="true" />
+          <i class="fa-solid fa-check"></i>
         </el-button>
       </div>
     </div>
@@ -140,6 +140,7 @@ const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; butt
 
         i {
           font-size: 22px;
+          color: $gray-900;
         }
 
         &:last-child {

@@ -4,7 +4,6 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth/auth.store'
-import 'element-theme-chalk'
 import type { Role } from './types/oidc.types'
 import { transformKeycloakAttributesToDataSource } from './utils/user.util'
 

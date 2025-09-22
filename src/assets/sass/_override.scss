@@ -374,6 +374,17 @@
     line-height: 25px;
   }
 }
+
+//
+// Normalize Element Plus checkbox checkmark transform to match desired style
+//
+.el-checkbox__inner::after {
+  transform: rotate(45deg) scaleY(0) !important;
+}
+
+.el-checkbox__input.is-checked .el-checkbox__inner::after {
+  transform: rotate(45deg) scaleY(1) !important;
+}
 .ql-editor h1 {
   font-size: 2rem;
 }
