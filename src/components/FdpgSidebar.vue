@@ -30,6 +30,7 @@ import type { SidebarMenu } from '@/types/sidebar-menu.types'
 import { MenuType } from '@/types/sidebar-menu.types'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
+import { title } from 'process'
 
 const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
@@ -68,6 +69,11 @@ const fdpgRoleSidebar = [
     kind: MenuType.Route,
     to: RouteName.Archive,
     title: 'general.archive',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Locations,
+    title: 'general.locations',
   },
 ]
 
