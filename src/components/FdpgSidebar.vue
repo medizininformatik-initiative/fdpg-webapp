@@ -232,14 +232,17 @@ const secondaryMenu: SidebarMenu[] = [
       }
 
       .fdpg-menu__icons {
-        float: right;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: flex-start;
 
         .fdpg-menu__icon {
           border-radius: 8px;
-          padding: 0 8px;
+          padding: 0 6px;
           line-height: 24px;
-          margin-left: 4px;
           border: 1px solid;
+          font-size: 12px;
 
           &--critical {
             background: $red-100;

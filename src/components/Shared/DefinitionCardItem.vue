@@ -1,5 +1,5 @@
 <template>
-  <template v-if="value === undefined && !definition.defaultValue">-</template>
+  <template v-if="value === undefined && !definition.defaultValue"><span class="ql-editor">-</span></template>
   <template v-else-if="definition.defaultValue && !value">
     {{ t(definition.defaultValue) }}
   </template>
