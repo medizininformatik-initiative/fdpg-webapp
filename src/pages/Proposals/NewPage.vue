@@ -53,7 +53,7 @@
             :platform="platform"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            v-if="isDifeSelected"
+            v-if="isDifeSelected && !isRegisteringForm"
           />
           <FdpgLabel html-for="proposal.MII" v-if="isMIISelected" size="large"></FdpgLabel>
 
@@ -69,7 +69,7 @@
             v-if="isRegisteringForm"
           />
 
-          <MiiVariableSelection v-if="isMIISelected" />
+          <MiiVariableSelection v-if="isMIISelected && !isRegisteringForm" />
 
           <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
 
@@ -77,6 +77,7 @@
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
             v-if="isMIISelected"
+            :isRegisteringForm="isRegisteringForm"
           />
 
           <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
@@ -450,6 +451,16 @@ const isRegisteringForm = computed(() => {
     router.currentRoute.value.name === RouteName.RegisterProject
   )
 })
+
+// Sync registration form state with layout store
+watch(
+  isRegisteringForm,
+  (newValue) => {
+    layoutStore.setIsRegisteringForm(newValue)
+  },
+  { immediate: true },
+)
+
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 

@@ -14,6 +14,7 @@ interface ILayoutStore {
   totalRequiredFields: number
   validatedFields: number
   formTouched: boolean
+  isRegisteringForm: boolean
 }
 export interface ICreateProposalStep {
   step: CreatPrposalSteps
@@ -40,6 +41,7 @@ export const useLayoutStore = defineStore('layout', {
     totalRequiredFields: 0,
     validatedFields: 0,
     formTouched: false,
+    isRegisteringForm: false,
   }),
 
   actions: {
@@ -59,14 +61,28 @@ export const useLayoutStore = defineStore('layout', {
       this.scrollToTop()
     },
     nextStep() {
-      const nextStep = this.createProposalSteps.find((s) => s.step === this.activeStep + 1)
+      // Filter out Casecohort step if in registration mode
+      const availableSteps = this.isRegisteringForm
+        ? this.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
+        : this.createProposalSteps
+
+      const currentIndex = availableSteps.findIndex((s) => s.step === this.activeStep)
+      const nextStep = availableSteps[currentIndex + 1]
+
       if (nextStep) {
         this.activeStep = nextStep.step
         this.scrollToTop()
       }
     },
     prevStep() {
-      const prevStep = this.createProposalSteps.find((s) => s.step === this.activeStep - 1)
+      // Filter out Casecohort step if in registration mode
+      const availableSteps = this.isRegisteringForm
+        ? this.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
+        : this.createProposalSteps
+
+      const currentIndex = availableSteps.findIndex((s) => s.step === this.activeStep)
+      const prevStep = availableSteps[currentIndex - 1]
+
       if (prevStep) {
         this.activeStep = prevStep.step
         this.scrollToTop()
@@ -125,6 +141,9 @@ export const useLayoutStore = defineStore('layout', {
     },
     setFormTouched(touched: boolean) {
       this.formTouched = touched
+    },
+    setIsRegisteringForm(isRegistering: boolean) {
+      this.isRegisteringForm = isRegistering
     },
   },
 })
