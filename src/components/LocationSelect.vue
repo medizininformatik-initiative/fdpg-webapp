@@ -27,11 +27,13 @@
 
 <script setup lang="ts">
 import useLocationGrouping from '@/composables/use-location-grouping'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { MiiLocation } from '@/types/location.enum'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
-
+import { useI18n } from 'vue-i18n'
 const props = defineProps({
   modelValue: {
     type: Array as PropType<MiiLocation[]>,
@@ -61,11 +63,15 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
 })
-
+const { t } = useI18n()
 const emit = defineEmits(['update:modelValue'])
 const vModel = useVModel(props, 'modelValue', emit)
-
+const proposalStore = useProposalStore()
 const selection = computed({
   get() {
     return vModel.value
@@ -74,7 +80,7 @@ const selection = computed({
     const wasOldVirtualAll = vModel.value.includes(MiiLocation.VirtualAll)
     const isVirtualAll = values.includes(MiiLocation.VirtualAll)
 
-    const selectionValues = groupOptions
+    const selectionValues = (groupOptions.value || [])
       .flatMap((groupOption) => groupOption.options)
       .map((option) => option.value as MiiLocation)
 
@@ -100,12 +106,14 @@ const setMinimumSelection = () => {
   }
 }
 
-const { groupOptions } = useLocationGrouping(undefined, props.allOptionLabel)
+const { groupOptions: baseGroupOptions } = useLocationGrouping(undefined, props.allOptionLabel)
 
 const select = ref()
 
 const openState = ref(false)
-
+const selectedDataSources = computed(() => {
+  return proposalStore.currentProposal?.selectedDataSources
+})
 const handleDropDownChange = (value: boolean) => {
   openState.value = value
 
@@ -113,9 +121,31 @@ const handleDropDownChange = (value: boolean) => {
     setMinimumSelection()
   }
 }
+const groupOptions = computed(() => {
+  if (props.isRegisteringForm && selectedDataSources.value?.includes(PlatformIdentifier.DIFE)) {
+    const modifiedOptions = baseGroupOptions.map((group) => {
+      if (group.label === t('general.locations')) {
+        const hasDIFE = group.options.find((option) => option.value === 'DIFE')
+        if (!hasDIFE) {
+          return {
+            ...group,
+            options: [
+              ...group.options,
+              {
+                label: 'DIFE',
+                value: 'DIFE',
+              },
+            ],
+          }
+        }
+      }
+      return group
+    })
+    return modifiedOptions
+  }
+  return baseGroupOptions
+})
 </script>
-
-<style></style>
 
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;

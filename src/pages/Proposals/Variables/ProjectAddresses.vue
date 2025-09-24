@@ -12,6 +12,7 @@
         allOptionLabel="proposal.virtualAllLocations"
         style="width: 100%"
         :closable="false"
+        :is-registering-form="isRegisteringForm"
       />
     </FdpgFormItem>
   </el-card>
@@ -37,6 +38,10 @@ const props = defineProps({
   },
 
   reviewMode: {
+    type: Boolean,
+    default: false,
+  },
+  isRegisteringForm: {
     type: Boolean,
     default: false,
   },
