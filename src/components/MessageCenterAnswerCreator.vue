@@ -81,7 +81,7 @@ const isAnswerToLocation = computed(() => {
 
 const minimumSelection = computed(() => {
   if (isAnswerToLocation.value === true) {
-    return props.message.owner.miiLocation ? [props.message.owner.miiLocation] : [MiiLocation.VirtualAll]
+    return props.message.owner.miiLocation ? [props.message.owner.miiLocation] : [...props.message.locations]
   } else {
     return []
   }

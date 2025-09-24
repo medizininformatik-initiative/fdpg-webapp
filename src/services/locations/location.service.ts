@@ -27,8 +27,13 @@ export class LocationService {
     return response.data
   }
 
-  async updateChangelog(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
-    const response = await this.apiClient.post(`${this.basePath}/changelogs/${changelog._id}`, changelog)
+  async updateLocation(location: ILocation): Promise<ILocation> {
+    const response = await this.apiClient.post(`${this.basePath}/${location._id}`, location)
+    return response.data
+  }
+
+  async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
+    const response = await this.apiClient.post(`${this.basePath}/changelogs/${changelog._id}/status`, changelog)
     return response.data
   }
 

@@ -44,6 +44,7 @@ import { computed, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
+import type { MissingHandler } from 'vue-i18n'
 
 const props = defineProps({
   modelValue: {
@@ -75,8 +76,8 @@ const isMessageToLocation = computed(() => {
   const isMessageToLocation = props.type === CommentType.PROPOSAL_MESSAGE_TO_LOCATION
   return isMessageToLocation && answerIsFromFdpg
 })
-const locationSelection = ref<MiiLocation[]>([MiiLocation.VirtualAll])
-const minimumSelection = [MiiLocation.VirtualAll]
+const locationSelection = ref<MiiLocation[]>([])
+const minimumSelection: MiiLocation[] = []
 
 const visibilityMessage = computed<IVisibilityMessage>(() => {
   return {

@@ -12,11 +12,11 @@
         <LocationOverviewTable :locations="locationsRef" />
       </el-tab-pane>
       <el-tab-pane :label="t('general.changelogs') + (pendingCount > 0 ? ` (${pendingCount})` : '')" name="changelogs">
-        <LocationChangelogOverview :changelogs="changelogRef" />
+        <LocationChangelogOverview :changelogs="changelogRef" @setStatus="setChangelogStatus" />
       </el-tab-pane>
-      <el-tab-pane :label="t('general.pendingChanges')" name="pendingChanges">
+      <!-- <el-tab-pane :label="t('general.pendingChanges')" name="pendingChanges">
         <LocationChangelogApproval />
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>
@@ -45,6 +45,12 @@ const changelogRef: Ref<ILocationSyncChangelog[]> = ref([])
 const pendingCount = computed(
   () => changelogRef.value.filter((c) => c.status === LocationSyncChangeLogStatus.PENDING).length,
 )
+
+const setChangelogStatus = async (changelog: ILocationSyncChangelog, status: LocationSyncChangeLogStatus) => {
+  console.log({ changelog, status })
+  const toUpdate = { ...changelog, status }
+  await locationStore.setChangelogStatus(toUpdate)
+}
 
 onMounted(async () => {
   const locations = await locationStore.getAll()

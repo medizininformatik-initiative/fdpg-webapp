@@ -1,15 +1,18 @@
 <template>
   <section ref="select" class="location-select">
     <el-select
-      v-model="selection"
+      v-model="vModel"
       :placeholder="$t(placeholder)"
       popper-class="location-dropdown"
-      :multiple="true"
+      multiple
       @visible-change="handleDropDownChange"
       collapse-tags
       :max-collapse-tags="3"
       :placement="placement"
     >
+      <template #header>
+        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll"> All </el-checkbox>
+      </template>
       <el-option-group v-for="group in groupOptions" :key="group.label" :label="group.label">
         <el-option
           v-for="item in group.options"
@@ -18,7 +21,6 @@
           :value="item.value"
           :disabled="disabled"
           :data-testId="'option__' + item.value + testIdExtension"
-          :class="vModel.includes(MiiLocation.VirtualAll) ? 'selected' : ''"
         />
       </el-option-group>
     </el-select>
@@ -27,10 +29,12 @@
 
 <script setup lang="ts">
 import useLocationGrouping from '@/composables/use-location-grouping'
+import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import { MiiLocation } from '@/types/location.enum'
 import { useVModel } from '@vueuse/core'
+import type { CheckboxValueType } from 'element-plus'
 import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -66,33 +70,17 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 const vModel = useVModel(props, 'modelValue', emit)
 
-const selection = computed({
-  get() {
-    return vModel.value
-  },
-  set(values) {
-    const wasOldVirtualAll = vModel.value.includes(MiiLocation.VirtualAll)
-    const isVirtualAll = values.includes(MiiLocation.VirtualAll)
+const checkAll = ref(false)
+const indeterminate = ref(false)
 
-    const selectionValues = groupOptions
-      .flatMap((groupOption) => groupOption.options)
-      .map((option) => option.value as MiiLocation)
-
-    let result: MiiLocation[] = []
-
-    if (wasOldVirtualAll && values.length === 0) {
-      result = []
-    } else if (wasOldVirtualAll) {
-      result = selectionValues.filter((optionVal) => !values.includes(optionVal))
-    } else if (isVirtualAll || values.length === selectionValues.length - 1) {
-      result = [MiiLocation.VirtualAll]
-    } else {
-      result = values
-    }
-
-    vModel.value = result
-  },
-})
+const handleCheckAll = (val: CheckboxValueType) => {
+  indeterminate.value = false
+  if (val) {
+    vModel.value = SORTED_ACTIVE_LOCATION_OPTIONS.map((loc) => loc.value as MiiLocation)
+  } else {
+    vModel.value = []
+  }
+}
 
 const setMinimumSelection = () => {
   if (vModel.value.length <= 0 && props.minimumSelection.length > 0) {

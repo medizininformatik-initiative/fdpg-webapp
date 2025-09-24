@@ -301,17 +301,17 @@ export const MII_LOCATIONS: Record<MiiLocation, IMiiLocationInfo> = {
     email: 'some.todo@af-universität.de',
   },
 
-  [MiiLocation.VirtualAll]: {
-    city: 'Alle Standorte',
-    display: 'Alle Standorte',
-    definition: 'VIRTUAL',
-    email: '',
-  },
+  // [MiiLocation.VirtualAll]: {
+  //   city: 'Alle Standorte',
+  //   display: 'Alle Standorte',
+  //   definition: 'VIRTUAL',
+  //   email: '',
+  // },
 }
 
 export const INACTIVE_LOCATIONS = [MiiLocation.UKD, MiiLocation.UKRUB]
 export const SORTED_ACTIVE_LOCATION_OPTIONS = Object.entries(MII_LOCATIONS)
-  .filter(([key]) => key !== MiiLocation.VirtualAll && !INACTIVE_LOCATIONS.includes(key as MiiLocation))
+  .filter(([key]) => !INACTIVE_LOCATIONS.includes(key as MiiLocation))
   .sort(([_aKey, aValue], [_bKey, bValue]) => aValue.city.localeCompare(bValue.city))
   .map(([key, value]) => ({ label: value.display, value: key }))
 

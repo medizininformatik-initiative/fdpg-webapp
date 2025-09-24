@@ -26,15 +26,32 @@
       </template>
     </el-table-column>
 
-    <el-table-column prop="forCode" label="Code" />
+    <el-table-column prop="forCode" label="Code" width="80px" />
+    <el-table-column label="Display">
+      <template #default="expandProps">
+        <p>{{ expandProps.row.newLocationData?.display }}</p>
+      </template>
+    </el-table-column>
     <el-table-column prop="status" label="Status" />
     <el-table-column prop="strategy" label="Strategy" />
     <el-table-column prop="created" label="Date" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default="operationProps">
         <div v-if="operationProps.row.status === LocationSyncChangeLogStatus.PENDING">
-          <el-button link type="primary" size="small">Approve</el-button>
-          <el-button link type="primary" size="small">Decline</el-button>
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="setStatus(operationProps.row._id, LocationSyncChangeLogStatus.APPROVED)"
+            >Approve</el-button
+          >
+          <el-button
+            link
+            type="primary"
+            size="small"
+            @click="setStatus(operationProps.row._id, LocationSyncChangeLogStatus.DECLINED)"
+            >Decline</el-button
+          >
         </div>
       </template>
     </el-table-column>
@@ -51,6 +68,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['setStatus'])
 
 type ComparisionKeys = keyof Omit<ILocation, 'rubrum'>
 const comparisionKeys: ComparisionKeys[] = [
@@ -70,6 +89,12 @@ const comparisionKeys: ComparisionKeys[] = [
 
 const getDifferenceClass = (oldVal: any, newVal: any) => {
   return oldVal === newVal ? '' : 'highlight-difference'
+}
+
+const setStatus = async (changelogId: string, status: LocationSyncChangeLogStatus) => {
+  const changelog = props.changelogs.find((c) => c._id === changelogId)
+  console.log({ changelog })
+  emit('setStatus', changelog, status)
 }
 </script>
 

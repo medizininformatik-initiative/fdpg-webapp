@@ -22,5 +22,11 @@ export const useLocationStore = defineStore('Location', {
 
       return data
     },
+
+    async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
+      console.log(changelog)
+      const data = await this.apiService.setChangelogStatus(changelog)
+      return data
+    },
   },
 })

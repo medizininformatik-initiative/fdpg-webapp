@@ -16,15 +16,7 @@ interface Option {
 const { t } = i18n.global
 
 export default (allGroupLabel?: TranslationSchema, allOptionLabel?: string) => {
-  const virtualAllOption = {
-    label: t(allOptionLabel || 'proposal.commentVisibleForAll'),
-    value: MiiLocation.VirtualAll,
-  }
   const groupOptions: GroupOption[] = [
-    {
-      label: allGroupLabel ? t(allGroupLabel) : undefined,
-      options: [virtualAllOption],
-    },
     {
       label: t('general.locations'),
       options: SORTED_ACTIVE_LOCATION_OPTIONS,
