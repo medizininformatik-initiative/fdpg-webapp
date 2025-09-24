@@ -138,7 +138,18 @@ watch(
   },
   { immediate: true },
 )
-
+watch(
+  () => props.isRegisteringForm,
+  (newValue) => {
+    if (newValue) {
+      options.push({
+        value: 'NONE' as ProposalTypeOfUse,
+        info: 'proposal.typeOfUse_NONE_Info' as TranslationSchema,
+      })
+    }
+  },
+  { immediate: true },
+)
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {

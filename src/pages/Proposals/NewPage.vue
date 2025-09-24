@@ -166,8 +166,13 @@
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.ProjectParticipants">
-          <FdpgLabel size="large" html-for="proposal.applicant" />
-          <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
+          <FdpgLabel size="large" html-for="proposal.applicant" v-if="!isRegisteringForm" />
+          <ProjectApplicant
+            v-model="proposalForm.applicant"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+            v-if="!isRegisteringForm"
+          />
 
           <FdpgLabel
             required
