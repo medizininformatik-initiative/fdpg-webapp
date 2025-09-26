@@ -87,7 +87,8 @@
     "wait": "AUSSTEHEND",
     "process": "AUSSTEHEND",
     "progress": "Fortschritt:",
-    "completed": "{progress}% ausgefüllt "
+    "completed": "{progress}% ausgefüllt ",
+    "published": "Veröffentlicht"
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
@@ -769,7 +770,19 @@
     "orphanedTasksDescription": "Diese Aufgaben beziehen sich auf Objekte, die im Vorschlag nicht mehr vorhanden sind. Sie können aus alten Datenstrukturen stammen.",
     "downloadLocationCsv": "Auflagen herunterladen",
     "typeOfUse_NONE_Info": "Keiner von oben",
-    "typeOfUse_NONE": "Keiner von oben"
+    "typeOfUse_NONE": "Keiner von oben",
+    "projectCategory": "Projektkategorie",
+    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
+    "diagnoses": "Diagnosen",
+    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
+    "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
+    "procedures": "Prozeduren",
+    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
+    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
+    "addBiosample": "Bioprobe hinzufügen",
+    "researcherInstituteUnknown": "unbenanntes Institut",
+    "projectUrl": "Projekt-URL",
+    "projectLogo": "Projektlogo"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

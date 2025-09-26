@@ -122,6 +122,58 @@
             </el-select>
           </FdpgFormItem>
         </el-col>
+        <el-col :sm="24">
+          <FdpgFormItem prop="userProject.generalProjectInformation.legalBasis">
+            <div class="fdpg-checkbox-wrapper">
+              <el-checkbox
+                v-model="generalProjectInformationForm.legalBasis"
+                class="fdpg-checkbox"
+                :disabled="isDisabled"
+                name="legalBasis"
+                data-testId="legalBasis"
+                size="small"
+              />
+              {{ t('proposal.updateAdditionalLocationLegalBasis') }}
+            </div>
+          </FdpgFormItem>
+        </el-col>
+        <el-col :sm="24">
+          <FdpgFormItem prop="userProject.generalProjectInformation.projectUrl">
+            <FdpgLabel required html-for="proposal.projectUrl" />
+            <FdpgInput
+              v-model="generalProjectInformationForm.projectUrl"
+              data-testId="generalProjectInformationForm.projectUrl"
+              placeholder="proposal.pleaseEnterTheProjectUrl"
+              :disabled="reviewMode || generalProjectInformationForm.isDone"
+            />
+          </FdpgFormItem>
+        </el-col>
+
+        <el-col :lg="24">
+          <FdpgLabel html-for="proposal.projectLogo" />
+          <FdpgUpload
+            v-if="proposalId"
+            data-test-id="general-appendix__upload"
+            :accept="SupportedMimeType"
+            :file-list="uploadsForType"
+            :is-loading="isAppendixLoading"
+            :proposal-id="proposalId"
+            @change="handleUploadFile"
+            @remove="handleRemoveFile"
+          >
+            <el-button
+              class="upload-button"
+              link
+              :disabled="isAppendixLoading || isReviewMode"
+              data-test-id="general-appendix__upload__button"
+            >
+              {{ t('proposal.chooseAFile') }}
+              <template #icon>
+                <el-icon class="bi-paperclip"></el-icon>
+              </template>
+            </el-button>
+          </FdpgUpload>
+        </el-col>
       </template>
     </el-row>
   </el-card>
@@ -144,6 +196,8 @@ import type { PropType } from 'vue'
 import { ref, watch, computed, onMounted } from 'vue'
 import useNotifications from '@/composables/use-notifications'
 import { useI18n } from 'vue-i18n'
+import useUpload from '@/composables/use-upload'
+import { DirectUpload } from '@/types/upload.types'
 
 const props = defineProps({
   modelValue: {
@@ -163,6 +217,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  proposalId: {
+    type: String as PropType<string | undefined>,
+    required: false,
+    default: undefined,
+  },
 })
 
 const { showInfoMessage } = useNotifications()
@@ -173,7 +232,6 @@ const emit = defineEmits(['update:modelValue'])
 const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
 const projectFundingEditor = ref()
 
-// Project categories for register form (10 categories as specified in PDF)
 const projectCategories = computed(() => [
   { value: 'category1', label: t('proposal.projectCategory1') },
   { value: 'category2', label: t('proposal.projectCategory2') },
@@ -194,10 +252,22 @@ const limitedStartDate = computed(() => {
   }
   return
 })
+const proposalId = computed(() => props.proposalId as string)
+const isDisabled = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
+const isReviewMode = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
+const { showErrorMessage } = useNotifications()
+const SupportedMimeType = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+
+const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } = useUpload(
+  proposalId,
+  [DirectUpload.ProjectLogo],
+  showErrorMessage,
+)
+
 watch(
   () => [generalProjectInformationForm.value.desiredStartTime, props.reviewMode],
   ([desiredStartTime, reviewMode]) => {
-    if (!desiredStartTime || reviewMode) {
+    if (!desiredStartTime || reviewMode || props.isRegisteringForm) {
       return
     }
     const startTimestamp = new Date(desiredStartTime as unknown as string).getTime()

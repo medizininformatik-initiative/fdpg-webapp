@@ -162,6 +162,7 @@
             :review-mode="isReviewMode"
             :platform="platform"
             :is-registering-form="isRegisteringForm"
+            :proposal-id="proposalId"
           />
         </div>
 
@@ -184,8 +185,14 @@
             v-model="proposalForm.projectResponsible"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :is-registering-form="isRegisteringForm"
           />
-          <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
+          <ProjectUser
+            v-model="proposalForm.projectUser"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+            v-if="!isRegisteringForm"
+          />
 
           <FdpgLabel
             info="proposal.participatingScientistsInfo"
@@ -196,6 +203,7 @@
             v-model="proposalForm.participants"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :is-registering-form="isRegisteringForm"
           />
         </div>
 
@@ -213,42 +221,44 @@
             v-model="proposalForm.userProject.ethicVote"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
           />
-          <FdpgLabel html-for="" size="large">{{
-            t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
-          }}</FdpgLabel>
-          <p class="desc">
-            {{
-              proposalId
-                ? t('proposal.pleaseUploadAdditionalAttachmentsHere')
-                : t('proposal.attachmentsOnlyAfterSavingHint')
-            }}
-          </p>
+          <template v-if="!isRegisteringForm">
+            <FdpgLabel html-for="" size="large">{{
+              t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+            }}</FdpgLabel>
+            <p class="desc">
+              {{
+                proposalId
+                  ? t('proposal.pleaseUploadAdditionalAttachmentsHere')
+                  : t('proposal.attachmentsOnlyAfterSavingHint')
+              }}
+            </p>
 
-          <FdpgUpload
-            v-if="proposalId"
-            data-test-id="general-appendix__upload"
-            :accept="SupportedMimetype"
-            :file-list="uploadsForType"
-            :is-loading="isAppendixLoading"
-            :is-disabled="isReviewMode"
-            :proposal-id="proposalId"
-            @change="handleUploadFile"
-            @remove="handleRemoveFile"
-          >
-            <el-button
-              class="upload-button"
-              link
-              :disabled="isAppendixLoading || isReviewMode"
-              data-test-id="general-appendix__upload__button"
+            <FdpgUpload
+              v-if="proposalId"
+              data-test-id="general-appendix__upload"
+              :accept="SupportedMimetype"
+              :file-list="uploadsForType"
+              :is-loading="isAppendixLoading"
+              :is-disabled="isReviewMode"
+              :proposal-id="proposalId"
+              @change="handleUploadFile"
+              @remove="handleRemoveFile"
             >
-              {{ t('proposal.chooseAFile') }}
-              <template #icon>
-                <el-icon class="bi-paperclip"></el-icon>
-              </template>
-            </el-button>
-          </FdpgUpload>
+              <el-button
+                class="upload-button"
+                link
+                :disabled="isAppendixLoading || isReviewMode"
+                data-test-id="general-appendix__upload__button"
+              >
+                {{ t('proposal.chooseAFile') }}
+                <template #icon>
+                  <el-icon class="bi-paperclip"></el-icon>
+                </template>
+              </el-button>
+            </FdpgUpload>
+          </template>
         </div>
         <ShoppingList v-model="proposalForm.selectedDataSources" />
       </el-form>
@@ -461,7 +471,9 @@ const isRegisteringForm = computed(() => {
 watch(
   isRegisteringForm,
   (newValue) => {
-    layoutStore.setIsRegisteringForm(newValue)
+    nextTick(() => {
+      layoutStore.setIsRegisteringForm(newValue)
+    })
   },
   { immediate: true },
 )
@@ -493,6 +505,7 @@ const rules = ref<Record<string, any>>({
       desiredStartTime: [
         {
           validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+            if (isRegisteringForm.value) return
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
             if (isLater) {
               if (!value) {
@@ -520,11 +533,11 @@ const rules = ref<Record<string, any>>({
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
       // Register-specific fields
-      projectStart: isRegisteringForm.value ? [maxLengthValidationFunc(1000)] : [],
-      projectCategory: isRegisteringForm.value ? [requiredValidationFunc('string')] : [],
+      projectCategory: isRegisteringForm.value ? [requiredValidationFunc('string'), maxLengthValidationFunc(200)] : [],
+      projectUrl: isRegisteringForm.value ? [requiredValidationFunc('string'), maxLengthValidationFunc(500)] : [],
       projectCatchphrases: isRegisteringForm.value ? [] : [],
-      diagnoses: isRegisteringForm.value ? [] : [],
-      procedures: isRegisteringForm.value ? [] : [],
+      diagnoses: isRegisteringForm.value ? [requiredValidationFunc('array')] : [],
+      procedures: isRegisteringForm.value ? [requiredValidationFunc('array')] : [],
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],

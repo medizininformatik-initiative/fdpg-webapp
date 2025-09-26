@@ -87,7 +87,8 @@
     "wait": "PENDING",
     "process": "PENDING",
     "progress": "Progress:",
-    "completed": "{progress}% filled out"
+    "completed": "{progress}% filled out",
+    "published": "published"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -769,7 +770,19 @@
     "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures.",
     "downloadLocationCsv": "Download conditions",
     "typeOfUse_NONE_Info": "None of above",
-    "typeOfUse_NONE": "None of above"
+    "typeOfUse_NONE": "None of above",
+    "projectCategory": "Project Category",
+    "pleaseSelectProjectCategory": "Please select a project category.",
+    "diagnoses": "Diagnoses",
+    "diagnosesPlaceholder": "Enter diagnoses and press Enter",
+    "pleaseSelectDiagnoses": "Please select or enter diagnoses",
+    "procedures": "Procedures",
+    "proceduresPlaceholder": "Enter procedures and press Enter",
+    "pleaseSelectProcedures": "Please select or enter procedures",
+    "addBiosample": "Add Biosample",
+    "researcherInstituteUnknown": "unnamed institute",
+    "projectUrl": "Project URL",
+    "projectLogo": "Project Logo"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

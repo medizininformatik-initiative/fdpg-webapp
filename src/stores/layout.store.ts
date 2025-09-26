@@ -61,13 +61,8 @@ export const useLayoutStore = defineStore('layout', {
       this.scrollToTop()
     },
     nextStep() {
-      // Filter out Casecohort step if in registration mode
-      const availableSteps = this.isRegisteringForm
-        ? this.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
-        : this.createProposalSteps
-
-      const currentIndex = availableSteps.findIndex((s) => s.step === this.activeStep)
-      const nextStep = availableSteps[currentIndex + 1]
+      const currentIndex = this.filteredSteps.findIndex((s) => s.step === this.activeStep)
+      const nextStep = this.filteredSteps[currentIndex + 1]
 
       if (nextStep) {
         this.activeStep = nextStep.step
@@ -75,13 +70,8 @@ export const useLayoutStore = defineStore('layout', {
       }
     },
     prevStep() {
-      // Filter out Casecohort step if in registration mode
-      const availableSteps = this.isRegisteringForm
-        ? this.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
-        : this.createProposalSteps
-
-      const currentIndex = availableSteps.findIndex((s) => s.step === this.activeStep)
-      const prevStep = availableSteps[currentIndex - 1]
+      const currentIndex = this.filteredSteps.findIndex((s) => s.step === this.activeStep)
+      const prevStep = this.filteredSteps[currentIndex - 1]
 
       if (prevStep) {
         this.activeStep = prevStep.step
@@ -144,6 +134,14 @@ export const useLayoutStore = defineStore('layout', {
     },
     setIsRegisteringForm(isRegistering: boolean) {
       this.isRegisteringForm = isRegistering
+    },
+  },
+  getters: {
+    filteredSteps: (state) => {
+      if (state.isRegisteringForm) {
+        return state.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
+      }
+      return state.createProposalSteps
     },
   },
 })
