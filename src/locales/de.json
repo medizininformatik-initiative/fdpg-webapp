@@ -20,6 +20,7 @@
     "applicantEmail": "Kontakt",
     "requiredField": "Pflichtfeld!",
     "invalidField": "Fehlerhafte Eingabe!",
+    "pleaseCheckFormErrors": "Bitte überprüfen und korrigieren Sie die Formularfehler vor dem Absenden.",
     "oneFieldRequired": "Eines der beiden Felder muss befüllt werden",
     "maxCharLimit": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
     "startDateInPast": "Der Startzeitpunkt muss in der Zukunft liegen",
