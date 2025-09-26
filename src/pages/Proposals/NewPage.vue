@@ -373,6 +373,8 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.variableSelection.DIFE.typeOfUseExplanation',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
+    'userProject.generalProjectInformation.diagnoses',
+    'userProject.generalProjectInformation.procedures',
   ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
@@ -396,6 +398,7 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.generalProjectInformation.projectFunding',
     'userProject.generalProjectInformation.fundingReferenceNumber',
     'userProject.plannedPublication.publications',
+    'userProject.generalProjectInformation.projectUrl',
   ],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
 
@@ -505,7 +508,10 @@ const rules = ref<Record<string, any>>({
       desiredStartTime: [
         {
           validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
-            if (isRegisteringForm.value) return
+            if (isRegisteringForm.value) {
+              callback() // Must call callback for register forms
+              return
+            }
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
             if (isLater) {
               if (!value) {

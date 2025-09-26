@@ -148,7 +148,6 @@
             />
           </FdpgFormItem>
         </el-col>
-
         <el-col :lg="24">
           <FdpgLabel html-for="proposal.projectLogo" />
           <FdpgUpload

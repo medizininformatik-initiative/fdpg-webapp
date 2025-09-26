@@ -20,6 +20,7 @@
     "applicantEmail": "Contact",
     "requiredField": "Required field!",
     "invalidField": "Invalid field!",
+    "pleaseCheckFormErrors": "Please check and fix the form errors before submitting.",
     "oneFieldRequired": "One of the two fields is mandatory",
     "maxCharLimit": "Exceeding the max character limit of {length}",
     "startDateInPast": "The start time must be in the future",
