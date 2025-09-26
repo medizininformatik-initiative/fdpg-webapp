@@ -76,6 +76,11 @@ const transformGeneralProjectInformation = (
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),
     keywords: generalProjectInformation?.keywords ?? [],
+    projectUrl: transformEmptyStringToUndefined(generalProjectInformation?.projectUrl),
+    legalBasis: generalProjectInformation?.legalBasis ?? false,
+    projectCategory: transformEmptyStringToUndefined(generalProjectInformation?.projectCategory),
+    diagnoses: generalProjectInformation?.diagnoses ?? [],
+    procedures: generalProjectInformation?.procedures ?? [],
   }
 }
 

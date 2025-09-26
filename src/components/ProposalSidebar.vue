@@ -62,10 +62,7 @@ const isRegisteringForm = computed(() => {
 })
 
 const filteredSteps = computed(() => {
-  if (isRegisteringForm.value) {
-    return layoutStore.createProposalSteps.filter((step) => step.step !== CreatPrposalSteps.Casesohort)
-  }
-  return layoutStore.createProposalSteps
+  return layoutStore.filteredSteps
 })
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())

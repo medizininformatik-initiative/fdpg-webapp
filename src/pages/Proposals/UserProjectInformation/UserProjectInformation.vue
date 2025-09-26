@@ -5,13 +5,18 @@
       :review-mode="reviewMode"
       :form-ref="formRef"
       :is-registering-form="isRegisteringForm"
+      :proposal-id="proposalId"
     />
     <ProjectResources
       v-model="userProjectForm.resourceAndRecontact"
       :review-mode="reviewMode"
       v-if="isMIISelected && !isRegisteringForm"
     />
-    <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
+    <PropertyRights
+      v-model="userProjectForm.propertyRights"
+      :review-mode="reviewMode"
+      v-if="isMIISelected && !isRegisteringForm"
+    />
     <PlannedPublications
       v-model="userProjectForm.plannedPublication"
       :review-mode="reviewMode"
@@ -61,6 +66,11 @@ const props = defineProps({
   isRegisteringForm: {
     type: Boolean,
     default: false,
+  },
+  proposalId: {
+    type: String as PropType<string | undefined>,
+    required: false,
+    default: undefined,
   },
 })
 
