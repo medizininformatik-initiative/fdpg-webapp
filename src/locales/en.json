@@ -20,7 +20,6 @@
     "applicantEmail": "Contact",
     "requiredField": "Required field!",
     "invalidField": "Invalid field!",
-    "pleaseCheckFormErrors": "Please check and fix the form errors before submitting.",
     "oneFieldRequired": "One of the two fields is mandatory",
     "maxCharLimit": "Exceeding the max character limit of {length}",
     "startDateInPast": "The start time must be in the future",
@@ -776,14 +775,14 @@
     "pleaseSelectProjectCategory": "Please select a project category.",
     "diagnoses": "Diagnoses",
     "diagnosesPlaceholder": "Enter diagnoses and press Enter",
-    "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "procedures": "Procedures",
     "proceduresPlaceholder": "Enter procedures and press Enter",
-    "pleaseSelectProcedures": "Please select or enter procedures",
     "addBiosample": "Add Biosample",
     "researcherInstituteUnknown": "unnamed institute",
     "projectUrl": "Project URL",
-    "projectLogo": "Project Logo"
+    "projectLogo": "Project Logo",
+    "pleaseSelectDiagnoses": "Please select or enter diagnoses",
+    "pleaseSelectProcedures": "Please select or enter procedures"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

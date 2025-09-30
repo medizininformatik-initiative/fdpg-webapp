@@ -20,7 +20,6 @@
     "applicantEmail": "Kontakt",
     "requiredField": "Pflichtfeld!",
     "invalidField": "Fehlerhafte Eingabe!",
-    "pleaseCheckFormErrors": "Bitte überprüfen und korrigieren Sie die Formularfehler vor dem Absenden.",
     "oneFieldRequired": "Eines der beiden Felder muss befüllt werden",
     "maxCharLimit": "Überschreiten der maximalen Zeichenbegrenzung von {length}",
     "startDateInPast": "Der Startzeitpunkt muss in der Zukunft liegen",
@@ -776,14 +775,14 @@
     "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
     "diagnoses": "Diagnosen",
     "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
-    "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
     "procedures": "Prozeduren",
     "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
-    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
     "addBiosample": "Bioprobe hinzufügen",
     "researcherInstituteUnknown": "unbenanntes Institut",
     "projectUrl": "Projekt-URL",
-    "projectLogo": "Projektlogo"
+    "projectLogo": "Projektlogo",
+    "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
+    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

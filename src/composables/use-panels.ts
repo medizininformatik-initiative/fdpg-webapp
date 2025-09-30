@@ -68,8 +68,11 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
     if (routeName.value === RouteName.Archive) {
       return []
     } else if (routeName.value === RouteName.Published) {
-      // Handle Published route specifically
-      return [{ type: CardType.Draft, header: 'sidebar.published', query: PanelQuery.RegisterProposals }]
+      // Handle Published route specifically - show both draft and submitted registered proposals
+      return [
+        { type: CardType.Draft, header: 'general.draft', query: PanelQuery.RegisterDraftProposals },
+        { type: CardType.Draft, header: 'general.submitted', query: PanelQuery.RegisterSubmittedProposals },
+      ]
     } else if (authStore.hasFdpgLevelPermissions()) {
       const fdpgPanels = PANEL_MAP[Role.FdpgMember] as Record<FdpgDashboardRoutes, PanelType[]>
       return fdpgPanels[routeName.value as FdpgDashboardRoutes] ?? []

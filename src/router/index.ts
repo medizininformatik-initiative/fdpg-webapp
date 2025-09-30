@@ -76,7 +76,14 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember, Role.DataSourceMember, Role.RegisteringMember],
+          roles: [
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.RegisteringMember,
+            Role.Researcher,
+            Role.DizMember,
+            Role.UacMember,
+          ],
         },
       },
 

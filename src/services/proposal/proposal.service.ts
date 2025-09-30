@@ -53,6 +53,17 @@ export class ProposalService {
     return response.data
   }
 
+  async getAllRegistered({ order, sortBy, panelQuery }: ISortAndOrderBy<IProposal>): Promise<IProposalDetail[]> {
+    const params = {
+      order,
+      sortBy,
+      panelQuery,
+    }
+    const response = await this.apiClient.get(`${this.basePath}/isRegister`, { params })
+
+    return response.data
+  }
+
   async update(id: string, proposal: DeepPartial<IProposal>): Promise<IProposal> {
     const response = await this.apiClient.put(`${this.basePath}/${id}`, proposal)
     return response.data
