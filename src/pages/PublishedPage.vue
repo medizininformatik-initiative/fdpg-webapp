@@ -18,11 +18,13 @@
         />
       </div>
     </div>
-    <FdpgProposalCardPanel
-      :panel="panel"
-      :sort-by="proposalStore.currentSortField"
-      :sort-order="proposalStore.currentSortDirection"
-    />
+    <div v-for="panel in panels" :key="panel.query">
+      <FdpgProposalCardPanel
+        :panel="panel"
+        :sort-by="proposalStore.currentSortField"
+        :sort-order="proposalStore.currentSortDirection"
+      />
+    </div>
   </div>
 </template>
 
@@ -45,9 +47,7 @@ const { t } = useI18n()
 const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Published)
 const proposalStore = useProposalStore()
-const { proposalCount } = usePanels(routeName)
-
-const panel: PanelType = { type: CardType.Draft, header: 'sidebar.published', query: PanelQuery.RegisterProposals }
+const { panels, proposalCount } = usePanels(routeName)
 
 const layoutStore = useLayoutStore()
 

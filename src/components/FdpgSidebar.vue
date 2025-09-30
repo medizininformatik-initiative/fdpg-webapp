@@ -102,6 +102,12 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
+    },
+    {
+      kind: MenuType.Route,
       to: RouteName.Archive,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
@@ -116,6 +122,12 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
+    },
+    {
+      kind: MenuType.Route,
       to: RouteName.Archive,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
@@ -127,6 +139,12 @@ const mainMenuMap: Menu = {
       to: RouteName.Dashboard,
       title: 'sidebar.dashboard',
       icon: 'bi bi-folder-fill',
+    },
+    {
+      kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
     },
     {
       kind: MenuType.Route,

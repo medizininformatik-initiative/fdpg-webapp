@@ -62,7 +62,7 @@
 import FdpgProposalCard from '@/components/FdpgProposalCardPanel/FdpgProposalCard/FdpgProposalCard.vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { PanelType } from '@/types/proposal.types'
-import { SortDirection } from '@/types/sort-filter.types'
+import { SortDirection, PanelQuery } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -97,7 +97,19 @@ const fetchProposals = async () => {
   displayCount.value = props.defaultLength
   try {
     loading.value = true
-    await proposalStore.fetch({ sortBy: props.sortBy, order: props.sortOrder, panelQuery: props.panel.query })
+    // Use fetchRegistered for any Register panel queries, otherwise use regular fetch
+    if (
+      props.panel.query === PanelQuery.RegisterDraftProposals ||
+      props.panel.query === PanelQuery.RegisterSubmittedProposals
+    ) {
+      await proposalStore.fetchRegistered({
+        sortBy: props.sortBy,
+        order: props.sortOrder,
+        panelQuery: props.panel.query,
+      })
+    } else {
+      await proposalStore.fetch({ sortBy: props.sortBy, order: props.sortOrder, panelQuery: props.panel.query })
+    }
     loading.value = false
   } catch (error) {
     loading.value = false

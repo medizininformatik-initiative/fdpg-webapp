@@ -7,14 +7,18 @@
         <h2 class="project-overview">{{ t('dashboard.projectOverview') }}</h2>
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
-
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <el-button type="primary" class="register-project-button" @click="openRegisterProjectDialog">
+          {{ t('dashboard.registerProject') }}
+        </el-button>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+        />
+      </div>
     </div>
     <FdpgProposalCardPanel
       v-for="(panel, index) in panels"
@@ -78,6 +82,9 @@ const createProposal = () => {
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
 }
+const openRegisterProjectDialog = () => {
+  router.push({ name: RouteName.RegisterNewProject })
+}
 onMounted(() => {
   configStore.getAlertConfig()
 })
@@ -89,5 +96,15 @@ onMounted(() => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 29px;
+}
+.sort {
+  display: flex;
+  justify-content: space-between;
+  max-width: 500px;
+  align-items: center;
+  width: 100%;
+  .register-project-button {
+    margin-top: 14px;
+  }
 }
 </style>
