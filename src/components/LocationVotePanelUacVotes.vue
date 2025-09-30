@@ -291,12 +291,13 @@ const handleDownload = async (id: string) => {
 const pendingVotesCount = computed(() => {
   const currentProposal = proposalStore.currentProposal
 
-  return (
+  const pendingCount =
     (currentProposal?.numberOfRequestedLocations ?? 0) -
     (currentProposal?.uacApprovalsCount ?? 0) -
     (currentProposal?.conditionalApprovalsCount ?? 0) -
     (currentProposal?.requestedButExcludedLocationsCount ?? 0)
-  )
+
+  return Math.max(0, pendingCount)
 })
 
 const uacApprovalsCount = computed(() => proposalStore.currentProposal?.uacApprovalsCount ?? 0)
