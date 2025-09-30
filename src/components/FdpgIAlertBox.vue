@@ -61,7 +61,7 @@ const props = defineProps<{
 
 .alert-logo {
   width: auto !important;
-  height: 220px !important;
+  height: 150px !important;
   max-width: none !important;
   max-height: none !important;
   object-fit: contain;
