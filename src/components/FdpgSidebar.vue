@@ -176,6 +176,7 @@ const secondaryMenu: SidebarMenu[] = [
 
   .logo {
     width: 179px;
+    height: 220px;
     margin-left: 29px;
   }
 
