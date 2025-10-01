@@ -212,7 +212,7 @@ const secondaryMenu: SidebarMenu[] = [
         width: 20px;
         text-align: center;
         font-size: 20px;
-        margin-right: 12px;
+        margin-right: 8px;
         margin-left: 2px;
       }
 
@@ -233,16 +233,24 @@ const secondaryMenu: SidebarMenu[] = [
 
       .fdpg-menu__icons {
         display: flex;
-        flex-wrap: wrap;
-        gap: 4px;
-        justify-content: flex-start;
+        flex-wrap: nowrap;
+        gap: 3px;
+        justify-content: flex-end;
+        min-width: fit-content;
+        max-width: 120px;
 
         .fdpg-menu__icon {
-          border-radius: 8px;
-          padding: 0 6px;
-          line-height: 24px;
+          border-radius: 4px;
+          padding: 0 3px;
+          line-height: 18px;
           border: 1px solid;
-          font-size: 12px;
+          font-size: 11px;
+          min-width: 18px;
+          max-width: 50px;
+          text-align: center;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
 
           &--critical {
             background: $red-100;
