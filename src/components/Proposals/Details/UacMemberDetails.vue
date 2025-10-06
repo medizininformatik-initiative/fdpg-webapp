@@ -197,9 +197,55 @@ const getApproveTodo = (): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo()]
+  return [...getApproveTodo(), ...getAdditionalLocationInformationTodo()]
 })
+const getAdditionalLocationInformationTodo = (afterLocationCheck = false): IProjectTodo[] => {
+  const proposal = proposalStore.currentProposal
+  if (!proposal) {
+    return []
+  }
 
+  if (proposal.requestedButExcludedLocations.length > 0) {
+    return []
+  }
+
+  const afterLocationCheckStatuses = [
+    ProposalStatus.Contracting,
+    ProposalStatus.ExpectDataDelivery,
+    ProposalStatus.DataResearch,
+    ProposalStatus.DataCorrupt,
+    ProposalStatus.ReadyToArchive,
+    ProposalStatus.FinishedProject,
+    ProposalStatus.Archived,
+    ProposalStatus.Rejected,
+  ]
+
+  if (afterLocationCheck) {
+    if (!proposal.status || !afterLocationCheckStatuses.includes(proposal.status)) {
+      return []
+    }
+  } else {
+    if (proposal.status !== ProposalStatus.LocationCheck) {
+      return []
+    }
+  }
+
+  const additionalLocationInformation = proposal.additionalLocationInformation[0] ?? {
+    legalBasis: false,
+    locationPublicationName: '',
+  }
+
+  return [
+    {
+      title: t('proposal.updateAdditionalLocationInformationTodoTitle'),
+      description: t('proposal.updateAdditionalLocationInformationTodoDescription'),
+      action: (): void => {},
+      type: 'additional-location-information',
+      additionalInformation: additionalLocationInformation,
+      readonly: true,
+    },
+  ]
+}
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
