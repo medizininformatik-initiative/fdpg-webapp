@@ -40,7 +40,7 @@ const props = defineProps<{
 
 .custom-alert :deep(.el-icon) {
   width: auto !important;
-  height: 220px !important;
+  height: 150px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
