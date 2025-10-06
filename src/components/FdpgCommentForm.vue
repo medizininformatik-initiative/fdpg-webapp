@@ -28,6 +28,7 @@
       v-model="locationSelection"
       :placeholder="visibility || ''"
       :minimum-selection="minimumSelection"
+      :all-locations="allLocations"
     />
   </section>
 </template>
@@ -38,13 +39,13 @@ import { useVModel } from '@vueuse/core'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { MiiLocation } from '@/types/location.enum'
-import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import type { PropType, Ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
-import type { MissingHandler } from 'vue-i18n'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   modelValue: {
@@ -70,14 +71,18 @@ const props = defineProps({
   },
 })
 
+const locationStore = useLocationStore()
+
 const authStore = useAuthStore()
 const isMessageToLocation = computed(() => {
   const answerIsFromFdpg = authStore.hasFdpgLevelPermissions()
   const isMessageToLocation = props.type === CommentType.PROPOSAL_MESSAGE_TO_LOCATION
   return isMessageToLocation && answerIsFromFdpg
 })
-const locationSelection = ref<MiiLocation[]>([])
-const minimumSelection: MiiLocation[] = []
+const locationSelection = ref<string[]>([])
+const minimumSelection: string[] = []
+
+const allLocations: Ref<ILocation[]> = ref([])
 
 const visibilityMessage = computed<IVisibilityMessage>(() => {
   return {
@@ -112,6 +117,11 @@ const setInputFocus = () => {
     inputRef.value.inputRef.focus()
   }
 }
+
+onMounted(async () => {
+  const locations = await locationStore.getAll()
+  allLocations.value = locations
+})
 </script>
 
 <style lang="scss" scoped>

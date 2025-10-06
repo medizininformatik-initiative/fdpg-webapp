@@ -12,6 +12,7 @@
         allOptionLabel="proposal.virtualAllLocations"
         style="width: 100%"
         :closable="false"
+        :all-locations="allLocations"
       />
     </FdpgFormItem>
   </el-card>
@@ -26,6 +27,7 @@ import FdpgSelect from '@/components/FdpgSelect.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { MII_LOCATIONS, SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
 import { MiiLocation } from '@/types/location.enum'
+import type { ILocation } from '@/types/location.types'
 import type { IAddressees } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
@@ -39,6 +41,11 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+  },
+
+  allLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
 })
 

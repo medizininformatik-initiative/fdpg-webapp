@@ -2,7 +2,7 @@
   <section ref="select" class="location-select">
     <el-select
       v-model="vModel"
-      :placeholder="$t(placeholder)"
+      :placeholder="t(placeholder)"
       popper-class="location-dropdown"
       multiple
       @visible-change="handleDropDownChange"
@@ -13,32 +13,29 @@
       <template #header>
         <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll"> All </el-checkbox>
       </template>
-      <el-option-group v-for="group in groupOptions" :key="group.label" :label="group.label">
-        <el-option
-          v-for="item in group.options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-          :disabled="disabled"
-          :data-testId="'option__' + item.value + testIdExtension"
-        />
-      </el-option-group>
+      <el-option
+        v-for="item in locationOptions"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+        :disabled="disabled"
+        :data-testId="'option__' + item.value + testIdExtension"
+      />
     </el-select>
   </section>
 </template>
 
 <script setup lang="ts">
-import useLocationGrouping from '@/composables/use-location-grouping'
-import { SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
-import { MiiLocation } from '@/types/location.enum'
+import type { ILocation } from '@/types/location.types'
 import { useVModel } from '@vueuse/core'
 import type { CheckboxValueType } from 'element-plus'
-import type { PropType } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import type { ComputedRef, PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   modelValue: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   placeholder: {
@@ -50,7 +47,7 @@ const props = defineProps({
     default: '',
   },
   minimumSelection: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   placement: {
@@ -61,11 +58,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  allOptionLabel: {
-    type: String,
-    required: false,
+  allLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
 })
+
+const { t } = useI18n()
 
 const emit = defineEmits(['update:modelValue'])
 const vModel = useVModel(props, 'modelValue', emit)
@@ -73,10 +72,19 @@ const vModel = useVModel(props, 'modelValue', emit)
 const checkAll = ref(false)
 const indeterminate = ref(false)
 
+const locationMap = computed(() => Object.fromEntries(props.allLocations.map((location) => [location._id, location])))
+
+watch(
+  () => props.modelValue,
+  (newVal, oldVal) => {
+    checkAll.value = newVal.length === props.allLocations.length
+  },
+  { deep: true },
+)
+
 const handleCheckAll = (val: CheckboxValueType) => {
-  indeterminate.value = false
   if (val) {
-    vModel.value = SORTED_ACTIVE_LOCATION_OPTIONS.map((loc) => loc.value as MiiLocation)
+    vModel.value = props.allLocations.map((loc) => loc._id)
   } else {
     vModel.value = []
   }
@@ -88,7 +96,23 @@ const setMinimumSelection = () => {
   }
 }
 
-const { groupOptions } = useLocationGrouping(undefined, props.allOptionLabel)
+const locationOptions: ComputedRef<
+  {
+    label: string
+    value: string
+  }[]
+> = computed(() => {
+  return props.allLocations
+    .map((loc) => {
+      const location = locationMap.value[loc._id]
+      if (!location) {
+        console.warn(`Missing location '${loc._id}'`)
+        return null
+      }
+      return { label: location.display, value: loc._id }
+    })
+    .filter((entry) => !!entry)
+})
 
 const select = ref()
 

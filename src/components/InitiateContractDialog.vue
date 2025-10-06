@@ -52,7 +52,7 @@
     <template #footer>
       <span>
         <el-button link data-testId="button__closeInitiateContractDialog" @click="closeDialog">
-          {{ $t('general.cancel') }}
+          {{ t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
@@ -60,7 +60,7 @@
           data-testid="button__initiateContract"
           @click="initiateContract"
         >
-          {{ $t('proposal.initiateContract') }}
+          {{ t('proposal.initiateContract') }}
         </el-button>
       </span>
     </template>
@@ -69,7 +69,7 @@
 
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
-import { computed, ref, watchEffect, type PropType } from 'vue'
+import { computed, onMounted, ref, watchEffect, type PropType, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import FdpgDialog from '@/components/FdpgDialog.vue'
@@ -78,8 +78,9 @@ import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { UseCaseUpload } from '@/types/upload.types'
 import { useVModel } from '@vueuse/core'
-import type { MiiLocation } from '@/types/location.enum'
-import { MII_LOCATIONS } from '@/constants'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
+import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContract'])
 
@@ -89,7 +90,7 @@ const props = defineProps({
     required: true,
   },
   locations: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   isSubmitting: {
@@ -97,6 +98,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
@@ -117,12 +120,32 @@ const handleRemoveFile = () => {
   contractDraft.value = null
 }
 
+const locationStore = useLocationStore()
+
+const locationsMap: Ref<Record<string, ILocation>> = ref({})
+
+const locationOptions = computed(() => {
+  return props.locations
+    .map((id) => {
+      const location = locationsMap.value[id]
+      if (!location) {
+        console.warn(`Missing location '${id}'`)
+        return null
+      }
+      return { label: location.display, value: id }
+    })
+    .filter((entr) => entr)
+})
+
+const selectedLocations = ref<string[]>([])
+
+onMounted(async () => {
+  const locationsArray = await locationStore.getAll()
+  locationsMap.value = Object.fromEntries(locationsArray.map((location) => [location._id, location]))
+})
+
 const { showErrorMessage } = useNotifications()
 const { uploadsForType } = useUpload(proposalId, [UseCaseUpload.ContractDraft], showErrorMessage)
-
-const locationOptions = computed(() => props.locations.map((value) => ({ label: MII_LOCATIONS[value].display, value })))
-
-const selectedLocations = ref<MiiLocation[]>()
 
 const initiateContract = () => {
   if (contractDraft.value) {
