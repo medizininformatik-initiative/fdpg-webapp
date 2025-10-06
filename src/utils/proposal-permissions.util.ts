@@ -28,7 +28,18 @@ export function isResponsibleScientist(proposal: IProposal, userProfile?: IFdpgO
   if (!currentUserEmail || !proposal.projectResponsible) {
     return false
   }
-  return proposal.projectResponsible.researcher?.email?.toLowerCase() === currentUserEmail
+
+  // Check if the applicant is the project responsible
+  if (proposal.projectResponsible.projectResponsibility?.applicantIsProjectResponsible) {
+    // When applicant is project responsible, check if current user is the applicant
+    return proposal.applicant?.researcher?.email?.toLowerCase() === currentUserEmail
+  }
+
+  // Otherwise check the project responsible scientist email (if researcher exists)
+  if (!proposal.projectResponsible.researcher) {
+    return false
+  }
+  return proposal.projectResponsible.researcher.email?.toLowerCase() === currentUserEmail
 }
 
 /**
@@ -53,6 +64,11 @@ export function isParticipatingScientist(proposal: IProposal, userProfile?: IFdp
   const currentUserEmail = userProfile?.email?.toLowerCase()
   if (!currentUserEmail) {
     return false
+  }
+
+  // Check if user is the responsible scientist
+  if (isResponsibleScientist(proposal, userProfile)) {
+    return true
   }
 
   // Check if user is in participants list

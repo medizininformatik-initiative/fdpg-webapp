@@ -122,6 +122,7 @@ describe('Newpage.vue', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   let commentStore: MockedObject<ReturnType<typeof useCommentStore>>
   let layoutStore: MockedObject<ReturnType<typeof useLayoutStore>>
+  let authStore: MockedObject<ReturnType<typeof useAuthStore>>
 
   const { showSuccessMessage, showErrorMessage } = useNotifications()
 
@@ -131,6 +132,7 @@ describe('Newpage.vue', () => {
 
   describe('In any case', () => {
     let proposal: IProposal
+    let authStore: MockedObject<ReturnType<typeof useAuthStore>>
 
     beforeEach(async () => {
       vi.clearAllMocks()
@@ -141,6 +143,14 @@ describe('Newpage.vue', () => {
       proposalStore = vi.mocked(useProposalStore())
       commentStore = vi.mocked(useCommentStore())
       layoutStore = vi.mocked(useLayoutStore())
+      authStore = vi.mocked(useAuthStore())
+
+      // Mock user as the proposal owner
+      authStore.profile = {
+        sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+        email: 'lars.schaefer@appsfactory.de',
+      } as any
+
       proposalStore.currentProposal = proposal
 
       // Ensure we're in the right step
@@ -181,6 +191,7 @@ describe('Newpage.vue', () => {
     'When the proposal is editable with status %s',
     (status?: ProposalStatus) => {
       let proposal: IProposal
+      let authStore: MockedObject<ReturnType<typeof useAuthStore>>
       beforeEach(() => {
         proposal = JSON.parse(
           JSON.stringify({ ...mockProposal, status: status, _id: status ? MOCK_PROPOSAL_ID : undefined }),
@@ -189,6 +200,14 @@ describe('Newpage.vue', () => {
         proposalStore = vi.mocked(useProposalStore())
         commentStore = vi.mocked(useCommentStore())
         layoutStore = vi.mocked(useLayoutStore())
+        authStore = vi.mocked(useAuthStore())
+
+        // Mock user as the proposal owner to enable editing
+        authStore.profile = {
+          sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8', // matches mockProposal owner.id
+          email: 'lars.schaefer@appsfactory.de', // matches mockProposal owner.email
+        } as any
+
         proposalStore.currentProposal = proposal
 
         // Ensure we're in the right step
@@ -200,8 +219,18 @@ describe('Newpage.vue', () => {
         expect(row.exists()).toBe(true)
       })
 
-      it('sets review mode to false', () => {
+      it('sets review mode to false', async () => {
+        // Wait for all reactive updates
+        await wrapper.vm.$nextTick()
+        await flushPromises()
+
         const component = wrapper.findComponent({ name: 'UserProjectInformation' })
+
+        // Debug info
+        console.log('Review mode:', component.props().reviewMode)
+        console.log('Auth profile:', authStore.profile)
+        console.log('Proposal owner:', proposal.owner)
+
         expect(component.props().reviewMode).toBe(false)
       })
 
@@ -345,10 +374,19 @@ describe('Newpage.vue', () => {
     })
 
     describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to save as draft', (proposalId?: string) => {
+      let authStore: MockedObject<ReturnType<typeof useAuthStore>>
       beforeEach(() => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())
         commentStore = vi.mocked(useCommentStore())
+        authStore = vi.mocked(useAuthStore())
+
+        // Mock user as owner to ensure buttons are visible
+        authStore.profile = {
+          sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+          email: 'lars.schaefer@appsfactory.de',
+        } as any
+
         proposalStore.currentProposal = JSON.parse(
           JSON.stringify({ ...mockProposal, status: ProposalStatus.Draft, _id: proposalId }),
         )
@@ -366,10 +404,19 @@ describe('Newpage.vue', () => {
     })
 
     describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to submit', (proposalId?: string) => {
+      let authStore: MockedObject<ReturnType<typeof useAuthStore>>
       beforeEach(() => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())
         commentStore = vi.mocked(useCommentStore())
+        authStore = vi.mocked(useAuthStore())
+
+        // Mock user as owner to ensure buttons are visible
+        authStore.profile = {
+          sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+          email: 'lars.schaefer@appsfactory.de',
+        } as any
+
         proposalStore.currentProposal = JSON.parse(
           JSON.stringify({ ...mockProposal, status: ProposalStatus.Draft, _id: proposalId }),
         )
@@ -400,10 +447,19 @@ describe('Newpage.vue', () => {
     })
 
     describe.each([undefined, MOCK_PROPOSAL_ID])('Failed on validation', (proposalId?: string) => {
+      let authStore: MockedObject<ReturnType<typeof useAuthStore>>
       beforeEach(async () => {
         createTestingPinia()
         proposalStore = vi.mocked(useProposalStore())
         commentStore = vi.mocked(useCommentStore())
+        authStore = vi.mocked(useAuthStore())
+
+        // Mock user as owner to ensure buttons are visible
+        authStore.profile = {
+          sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+          email: 'lars.schaefer@appsfactory.de',
+        } as any
+
         proposalStore.currentProposal = JSON.parse(
           JSON.stringify({ ...mockProposal, status: ProposalStatus.Draft, _id: proposalId }),
         )
@@ -498,6 +554,7 @@ describe('Newpage.vue', () => {
     describe('Submit button behavior', () => {
       let proposal: IProposal
       let layoutStore: MockedObject<ReturnType<typeof useLayoutStore>>
+      let authStore: MockedObject<ReturnType<typeof useAuthStore>>
 
       beforeEach(async () => {
         createTestingPinia({
@@ -512,6 +569,14 @@ describe('Newpage.vue', () => {
         proposalStore = vi.mocked(useProposalStore())
         commentStore = vi.mocked(useCommentStore())
         layoutStore = vi.mocked(useLayoutStore())
+        authStore = vi.mocked(useAuthStore())
+
+        // Mock user as owner to ensure buttons are visible
+        authStore.profile = {
+          sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+          email: 'lars.schaefer@appsfactory.de',
+        } as any
+
         proposalStore.currentProposal = proposal
         proposalStore.currentProposal.status = ProposalStatus.Rework
         commentStore.comments = [
@@ -589,7 +654,7 @@ describe('Newpage.vue', () => {
       proposal = JSON.parse(
         JSON.stringify({
           ...mockProposal,
-          status: ProposalStatus.FdpgCheck, // Non-editable status
+          status: ProposalStatus.Draft, // Use editable status
           _id: MOCK_PROPOSAL_ID,
           projectResponsible: {
             researcher: {
@@ -641,24 +706,40 @@ describe('Newpage.vue', () => {
     })
 
     it('allows editing when applicant is project responsible and current user is applicant', async () => {
-      // Update proposal to have applicant as project responsible
-      proposal.projectResponsible.projectResponsibility.applicantIsProjectResponsible = true
-      proposal.applicant.researcher.email = 'applicant@example.com'
+      // Reset the proposal with applicant as project responsible
+      proposal = JSON.parse(
+        JSON.stringify({
+          ...mockProposal,
+          status: ProposalStatus.Draft,
+          _id: MOCK_PROPOSAL_ID,
+          applicant: {
+            researcher: { email: 'applicant@example.com' },
+          },
+          projectResponsible: {
+            // No researcher email when applicant is responsible
+            projectResponsibility: {
+              _id: '68dd481a13b770c9855ed20c',
+              isDone: false,
+              applicantIsProjectResponsible: true,
+            },
+          },
+        }),
+      )
+
+      // Update the proposal store with the modified proposal
+      proposalStore.currentProposal = proposal
 
       // Mock the auth store to return the applicant's email
       authStore.profile = {
         email: 'applicant@example.com',
       } as any
 
-      // Update the proposal store with the modified proposal
-      proposalStore.currentProposal = proposal
-
-      // Force the component to re-setup with the new proposal
-      await wrapper.vm.setUpPage()
-      await wrapper.vm.$nextTick()
+      // Manually trigger the component to update the form with new data
+      await (wrapper.vm as any).setUpPage()
 
       // Check that review mode is false (editing is allowed)
       const component = wrapper.findComponent({ name: 'UserProjectInformation' })
+      expect(component.exists()).toBe(true)
       expect(component.props().reviewMode).toBe(false)
     })
   })

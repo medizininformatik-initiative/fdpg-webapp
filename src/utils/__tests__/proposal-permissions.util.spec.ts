@@ -82,6 +82,46 @@ describe('ProposalPermissions', () => {
     it('should return false when no user profile provided', () => {
       expect(isResponsibleScientist(mockProposal, undefined)).toBe(false)
     })
+
+    it('should return true when applicant is project responsible and user is applicant', () => {
+      const proposalWithApplicantResponsible = {
+        ...mockProposal,
+        applicant: {
+          researcher: { email: 'applicant@example.com' },
+        },
+        projectResponsible: {
+          // No researcher email when applicant is responsible
+          projectResponsibility: {
+            _id: '68dd481a13b770c9855ed20c',
+            isDone: false,
+            applicantIsProjectResponsible: true,
+          },
+        },
+      } as IProposal
+
+      const userProfile = { ...mockUserProfile, email: 'applicant@example.com' }
+      expect(isResponsibleScientist(proposalWithApplicantResponsible, userProfile)).toBe(true)
+    })
+
+    it('should return false when applicant is project responsible but user is not applicant', () => {
+      const proposalWithApplicantResponsible = {
+        ...mockProposal,
+        applicant: {
+          researcher: { email: 'applicant@example.com' },
+        },
+        projectResponsible: {
+          // No researcher email when applicant is responsible
+          projectResponsibility: {
+            _id: '68dd481a13b770c9855ed20c',
+            isDone: false,
+            applicantIsProjectResponsible: true,
+          },
+        },
+      } as IProposal
+
+      const userProfile = { ...mockUserProfile, email: 'other@example.com' }
+      expect(isResponsibleScientist(proposalWithApplicantResponsible, userProfile)).toBe(false)
+    })
   })
 
   describe('isEditor', () => {
@@ -130,7 +170,7 @@ describe('ProposalPermissions', () => {
     })
 
     it('should return false for participating scientist without editing role', () => {
-      const userProfile = { ...mockUserProfile, email: 'participant@example.com' }
+      const userProfile = { ...mockUserProfile, sub: 'participant123', email: 'participant@example.com' }
       expect(hasEditingPermissions(mockProposal, userProfile)).toBe(false)
     })
   })
@@ -147,9 +187,11 @@ describe('ProposalPermissions', () => {
     })
 
     it('should return correct permissions for participating scientist without editing rights', () => {
-      const userProfile = { ...mockUserProfile, email: 'participant@example.com' }
+      const userProfile = { ...mockUserProfile, sub: 'participant123', email: 'participant@example.com' }
       const permissions = getProposalPermissions(mockProposal, userProfile)
 
+      expect(permissions.isOwner).toBe(false)
+      expect(permissions.isResponsible).toBe(false)
       expect(permissions.isParticipating).toBe(true)
       expect(permissions.isEditor).toBe(false)
       expect(permissions.hasEditingRights).toBe(false)
