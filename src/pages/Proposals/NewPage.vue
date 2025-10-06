@@ -291,6 +291,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { transformForm } from '@/utils/form-transform'
+import * as ProposalPermissions from '@/utils/proposal-permissions.util'
 import {
   maxLengthValidationFunc,
   numberValidationFunc,
@@ -551,12 +552,33 @@ const rules = ref<Record<string, any>>({
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
-  const status = proposalForm.value?.status
-  return status === undefined || status === ProposalStatus.Draft || status === ProposalStatus.Rework
+  return ProposalPermissions.isProposalEditable(proposalForm.value)
 }
 
+// Comprehensive permission checks using utility functions
+const proposalPermissions = computed(() => {
+  if (!proposalForm.value) {
+    return {
+      isOwner: false,
+      isParticipating: false,
+      isResponsible: false,
+      isEditor: false,
+      hasEditingRights: false,
+      canEdit: false,
+      canSubmit: false,
+      isReviewMode: true,
+    }
+  }
+
+  return ProposalPermissions.getProposalPermissions(
+    proposalForm.value,
+    authStore.profile,
+    proposalStore.currentProposal?.isParticipatingScientist,
+  )
+})
+
 const isReviewMode = computed(() => {
-  return !isProposalEditable() || isParticipatingScientist.value
+  return proposalPermissions.value.isReviewMode
 })
 const isParticipatingScientist = computed(() => {
   return proposalStore.currentProposal?.isParticipatingScientist !== undefined
@@ -673,6 +695,7 @@ const getStepFields = (allFields: any[], stepFieldPaths: string[]) => {
 // Helper function to validate a single field
 const validateSingleField = async (field: any): Promise<boolean> => {
   if (!field.prop) return true
+  if (!isProposalEditable()) return true
 
   try {
     let hasErrors = false
@@ -689,6 +712,8 @@ const validateSingleField = async (field: any): Promise<boolean> => {
 
 // Helper function to validate step fields
 const validateStepFields = async (stepFields: any[]): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   const validationResults = await Promise.all(stepFields.map((field) => validateSingleField(field)))
   return validationResults.every((result) => result)
 }
@@ -728,6 +753,8 @@ const nextStep = async () => {
 
 // Helper function to validate multiple steps
 const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promise<boolean> => {
+  // For non-editable proposals, treat as having no validation errors
+  if (!isProposalEditable()) return false
   for (const stepValue of stepsToValidate) {
     const stepFieldPaths = stepFieldsMap[stepValue] || []
 
@@ -743,6 +770,11 @@ const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promi
   return false // no errors
 }
 const handleSubmit = async () => {
+  // Skip validation flow if proposal is not editable
+  if (!isProposalEditable()) {
+    await updateStepStatus()
+    return
+  }
   // Validate all fields before submission
   await formRef.value?.validate(() => {})
   await waitForValidation()
@@ -822,6 +854,8 @@ let isInitialValidationComplete = false
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   // No validation here - only update progress
   if (initialLoad) return
+  // Skip any validation-triggered progress updates when not editable
+  if (!isProposalEditable()) return
   await updateProgressOnly()
 }
 
@@ -924,6 +958,8 @@ const shouldSkipManualSave = () => {
 
 // Helper function to perform form validation
 const performFormValidation = async (): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   await formRef.value?.validate(() => {})
   await waitForValidation()
   await updateStepStatus()
@@ -1051,6 +1087,8 @@ const validateFormSilently = async () => {
   if (!formRef.value) {
     return
   }
+  // Do not run silent validation when proposal is not editable
+  if (!isProposalEditable()) return
 
   const allFields = formRef.value.fields || []
 
