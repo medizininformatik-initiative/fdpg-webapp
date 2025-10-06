@@ -291,6 +291,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { transformForm } from '@/utils/form-transform'
+import * as ProposalPermissions from '@/utils/proposal-permissions.util'
 import {
   maxLengthValidationFunc,
   numberValidationFunc,
@@ -551,12 +552,33 @@ const rules = ref<Record<string, any>>({
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
-  const status = proposalForm.value?.status
-  return status === undefined || status === ProposalStatus.Draft || status === ProposalStatus.Rework
+  return ProposalPermissions.isProposalEditable(proposalForm.value)
 }
 
+// Comprehensive permission checks using utility functions
+const proposalPermissions = computed(() => {
+  if (!proposalForm.value) {
+    return {
+      isOwner: false,
+      isParticipating: false,
+      isResponsible: false,
+      isEditor: false,
+      hasEditingRights: false,
+      canEdit: false,
+      canSubmit: false,
+      isReviewMode: true,
+    }
+  }
+
+  return ProposalPermissions.getProposalPermissions(
+    proposalForm.value,
+    authStore.profile,
+    proposalStore.currentProposal?.isParticipatingScientist,
+  )
+})
+
 const isReviewMode = computed(() => {
-  return !isProposalEditable() || isParticipatingScientist.value
+  return proposalPermissions.value.isReviewMode
 })
 const isParticipatingScientist = computed(() => {
   return proposalStore.currentProposal?.isParticipatingScientist !== undefined

@@ -19,6 +19,7 @@ import { CommentType, type ICommentDetail } from '@/types/comment.interface'
 import { mockCommentDetailForTask } from '@/mocks/comment.mock'
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
@@ -577,6 +578,88 @@ describe('Newpage.vue', () => {
         expect(proposalStore.updateProposal).not.toHaveBeenCalled()
         expect(proposalStore.createProposal).not.toHaveBeenCalled()
       })
+    })
+  })
+
+  describe('Responsible Scientist Editing', () => {
+    let proposal: IProposal
+    let authStore: MockedObject<ReturnType<typeof useAuthStore>>
+
+    beforeEach(() => {
+      proposal = JSON.parse(
+        JSON.stringify({
+          ...mockProposal,
+          status: ProposalStatus.FdpgCheck, // Non-editable status
+          _id: MOCK_PROPOSAL_ID,
+          projectResponsible: {
+            researcher: {
+              email: 'responsible@example.com',
+              firstName: 'John',
+              lastName: 'Doe',
+            },
+            projectResponsibility: {
+              applicantIsProjectResponsible: false,
+            },
+          },
+        }),
+      )
+
+      wrapper = mountComponent() as any
+      proposalStore = vi.mocked(useProposalStore())
+      commentStore = vi.mocked(useCommentStore())
+      layoutStore = vi.mocked(useLayoutStore())
+      authStore = vi.mocked(useAuthStore())
+
+      proposalStore.currentProposal = proposal
+      layoutStore.activeStep = CreatPrposalSteps.ResearchProject
+    })
+
+    it('allows editing when current user is the responsible scientist', async () => {
+      // Mock the auth store to return the responsible scientist's email
+      authStore.profile = {
+        email: 'responsible@example.com',
+      } as any
+
+      await wrapper.vm.$nextTick()
+
+      // Check that review mode is false (editing is allowed)
+      const component = wrapper.findComponent({ name: 'UserProjectInformation' })
+      expect(component.props().reviewMode).toBe(false)
+    })
+
+    it('prevents editing when current user is not the responsible scientist', async () => {
+      // Mock the auth store to return a different email
+      authStore.profile = {
+        email: 'other@example.com',
+      } as any
+
+      await wrapper.vm.$nextTick()
+
+      // Check that review mode is true (editing is prevented)
+      const component = wrapper.findComponent({ name: 'UserProjectInformation' })
+      expect(component.props().reviewMode).toBe(true)
+    })
+
+    it('allows editing when applicant is project responsible and current user is applicant', async () => {
+      // Update proposal to have applicant as project responsible
+      proposal.projectResponsible.projectResponsibility.applicantIsProjectResponsible = true
+      proposal.applicant.researcher.email = 'applicant@example.com'
+
+      // Mock the auth store to return the applicant's email
+      authStore.profile = {
+        email: 'applicant@example.com',
+      } as any
+
+      // Update the proposal store with the modified proposal
+      proposalStore.currentProposal = proposal
+
+      // Force the component to re-setup with the new proposal
+      await wrapper.vm.setUpPage()
+      await wrapper.vm.$nextTick()
+
+      // Check that review mode is false (editing is allowed)
+      const component = wrapper.findComponent({ name: 'UserProjectInformation' })
+      expect(component.props().reviewMode).toBe(false)
     })
   })
 })
