@@ -376,6 +376,10 @@ const handleParticipantTypeSelect = async (participant: ParticipantInfo, newType
         return p
       }) ?? []
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
+
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant type:', error)
@@ -440,6 +444,11 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
       }) ?? []
 
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
+
+    // Refresh researcher identities to get updated data from backend
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant role:', error)
