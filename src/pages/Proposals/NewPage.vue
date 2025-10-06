@@ -1382,7 +1382,7 @@ onMounted(async () => {
   // MOVE resetSteps() HERE - before any validation
   layoutStore.resetSteps()
 
-  const locations = await locationStore.getAll()
+  const locations = await locationStore.getAllActive()
   allLocations.value = locations
 
   try {

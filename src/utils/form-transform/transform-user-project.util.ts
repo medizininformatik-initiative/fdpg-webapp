@@ -1,5 +1,4 @@
 import type { DeepPartial } from '@/types/deep-partial.type'
-import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,

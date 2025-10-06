@@ -7,12 +7,18 @@
 
     <section class="messages">
       <template v-for="(message, index) in messagesForType" :key="message._id">
-        <MessageCenterMainMessage :message="message" :type="type" :show-done-comments="showDoneComments" />
+        <MessageCenterMainMessage
+          :message="message"
+          :type="type"
+          :show-done-comments="showDoneComments"
+          :possible-locations="possibleLocations"
+        />
         <template v-if="index === firstOpenIndex">
           <FdpgCommentForm
             v-model="commentContent"
             :edit="false"
             :type="type"
+            :possible-locations="possibleLocations"
             @close="handleCancelClick"
             @save="handleSubmit"
             :reviewMode="reviewMode"
@@ -25,6 +31,7 @@
           v-model="commentContent"
           :edit="false"
           :type="type"
+          :possible-locations="possibleLocations"
           @close="handleCancelClick"
           @save="handleSubmit"
           :reviewMode="reviewMode"
@@ -41,14 +48,13 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { IComment, ICommentCreateProps, ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
-import type { MiiLocation } from '@/types/location.enum'
-import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'
 import MessageCenterMainMessage from './MessageCenterMainMessage.vue'
 import { useI18n } from 'vue-i18n'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   type: {
@@ -58,6 +64,10 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+  },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
 })
 
@@ -112,7 +122,7 @@ const commentContent = ref('')
 const handleCancelClick = () => {
   commentContent.value = ''
 }
-const handleSubmit = async (content: string, locations: MiiLocation[]) => {
+const handleSubmit = async (content: string, locations: string[]) => {
   const createProps: ICommentCreateProps = {
     proposalId,
     objectId: proposalId,

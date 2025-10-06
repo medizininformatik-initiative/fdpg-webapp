@@ -20,7 +20,7 @@
         v-model="locationSelection"
         :placeholder="visibility || ''"
         :minimum-selection="minimumSelection"
-        :all-locations="[]"
+        :all-locations="possibleLocations"
       />
     </section>
   </section>
@@ -32,12 +32,12 @@ import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
-import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import LocationSelect from './LocationSelect.vue'
 import { useI18n } from 'vue-i18n'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   message: {
@@ -52,12 +52,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+  },
 })
 
 const { t } = useI18n()
 
 const authStore = useAuthStore()
-const locationSelection = ref<MiiLocation[]>([])
+const locationSelection = ref<string[]>([])
 const answerContent = ref<string>()
 const inputRef = ref()
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer'])
@@ -98,7 +102,7 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
   }
 })
 
-const { visibility } = useLocationVisibility(visibilityMessage, props.type, false)
+const { visibility } = useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)
 
 onMounted(() => {
   if (inputRef.value?.inputRef?.input) {
@@ -108,7 +112,7 @@ onMounted(() => {
   if (isAnswerToLocation.value === true) {
     locationSelection.value = props.message.owner.miiLocation
       ? [props.message.owner.miiLocation]
-      : [MiiLocation.VirtualAll]
+      : [...props.possibleLocations.map((loc) => loc._id)]
   }
 })
 </script>

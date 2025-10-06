@@ -44,7 +44,7 @@ import useLocationVisibility from '@/composables/use-location-visibility'
 import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, IAnswerDetail, ICommentDetail } from '@/types/comment.interface'
-import { Role } from '@/types/oidc.types'
+import type { ILocation } from '@/types/location.types'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -64,6 +64,10 @@ const props = defineProps({
   },
   type: {
     type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
+    required: true,
+  },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
     required: true,
   },
 })
@@ -92,7 +96,7 @@ const ownerText = computed(() => {
 })
 
 const computedMessage = computed(() => props.message)
-const { visibility } = useLocationVisibility(computedMessage, props.type, true)
+const { visibility } = useLocationVisibility(computedMessage, props.type, true, props.possibleLocations)
 const locations = computed(() => {
   return computedMessage.value.locations?.map((location) => MII_LOCATIONS[location].display) ?? []
 })

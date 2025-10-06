@@ -28,7 +28,7 @@
       v-model="locationSelection"
       :placeholder="visibility || ''"
       :minimum-selection="minimumSelection"
-      :all-locations="allLocations"
+      :all-locations="possibleLocations"
     />
   </section>
 </template>
@@ -44,7 +44,6 @@ import { computed, onMounted, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
-import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
@@ -69,9 +68,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+  },
 })
-
-const locationStore = useLocationStore()
 
 const authStore = useAuthStore()
 const isMessageToLocation = computed(() => {
@@ -82,8 +83,6 @@ const isMessageToLocation = computed(() => {
 const locationSelection = ref<string[]>([])
 const minimumSelection: string[] = []
 
-const allLocations: Ref<ILocation[]> = ref([])
-
 const visibilityMessage = computed<IVisibilityMessage>(() => {
   return {
     owner: { role: authStore.singleKnownRole as Role, miiLocation: authStore.profile?.MII_LOCATION },
@@ -91,7 +90,7 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
   }
 })
 
-const { visibility } = useLocationVisibility(visibilityMessage, props.type, false)
+const { visibility } = useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)
 
 const emit = defineEmits(['close', 'save', 'update:modelValue'])
 const comment = useVModel(props, 'modelValue', emit)
@@ -117,11 +116,6 @@ const setInputFocus = () => {
     inputRef.value.inputRef.focus()
   }
 }
-
-onMounted(async () => {
-  const locations = await locationStore.getAll()
-  allLocations.value = locations
-})
 </script>
 
 <style lang="scss" scoped>

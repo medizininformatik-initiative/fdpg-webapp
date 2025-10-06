@@ -17,6 +17,7 @@
           <FdpgCommentForm
             v-model="selectedComment.content"
             :edit="true"
+            :possible-locations="possibleLocations"
             @close="handleCancelClick"
             @save="handleSubmit"
           />
@@ -50,7 +51,12 @@
     </section>
 
     <el-card v-if="visibleCommentField" class="comment-field-card">
-      <FdpgCommentForm v-model="newComment" @close="handleCancelClick" @save="handleSubmit" />
+      <FdpgCommentForm
+        v-model="newComment"
+        :possible-locations="possibleLocations"
+        @close="handleCancelClick"
+        @save="handleSubmit"
+      />
     </el-card>
     <el-button
       v-if="!visibleCommentField"
@@ -71,6 +77,7 @@ import type { PropType } from 'vue'
 import { nextTick, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   objectId: {
@@ -79,6 +86,10 @@ const props = defineProps({
   },
   type: {
     type: String as PropType<CommentType>,
+    required: true,
+  },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
     required: true,
   },
 })

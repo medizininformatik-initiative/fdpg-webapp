@@ -217,7 +217,7 @@ const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
 const authStore = useAuthStore()
 const messageBoxStore = useMessageBoxStore()
 const { t } = useI18n()
-interface IPanelInputConfig<T extends MiiLocation | IConditionalApproval | IUacApproval> {
+interface IPanelInputConfig<T extends string | IConditionalApproval | IUacApproval> {
   data: T[]
   title: TranslationSchema
   indicator: 'green' | 'blue' | 'red' | 'grey'
@@ -246,7 +246,7 @@ interface ITableData {
   dataAmount?: number
   declineReason?: IDeclineReason
   revert?: boolean
-  location?: MiiLocation
+  location?: string
   isLate?: boolean
 }
 
@@ -311,7 +311,7 @@ const locationCheckDueDate = computed<Date | null>(() => {
 
 const mapTableData = (
   rowId: number,
-  location: MiiLocation,
+  location: string,
   dataAmount?: number,
   declineReason?: IDeclineReason,
   isLate?: boolean,
@@ -368,7 +368,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       ...(currentProposal?.dizApprovedLocations ?? []),
       ...(currentProposal?.dizConditionApprovedLocations ?? []),
     ]
-    const pendingLocations: IPanelInputConfig<MiiLocation> = {
+    const pendingLocations: IPanelInputConfig<string> = {
       data,
       title: 'proposal.pendingVotes',
       indicator: 'grey',
@@ -445,7 +445,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
 
   panels.push(...tablesWithDataAmount)
 
-  const excludedLocations: IPanelInputConfig<MiiLocation> = (() => {
+  const excludedLocations: IPanelInputConfig<string> = (() => {
     const data = currentProposal?.requestedButExcludedLocations ?? []
     return {
       data,
@@ -505,7 +505,7 @@ const triggerRowClick = async (event: Event) => {
   currentRowsFocusable?.focus()
 }
 
-const revertLocation = async (location: MiiLocation) => {
+const revertLocation = async (location: string) => {
   try {
     await proposalStore.revertLocationVote(proposalId.value, location)
     showSuccessMessage(t('general.submitted'))
@@ -514,7 +514,7 @@ const revertLocation = async (location: MiiLocation) => {
   }
 }
 
-const handleRevertLocation = (location: MiiLocation) => {
+const handleRevertLocation = (location: string) => {
   messageBoxStore.setMessageBoxInfo({
     cancelButtonText: 'general.cancel',
     confirmButtonText: 'proposal.revertVote',

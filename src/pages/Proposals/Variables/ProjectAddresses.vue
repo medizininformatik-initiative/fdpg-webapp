@@ -49,7 +49,7 @@ const props = defineProps({
   },
 })
 
-const minimumSelection: MiiLocation[] = [] // [MiiLocation.VirtualAll]
+const minimumSelection: string[] = [] // [MiiLocation.VirtualAll]
 
 const emit = defineEmits(['update:modelValue'])
 
