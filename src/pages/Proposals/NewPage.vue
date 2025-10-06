@@ -695,6 +695,7 @@ const getStepFields = (allFields: any[], stepFieldPaths: string[]) => {
 // Helper function to validate a single field
 const validateSingleField = async (field: any): Promise<boolean> => {
   if (!field.prop) return true
+  if (!isProposalEditable()) return true
 
   try {
     let hasErrors = false
@@ -711,6 +712,8 @@ const validateSingleField = async (field: any): Promise<boolean> => {
 
 // Helper function to validate step fields
 const validateStepFields = async (stepFields: any[]): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   const validationResults = await Promise.all(stepFields.map((field) => validateSingleField(field)))
   return validationResults.every((result) => result)
 }
@@ -750,6 +753,8 @@ const nextStep = async () => {
 
 // Helper function to validate multiple steps
 const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promise<boolean> => {
+  // For non-editable proposals, treat as having no validation errors
+  if (!isProposalEditable()) return false
   for (const stepValue of stepsToValidate) {
     const stepFieldPaths = stepFieldsMap[stepValue] || []
 
@@ -765,6 +770,11 @@ const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promi
   return false // no errors
 }
 const handleSubmit = async () => {
+  // Skip validation flow if proposal is not editable
+  if (!isProposalEditable()) {
+    await updateStepStatus()
+    return
+  }
   // Validate all fields before submission
   await formRef.value?.validate(() => {})
   await waitForValidation()
@@ -844,6 +854,8 @@ let isInitialValidationComplete = false
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   // No validation here - only update progress
   if (initialLoad) return
+  // Skip any validation-triggered progress updates when not editable
+  if (!isProposalEditable()) return
   await updateProgressOnly()
 }
 
@@ -946,6 +958,8 @@ const shouldSkipManualSave = () => {
 
 // Helper function to perform form validation
 const performFormValidation = async (): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   await formRef.value?.validate(() => {})
   await waitForValidation()
   await updateStepStatus()
@@ -1073,6 +1087,8 @@ const validateFormSilently = async () => {
   if (!formRef.value) {
     return
   }
+  // Do not run silent validation when proposal is not editable
+  if (!isProposalEditable()) return
 
   const allFields = formRef.value.fields || []
 
