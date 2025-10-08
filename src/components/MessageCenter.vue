@@ -1,28 +1,36 @@
 <template>
   <section class="section message-center">
     <div class="header-row">
-      <h2>{{ $t(titleForType) }}</h2>
-      <el-switch v-model="showDoneComments" class="switch" :inactive-text="$t('proposal.showDoneComments')" />
+      <h2>{{ t(titleForType) }}</h2>
+      <el-switch v-model="showDoneComments" class="switch" :inactive-text="t('proposal.showDoneComments')" />
     </div>
 
     <section class="messages">
-      <MessageCenterMainMessage
-        v-for="message in messagesForType"
-        :key="message._id"
-        :message="message"
-        :type="type"
-        :show-done-comments="showDoneComments"
-      />
-    </section>
+      <template v-for="(message, index) in messagesForType" :key="message._id">
+        <MessageCenterMainMessage :message="message" :type="type" :show-done-comments="showDoneComments" />
+        <template v-if="index === firstOpenIndex">
+          <FdpgCommentForm
+            v-model="commentContent"
+            :edit="false"
+            :type="type"
+            @close="handleCancelClick"
+            @save="handleSubmit"
+            :reviewMode="reviewMode"
+          />
+        </template>
+      </template>
 
-    <FdpgCommentForm
-      v-model="commentContent"
-      :edit="false"
-      :type="type"
-      @close="handleCancelClick"
-      @save="handleSubmit"
-      :reviewMode="reviewMode"
-    />
+      <template v-if="firstOpenIndex === -1">
+        <FdpgCommentForm
+          v-model="commentContent"
+          :edit="false"
+          :type="type"
+          @close="handleCancelClick"
+          @save="handleSubmit"
+          :reviewMode="reviewMode"
+        />
+      </template>
+    </section>
   </section>
 </template>
 
@@ -40,6 +48,7 @@ import { computed, onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'
 import MessageCenterMainMessage from './MessageCenterMainMessage.vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   type: {
@@ -55,6 +64,7 @@ const props = defineProps({
 const authStore = useAuthStore()
 const commentStore = useCommentStore()
 const { params } = useRoute()
+const { t } = useI18n()
 const proposalId = params.id as string
 
 const showDoneComments = ref(true)
@@ -85,6 +95,17 @@ const messagesForType = computed<ICommentDetail[]>(() => {
       )
     })
 })
+
+const firstOpenIndex = computed<number>(() => {
+  for (let i = messagesForType.value.length - 1; i >= 0; i--) {
+    const comment = messagesForType.value[i]
+    const hasUndoneAnswer = comment.answers.some((answer) => !answer.isDone)
+    const isOpen = hasUndoneAnswer || !comment.isDone
+    if (isOpen) return i
+  }
+  return -1
+})
+
 const { showErrorMessage } = useNotifications()
 const commentContent = ref('')
 

@@ -148,6 +148,9 @@ const projectFundingEditor = ref()
 watch(
   () => [generalProjectInformationForm.value.desiredStartTime, props.reviewMode],
   ([desiredStartTime, reviewMode]) => {
+    if (!desiredStartTime || reviewMode) {
+      return
+    }
     const startTimestamp = new Date(desiredStartTime as unknown as string).getTime()
     const isValidDate = !Number.isNaN(startTimestamp)
     const now = Date.now()
@@ -158,6 +161,7 @@ watch(
       showInfoMessage(t('proposal.autoDesiredStartDateAdjustment'))
     }
   },
+  { immediate: true },
 )
 
 const handleStartTimeTypeChange = (newValue: string) => {

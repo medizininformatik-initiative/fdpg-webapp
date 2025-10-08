@@ -115,7 +115,7 @@ import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-
+import { isParticipatingScientist } from '@/utils/proposal-permissions.util'
 const { params } = useRoute()
 const proposalId = params.id as string
 
@@ -166,7 +166,8 @@ const researcherCanEdit = computed(
     proposalStore.currentProposal?.status &&
     [ProposalStatus.Draft, ProposalStatus.Rework, ProposalStatus.FdpgCheck].includes(
       proposalStore.currentProposal.status,
-    ),
+    ) &&
+    !isParticipatingScientist(proposalStore.currentProposal, authStore.profile),
 )
 
 const fdpgCanEdit = computed(() => {
@@ -376,6 +377,10 @@ const handleParticipantTypeSelect = async (participant: ParticipantInfo, newType
         return p
       }) ?? []
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
+
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant type:', error)
@@ -440,6 +445,11 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
       }) ?? []
 
     await proposalStore.updateParticipants(proposalId, updatedParticipants)
+
+    // Refresh researcher identities to get updated data from backend
+    researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
+    participantsCount.value = researcherIdentities.value.length
+
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant role:', error)

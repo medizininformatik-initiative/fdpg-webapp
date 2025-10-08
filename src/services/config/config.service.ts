@@ -1,7 +1,7 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import type { IDataPrivacyConfigGet } from '@/types/data-privacy.types'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IDataSource } from '@/types/proposal.types'
+import type { IAlertConfigGet, IDataSource } from '@/types/proposal.types'
 import type { ITermsConfigGet } from '@/types/terms.types'
 
 export class ConfigService {
@@ -21,6 +21,10 @@ export class ConfigService {
 
   async getDataSources(): Promise<IDataSource[]> {
     const response = await this.apiClient.get(`${this.basePath}/data-sources`)
+    return response.data
+  }
+  async getAlertConfig(): Promise<IAlertConfigGet> {
+    const response = await this.apiClient.get(`${this.basePath}/alert`)
     return response.data
   }
 }
