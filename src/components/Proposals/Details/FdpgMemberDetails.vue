@@ -268,6 +268,18 @@ const handleRejectApplicationClick = () => {
   })
 }
 
+const handleAcceptProposalClick = () => {
+  messageBoxStore.setMessageBoxInfo({
+    ...messageBoxDefaults,
+    title: 'proposal.acceptProposalModalTitle',
+    message: 'proposal.acceptProposalModalDescription',
+    confirmButtonText: 'proposal.acceptProposal',
+    cancelButtonText: 'general.cancel',
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToPublish) : undefined,
+  })
+}
+
 const handleToLocationCheckClick = () => {
   const messageComponent = markRaw(
     defineComponent({
@@ -515,6 +527,15 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'left',
     isDisabled: proposalStore.currentProposal?.isLocked,
     isHidden: status.value !== ProposalStatus.FdpgCheck,
+  },
+  {
+    type: 'primary',
+    label: 'proposal.acceptProposal',
+    action: handleAcceptProposalClick,
+    testId: 'button__acceptProposal',
+    position: 'right',
+    isHidden: status.value !== ProposalStatus.FdpgCheck || !proposalStore.currentProposal?.isRegister,
+    isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
     type: 'primary',
