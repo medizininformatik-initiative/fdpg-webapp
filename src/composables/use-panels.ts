@@ -31,6 +31,11 @@ const RESEARCHER_PANELS: PanelType[] = [
   { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.ResearcherFinished },
 ]
 
+const REGISTERINGMEMBER_PANELS: PanelType[] = [
+  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
+  { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
+]
+
 const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   [RouteName.Dashboard]: [
     { type: CardType.Requested, header: 'dashboard.forTesting', query: PanelQuery.FdpgRequestedToCheck },
@@ -54,7 +59,7 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
 
 const PANEL_MAP: Record<Role, PanelType[] | Record<FdpgDashboardRoutes, PanelType[]>> = {
   [Role.Researcher]: RESEARCHER_PANELS,
-  [Role.RegisteringMember]: RESEARCHER_PANELS,
+  [Role.RegisteringMember]: REGISTERINGMEMBER_PANELS,
   [Role.FdpgMember]: FDPG_PANELS,
   [Role.DataSourceMember]: FDPG_PANELS,
   [Role.DizMember]: DIZ_PANELS,
@@ -85,10 +90,7 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
         ]
       } else if (hasRegisteringMemberRole.value) {
         // Only users with RegisteringMember role can see published page
-        return [
-          { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
-          { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
-        ]
+        return REGISTERINGMEMBER_PANELS
       } else {
         // Users without RegisteringMember role cannot see published page
         return []

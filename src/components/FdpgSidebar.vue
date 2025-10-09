@@ -40,8 +40,12 @@ const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
 
   const baseMenu = [...(mainMenuMap[authStore.singleKnownRole] || [])]
 
-  // Add published page to base menu if user has RegisteringMember role
-  if (authStore.singleKnownRole !== Role.FdpgMember && authStore.singleKnownRole !== Role.DataSourceMember) {
+  // Add published page to base menu if user has RegisteringMember role (but not for RegisteringMember themselves)
+  if (
+    authStore.singleKnownRole !== Role.FdpgMember &&
+    authStore.singleKnownRole !== Role.DataSourceMember &&
+    authStore.singleKnownRole !== Role.RegisteringMember
+  ) {
     const hasRegisteringMemberRole = authStore.roles.includes(Role.RegisteringMember)
     if (hasRegisteringMemberRole) {
       const publishedMenuItem: SidebarRouteMenu = {
@@ -155,12 +159,6 @@ const mainMenuMap: Menu = {
     },
   ],
   [Role.RegisteringMember]: [
-    {
-      kind: MenuType.Route,
-      to: RouteName.Dashboard,
-      title: 'sidebar.dashboard',
-      icon: 'bi bi-folder-fill',
-    },
     {
       kind: MenuType.Route,
       to: RouteName.Published,
