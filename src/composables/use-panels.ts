@@ -31,9 +31,18 @@ const RESEARCHER_PANELS: PanelType[] = [
   { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.ResearcherFinished },
 ]
 
-const REGISTERINGMEMBER_PANELS: PanelType[] = [
-  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
-  { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
+// Published page panels for researchers, UAC, DIZ, and registering members
+const PUBLISHED_PANELS: PanelType[] = [
+  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.PublishedDraft },
+  { type: CardType.Pending, header: 'general.pending', query: PanelQuery.PublishedPending },
+  { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.PublishedCompleted },
+]
+
+// FDPG Published page panels
+const FDPG_PUBLISHED_PANELS: PanelType[] = [
+  { type: CardType.Requested, header: 'general.requested', query: PanelQuery.FdpgPublishedRequested },
+  { type: CardType.Pending, header: 'general.readyForPublication', query: PanelQuery.FdpgPublishedReady },
+  { type: CardType.Completed, header: 'general.published', query: PanelQuery.FdpgPublishedPublished },
 ]
 
 const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
@@ -59,7 +68,7 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
 
 const PANEL_MAP: Record<Role, PanelType[] | Record<FdpgDashboardRoutes, PanelType[]>> = {
   [Role.Researcher]: RESEARCHER_PANELS,
-  [Role.RegisteringMember]: REGISTERINGMEMBER_PANELS,
+  [Role.RegisteringMember]: PUBLISHED_PANELS,
   [Role.FdpgMember]: FDPG_PANELS,
   [Role.DataSourceMember]: FDPG_PANELS,
   [Role.DizMember]: DIZ_PANELS,
@@ -83,14 +92,11 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
     } else if (routeName.value === RouteName.Published) {
       // Different logic for FDPG members vs other roles
       if (authStore.hasFdpgLevelPermissions()) {
-        // FDPG members see different published page
-        return [
-          { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
-          { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
-        ]
+        // FDPG members see FDPG-specific published page
+        return FDPG_PUBLISHED_PANELS
       } else if (hasRegisteringMemberRole.value) {
-        // Only users with RegisteringMember role can see published page
-        return REGISTERINGMEMBER_PANELS
+        // RegisteringMember, researchers, UAC, DIZ see the same published panels
+        return PUBLISHED_PANELS
       } else {
         // Users without RegisteringMember role cannot see published page
         return []
