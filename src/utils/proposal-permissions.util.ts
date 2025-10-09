@@ -89,6 +89,11 @@ export function isProposalOwner(proposal: IProposal, userProfile?: IFdpgOidcProf
  * Determines if the current user has editing permissions (responsible scientist or editor or owner)
  */
 export function hasEditingPermissions(proposal: IProposal, userProfile?: IFdpgOidcProfile): boolean {
+  // For new proposals (no ID), allow editing if user has sub
+  if (!proposal._id && userProfile?.sub) {
+    return true
+  }
+
   return (
     isResponsibleScientist(proposal, userProfile) ||
     isEditor(proposal, userProfile) ||
