@@ -47,6 +47,9 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   [RouteName.Completed]: [
     { type: CardType.Completed, header: 'dashboard.ongoing', isTable: true, query: PanelQuery.FdpgFinished },
   ],
+  // [RouteName.Published]:[
+  //   {type:CardType.Requested,}
+  // ]
 }
 
 const PANEL_MAP: Record<Role, PanelType[] | Record<FdpgDashboardRoutes, PanelType[]>> = {
@@ -64,15 +67,32 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
   const authStore = useAuthStore()
   const rolesWithBasicPanels = [Role.Researcher, Role.RegisteringMember, Role.DizMember, Role.UacMember]
 
+  // Check if user has RegisteringMember role among their assigned roles
+  const hasRegisteringMemberRole = computed(() => {
+    return authStore.roles.includes(Role.RegisteringMember)
+  })
+
   const panels = computed<PanelType[]>(() => {
     if (routeName.value === RouteName.Archive) {
       return []
     } else if (routeName.value === RouteName.Published) {
-      // Handle Published route specifically - show both draft and submitted registered proposals
-      return [
-        { type: CardType.Draft, header: 'general.draft', query: PanelQuery.RegisterDraftProposals },
-        { type: CardType.Draft, header: 'general.submitted', query: PanelQuery.RegisterSubmittedProposals },
-      ]
+      // Different logic for FDPG members vs other roles
+      if (authStore.hasFdpgLevelPermissions()) {
+        // FDPG members see different published page
+        return [
+          { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
+          { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
+        ]
+      } else if (hasRegisteringMemberRole.value) {
+        // Only users with RegisteringMember role can see published page
+        return [
+          { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.RegisterDraftProposals },
+          { type: CardType.Draft, header: 'general.pending', query: PanelQuery.RegisterSubmittedProposals },
+        ]
+      } else {
+        // Users without RegisteringMember role cannot see published page
+        return []
+      }
     } else if (authStore.hasFdpgLevelPermissions()) {
       const fdpgPanels = PANEL_MAP[Role.FdpgMember] as Record<FdpgDashboardRoutes, PanelType[]>
       return fdpgPanels[routeName.value as FdpgDashboardRoutes] ?? []

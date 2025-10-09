@@ -16,3 +16,4 @@ export enum RouteName {
 }
 
 export type FdpgDashboardRoutes = RouteName.Dashboard | RouteName.Pending | RouteName.Ongoing | RouteName.Completed
+// | RouteName.Published

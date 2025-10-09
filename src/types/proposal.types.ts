@@ -647,6 +647,7 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
+  isRegister: boolean
 }
 
 export interface IDeclineReason {

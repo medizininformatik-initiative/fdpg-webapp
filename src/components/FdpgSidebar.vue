@@ -26,7 +26,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'
 import { RouteName } from '@/types/route-name.enum'
-import type { SidebarMenu } from '@/types/sidebar-menu.types'
+import type { SidebarMenu, SidebarRouteMenu } from '@/types/sidebar-menu.types'
 import { MenuType } from '@/types/sidebar-menu.types'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -36,7 +36,26 @@ const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 
 const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
-  return authStore.singleKnownRole ? mainMenuMap[authStore.singleKnownRole] : []
+  if (!authStore.singleKnownRole) return []
+
+  const baseMenu = [...(mainMenuMap[authStore.singleKnownRole] || [])]
+
+  // Add published page to base menu if user has RegisteringMember role
+  if (authStore.singleKnownRole !== Role.FdpgMember && authStore.singleKnownRole !== Role.DataSourceMember) {
+    const hasRegisteringMemberRole = authStore.roles.includes(Role.RegisteringMember)
+    if (hasRegisteringMemberRole) {
+      const publishedMenuItem: SidebarRouteMenu = {
+        kind: MenuType.Route,
+        to: RouteName.Published,
+        title: 'sidebar.published',
+        icon: 'bi bi-journal-check',
+      }
+
+      baseMenu.push(publishedMenuItem)
+    }
+  }
+
+  return baseMenu
 })
 
 interface Menu {
@@ -102,12 +121,6 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Published,
-      title: 'sidebar.published',
-      icon: 'bi bi-journal-check',
-    },
-    {
-      kind: MenuType.Route,
       to: RouteName.Archive,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
@@ -122,12 +135,6 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Published,
-      title: 'sidebar.published',
-      icon: 'bi bi-journal-check',
-    },
-    {
-      kind: MenuType.Route,
       to: RouteName.Archive,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
@@ -139,12 +146,6 @@ const mainMenuMap: Menu = {
       to: RouteName.Dashboard,
       title: 'sidebar.dashboard',
       icon: 'bi bi-folder-fill',
-    },
-    {
-      kind: MenuType.Route,
-      to: RouteName.Published,
-      title: 'sidebar.published',
-      icon: 'bi bi-journal-check',
     },
     {
       kind: MenuType.Route,

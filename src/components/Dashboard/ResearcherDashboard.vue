@@ -8,9 +8,11 @@
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
       <div class="sort">
-        <el-button type="primary" class="register-project-button" @click="openRegisterProjectDialog">
-          {{ t('dashboard.registerProject') }}
-        </el-button>
+        <router-link :to="{ name: RouteName.RegisterNewProject }" class="register-project-button">
+          <el-button type="primary">
+            {{ t('dashboard.registerProject') }}
+          </el-button>
+        </router-link>
         <FdpgSortSelect
           :sort-options="sortOptions"
           :sort-by="proposalStore.currentSortField"
@@ -81,9 +83,6 @@ const createProposal = () => {
 
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
-}
-const openRegisterProjectDialog = () => {
-  router.push({ name: RouteName.RegisterNewProject })
 }
 onMounted(() => {
   configStore.getAlertConfig()

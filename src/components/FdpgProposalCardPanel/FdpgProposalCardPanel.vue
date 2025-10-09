@@ -2,7 +2,7 @@
   <div class="fdpg-card-panel">
     <div class="header">
       <div class="title-wrapper">
-        <h5 class="title">{{ $t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
+        <h5 class="title">{{ t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
         <div v-loading="loading"></div>
       </div>
       <div class="action-wrapper">
@@ -12,7 +12,7 @@
           class="alert-btn"
           @click="handleShowAllClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showAll') }}</el-button
+          >{{ t('dashboard.showAll') }}</el-button
         >
         <el-button
           v-if="proposals.length > displayCount"
@@ -20,7 +20,7 @@
           class="alert-btn"
           @click="handleShowMoreClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showMore') }}</el-button
+          >{{ t('dashboard.showMore') }}</el-button
         >
         <el-button
           v-if="displayCount > defaultLength"
@@ -28,7 +28,7 @@
           class="alert-btn"
           @click="handleShowLessClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showLess') }}</el-button
+          >{{ t('dashboard.showLess') }}</el-button
         >
       </div>
     </div>
@@ -52,6 +52,7 @@
           @keydown.left="focusPreviousCard($event)"
           @keydown.tab="handleTab($event)"
           @focus="handleFocus($event)"
+          :isRegisteringProposal="proposal.isRegister"
         />
       </el-col>
     </el-row>
@@ -66,6 +67,7 @@ import { SortDirection, PanelQuery } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   panel: {
@@ -88,6 +90,8 @@ const props = defineProps({
     default: SortDirection.ASC,
   },
 })
+
+const { t } = useI18n()
 const displayCount = ref<number>(props.defaultLength)
 const loading = ref<boolean>(false)
 

@@ -6,9 +6,11 @@
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
       <div class="sort">
-        <el-button type="primary" class="register-project-button" @click="openRegisterProjectDialog">
-          {{ t('dashboard.registerProject') }}
-        </el-button>
+        <router-link :to="{ name: RouteName.RegisterNewProject }" class="register-project-button">
+          <el-button type="primary">
+            {{ t('dashboard.registerProject') }}
+          </el-button>
+        </router-link>
         <FdpgSortSelect
           :sort-options="sortOptions"
           :sort-by="proposalStore.currentSortField"
@@ -35,10 +37,7 @@ import { sortOptions } from '@/components/Dashboard/constants'
 import usePanels from '@/composables/use-panels'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { CardType } from '@/types/component.types'
-import type { PanelType } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
-import { PanelQuery } from '@/types/sort-filter.types'
 import { computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
