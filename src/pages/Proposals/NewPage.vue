@@ -285,7 +285,7 @@ import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IProposal } from '@/types/proposal.types'
+import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
@@ -421,6 +421,7 @@ const fileList = ref([])
 const bypassDebounce = ref(false)
 const isAutoSaving = ref(false)
 const hasFormChanged = ref(false)
+const isBiosampleToggleInProgress = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
@@ -598,6 +599,38 @@ const isMIISelected = computed(() => {
 })
 const isDifeSelected = computed(() => {
   return platform?.value?.includes(PlatformIdentifier.DIFE)
+})
+
+// Keep biosamples state stable: clear/init only on BIOSAMPLE toggle to avoid empty autosaves
+watch(hasBiosamples, async (enabled) => {
+  const up = proposalForm.value?.userProject
+  if (!up) return
+
+  isBiosampleToggleInProgress.value = true
+
+  if (!enabled) {
+    if (up.informationOnRequestedBioSamples) {
+      // Reset to an empty object that satisfies the type; payload transform will drop it when BIOSAMPLE is off
+      ;(up as IUserProject).informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
+  } else {
+    if (!up.informationOnRequestedBioSamples) {
+      up.informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
+  }
+
+  await nextTick()
+  setTimeout(() => {
+    isBiosampleToggleInProgress.value = false
+  }, 100) // Cooldown to prevent autosave during toggle
 })
 
 const getFormValues = () => {
@@ -878,6 +911,11 @@ const shouldSkipAutoSave = () => {
 
   // Skip for new proposals without project abbreviation
   if (!proposalId.value && !proposalForm.value?.projectAbbreviation?.trim()) {
+    return true
+  }
+
+  // Skip autosave during BIOSAMPLE toggle stabilization
+  if (isBiosampleToggleInProgress.value) {
     return true
   }
 
