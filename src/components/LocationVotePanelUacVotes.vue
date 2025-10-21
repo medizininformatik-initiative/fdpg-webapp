@@ -154,7 +154,7 @@
                           :disabled="conditionalApproval.reviewedAt !== undefined"
                           :data-testId="'button__condition-decline__' + conditionalApproval.location"
                           @click="acceptCondition(conditionalApproval._id, false)"
-                          ><i class="el-icon-close" role="button"
+                          ><i class="bi bi-x" role="button"
                         /></el-button>
                         <el-button
                           class="positive"
@@ -163,7 +163,7 @@
                           :data-testId="'button__condition-accept__' + conditionalApproval.location"
                           @click="acceptCondition(conditionalApproval._id, true)"
                         >
-                          <i class="el-icon-check" role="button" />
+                          <i class="bi bi-check2" role="button" />
                         </el-button>
                       </div>
                     </div>
