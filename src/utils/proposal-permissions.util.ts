@@ -7,6 +7,7 @@ export interface ProposalPermissions {
   isParticipating: boolean
   isResponsible: boolean
   isEditor: boolean
+  isApplicant: boolean
   hasEditingRights: boolean
   canEdit: boolean
   isReviewMode: boolean
@@ -66,15 +67,13 @@ export function isParticipatingScientist(proposal: IProposal, userProfile?: IFdp
     return false
   }
 
-  // Check if user is the responsible scientist
-  if (isResponsibleScientist(proposal, userProfile)) {
-    return true
-  }
-
   // Check if user is in participants list
   return (
-    proposal.participants?.some((participant) => participant.researcher?.email?.toLowerCase() === currentUserEmail) ??
-    false
+    proposal.participants?.some(
+      (participant) =>
+        participant.researcher?.email?.toLowerCase() === currentUserEmail &&
+        participant.participantRole.role === ParticipantRole.ParticipatingScientist,
+    ) ?? false
   )
 }
 
@@ -83,6 +82,29 @@ export function isParticipatingScientist(proposal: IProposal, userProfile?: IFdp
  */
 export function isProposalOwner(proposal: IProposal, userProfile?: IFdpgOidcProfile): boolean {
   return proposal.owner?.id === userProfile?.sub
+}
+
+/**
+ * Checks if the current user is the applicant of the proposal
+ */
+export function isApplicant(proposal: IProposal, userProfile?: IFdpgOidcProfile): boolean {
+  const currentUserEmail = userProfile?.email?.toLowerCase()
+  if (!currentUserEmail || !proposal.applicant) {
+    return false
+  }
+
+  return proposal.applicant.researcher?.email?.toLowerCase() === currentUserEmail
+}
+
+/**
+ * Checks if a specific participant is the applicant of the proposal
+ */
+export function isParticipantApplicant(proposal: IProposal, participantEmail: string): boolean {
+  if (!proposal.applicant || !participantEmail) {
+    return false
+  }
+
+  return proposal.applicant.researcher?.email?.toLowerCase() === participantEmail.toLowerCase()
 }
 
 /**
@@ -113,6 +135,7 @@ export function getProposalPermissions(
   const participating = isParticipatingFromApi ?? isParticipatingScientist(proposal, userProfile)
   const responsible = isResponsibleScientist(proposal, userProfile)
   const editor = isEditor(proposal, userProfile)
+  const applicant = isApplicant(proposal, userProfile)
   const editingRights = hasEditingPermissions(proposal, userProfile)
   const editable = isProposalEditable(proposal)
   const canEdit = editable && editingRights
@@ -125,6 +148,7 @@ export function getProposalPermissions(
     isParticipating: participating,
     isResponsible: responsible,
     isEditor: editor,
+    isApplicant: applicant,
     hasEditingRights: editingRights,
     canEdit,
     isReviewMode: reviewMode,
