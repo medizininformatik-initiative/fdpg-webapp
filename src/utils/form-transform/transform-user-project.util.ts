@@ -196,10 +196,8 @@ const transformInformationOnRequestedBioSamples = (
     ? {
         _id: informationOnRequestedBioSamples?._id,
         isDone: informationOnRequestedBioSamples?.isDone ?? false,
-        noSampleRequired: noSampleRequired ?? informationOnRequestedBioSamples?.noSampleRequired ?? false,
-        laboratoryResources: transformEmptyStringToUndefined(
-          laboratoryResources ?? informationOnRequestedBioSamples?.laboratoryResources,
-        ),
+        noSampleRequired: informationOnRequestedBioSamples?.noSampleRequired ?? false,
+        laboratoryResources: transformEmptyStringToUndefined(informationOnRequestedBioSamples?.laboratoryResources),
         biosamples: transformBiosamples(informationOnRequestedBioSamples?.biosamples, transformToApi),
       }
     : undefined

@@ -87,7 +87,8 @@
     "wait": "AUSSTEHEND",
     "process": "AUSSTEHEND",
     "progress": "Fortschritt:",
-    "completed": "{progress}% ausgefüllt "
+    "completed": "{progress}% ausgefüllt ",
+    "published": "Veröffentlicht"
   },
   "history": {
     "PROPOSAL_CREATING": "Antrag wurde erstellt",
@@ -173,7 +174,8 @@
     "editedXDaysAgo": "Bearbeitet vor {x} Tagen",
     "noRole": "Es tut uns leid. Derzeit haben Sie keine zugewiesene Rolle und können das Portal noch nicht nutzen. Nach Ihrer Registrierung findet ein manueller Freischaltungsschritt statt. Sie werden informiert, wenn dieser erfolgt ist. Je nach Aufkommen kann dies 1-2 Tage dauern.",
     "xOngoingProjectContracts": "{x} laufende Projektverträge",
-    "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge"
+    "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
+    "registerProject": "Projekt registrieren"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -518,8 +520,8 @@
     "participantCategory_DATA_RECEIVER": "Empfang von Daten",
     "participantCategory_BIOSAMPLE_RECEIVER": "Empfang von Bioproben",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Empfang von Daten und Bioproben",
-    "participantCategory_PROJECT_LEADER": "Projektleiter",
-    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterer Projektleiter",
+    "participantCategory_PROJECT_LEADER": "Projektleiteung",
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterere Beteiligte",
     "termsDialogTitle": "Nutzungsordnung zustimmen",
     "lockProposal": "Antrag sperren",
     "lockModalDescription": "Bitte beachten Sie, dass dadurch jede Antragsfunktion deaktiviert wird.\n Die Sperrung kann jederzeit rückgängig gemacht werden.",
@@ -588,7 +590,7 @@
     "reviewUacConditionFile": "Ihr UAC hat seiner Entscheidung das folgende Dokument beigelegt.",
     "updateAdditionalLocationInformationTodoTitle": "Bereitstellung zusätzlicher Informationen mit Ihrer Entscheidung",
     "updateAdditionalLocationInformationTodoDescription": "Im Falle eines Projektteilnahme, teilen Sie bitte die unten aufgeführten Informationen zum Projekt mit.",
-    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent",
+    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent der MII",
     "updateAdditionalLocationPublicationName": "Für den Vertragsanhang, in dem aufgeführt ist, wie die Standorte in Acknowlegements von Publikationen benannt werden sollen, haben wir von allen Standorten eine Standardformulieren. Sie müssen hier nur Angaben machen, falls Sie eine projektspezifische Änderung an diesem Text vornehmen möchten. Bitte teilen Sie uns dauerhafte Änderungen an den Vorgaben zur Nennung in Publikationen über die Kommentare mit.",
     "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll.",
     "contractPendingLocationCount": "Ausstehend für {count} Standorte",
@@ -765,7 +767,23 @@
     "MiiDataPrivacyText_Distributed": "Beim vorliegenden Anwendungsfall handelt es sich um eine verteilte Analyse, bei der keine personenbezogenen Gesundheitsdaten die Standorte verlassen. Gemäß Abschnitt 3.2.2 des übergreifenden Datenschutzkonzepts der MII ist für die lokale Verarbeitung keine weitere Rechtsgrundlage notwendig. Dennoch ist bekannt, dass die Auffassung hierzu nach Bundesland und Standort variieren kann. In dem Abschnitt wird daher auf weitere Möglichkeiten wie Landeskrankenhaus- oder Landesdatenschutzgesetze oder, falls nicht anders möglich, auf den Broad Consent verwiesen. Die lokalen Datenschutzbeauftragten der Standorte sind für den jeweiligen Standort auskunftsfähig, ob überhaupt und wenn ja welche weitere Rechtsgrundlage zum Einsatz kommt.",
     "autoDesiredStartDateAdjustment": "Das Startdatum des Projektes wurde automatisch angepasst",
     "exportAttachments": "Anhänge exportieren",
-    "orphanedTasksDescription": "Diese Aufgaben beziehen sich auf Objekte, die im Vorschlag nicht mehr vorhanden sind. Sie können aus alten Datenstrukturen stammen."
+    "orphanedTasksDescription": "Diese Aufgaben beziehen sich auf Objekte, die im Vorschlag nicht mehr vorhanden sind. Sie können aus alten Datenstrukturen stammen.",
+    "downloadLocationCsv": "Auflagen herunterladen",
+    "typeOfUse_NONE_Info": "Keiner von oben",
+    "typeOfUse_NONE": "Keiner von oben",
+    "projectCategory": "Projektkategorie",
+    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
+    "diagnoses": "Diagnosen",
+    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
+    "procedures": "Prozeduren",
+    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
+    "addBiosample": "Bioprobe hinzufügen",
+    "researcherInstituteUnknown": "unbenanntes Institut",
+    "projectUrl": "Projekt-URL",
+    "projectLogo": "Projektlogo",
+    "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
+    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
+    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -780,6 +798,7 @@
     "HEADER_UacMember": "UAC",
     "HEADER_Admin": "Admin",
     "HEADER_DataSourceMember": "Data Source Member",
+    "HEADER_RegisteringMember": "RegisteringMember",
     "changeRoleModalText": "Diese Rolle hat keinen richtigen Zugang. Möchten Sie die Rolle ändern und erneut versuchen, Zugang zu erhalten?",
     "changeRoleModalTitle": "Falsche Rolle",
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",

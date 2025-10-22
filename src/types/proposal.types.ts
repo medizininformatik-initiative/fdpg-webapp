@@ -44,6 +44,12 @@ export enum ParticipantType {
   DataAndBiosampleReceiver = 'DATA_AND_BIOSAMPLE_RECEIVER',
 }
 
+export enum ParticipantRole {
+  ParticipatingScientist = 'PARTICIPATING_SCIENTIST',
+  Researcher = 'RESEARCHER',
+  ResponsibleScientist = 'RESPONSIBLE_SCIENTIST',
+}
+
 export enum ProjectUserType {
   ApplicantAsPrivatePerson = 'APPLICANT_AS_PRIVATE_PERSON',
   OrganizationOfProjectResponsible = 'ORGANIZATION_OF_PROJECT_RESPONSIBLE',
@@ -62,7 +68,10 @@ export interface IResearcherIdentity extends IResearcher {
   isEmailVerified: boolean
   isRegistrationComplete: boolean
   participantType: ParticipantType
+  participantRole: string
   username: string
+  addedByFdpg?: boolean
+  participantId?: string // This is used to identify the researcher in the proposal
 }
 
 export interface IInstitute extends WithIdAndIsDone {
@@ -80,10 +89,16 @@ export interface IParticipantCategory extends WithIdAndIsDone {
   category: ParticipantType
 }
 
+export interface IParticipantRole extends WithIdAndIsDone {
+  role: ParticipantRole
+}
+
 export interface IParticipant extends WithIdAndIsDone {
   researcher: IResearcher
   institute: IInstitute
   participantCategory: IParticipantCategory
+  participantRole: IParticipantRole
+  addedByFdpg?: boolean
 }
 
 export interface IApplicant {
@@ -95,6 +110,7 @@ export interface IApplicant {
 export interface IProjectResponsible {
   institute: IInstitute
   participantCategory: IParticipantCategory
+  participantRole: IParticipantRole
   researcher: IResearcher
   projectResponsibility: IProjectResponsibility
 }
@@ -311,6 +327,9 @@ export enum ProjectHistoryType {
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
   FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
+  ParticipantAdded = 'PARTICIPANT_ADDED',
+  ParticipantRemoved = 'PARTICIPANT_REMOVED',
+  ParticipantUpdated = 'PARTICIPANT_UPDATED',
 }
 
 export enum UploadFileType {
@@ -350,6 +369,7 @@ export interface IProposalHistory {
   type: ProjectHistoryType
   proposalVersion: { minor: number; major: number }
   location?: MiiLocation
+  data?: Record<string, string | number>
 }
 interface IPublicationBase {
   title: string
@@ -429,9 +449,10 @@ export interface IConditionalApproval {
   uploadId?: string
   conditionReasoning?: string
   _id: string
-  createdAt: string
+  createdAt: Date
   reviewedAt?: string
   signedAt?: string
+  isLate?: boolean
 }
 
 export interface IUacApproval {
@@ -439,8 +460,9 @@ export interface IUacApproval {
   dataAmount: number
   isContractSigned?: boolean
   _id: string
-  createdAt: string
+  createdAt: Date
   signedAt?: string
+  isLate?: boolean
 }
 export interface IAdditionalLocationProposalInformation {
   location: MiiLocation
@@ -449,6 +471,13 @@ export interface IAdditionalLocationProposalInformation {
 }
 
 export type IEditAdditionalLocationProposalInformation = Omit<IAdditionalLocationProposalInformation, 'location'>
+
+export interface IDizDetails {
+  _id?: string
+  location: MiiLocation
+  localProjectIdentifier?: string
+  documentationLinks: string
+}
 
 export enum LocationState {
   IsDizCheck = 'DIZ_CHECK',
@@ -533,6 +562,7 @@ export interface IProposal {
 
   // LOCATION Tasks <----
   additionalLocationInformation: IAdditionalLocationProposalInformation[]
+  dizDetails: IDizDetails[]
 
   // Conditional and UAC approval are stored additionally to the "flow-arrays" and are persistent
   locationConditionDraft: IConditionalApproval[]
@@ -609,13 +639,15 @@ export interface IProposalDetail {
   locationState: LocationState
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
+  selectedDataSources: PlatformIdentifier[]
 }
 
 export interface IDeclineReason {
   type: DeclineType
   reason?: string
   location: MiiLocation
-  createdAt: string
+  createdAt: Date
+  isLate?: boolean
 }
 
 export enum DeclineType {
@@ -653,4 +685,9 @@ export interface ISelectedCohort {
 export interface ICohort extends WithIdAndIsDone {
   selectedCohorts: ISelectedCohort[]
   details?: string
+}
+export interface IAlertConfigGet {
+  logoBase64: string
+  message: string
+  isVisible: boolean
 }

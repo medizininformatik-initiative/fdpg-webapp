@@ -4,6 +4,7 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+    <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
 
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
@@ -15,11 +16,10 @@
       @saveDeadlines="handleSaveDeadlines"
     ></FdpgChangeDeadlines>
 
-    <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
     <div class="section">
-      <h3 info="general.info" size="large">{{ $t('proposal.checkAttachments', { count: documents.length }) }}</h3>
+      <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
         :documents="documents"
         :proposal-id="proposalId"
@@ -102,7 +102,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch } from 'vue'
+import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -117,6 +117,7 @@ import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
 import { statusToDueDatesMap } from '@/utils/deadlines'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import { UpdateQueue } from '@/utils/promise-queue.util'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -179,18 +180,6 @@ watch(
   },
   { deep: true },
 )
-
-const filteredDueDates = computed(() => {
-  return Object.fromEntries(
-    Object.keys(proposalStore.currentProposal?.deadlines || {})
-      .filter(
-        (dueDateKey) =>
-          proposalStore.currentProposal?.status &&
-          statusToDueDatesMap[proposalStore.currentProposal.status]?.includes(dueDateKey as DueDateEnum),
-      )
-      .map((key) => [key, (proposalStore.currentProposal?.deadlines as Record<string, string | null>)[key]]),
-  )
-})
 
 const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
   isSubmitting.value = true
@@ -364,6 +353,12 @@ const handleFinishProjectDeclineClick = () => {
   })
 }
 
+const handleDownloadLocationCsvClick = async () => {
+  if (proposalId.value) {
+    await proposalStore.downloadLocationCsv(proposalId.value)
+  }
+}
+
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
 const handleExportProposalPdfClick = async () => {
@@ -445,6 +440,20 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        try {
+          await proposalStore.exportAllUploadsAsZip()
+        } catch (error: any) {
+          showErrorMessage(error.message)
+        }
+      }
+    },
+  },
+  {
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
@@ -510,6 +519,13 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
     isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
+  },
+  {
+    label: 'proposal.downloadLocationCsv',
+    testId: 'button__downloadLocationCsv',
+    action: handleDownloadLocationCsvClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',
@@ -649,13 +665,28 @@ const handleSaveDeadlines = async (deadlines: Deadlines) => {
   }
 }
 
-const updateChecklistItem = (item: Partial<IFdpgChecklist>) => {
+const updateQueue = new UpdateQueue()
+
+const updateChecklistItem = async (item: Partial<IFdpgChecklist>) => {
   if (!proposalId.value) {
     console.error('Proposal ID is missing')
     return
   }
-  proposalStore.updateFdpgChecklist(proposalId.value, item)
+
+  await updateQueue.update(item, async (item) => {
+    try {
+      await proposalStore.updateFdpgChecklistImmediate(proposalId.value, item)
+      return Promise.resolve()
+    } catch (error) {
+      showErrorMessage('Failed to update checklist item')
+      throw error
+    }
+  })
 }
+
+onUnmounted(() => {
+  updateQueue.clear()
+})
 
 const isChecklistDone = computed(() => {
   const checklist = proposalStore.currentProposal?.fdpgChecklist

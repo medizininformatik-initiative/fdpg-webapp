@@ -1,26 +1,26 @@
 <template>
-  <template v-if="value === undefined && !definition.defaultValue">-</template>
+  <template v-if="value === undefined && !definition.defaultValue"><span class="ql-editor">-</span></template>
   <template v-else-if="definition.defaultValue && !value">
     {{ t(definition.defaultValue) }}
   </template>
   <template v-else>
     <template v-if="definition.kind === 'translatable'">
-      {{ t(`${definition.prefix}${value}`) }}
+      <div class="card-item-value">{{ t(`${definition.prefix}${value}`) }}</div>
     </template>
 
     <template v-else-if="definition.kind === 'date'">
-      {{ getLocaleDateString(value as string | Date) }}
+      <div class="card-item-value">{{ getLocaleDateString(value as string | Date) }}</div>
     </template>
 
     <template v-else-if="definition.kind === 'boolean'">
-      {{ t(value ? definition.true : definition.false) }}
+      <div class="card-item-value">{{ t(value ? definition.true : definition.false) }}</div>
     </template>
 
     <template v-else-if="definition.kind === 'lookup'">
-      {{ definition.lookupMap[value as string][definition.lookupKey] }}
+      <div class="card-item-value">{{ definition.lookupMap[value as string][definition.lookupKey] }}</div>
     </template>
 
-    <template v-else-if="definition.kind === 'table'">
+    <template v-else-if="definition.kind === 'table' && Array.isArray(value)">
       <el-table :data="value" style="width: 100%">
         <el-table-column
           v-for="column in definition.columns"
@@ -40,11 +40,12 @@ import type { Definitions } from '@/components/Shared/definition-card.types'
 import type { PropType } from 'vue'
 import { getLocaleDateString } from '@/utils/date.util'
 import { useI18n } from 'vue-i18n'
-import { de } from '@/locales'
 
 defineProps({
   value: {
-    type: [String, Boolean, Number],
+    type: [String, Number, Boolean, Date, Array, Object] as PropType<
+      string | number | boolean | Date | any[] | Record<string, any>
+    >,
     required: true,
   },
   definition: {
@@ -55,3 +56,8 @@ defineProps({
 
 const { t } = useI18n()
 </script>
+<style scoped>
+.card-item-value {
+  padding: 12px 15px;
+}
+</style>

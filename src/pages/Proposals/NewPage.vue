@@ -1,18 +1,8 @@
 <template>
   <el-container class="fdpg-new-proposal-page">
-    <div class="lead">
-      <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
+    <LeadHeader />
+    <div class="lead align-right">
       <div>
-        <el-button
-          type="primary"
-          size="large"
-          data-test-id="projectDetails"
-          link
-          @click="openDetails"
-          v-if="proposalId"
-        >
-          <i class="bi bi-info-square"></i>
-        </el-button>
         <el-button
           v-if="!proposalStore.currentProposal || !isReviewMode"
           @click="handleSaveDraft"
@@ -23,10 +13,6 @@
         >
           <img src="@/assets/img/proposal/save.svg" alt="save btn" />
         </el-button>
-      </div>
-    </div>
-    <div class="lead align-right">
-      <div>
         <el-button type="primary" link @click="toggleShoppingList" data-test-id="shoppingList">
           <el-badge :value="proposalForm?.selectedDataSources.length" class="item">
             <i class="fa-solid fa-rectangle-list"></i>
@@ -34,6 +20,7 @@
         </el-button>
       </div>
     </div>
+
     <div class="form-container">
       <el-form v-if="proposalForm" ref="formRef" :model="proposalForm" :rules="rules" @validate="onValidate">
         <div v-show="activeStep === CreatPrposalSteps.DataSources">
@@ -257,7 +244,7 @@
           type="primary"
           data-test-id="nextStep"
           @click="nextStep"
-          :disabled="!proposalForm?.selectedDataSources?.length"
+          :disabled="!proposalForm?.selectedDataSources?.length || !proposalId"
           v-if="activeStep !== CreatPrposalSteps.ResearchProject"
           >{{ t('proposal.nextStep') }}</el-button
         >
@@ -298,12 +285,13 @@ import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IProposal } from '@/types/proposal.types'
+import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { transformForm } from '@/utils/form-transform'
+import * as ProposalPermissions from '@/utils/proposal-permissions.util'
 import {
   maxLengthValidationFunc,
   numberValidationFunc,
@@ -342,35 +330,57 @@ import useDraftDownload from '@/composables/use-draft-download'
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
+import { debounce } from 'lodash-es'
+
+import LeadHeader from '@/components/Shared/LeadHeader.vue'
 // Map each step to its corresponding form fields
-const stepFieldsMap = {
+const stepFieldsMap: Record<number, string[]> = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
-  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
-  [CreatPrposalSteps.ProjectDetails]: [
-    'userProject.generalProjectInformation',
-    'userProject.feasibility',
-    'userProject.plannedPublication',
-  ],
-  [CreatPrposalSteps.DataUsage]: ['userProject.typeOfUse'],
   [CreatPrposalSteps.Variables]: [
     'requestedData.dataInfo',
-    'userProject.variableSelection.DIFE',
+    'userProject.variableSelection.DIFE.typeOfUse',
+    'userProject.variableSelection.DIFE.typeOfUseExplanation',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
   ],
-  [CreatPrposalSteps.ResearchProject]: [
-    'userProject.projectDetails',
-    'userProject.ethicVote',
-    'requestedData.desiredControlDataAmount',
-    'requestedData.desiredDataAmount',
-  ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
-    'userProject.feasibility.details',
     'userProject.selectionOfCases.difeSelectionOfCases',
     'requestedData.patientInfo',
     'userProject.selectionOfCases.difeSelectionOfCases.selectedCases',
     'userProject.selectionOfCases.difeSelectionOfCases.otherExplanation',
+  ],
+  [CreatPrposalSteps.DataUsage]: [
+    'userProject.typeOfUse.usage',
+    'userProject.typeOfUse.dataPrivacyExtra',
+    'userProject.resourceAndRecontact',
+    'userProject.typeOfUse.difeUsage',
+    'userProject.typeOfUse.PseudonymizationInfo',
+  ],
+  [CreatPrposalSteps.ProjectDetails]: [
+    'userProject.generalProjectInformation.projectTitle',
+    'userProject.generalProjectInformation.desiredStartTime',
+    'userProject.generalProjectInformation.desiredStartTimeType',
+    'userProject.generalProjectInformation.projectDuration',
+    'userProject.generalProjectInformation.projectFunding',
+    'userProject.generalProjectInformation.fundingReferenceNumber',
+    'userProject.plannedPublication.publications',
+  ],
+  [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
+
+  [CreatPrposalSteps.ResearchProject]: [
+    'userProject.projectDetails.simpleProjectDescription',
+    'userProject.projectDetails.department',
+    'userProject.projectDetails.scientificBackground',
+    'userProject.projectDetails.hypothesisAndQuestionProjectGoals',
+    'userProject.projectDetails.materialAndMethods',
+    'userProject.projectDetails.executiveSummaryUac',
+    'userProject.ethicVote.ethicsCommittee',
+    'userProject.ethicVote.ethicsVoteNumber',
+    'userProject.ethicVote.voteFromDate',
+    'userProject.ethicVote.ethicVoteUploads',
+    'requestedData.desiredControlDataAmount',
+    'requestedData.desiredDataAmount',
   ],
 }
 
@@ -399,11 +409,6 @@ const proposalId = computed(() => proposalForm.value?._id as string)
 const ethicVoteUploads = computed(() =>
   proposalForm.value?.uploads?.filter((upload) => upload.type === DirectUpload.EthicVote),
 )
-const feasibilityId = computed(() => proposalForm.value?.userProject.feasibility.id)
-const desiredStartTimeType = computed(
-  () => proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later',
-)
-
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
@@ -414,6 +419,9 @@ const formRef = ref<FormInstance>()
 const fileList = ref([])
 
 const bypassDebounce = ref(false)
+const isAutoSaving = ref(false)
+const hasFormChanged = ref(false)
+const isBiosampleToggleInProgress = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
@@ -476,11 +484,6 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
-      variableSelection: {
-        /*
-          handled in component
-        */
-      },
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
@@ -497,7 +500,6 @@ const rules = ref<Record<string, any>>({
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       ethicsVoteNumber: [requiredValidationFunc('string'), maxLengthValidationFunc(100)],
       voteFromDate: requiredValidationFunc(),
-      ethicVoteUploads: requiredUploadFunc(ethicVoteUploads),
     },
     resourceAndRecontact: {
       hasEnoughResources: null,
@@ -549,14 +551,35 @@ const rules = ref<Record<string, any>>({
   status: null,
 })
 
-const isReviewMode = computed(() => {
-  return (
-    !(
-      proposalForm.value?.status === undefined ||
-      proposalForm.value?.status === ProposalStatus.Draft ||
-      proposalForm.value?.status === ProposalStatus.Rework
-    ) || isParticipatingScientist.value
+// Helper function to check if proposal is in editable status
+const isProposalEditable = () => {
+  return ProposalPermissions.isProposalEditable(proposalForm.value)
+}
+
+// Comprehensive permission checks using utility functions
+const proposalPermissions = computed(() => {
+  if (!proposalForm.value) {
+    return {
+      isOwner: false,
+      isParticipating: false,
+      isResponsible: false,
+      isEditor: false,
+      hasEditingRights: false,
+      canEdit: false,
+      canSubmit: false,
+      isReviewMode: true,
+    }
+  }
+
+  return ProposalPermissions.getProposalPermissions(
+    proposalForm.value,
+    authStore.profile,
+    proposalStore.currentProposal?.isParticipatingScientist,
   )
+})
+
+const isReviewMode = computed(() => {
+  return proposalPermissions.value.isReviewMode
 })
 const isParticipatingScientist = computed(() => {
   return proposalStore.currentProposal?.isParticipatingScientist !== undefined
@@ -578,14 +601,38 @@ const isDifeSelected = computed(() => {
   return platform?.value?.includes(PlatformIdentifier.DIFE)
 })
 
-const openDetails = () => {
-  if (proposalId.value) {
-    router.push({
-      name: RouteName.ProposalDetails,
-      params: { id: proposalId.value },
-    })
+// Keep biosamples state stable: clear/init only on BIOSAMPLE toggle to avoid empty autosaves
+watch(hasBiosamples, async (enabled) => {
+  const up = proposalForm.value?.userProject
+  if (!up) return
+
+  isBiosampleToggleInProgress.value = true
+
+  if (!enabled) {
+    if (up.informationOnRequestedBioSamples) {
+      // Reset to an empty object that satisfies the type; payload transform will drop it when BIOSAMPLE is off
+      ;(up as IUserProject).informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
+  } else {
+    if (!up.informationOnRequestedBioSamples) {
+      up.informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
   }
-}
+
+  await nextTick()
+  setTimeout(() => {
+    isBiosampleToggleInProgress.value = false
+  }, 100) // Cooldown to prevent autosave during toggle
+})
+
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
@@ -659,84 +706,224 @@ const handleTermsConfirm = async () => {
   }
 }
 
+// Helper function to get applied rules for a field
+const getAppliedRules = (field: any) => {
+  return {
+    componentRules: getRulesArray(field.rules),
+    formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
+  }
+}
+
+// Helper function to check if field has validation rules
+const fieldHasRules = (field: any) => {
+  const appliedRules = getAppliedRules(field)
+  return [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
+}
+
+// Helper function to get fields belonging to a step
+const getStepFields = (allFields: any[], stepFieldPaths: string[]) => {
+  return allFields.filter((field) => stepFieldPaths.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)))
+}
+
+// Helper function to validate a single field
+const validateSingleField = async (field: any): Promise<boolean> => {
+  if (!field.prop) return true
+  if (!isProposalEditable()) return true
+
+  try {
+    let hasErrors = false
+    await formRef.value?.validateField([field.prop], (valid, invalidFields) => {
+      if (invalidFields && Object.keys(invalidFields).length > 0) {
+        hasErrors = true
+      }
+    })
+    return !hasErrors
+  } catch (error) {
+    return false
+  }
+}
+
+// Helper function to validate step fields
+const validateStepFields = async (stepFields: any[]): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
+  const validationResults = await Promise.all(stepFields.map((field) => validateSingleField(field)))
+  return validationResults.every((result) => result)
+}
+
+// Helper function to get step progression order
+const getStepProgressionOrder = () => {
+  return Object.keys(CreatPrposalSteps).map((key) => CreatPrposalSteps[key as keyof typeof CreatPrposalSteps])
+}
+
 const prevStep = () => {
   layoutStore.prevStep()
 }
-const nextStep = () => {
+
+const nextStep = async () => {
+  const stepProgressionOrder = getStepProgressionOrder()
+  const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
+  const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
+
+  const allFields = formRef.value?.fields || []
+
+  // Validate all steps up to current step
+  const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+
+  // Ensure validation states have settled before computing step status
+  await waitForValidation()
+
+  // Update step statuses
+  await updateValidatedStepsStatus(stepsToValidate)
+
+  // Don't proceed if there are validation errors
+  if (hasValidationErrors) {
+    return
+  }
+
   layoutStore.nextStep()
 }
+
+// Helper function to validate multiple steps
+const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promise<boolean> => {
+  // For non-editable proposals, treat as having no validation errors
+  if (!isProposalEditable()) return false
+  for (const stepValue of stepsToValidate) {
+    const stepFieldPaths = stepFieldsMap[stepValue] || []
+
+    if (stepFieldPaths.length === 0) continue
+
+    const stepFields = getStepFields(allFields, stepFieldPaths)
+    const isStepValid = await validateStepFields(stepFields)
+
+    if (!isStepValid) {
+      return true // has errors
+    }
+  }
+  return false // no errors
+}
 const handleSubmit = async () => {
+  // Skip validation flow if proposal is not editable
+  if (!isProposalEditable()) {
+    await updateStepStatus()
+    return
+  }
+  // Validate all fields before submission
+  await formRef.value?.validate(() => {})
+  await waitForValidation()
+  await updateStepStatus()
   isSubmissionDialogOpen.value = true
+}
+
+// Helper function to check if step is valid based on field states and values
+const isStepValidByFieldStates = (stepFields: any[]) => {
+  const fieldsWithRules = stepFields.filter(fieldHasRules)
+
+  if (fieldsWithRules.length === 0) return true
+
+  for (const field of fieldsWithRules) {
+    // Hard failure if any field is explicitly in error
+    if (field.validateState === 'error') return false
+
+    // If field has succeeded, continue
+    if (field.validateState === 'success') continue
+
+    // If field hasn't been validated yet, fall back to value-based check
+    if (!isFieldValidByValue(field)) return false
+  }
+
+  return true
+}
+
+// Helper function to get step key from step value
+const getStepKey = (stepValue: number) => {
+  return CreatPrposalSteps[stepValue] as keyof typeof CreatPrposalSteps
+}
+
+// Helper function to update a single step status
+const updateSingleStepStatus = (stepValue: number, allFields: any[]) => {
+  const stepFieldPaths = stepFieldsMap[stepValue] || []
+  const stepFields = getStepFields(allFields, stepFieldPaths)
+  const isStepValid = isStepValidByFieldStates(stepFields)
+  const stepKey = getStepKey(stepValue)
+
+  layoutStore.updateStepStatus(stepKey, isStepValid)
 }
 
 const updateStepStatus = async () => {
   if (!formRef.value) return
 
-  // Get all form fields
   const allFields = formRef.value.fields || []
 
-  // Check each step's fields
-  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-    // Get all fields that belong to this step
-    const stepFields = allFields.filter((field) =>
-      fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-    )
-
-    // Check if all fields in this step are valid
-    const isStepValid = stepFields.length > 0 && stepFields.every((field) => field.validateState === 'success')
-    const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-
-    // Update the step status in layout store
-    layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
+  // Update status for all steps
+  Object.keys(stepFieldsMap).forEach((step) => {
+    updateSingleStepStatus(parseInt(step), allFields)
   })
 }
 
-// Add validation on form validate event
+const updateCurrentStepStatus = async () => {
+  if (!formRef.value) return
+
+  const allFields = formRef.value.fields || []
+  updateSingleStepStatus(activeStep.value, allFields)
+}
+
+const updateValidatedStepsStatus = async (stepsToUpdate: number[]) => {
+  if (!formRef.value) return
+
+  const allFields = formRef.value.fields || []
+
+  // Update status for specified steps only
+  stepsToUpdate.forEach((stepValue) => {
+    updateSingleStepStatus(stepValue, allFields)
+  })
+}
+
+let initialLoad = true
+
+// Add a flag to prevent watchers from interfering with initial validation
+let isInitialValidationComplete = false
+
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
-  await waitForValidation()
-
-  // Check which step the validated field belongs to
-  Object.entries(stepFieldsMap).forEach(([step, fields]) => {
-    if (fields.some((fieldPath) => prop.toString().startsWith(fieldPath))) {
-      const stepEnum = CreatPrposalSteps[step as keyof typeof CreatPrposalSteps]
-
-      // Get all fields that belong to this step
-      const stepFields =
-        formRef.value?.fields.filter((field) =>
-          fields.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)),
-        ) || []
-
-      const isStepValid =
-        stepFields.length > 0 &&
-        stepFields.every((field) => {
-          let validity
-          if (field.rules) validity = field.validateState == 'success'
-          else validity = field.validateState !== 'error'
-          return validity
-        })
-
-      layoutStore.updateStepStatus(stepEnum as unknown as keyof typeof CreatPrposalSteps, isStepValid)
-    }
-  })
+  // No validation here - only update progress
+  if (initialLoad) return
+  // Skip any validation-triggered progress updates when not editable
+  if (!isProposalEditable()) return
+  await updateProgressOnly()
 }
 
-// Update handleSaveDraft to check all fields
-const handleSaveDraft = async () => {
-  if (
-    proposalForm.value?.status !== undefined &&
-    proposalForm.value.status !== ProposalStatus.Draft &&
-    proposalForm.value.status !== ProposalStatus.Rework
-  ) {
-    return
+// Helper function to check if auto-save should be skipped
+const shouldSkipAutoSave = () => {
+  // Skip if proposal is not in editable state
+  if (!isProposalEditable()) {
+    return true
   }
-  bypassDebounce.value = true
 
-  // Validate all fields to update step statuses
-  await formRef.value?.validate(() => {})
-  await waitForValidation()
-  await updateStepStatus()
+  // Skip if in the middle of a manual save
+  if (bypassDebounce.value) {
+    return true
+  }
 
-  // First validate projectAbbreviation
+  // Skip if form hasn't changed
+  if (!hasFormChanged.value) {
+    return true
+  }
+
+  // Skip for new proposals without project abbreviation
+  if (!proposalId.value && !proposalForm.value?.projectAbbreviation?.trim()) {
+    return true
+  }
+
+  // Skip autosave during BIOSAMPLE toggle stabilization
+  if (isBiosampleToggleInProgress.value) {
+    return true
+  }
+
+  return false
+}
+
+// Helper function to validate project abbreviation
+const validateProjectAbbreviation = async (): Promise<boolean> => {
   let invalidFields: ValidateFieldsError | undefined
   await formRef.value?.validateField(
     ['projectAbbreviation'],
@@ -747,38 +934,215 @@ const handleSaveDraft = async () => {
 
   if (invalidFields && Object.keys(invalidFields).length > 0) {
     raiseErrors(invalidFields)
+    return false
+  }
+  return true
+}
+
+// Helper function to save existing proposal
+const saveExistingProposal = async () => {
+  const saveResult = await proposalStore.updateProposal(proposalId.value, {
+    ...getFormValues(),
+  })
+  proposalStore.currentProposal = transformForm(saveResult) as IProposal
+}
+
+// Helper function to create new proposal
+const createNewProposal = async () => {
+  if (!proposalForm.value?.projectAbbreviation?.trim()) {
     return
   }
 
-  // Only proceed with saving if projectAbbreviation is valid
-  if (proposalId.value) {
-    try {
-      const saveResult = await proposalStore.updateProposal(proposalId.value, {
-        ...getFormValues(),
-      })
-      proposalStore.currentProposal = transformForm(saveResult) as IProposal
-      showSuccessMessage(t('general.savedAsDraft'))
-    } catch (error: any) {
-      showErrorMessage(error.message)
-    }
-  } else {
-    try {
-      const saveResult = await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.Draft })
-      proposalStore.currentProposal = transformForm(saveResult) as IProposal
-      showSuccessMessage(t('general.savedAsDraft'))
-    } catch (error: any) {
-      showErrorMessage(error.message)
-    }
+  const isValid = await validateProjectAbbreviation()
+  if (!isValid) {
+    bypassDebounce.value = false
+    return
   }
 
+  const saveResult = await proposalStore.createProposal({
+    ...getFormValues(),
+    status: ProposalStatus.Draft,
+  })
+  proposalStore.currentProposal = transformForm(saveResult) as IProposal
   await setUpPage()
+}
+
+// Auto-save function without validation
+const autoSaveDraft = async () => {
+  if (shouldSkipAutoSave()) {
+    return
+  }
+
+  isAutoSaving.value = true
+
+  try {
+    if (proposalId.value) {
+      await saveExistingProposal()
+    } else {
+      await createNewProposal()
+    }
+    hasFormChanged.value = false
+  } catch (error: any) {
+    // Silently fail for auto-save to avoid disrupting user experience
+  } finally {
+    isAutoSaving.value = false
+  }
+}
+
+// Helper function to check if manual save should be skipped
+const shouldSkipManualSave = () => {
+  return !isProposalEditable()
+}
+
+// Helper function to perform form validation
+const performFormValidation = async (): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
+  await formRef.value?.validate(() => {})
+  await waitForValidation()
+  await updateStepStatus()
+
+  const isValid = await validateProjectAbbreviation()
+  if (!isValid) {
+    bypassDebounce.value = false
+    return false
+  }
+  return true
+}
+
+// Helper function to save proposal with success message
+const saveProposalWithMessage = async () => {
+  try {
+    let saveResult
+    if (proposalId.value) {
+      saveResult = await proposalStore.updateProposal(proposalId.value, {
+        ...getFormValues(),
+      })
+    } else {
+      saveResult = await proposalStore.createProposal({
+        ...getFormValues(),
+        status: ProposalStatus.Draft,
+      })
+    }
+
+    proposalStore.currentProposal = transformForm(saveResult) as IProposal
+    showSuccessMessage(t('general.savedAsDraft'))
+  } catch (error: any) {
+    showErrorMessage(error.message)
+  }
+}
+
+// Update handleSaveDraft to validate all fields
+const handleSaveDraft = async () => {
+  if (shouldSkipManualSave()) {
+    return
+  }
+
+  bypassDebounce.value = true
+
+  const stepProgressionOrder = getStepProgressionOrder()
+  const currentStepIndex = stepProgressionOrder.indexOf(activeStep.value)
+  const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
+  const allFields = formRef.value?.fields || []
+  const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+  // Ensure all field validateStates are updated before updating step status
+  await waitForValidation()
+  await updateValidatedStepsStatus(stepsToValidate)
+  if (hasValidationErrors) {
+    bypassDebounce.value = false
+  }
+  await saveProposalWithMessage()
+  await setUpPage()
+
   bypassDebounce.value = false
   isSubmissionDialogOpen.value = false
 }
 
 const authStore = useAuthStore()
-const setUpPage = async () => {
-  proposalForm.value = transformForm(proposalStore.currentProposal, false, authStore.profile) as IProposal
+
+// Debounced auto-save function
+const debouncedAutoSave = debounce(autoSaveDraft, 2000) // 2 second delay
+
+// Auto-save watcher - MODIFY TO NOT INTERFERE WITH INITIAL VALIDATION
+watch(
+  () => proposalForm.value,
+  () => {
+    if (initialLoad) return
+    layoutStore.setFormTouched(true)
+
+    if (proposalForm.value) {
+      hasFormChanged.value = true
+      debouncedAutoSave()
+
+      // Only call updateProgressOnly after initial validation is complete
+      if (isInitialValidationComplete) {
+        updateProgressOnly()
+      }
+    }
+  },
+  { deep: true },
+)
+
+// Helper function to check if field is valid by value
+const isFieldValidByValue = (field: any): boolean => {
+  const fieldPath = field.prop as string
+  const fieldValue = getFieldValue(fieldPath)
+  const isFilled = isFieldMeaningfullyFilled(fieldValue)
+
+  const appliedRules = getAppliedRules(field)
+  const isRequired = [...appliedRules.formRules, ...appliedRules.componentRules].some((rule) => rule.required)
+
+  // Required fields must be filled
+  if (isRequired && !isFilled) {
+    return false
+  }
+
+  // Optional fields are valid if empty or filled
+  return true
+}
+
+// Helper function to validate step silently
+const validateStepSilently = (stepNumber: number, allFields: any[]): boolean => {
+  const stepFieldPaths = stepFieldsMap[stepNumber] || []
+  const stepFields = getStepFields(allFields, stepFieldPaths)
+  const fieldsWithRules = stepFields.filter(fieldHasRules)
+
+  if (fieldsWithRules.length === 0) {
+    return true
+  }
+
+  return fieldsWithRules.every(isFieldValidByValue)
+}
+
+// Helper function to get step key from step number
+const getStepKeyFromNumber = (stepNumber: number) => {
+  return Object.keys(CreatPrposalSteps).find(
+    (key) => CreatPrposalSteps[key as keyof typeof CreatPrposalSteps] === stepNumber && isNaN(Number(key)),
+  ) as keyof typeof CreatPrposalSteps
+}
+
+const validateFormSilently = async () => {
+  if (!formRef.value) {
+    return
+  }
+  // Do not run silent validation when proposal is not editable
+  if (!isProposalEditable()) return
+
+  const allFields = formRef.value.fields || []
+
+  // Validate each step silently
+  Object.keys(stepFieldsMap).forEach((step) => {
+    const stepNumber = parseInt(step)
+    const isStepValid = validateStepSilently(stepNumber, allFields)
+    if (isStepValid) {
+      const stepKey = getStepKeyFromNumber(stepNumber)
+      layoutStore.updateStepStatus(stepKey, isStepValid)
+    }
+  })
+}
+
+// Helper function to set up breadcrumbs
+const setupBreadcrumbs = () => {
   const lastDashboard = layoutStore.lastDashboard
   layoutStore.setBreadcrumbs([
     {
@@ -787,21 +1151,42 @@ const setUpPage = async () => {
     },
     {
       name: RouteName.ProposalDetails,
-      params: proposalForm.value._id ? { id: proposalForm.value._id } : undefined,
-      displayName: proposalForm.value.projectAbbreviation
+      params: proposalForm.value?._id ? { id: proposalForm.value._id } : undefined,
+      displayName: proposalForm.value?.projectAbbreviation
         ? proposalForm.value.projectAbbreviation
         : 'proposal.mIIUsageApplicationForm',
     },
   ])
+}
 
-  const isEditable =
-    proposalStore.currentProposal?.status === ProposalStatus.Draft ||
-    proposalStore.currentProposal?.status === ProposalStatus.Rework
-  if (proposalForm.value._id && isEditable) {
-    formRef.value?.validate(() => {})
+// Helper function to handle validation for existing proposals
+const handleExistingProposalValidation = async () => {
+  const isEditable = isProposalEditable()
+
+  if (isEditable) {
+    await nextTick()
+    await validateFormSilently()
   }
 
+  isInitialValidationComplete = true
+}
+
+const setUpPage = async () => {
+  proposalForm.value = transformForm(proposalStore.currentProposal, false, authStore.profile) as IProposal
+  setupBreadcrumbs()
+
   await nextTick()
+
+  // Handle validation based on proposal type
+  if (params.id) {
+    // For existing proposals, perform initial validation
+    await handleExistingProposalValidation()
+  } else {
+    // For new proposals, mark validation as complete immediately
+    isInitialValidationComplete = true
+  }
+
+  initialLoad = false
 }
 
 const scrollToAnchor = async () => {
@@ -813,9 +1198,115 @@ const scrollToAnchor = async () => {
     }
   }
 }
+// Helper function to check if there are open tasks for rework
+const hasOpenReworkTasks = () => {
+  return OpenProposalTasks.value.length > 0 && proposalForm.value?.status === ProposalStatus.Rework
+}
+
 const setValidationStatus = () => {
-  const hasOpenTasks = OpenProposalTasks.value.length > 0 && proposalForm.value?.status === ProposalStatus.Rework
+  const hasOpenTasks = hasOpenReworkTasks()
   isValidToSubmit.value = allFieldsValid.value && !!proposalId.value && !hasOpenTasks
+}
+
+// Helper function to check if field is required
+const isFieldRequired = (field: any): boolean => {
+  const appliedRules = getAppliedRules(field)
+  return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
+}
+
+// Helper function to check if field is valid and filled
+const isFieldValidAndFilled = (field: any): boolean => {
+  const fieldPath = field.prop as string
+  const fieldValue = getFieldValue(fieldPath)
+  const isFilled = isFieldMeaningfullyFilled(fieldValue)
+  return isFilled && field.validateState !== 'error'
+}
+
+// Helper function to check if all fields are valid
+const areAllFieldsValid = (requiredFields: any[], allFields: any[]): boolean => {
+  const requiredFieldsValid = requiredFields.every((field) => {
+    const fieldPath = field.prop as string
+    const fieldValue = getFieldValue(fieldPath)
+    return isFieldMeaningfullyFilled(fieldValue) && field.validateState !== 'error'
+  })
+
+  const allFieldsNoErrors = allFields.every((field) => field.validateState !== 'error')
+
+  return requiredFieldsValid && allFieldsNoErrors
+}
+
+// Function to track progress without showing validation errors
+const updateProgressOnly = async () => {
+  await nextTick()
+
+  if (!formRef.value) {
+    return
+  }
+
+  const allFields = formRef.value.fields
+  if (!allFields) {
+    allFieldsValid.value = false
+    return
+  }
+
+  // Get required fields and update totals
+  const requiredFields = allFields.filter(isFieldRequired)
+  layoutStore.setTotalRequiredFields(requiredFields.length)
+
+  // Count valid fields
+  const validatedFields = requiredFields.filter(isFieldValidAndFilled).length
+  layoutStore.setValidatedFields(validatedFields)
+
+  // Update overall validity status
+  allFieldsValid.value = areAllFieldsValid(requiredFields, allFields)
+}
+
+// Function to get field value by path
+const getFieldValue = (path: string) => {
+  if (!proposalForm.value) return undefined
+
+  const keys = path.split('.')
+  let current: any = proposalForm.value
+
+  for (const key of keys) {
+    if (current[key] === undefined) {
+      return undefined
+    }
+    current = current[key]
+  }
+
+  return current
+}
+
+// Function to check if a field has meaningful content
+const isFieldMeaningfullyFilled = (value: any): boolean => {
+  if (value === undefined || value === null) return false
+
+  // Handle strings
+  if (typeof value === 'string') {
+    return value.trim() !== ''
+  }
+
+  // Handle arrays
+  if (Array.isArray(value)) {
+    return value.length > 0
+  }
+
+  // Handle objects
+  if (typeof value === 'object') {
+    // Check if object has any non-empty properties
+    return Object.keys(value).some((key) => {
+      const propValue = value[key]
+      if (propValue === undefined || propValue === null) return false
+      if (typeof propValue === 'string') return propValue.trim() !== ''
+      if (Array.isArray(propValue)) return propValue.length > 0
+      if (typeof propValue === 'object') return isFieldMeaningfullyFilled(propValue)
+      return true
+    })
+  }
+
+  // Handle numbers, booleans, etc.
+  return true
 }
 
 const waitForValidation = async () => {
@@ -830,6 +1321,7 @@ const waitForValidation = async () => {
       return
     }
 
+    // Get fields with any validation rules (for progress tracking, we still use required fields)
     const requiredFields = allFields.filter((field) => {
       const appliedRules = {
         componentRules: getRulesArray(field.rules),
@@ -865,9 +1357,8 @@ const waitForValidation = async () => {
     const validatedFields = requiredFields.filter((field) => field.validateState === 'success').length
     layoutStore.setValidatedFields(validatedFields)
 
-    allFieldsValid.value =
-      requiredFields.every((field) => field.validateState === 'success') &&
-      allFields.every((field) => field.validateState !== 'error')
+    // Form is valid when ALL fields (required and non-required) have no errors
+    allFieldsValid.value = allFields.every((field) => field.validateState !== 'error')
   }
 }
 
@@ -905,17 +1396,6 @@ const getFormRuleArrayFromPath = (obj: Record<string, any>, path?: string) => {
 }
 
 const toggleShoppingList = () => {
-  // Scroll the main content container to the top
-  const mainElement = document.querySelector('.el-main')
-  if (mainElement) {
-    mainElement.scrollTo({ top: 0, behavior: 'smooth' })
-  } else {
-    // Fallback if main element not found
-    const formContainer = document.querySelector('.form-container')
-    if (formContainer) {
-      formContainer.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }
   layoutStore.toggleShoppingList()
 }
 
@@ -945,12 +1425,36 @@ watch(
   { immediate: true, deep: true },
 )
 
+watch(
+  () => activeStep.value,
+  async (newStep, oldStep) => {
+    if (newStep !== oldStep) {
+      const allFields = formRef.value?.fields || []
+      // Validate old step fields
+      const stepFieldPaths = stepFieldsMap[oldStep] || []
+      const oldStepFields = getStepFields(allFields, stepFieldPaths)
+      await validateStepFields(oldStepFields)
+      // Wait for validation to settle before updating status
+      await waitForValidation()
+      // Update step statuses
+      await updateValidatedStepsStatus([oldStep])
+    }
+  },
+)
+
 onMounted(async () => {
+  // Reset progress on mount
+  layoutStore.setTotalRequiredFields(0)
+  layoutStore.setValidatedFields(0)
+  layoutStore.setFormTouched(false)
+
+  // MOVE resetSteps() HERE - before any validation
+  layoutStore.resetSteps()
+
   try {
     await proposalStore.setCurrentProposal(params.id as string)
     await setUpPage()
   } catch (error) {
-    console.log(error)
     showErrorMessage()
     router.push({ name: RouteName.Dashboard })
   }
@@ -958,14 +1462,25 @@ onMounted(async () => {
   if (params.id) {
     try {
       await commentStore.fetchAll({ proposalId: params.id as string })
-      await setUpPage()
+
+      // After comments are loaded, ensure validation and progress are updated
+      const isEditable =
+        proposalStore.currentProposal?.status === ProposalStatus.Draft ||
+        proposalStore.currentProposal?.status === ProposalStatus.Rework
+
+      if (isEditable) {
+        await nextTick()
+        await validateFormSilently()
+        await updateProgressOnly()
+      }
+
       await scrollToAnchor()
     } catch (error) {
-      console.log(error)
       showErrorMessage()
     }
   }
-  layoutStore.resetSteps()
+
+  // REMOVE layoutStore.resetSteps() from here
 
   const isDateDefined =
     proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
@@ -974,24 +1489,29 @@ onMounted(async () => {
   const isEditable =
     proposalStore.currentProposal?.status === ProposalStatus.Draft ||
     proposalStore.currentProposal?.status === ProposalStatus.Rework
-  if (params.id && isDateDefined && isEditable) {
+  if (params.id && isDateDefined && isEditable && formRef.value) {
     let invalidFields: ValidateFieldsError | undefined
-    await formRef.value?.validateField(
-      ['userProject.generalProjectInformation.desiredStartTime'],
-      (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
-        invalidFields = invalidFieldsResult
-      },
-    )
+    try {
+      await formRef.value.validateField(
+        'userProject.generalProjectInformation.desiredStartTime',
+        (_isValid: boolean, invalidFieldsResult?: ValidateFieldsError) => {
+          invalidFields = invalidFieldsResult
+        },
+      )
 
-    if (invalidFields && Object.keys(invalidFields).length > 0) {
-      raiseErrors(invalidFields)
-      return
+      if (invalidFields && Object.keys(invalidFields).length > 0) {
+        raiseErrors(invalidFields)
+        return
+      }
+    } catch (error) {
+      // Error validating desiredStartTime field
     }
   }
 
-  watch(() => proposalForm.value, waitForValidation, { deep: true })
-  await waitForValidation()
+  // Update progress and set up watchers after silent validation is complete
+  await updateProgressOnly()
 
+  watch(() => proposalForm.value, updateProgressOnly, { deep: true })
   watch(() => [allFieldsValid.value, proposalId.value], setValidationStatus, { deep: true })
   setValidationStatus()
 })
@@ -1005,17 +1525,13 @@ onMounted(async () => {
 
   flex-direction: column;
   padding-bottom: 100px;
+  position: relative;
 
   .lead {
     margin-bottom: 37px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .title {
-      margin: 0;
-      font-size: 32px;
-    }
   }
 
   .abbreviation {
@@ -1134,7 +1650,53 @@ onMounted(async () => {
     }
   }
 }
+.shopping-list-open {
+  position: unset;
+}
 .align-right {
   justify-content: end !important;
+}
+
+.auto-save-indicator {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+
+  .auto-save-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+
+    &.saving {
+      color: #409eff;
+      background-color: #ecf5ff;
+
+      i {
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    &.pending {
+      color: #e6a23c;
+      background-color: #fdf6ec;
+    }
+
+    &.saved {
+      color: #67c23a;
+      background-color: #f0f9ff;
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

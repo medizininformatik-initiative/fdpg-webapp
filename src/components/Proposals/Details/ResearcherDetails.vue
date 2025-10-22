@@ -4,12 +4,14 @@
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
-    <ContractParticipants v-if="showContractingParticipants" />
-    <LocationVotePanel v-if="showLocationVotePanel" />
     <ProjectTodos
       :is-disabled="proposalStore.currentProposal?.isLocked || isParticipatingScientist"
       :project-todos="projectTodos"
     ></ProjectTodos>
+    <ContractParticipants v-if="showContractingParticipants" />
+    <LocationVotePanel v-if="showLocationVotePanel" />
+    <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
+
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
@@ -21,7 +23,7 @@
       access-for-maintenance
     ></ProjectReports>
     <ProjectHistory />
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :reviewMode="isParticipatingScientist" />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" />
   </el-container>
 
   <SignDialog v-model="isSignDialogOpen" @accept-contract="handleContractSignConfirm" />
@@ -67,12 +69,15 @@ import { useRoute, useRouter } from 'vue-router'
 import AppendixInfo from '../../AppendixInfo.vue'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import useDraftDownload from '@/composables/use-draft-download'
+import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
+const authStore = useAuthStore()
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -213,6 +218,20 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        try {
+          await proposalStore.exportAllUploadsAsZip()
+        } catch (error: any) {
+          showErrorMessage(error.message)
+        }
+      }
+    },
+  },
+  {
     label: 'proposal.exportPdfProposal',
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
@@ -307,7 +326,11 @@ const projectTodos = computed<IProjectTodo[]>(() => {
   ]
 })
 
-const isParticipatingScientist = computed(() => proposalStore.currentProposal?.isParticipatingScientist)
+const isParticipatingScientist = computed(() =>
+  proposalStore.currentProposal
+    ? isUserParticipatingScientist(proposalStore.currentProposal, authStore.profile)
+    : false,
+)
 
 const fetchProposal = async () => {
   try {

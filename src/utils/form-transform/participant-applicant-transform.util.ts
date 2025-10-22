@@ -6,11 +6,13 @@ import type {
   IInstitute,
   IParticipant,
   IParticipantCategory,
+  IParticipantRole,
   IProjectResponsibility,
   IProjectResponsible,
   IProjectUser,
   IResearcher,
 } from '@/types/proposal.types'
+import { ParticipantRole } from '@/types/proposal.types'
 import { hasNoContent, transformEmptyStringToUndefined } from '../empty-string.util'
 const NEW_ID = 'NEW_ID'
 
@@ -105,6 +107,14 @@ const transformParticipantCategory = (
   }
 }
 
+const transformParticipantRole = (participantRole?: DeepPartial<IParticipantRole>): Partial<IParticipantRole> => {
+  return {
+    _id: participantRole?._id,
+    isDone: participantRole?.isDone ?? false,
+    role: participantRole?.role ?? ParticipantRole.ParticipatingScientist,
+  }
+}
+
 export const transformProjectUser = (projectUser?: DeepPartial<IProjectUser>): Partial<IProjectUser> => {
   return {
     _id: projectUser?._id,
@@ -139,23 +149,35 @@ export const transformProjectResponsible = (
   let researcher: Partial<IResearcher> | undefined
   let institute: Partial<IInstitute> | undefined
   let participantCategory: Partial<IParticipantCategory> | undefined
+  let participantRole: Partial<IParticipantRole> | undefined
 
   if (transformToApi && applicantIsProjectResponsible) {
     // Both true
     researcher = undefined
     institute = undefined
     participantCategory = undefined
+    participantRole = undefined
   } else {
     if (applicantIsProjectResponsible) {
       // transformToApi: false, applicantIsProjectResponsible: true
       researcher = transformParticipantResearcher()
       institute = transformParticipantInstitute()
       participantCategory = transformParticipantCategory()
+      participantRole = {
+        _id: projectResponsible?.participantRole?._id || 'projectResponsibleRoleId',
+        isDone: projectResponsible?.participantRole?.isDone ?? false,
+        role: ParticipantRole.ResponsibleScientist,
+      }
     } else {
-      // Both false || transformToApi: true, applicantIsProjectResponsible: false
+      // Both false || transformToApi: true, applicantIsProjectResponsible: false
       researcher = transformParticipantResearcher(projectResponsible?.researcher)
       institute = transformParticipantInstitute(projectResponsible?.institute)
       participantCategory = transformParticipantCategory(projectResponsible?.participantCategory)
+      participantRole = {
+        _id: projectResponsible?.participantRole?._id || 'projectResponsibleRoleId',
+        isDone: projectResponsible?.participantRole?.isDone ?? false,
+        role: ParticipantRole.ResponsibleScientist,
+      }
     }
   }
 
@@ -165,6 +187,7 @@ export const transformProjectResponsible = (
     researcher,
     institute,
     participantCategory,
+    participantRole,
     projectResponsibility,
   }
 }
@@ -175,6 +198,8 @@ export const mapParticipant = (participant?: DeepPartial<IParticipant>): DeepPar
     researcher: transformParticipantResearcher(participant?.researcher),
     institute: transformParticipantInstitute(participant?.institute),
     participantCategory: transformParticipantCategory(participant?.participantCategory),
+    participantRole: transformParticipantRole(participant?.participantRole),
+    addedByFdpg: participant?.addedByFdpg ?? false,
   }
 }
 export const transformParticipants = (participants?: DeepPartial<IParticipant[]>): DeepPartial<IParticipant[]> => {

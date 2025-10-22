@@ -1,6 +1,6 @@
 <template>
-  <h1 class="title">{{ $t('proposal.mIIUsageApplicationForm') }}</h1>
-  <h2>1. {{ $t(overviewSection.sectionLabel) }}</h2>
+  <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
+  <h2>1. {{ t(overviewSection.sectionLabel) }}</h2>
   <section v-for="(card, cardIdx) in overviewSection.mapping" :key="'card' + cardIdx" role="region">
     <PrintCard
       class="print-region"
@@ -11,7 +11,7 @@
     ></PrintCard>
   </section>
   <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
-    <h2>{{ sIdx + 2 }}. {{ $t(section.sectionLabel) }}</h2>
+    <h2>{{ sIdx + 2 }}. {{ t(section.sectionLabel) }}</h2>
 
     <template v-if="section.kind === 'array' && proposalData">
       <div
@@ -53,7 +53,7 @@
     </template>
   </template>
 
-  <h2>{{ getVisibleSections(sections).length + 2 }}. {{ $t(dataPrivacySection.sectionLabel) }}</h2>
+  <h2>{{ getVisibleSections(sections).length + 2 }}. {{ t(dataPrivacySection.sectionLabel) }}</h2>
   <section v-for="(card, cardIdx) in dataPrivacySection.mapping" :key="'privacy-card' + cardIdx" role="region">
     <PrintCard
       class="print-region"

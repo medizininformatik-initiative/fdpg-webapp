@@ -15,6 +15,8 @@ import type {
   IEditAdditionalLocationProposalInformation,
   IUpload,
   ISelectedCohort,
+  IParticipant,
+  IApplicant,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -28,7 +30,8 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
-import { transformCohorts } from '@/utils/form-transform/transform-user-project.util'
+import type { IDizDetails } from '@/types/proposal.types'
+
 export interface IProposalState {
   apiService: ProposalService
   proposals: { [key in PanelQuery]?: IProposalDetail[] }
@@ -141,6 +144,10 @@ export const useProposalStore = defineStore('Proposal', {
 
     async initContracting(id: string, file: File, selectedLocations: MiiLocation[]): Promise<void> {
       await this.apiService.initContracting(id, file, selectedLocations)
+    },
+
+    async updateContracting(id: string, file: File, contractDraftToBeReplacedId: string): Promise<void> {
+      await this.apiService.updateContracting(id, file, contractDraftToBeReplacedId)
     },
 
     async uploadFile(id: string, file: File, type: DirectUpload): Promise<void> {
@@ -261,6 +268,53 @@ export const useProposalStore = defineStore('Proposal', {
         }
       }
     }, 500),
+
+    async updateFdpgChecklistImmediate(
+      id: string,
+      checklist: Partial<IFdpgChecklist>,
+      errorCb?: (...args: any) => void,
+    ): Promise<void> {
+      const typedStore = this as unknown as IProposalState
+
+      try {
+        const updatedItem = await typedStore.apiService.updateFdpgChecklist(id, checklist)
+        const currentProposal = typedStore.currentProposal
+
+        if (!currentProposal || !updatedItem || !currentProposal.fdpgChecklist) return
+
+        const checklistData = currentProposal.fdpgChecklist
+
+        if ('isRegistrationLinkSent' in updatedItem) {
+          checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('fdpgInternalCheckNotes' in updatedItem) {
+          checklistData.fdpgInternalCheckNotes =
+            updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
+        } else if ('_id' in updatedItem) {
+          const targetFields = ['checkListVerification', 'projectProperties'] as const
+
+          for (const field of targetFields) {
+            const list = checklistData[field]
+            const index = list?.findIndex((item) => item._id === updatedItem._id)
+            if (index !== -1 && list) {
+              list[index] = {
+                ...list[index],
+                ...updatedItem,
+              }
+              break
+            }
+          }
+        }
+
+        typedStore.currentProposal = {
+          ...currentProposal,
+          fdpgChecklist: checklistData,
+        }
+      } catch (error) {
+        if (errorCb) {
+          errorCb(error)
+        }
+      }
+    },
 
     async updateFdpgChecklist(
       id: string,
@@ -386,6 +440,72 @@ export const useProposalStore = defineStore('Proposal', {
       }
 
       await this.apiService.getFeasibilityCsvByQueryId(this.currentProposal?._id, feasibilityQueryId, queryName)
+    },
+    async updateParticipants(id: string, participants: IParticipant[]): Promise<void> {
+      const updatedProposal = await this.apiService.updateParticipants(id, participants)
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          participants: updatedProposal.participants,
+        }
+      }
+    },
+    async removeParticipant(id: string, participantId: string): Promise<void> {
+      const updatedProposal = await this.apiService.removeParticipant(id, participantId)
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          participants: updatedProposal.participants,
+        }
+      }
+    },
+
+    async updateApplicantParticipantRole(id: string, applicant: IApplicant): Promise<void> {
+      await this.apiService.updateApplicantParticipantRole(id, applicant)
+      // Update the current proposal if it matches the updated proposal
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          applicant: {
+            ...this.currentProposal.applicant,
+            ...applicant,
+          },
+        }
+      }
+    },
+
+    async makeParticipantResponsible(id: string, participantId: string): Promise<void> {
+      await this.apiService.makeParticipantResponsible(id, participantId)
+      // Refresh the proposal to get the updated data
+      await this.setCurrentProposal(id)
+    },
+
+    async createDizDetails(proposalId: string, data: IDizDetails): Promise<void> {
+      await this.apiService.createDizDetails(proposalId, data)
+
+      this.setCurrentProposal(proposalId)
+    },
+
+    async updateDizDetails(proposalId: string, dizDetailsId: string, data: IDizDetails): Promise<IDizDetails> {
+      const updatedDizDetails = await this.apiService.updateDizDetails(proposalId, dizDetailsId, data)
+
+      if (this.currentProposal && this.currentProposal._id === proposalId) {
+        const index = this.currentProposal.dizDetails?.findIndex((detail) => detail._id === dizDetailsId)
+        if (index !== undefined && index !== -1 && this.currentProposal.dizDetails) {
+          this.currentProposal.dizDetails[index] = updatedDizDetails
+        }
+      }
+
+      return updatedDizDetails
+    },
+    async exportAllUploadsAsZip(): Promise<void> {
+      if (!this.currentProposal?._id) {
+        throw new Error('No proposal selected for export')
+      }
+      await this.apiService.exportAllUploadsAsZip(this.currentProposal._id)
+    },
+    async downloadLocationCsv(proposalId: string): Promise<void> {
+      await this.apiService.downloadLocationCsv(proposalId)
     },
   },
 

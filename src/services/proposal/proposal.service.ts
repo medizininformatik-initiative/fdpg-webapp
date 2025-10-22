@@ -16,6 +16,9 @@ import type {
   IEditAdditionalLocationProposalInformation,
   FdpgChecklistItemUpdateResponse,
   ISelectedCohort,
+  IParticipant,
+  IDizDetails,
+  IApplicant,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -119,12 +122,25 @@ export class ProposalService {
     return response.data
   }
 
-  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<IProposal> {
+  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<void> {
     const formData = new FormData()
     formData.append('file', file as Blob)
     formData.append('locations', JSON.stringify(locations))
 
     const response = await this.apiClient.put(`${this.basePath}/${id}/init-contracting`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  }
+
+  async updateContracting(id: string, file: File, contractDraftToBeReplacedId: string): Promise<void> {
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('uploadId', contractDraftToBeReplacedId)
+
+    const response = await this.apiClient.post(`${this.basePath}/${id}/update-contracting`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -334,6 +350,127 @@ export class ProposalService {
       window.URL.revokeObjectURL(url)
     } else {
       throw new Error('Could not fetch the feasibility csv')
+    }
+  }
+  async updateParticipants(id: string, participants: IParticipant[]): Promise<IProposal> {
+    const response = await this.apiClient.patch(`${this.basePath}/${id}/participants`, { participants })
+    return response.data
+  }
+  async removeParticipant(id: string, participantId: string): Promise<IProposal> {
+    const response = await this.apiClient.delete(`${this.basePath}/${id}/participants/${participantId}`)
+    return response.data
+  }
+
+  async updateApplicantParticipantRole(id: string, applicant: IApplicant): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/applicant/participant-role`, applicant)
+  }
+
+  async makeParticipantResponsible(id: string, participantId: string): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/participants/${participantId}/make-responsible`)
+  }
+
+  async createDizDetails(proposalId: string, data: IDizDetails): Promise<IDizDetails> {
+    const response = await this.apiClient.post(`${this.basePath}/${proposalId}/diz-details`, data)
+    return response.data
+  }
+
+  async updateDizDetails(proposalId: string, dizDetailsId: string, data: IDizDetails): Promise<IDizDetails> {
+    const response = await this.apiClient.put(`${this.basePath}/${proposalId}/diz-details/${dizDetailsId}`, data)
+    return response.data
+  }
+
+  async exportAllUploadsAsZip(proposalId: string): Promise<void> {
+    try {
+      const response = await this.apiClient.post(
+        `${this.basePath}/${proposalId}/uploads/export`,
+        {},
+        { responseType: 'blob' },
+      )
+
+      if (response.status === 200) {
+        const url = window.URL.createObjectURL(new Blob([response.data]))
+
+        const contentDisposition = response.headers['content-disposition'] || response.headers['Content-Disposition']
+        const xFilename = response.headers['x-filename'] || response.headers['X-Filename']
+
+        let filename = 'proposal-uploads.zip'
+
+        if (xFilename) {
+          filename = xFilename
+        } else if (contentDisposition) {
+          // Try RFC 5987 format first: filename*=UTF-8''encoded-filename
+          const rfc5987Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/)
+          if (rfc5987Match && rfc5987Match[1]) {
+            filename = decodeURIComponent(rfc5987Match[1])
+          } else {
+            const standardMatch = contentDisposition.match(/filename="?([^"]+)"?/)
+            if (standardMatch && standardMatch[1]) {
+              filename = standardMatch[1]
+            }
+          }
+        }
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+      } else {
+        throw new Error('Could not export proposal uploads')
+      }
+    } catch (error: any) {
+      if (error.response) {
+        const status = error.response.status
+        let errorData = error.response.data
+        if (errorData instanceof Blob) {
+          try {
+            const text = await errorData.text()
+            errorData = JSON.parse(text)
+          } catch (parseError) {
+            console.warn('Could not parse error response as JSON:', parseError)
+          }
+        }
+        const errorMessage = errorData?.message || errorData?.error || `Export failed with status ${status}`
+        throw new Error(errorMessage)
+      } else {
+        throw new Error(error.message || 'An unexpected error occurred while exporting files')
+      }
+    }
+  }
+  async downloadLocationCsv(proposalId: string): Promise<void> {
+    const response = await this.apiClient.get(`${this.basePath}/${proposalId}/locations/csv`)
+
+    if (response.status === 200) {
+      const { downloadUrl, filename } = response.data
+
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = filename
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    } else {
+      throw new Error('Could not generate location CSV download link')
+    }
+  }
+  async catch(error: any) {
+    if (error.response) {
+      const status = error.response.status
+      let errorData = error.response.data
+      if (errorData instanceof Blob) {
+        try {
+          const text = await errorData.text()
+          errorData = JSON.parse(text)
+        } catch (parseError) {
+          console.warn('Could not parse error response as JSON:', parseError)
+        }
+      }
+      const errorMessage = errorData?.message || errorData?.error || `Export failed with status ${status}`
+      throw new Error(errorMessage)
+    } else {
+      throw new Error(error.message || 'An unexpected error occurred while exporting files')
     }
   }
 }

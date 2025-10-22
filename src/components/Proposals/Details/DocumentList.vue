@@ -17,7 +17,16 @@
             <el-button link class="file-button" :disabled="isLoading">
               <i class="bi bi-download" aria-hidden="true" />
             </el-button>
-            <el-button v-if="!isDisabled" class="file-button" :disabled="isLoading" @click.stop="handleRemove(_id)">
+
+            <el-button v-if="isEditable" class="file-button" :disabled="isLoading" @click.stop="handleEdit(_id)">
+              <i class="fa fa-pencil" aria-hidden="true" />
+            </el-button>
+            <el-button
+              v-if="!isDisabled && !hideRemoveButton"
+              class="file-button"
+              :disabled="isLoading"
+              @click.stop="handleRemove(_id)"
+            >
               <i class="fa fa-trash" aria-hidden="true" />
             </el-button>
           </div>
@@ -60,6 +69,11 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  isEditable: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
   proposalId: {
     type: String,
     required: false,
@@ -69,9 +83,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideRemoveButton: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
 })
 
-const emit = defineEmits(['remove'])
+const emit = defineEmits(['remove', 'edit'])
 
 const proposalId = computed(() => props.proposalId)
 const isCollapsed = ref<boolean>(true)
@@ -79,7 +98,7 @@ const isCollapsed = ref<boolean>(true)
 const handleTogglePanel = () => {
   isCollapsed.value = !isCollapsed.value
 }
-const displayTypeMap: Record<UploadType, TranslationSchema> = {
+const displayTypeMap: Partial<Record<UploadType, TranslationSchema>> = {
   CONTRACT_CONDITION: 'proposal.uploadType_CONTRACT_CONDITION',
   CONTRACT_DRAFT: 'proposal.uploadType_CONTRACT_DRAFT',
   ETHIC_VOTE: 'proposal.uploadType_ETHIC_VOTE',
@@ -114,6 +133,12 @@ const handleDownload = async (id: string) => {
 const handleRemove = (id: string) => {
   if (!props.isLoading) {
     emit('remove', id)
+  }
+}
+
+const handleEdit = (id: string) => {
+  if (!props.isLoading) {
+    emit('edit', id)
   }
 }
 </script>

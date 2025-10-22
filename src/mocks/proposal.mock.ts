@@ -10,6 +10,7 @@ import {
   ProjectUserType,
   ProposalStatus,
   ProposalTypeOfUse,
+  ParticipantRole,
 } from '@/types/proposal.types'
 import { PublicationType } from '@/types/publication-type.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
@@ -95,6 +96,11 @@ export const mockProposal: IProposal = {
       isDone: false,
       category: ParticipantType.ProjectLeader,
     },
+    participantRole: {
+      _id: 'participantRoleId',
+      isDone: false,
+      role: ParticipantRole.ResponsibleScientist,
+    },
     projectResponsibility: {
       _id: 'researcherId',
       applicantIsProjectResponsible: false,
@@ -131,6 +137,11 @@ export const mockProposal: IProposal = {
         isDone: false,
         category: ParticipantType.ProjectLeader,
       },
+      participantRole: {
+        _id: 'participantRoleId',
+        isDone: false,
+        role: ParticipantRole.ResponsibleScientist,
+      },
     },
     {
       _id: 'participantId',
@@ -158,6 +169,11 @@ export const mockProposal: IProposal = {
         _id: 'participantCategoryId',
         isDone: false,
         category: ParticipantType.ProjectLeader,
+      },
+      participantRole: {
+        _id: 'participantRoleId2',
+        isDone: false,
+        role: ParticipantRole.Researcher,
       },
     },
   ],

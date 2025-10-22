@@ -47,6 +47,7 @@ const mountComponent = (withPinia = true) => {
         'el-row': false,
         'el-col': false,
         'el-button': false,
+        LeadHeader: false,
       },
     },
     props: {},

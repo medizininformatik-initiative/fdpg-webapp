@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="20" class="vote">
+  <el-row :gutter="20" class="vote" v-if="isMII">
     <el-col :span="12">
       <el-progress
         text-inside
@@ -7,7 +7,7 @@
         :color="percentColors"
       />
       <p class="uac-vote">
-        {{ $t('dashboard.uacVote') }}: <span>{{ `${voteCount}/${proposal.requestedLocationsCount}` }}</span>
+        {{ t('dashboard.uacVote') }}: <span>{{ `${voteCount}/${proposal.requestedLocationsCount}` }}</span>
       </p>
     </el-col>
     <el-col :span="12">
@@ -24,9 +24,11 @@
 </template>
 
 <script setup lang="ts">
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposalDetail } from '@/types/proposal.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   proposal: {
@@ -34,6 +36,7 @@ const props = defineProps({
     required: true,
   },
 })
+const { t } = useI18n()
 
 const percentColors = [
   { color: '#e52117', percentage: 50 },
@@ -43,6 +46,9 @@ const percentColors = [
 
 const voteCount = computed(() => {
   return props.proposal.requestedButExcludedCount + props.proposal.uacApprovedCount
+})
+const isMII = computed(() => {
+  return props.proposal.selectedDataSources?.includes(PlatformIdentifier.Mii)
 })
 </script>
 

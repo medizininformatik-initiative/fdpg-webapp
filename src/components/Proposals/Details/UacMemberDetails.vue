@@ -11,9 +11,10 @@
       @remove-cohort="() => {}"
     />
     <ProjectStatus :proposal-status="status"></ProjectStatus>
+    <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
+    <DIZDetailSection></DIZDetailSection>
     <ContractParticipants v-if="showContractingParticipants" />
     <LocationVotePanel v-if="showLocationVotePanel" />
-    <ProjectTodos :is-disabled="proposalStore.currentProposal?.isLocked" :project-todos="projectTodos"></ProjectTodos>
     <ProjectPublications v-if="showPublications"></ProjectPublications>
     <ProjectHistory />
 
@@ -64,6 +65,7 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import DIZDetailSection from '@/components/DIZDetailSection.vue'
 
 const { t } = useI18n()
 const showPublications = ref(false)
@@ -154,6 +156,20 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 
 const topBarButtons: IButtonConfig[] = [
   {
+    label: 'proposal.exportAttachments',
+    testId: 'button__exportAttachments',
+    isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
+    action: async () => {
+      if (proposalId.value) {
+        try {
+          await proposalStore.exportAllUploadsAsZip()
+        } catch (error: any) {
+          showErrorMessage(error.message)
+        }
+      }
+    },
+  },
+  {
     type: 'primary',
     label: 'proposal.toTheRequest',
     testId: 'button__toProposal',
@@ -181,9 +197,55 @@ const getApproveTodo = (): IProjectTodo[] => {
 }
 
 const projectTodos = computed<IProjectTodo[]>(() => {
-  return [...getApproveTodo()]
+  return [...getApproveTodo(), ...getAdditionalLocationInformationTodo()]
 })
+const getAdditionalLocationInformationTodo = (afterLocationCheck = false): IProjectTodo[] => {
+  const proposal = proposalStore.currentProposal
+  if (!proposal) {
+    return []
+  }
 
+  if (proposal.requestedButExcludedLocations.length > 0) {
+    return []
+  }
+
+  const afterLocationCheckStatuses = [
+    ProposalStatus.Contracting,
+    ProposalStatus.ExpectDataDelivery,
+    ProposalStatus.DataResearch,
+    ProposalStatus.DataCorrupt,
+    ProposalStatus.ReadyToArchive,
+    ProposalStatus.FinishedProject,
+    ProposalStatus.Archived,
+    ProposalStatus.Rejected,
+  ]
+
+  if (afterLocationCheck) {
+    if (!proposal.status || !afterLocationCheckStatuses.includes(proposal.status)) {
+      return []
+    }
+  } else {
+    if (proposal.status !== ProposalStatus.LocationCheck) {
+      return []
+    }
+  }
+
+  const additionalLocationInformation = proposal.additionalLocationInformation[0] ?? {
+    legalBasis: false,
+    locationPublicationName: '',
+  }
+
+  return [
+    {
+      title: t('proposal.updateAdditionalLocationInformationTodoTitle'),
+      description: t('proposal.updateAdditionalLocationInformationTodoDescription'),
+      action: (): void => {},
+      type: 'additional-location-information',
+      additionalInformation: additionalLocationInformation,
+      readonly: true,
+    },
+  ]
+}
 const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
