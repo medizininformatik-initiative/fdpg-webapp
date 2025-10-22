@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="locations" stripe style="width: 100%">
+  <el-table :data="locations" stripe style="width: 100%" v-loading="loading">
     <el-table-column prop="_id" label="ID" />
     <el-table-column prop="externalCode" label="Code" />
     <el-table-column prop="display" label="Display" />
@@ -23,6 +23,10 @@ const props = defineProps({
   locations: {
     type: Array as PropType<ILocation[]>,
     required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: true,
   },
 })
 

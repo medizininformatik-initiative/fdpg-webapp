@@ -37,6 +37,11 @@ export class LocationService {
     return response.data
   }
 
+  async syncLocations(): Promise<ILocationSyncChangelog[]> {
+    const response = await this.apiClient.get(`${this.basePath}/sync`)
+    return response.data
+  }
+
   async catch(error: any) {
     if (error.response) {
       const status = error.response.status

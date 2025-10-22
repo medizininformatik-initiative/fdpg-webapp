@@ -14,8 +14,8 @@ export const useLocationStore = defineStore('Location', {
   }),
 
   actions: {
-    async getAll(): Promise<ILocation[]> {
-      if ((this.allLocations?.length ?? 0) > 0) {
+    async getAll(withLocalCaching: boolean = true): Promise<ILocation[]> {
+      if ((this.allLocations?.length ?? 0) > 0 && withLocalCaching) {
         return this.allLocations
       }
 
@@ -47,6 +47,11 @@ export const useLocationStore = defineStore('Location', {
 
     async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
       const data = await this.apiService.setChangelogStatus(changelog)
+      return data
+    },
+
+    async syncLocations(): Promise<ILocationSyncChangelog[]> {
+      const data = await this.apiService.syncLocations()
       return data
     },
   },

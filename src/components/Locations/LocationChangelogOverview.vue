@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="changelogs" stripe style="width: 100%">
+  <el-table :data="changelogs" stripe style="width: 100%" v-loading="loading">
     <el-table-column type="expand">
       <template #default="expandProps">
         <div class="expand-container">
@@ -45,13 +45,6 @@
             @click="setStatus(operationProps.row._id, LocationSyncChangeLogStatus.APPROVED)"
             >Approve</el-button
           >
-          <el-button
-            link
-            type="primary"
-            size="small"
-            @click="setStatus(operationProps.row._id, LocationSyncChangeLogStatus.DECLINED)"
-            >Decline</el-button
-          >
         </div>
       </template>
     </el-table-column>
@@ -66,6 +59,10 @@ const props = defineProps({
   changelogs: {
     type: Array as PropType<ILocationSyncChangelog[]>,
     required: true,
+  },
+  loading: {
+    type: Boolean,
+    default: true,
   },
 })
 
@@ -93,7 +90,6 @@ const getDifferenceClass = (oldVal: any, newVal: any) => {
 
 const setStatus = async (changelogId: string, status: LocationSyncChangeLogStatus) => {
   const changelog = props.changelogs.find((c) => c._id === changelogId)
-  console.log({ changelog })
   emit('setStatus', changelog, status)
 }
 </script>
