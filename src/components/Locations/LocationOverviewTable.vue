@@ -7,8 +7,8 @@
     <el-table-column prop="deprecated" label="Deprecated" />
     <el-table-column fixed="right" label="Operations" min-width="120">
       <template #default>
-        <el-button link type="primary" size="small" @click="handleClick">Detail</el-button>
-        <el-button link type="primary" size="small">Edit</el-button>
+        <el-button link type="primary" size="small" @click="handleClick">{{ t('general.details') }}</el-button>
+        <el-button link type="primary" size="small">{{ t('general.edit') }}</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -18,6 +18,7 @@
 import type { ILocation } from '@/types/location.types'
 import type { PropType } from 'vue'
 import { defineProps } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   locations: {
@@ -29,6 +30,8 @@ const props = defineProps({
     default: true,
   },
 })
+
+const { t } = useI18n()
 
 const handleClick = () => {}
 </script>

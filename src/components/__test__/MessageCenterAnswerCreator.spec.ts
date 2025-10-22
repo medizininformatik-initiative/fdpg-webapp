@@ -11,6 +11,7 @@ import LocationSelect from '../LocationSelect.vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import type { MockedObject } from 'vitest'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockLocations, useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -28,6 +29,11 @@ vi.mock('@/plugins/i18n', () => ({
     },
   },
 }))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
 describe('MessageCenterAnswerCreator.vue', () => {
   let authStore: MockedObject<ReturnType<typeof useAuthStore>>
   let wrapper: VueWrapper & { vm: { visibilityMessage: IVisibilityMessage } }
@@ -43,6 +49,7 @@ describe('MessageCenterAnswerCreator.vue', () => {
           locations: [MiiLocation.Charité],
         } as ICommentDetail,
         type: CommentType.PROPOSAL_MESSAGE_TO_OWNER,
+        possibleLocations: [...mockLocations],
       },
       global: {
         plugins: [],

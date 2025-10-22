@@ -4,9 +4,15 @@
       <template #default="expandProps">
         <div class="expand-container">
           <div class="comparison-row header">
-            <div class="comparison-col"><strong>Field</strong></div>
-            <div class="comparison-col"><strong>Old Value</strong></div>
-            <div class="comparison-col"><strong>New Value</strong></div>
+            <div class="comparison-col">
+              <strong>{{ t('general.field') }}</strong>
+            </div>
+            <div class="comparison-col">
+              <strong>{{ t('general.oldValue') }}</strong>
+            </div>
+            <div class="comparison-col">
+              <strong>{{ t('general.newValue') }}</strong>
+            </div>
           </div>
 
           <div v-for="key in comparisionKeys" :key="key" class="comparison-row">
@@ -43,7 +49,7 @@
             type="primary"
             size="small"
             @click="setStatus(operationProps.row._id, LocationSyncChangeLogStatus.APPROVED)"
-            >Approve</el-button
+            >{{ t('general.approve') }}</el-button
           >
         </div>
       </template>
@@ -54,6 +60,7 @@
 <script lang="ts" setup>
 import { LocationSyncChangeLogStatus, type ILocation, type ILocationSyncChangelog } from '@/types/location.types'
 import type { PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   changelogs: {
@@ -65,6 +72,8 @@ const props = defineProps({
     default: true,
   },
 })
+
+const { t } = useI18n()
 
 const emit = defineEmits(['setStatus'])
 

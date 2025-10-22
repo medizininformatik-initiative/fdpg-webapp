@@ -68,7 +68,13 @@
     "boolean_false": "No",
     "upload": "Upload",
     "noData": "No Data.",
-    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone."
+    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone.",
+    "changelogs": "Changelogs",
+    "syncLocations": "Sync Locations",
+    "field": "Field",
+    "oldValue": "Old Value",
+    "newValue": "New Value",
+    "approve": "Save Changes"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -87,7 +93,8 @@
     "wait": "PENDING",
     "process": "PENDING",
     "progress": "Progress:",
-    "completed": "{progress}% filled out"
+    "completed": "{progress}% filled out",
+    "published": "published"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -173,7 +180,8 @@
     "editedXDaysAgo": "Edited {x} days ago",
     "noRole": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days.",
     "xOngoingProjectContracts": "{x} ongoing project contracts",
-    "xCompletedProjectContracts": "{x} completed project contracts"
+    "xCompletedProjectContracts": "{x} completed project contracts",
+    "registerProject": "Register a project"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -519,7 +527,7 @@
     "participantCategory_BIOSAMPLE_RECEIVER": "Bio sample recipient",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Receipt of data and biological samples",
     "participantCategory_PROJECT_LEADER": "Project Manager",
-    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Another project leader",
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Participating scientist",
     "termsDialogTitle": "Accept Terms and Conditions",
     "lockProposal": "Lock proposal",
     "lockModalDescription": "Please note that this will disable any function of the proposal.\n The lock can be reversed at any time.",
@@ -588,7 +596,7 @@
     "reviewUacConditionFile": "Your UAC has attached the following document to its decision.",
     "updateAdditionalLocationInformationTodoTitle": "Provide additional information with your decision",
     "updateAdditionalLocationInformationTodoDescription": "In case of an acception, please provide the following information for the project.",
-    "updateAdditionalLocationLegalBasis": "The legal basis is the Broad Consent",
+    "updateAdditionalLocationLegalBasis": "The legal basis is the Broad Consent of the MII",
     "updateAdditionalLocationPublicationName": "We have a standard formulation from all locations for the contract appendix, which lists how the locations should be named in acknowledgements of publications. You only need to enter details here if you wish to make a project-specific change to this text. Let us know about permanent changes via the comments.",
     "updateAdditionalLocationPublicationNamePlaceholder": "Here, you can enter the name of your location as it should appear in scientific publications.",
     "contractPendingLocationCount": "Pending for {count} locations",
@@ -766,7 +774,22 @@
     "autoDesiredStartDateAdjustment": "The start date of the project was automatically adjusted",
     "exportAttachments": "Export attachments",
     "orphanedTasksDescription": "These tasks reference objects that no longer exist in the proposal. They may be from old data structures.",
-    "downloadLocationCsv": "Download conditions"
+    "downloadLocationCsv": "Download conditions",
+    "typeOfUse_NONE_Info": "None of above",
+    "typeOfUse_NONE": "None of above",
+    "projectCategory": "Project Category",
+    "pleaseSelectProjectCategory": "Please select a project category.",
+    "diagnoses": "Diagnoses",
+    "diagnosesPlaceholder": "Enter diagnoses and press Enter",
+    "procedures": "Procedures",
+    "proceduresPlaceholder": "Enter procedures and press Enter",
+    "addBiosample": "Add Biosample",
+    "researcherInstituteUnknown": "unnamed institute",
+    "projectUrl": "Project URL",
+    "projectLogo": "Project Logo",
+    "pleaseSelectDiagnoses": "Please select or enter diagnoses",
+    "pleaseSelectProcedures": "Please select or enter procedures",
+    "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -781,6 +804,7 @@
     "HEADER_UacMember": "UAC",
     "HEADER_Admin": "Admin",
     "HEADER_DataSourceMember": "Data Source Member",
+    "HEADER_RegisteringMember": "RegisteringMember",
     "changeRoleModalText": "This role doesn't have right access. do you want to change role and try again to access?",
     "changeRoleModalTitle": "Wrong role",
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",
