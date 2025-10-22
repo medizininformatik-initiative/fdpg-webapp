@@ -142,13 +142,13 @@ describe('ProposalPermissions', () => {
   })
 
   describe('isParticipatingScientist', () => {
-    it('should return true when user is responsible scientist', () => {
+    it('should return false when user is responsible scientist (not a participant)', () => {
       const userProfile = { ...mockUserProfile, email: 'responsible@example.com' }
-      expect(isParticipatingScientist(mockProposal, userProfile)).toBe(true)
+      expect(isParticipatingScientist(mockProposal, userProfile)).toBe(false)
     })
 
-    it('should return true when user is a participant', () => {
-      const userProfile = { ...mockUserProfile, email: 'editor@example.com' }
+    it('should return true when user has participating scientist role', () => {
+      const userProfile = { ...mockUserProfile, email: 'participant@example.com' }
       expect(isParticipatingScientist(mockProposal, userProfile)).toBe(true)
     })
 

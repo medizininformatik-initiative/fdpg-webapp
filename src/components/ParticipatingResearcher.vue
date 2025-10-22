@@ -115,7 +115,7 @@ import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import { isParticipatingScientist } from '@/utils/proposal-permissions.util'
+import { isParticipatingScientist, isParticipantApplicant } from '@/utils/proposal-permissions.util'
 const { params } = useRoute()
 const proposalId = params.id as string
 
@@ -254,8 +254,6 @@ const getParticipantRoleItems = (participant: ParticipantInfo): DropdownItem[] =
     label: `roles.participantRole_${role}`,
     kind: 'basic',
     action: () => handleParticipantRoleSelect(participant, role),
-    // Disable if user has no permission or if trying to change the only Responsible Scientist
-    disabled: !userHasPermission.value || (isOnlyResponsibleScientist && role !== ParticipantRole.ResponsibleScientist),
   }))
 }
 
@@ -390,63 +388,89 @@ const handleParticipantTypeSelect = async (participant: ParticipantInfo, newType
 
 const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole: ParticipantRole) => {
   try {
+    const participantIsApplicant = isParticipantApplicant(proposalStore.currentProposal!, participant.email)
+
+    // Prevent applicant from becoming ParticipatingScientist
+    if (participantIsApplicant && newRole === ParticipantRole.ParticipatingScientist) {
+      showErrorMessage(t('proposal.applicantCannotBeParticipatingScientist'))
+      return
+    }
+
     // Prevent changing role if this is the only Responsible Scientist
-    if (
-      participant.participantRole === ParticipantRole.ResponsibleScientist &&
-      newRole !== ParticipantRole.ResponsibleScientist &&
-      !researcherIdentities.value.some(
-        (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
-      )
-    ) {
+    const isParticipantCurrentlyResponsible = participant.participantRole === ParticipantRole.ResponsibleScientist
+    const isChangingAwayFromResponsible = newRole !== ParticipantRole.ResponsibleScientist
+    const hasOtherResponsibleScientist = researcherIdentities.value.some(
+      (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
+    )
+
+    if (isParticipantCurrentlyResponsible && isChangingAwayFromResponsible && !hasOtherResponsibleScientist) {
       showErrorMessage(t('proposal.cannotChangeOnlyResponsibleScientist'))
       return
     }
 
-    if (newRole === ParticipantRole.ResponsibleScientist) {
-      const existingResponsibleScientist = researcherIdentities.value.find(
-        (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
-      )
-      if (existingResponsibleScientist) {
-        existingResponsibleScientist.participantRole = ParticipantRole.ParticipatingScientist
+    if (participantIsApplicant) {
+      const currentProposal = proposalStore.currentProposal
+      if (currentProposal?.applicant) {
+        const updatedApplicant = {
+          ...currentProposal.applicant,
+          participantRole: {
+            role: newRole,
+            isDone: false,
+          },
+        }
+        await proposalStore.updateApplicantParticipantRole(proposalId, updatedApplicant)
+      }
+    } else {
+      const isCurrentlyResponsible =
+        proposalStore.currentProposal?.projectResponsible?.researcher?.email?.toLowerCase() ===
+        participant.email?.toLowerCase()
+
+      // For regular participants or current responsible scientist
+      if (newRole === ParticipantRole.ResponsibleScientist) {
+        // Making someone the responsible scientist
+        const researcherInfo = researcherIdentities.value.find((r) => r.email === participant.email)
+        if (
+          researcherInfo?.participantId &&
+          researcherInfo.participantId !== 'applicantId' &&
+          researcherInfo.participantId !== 'responsibleResearcherId'
+        ) {
+          await proposalStore.makeParticipantResponsible(proposalId, researcherInfo.participantId)
+        }
+      } else if (isCurrentlyResponsible) {
+        // Current responsible scientist is changing to a different role
+        showErrorMessage(t('proposal.cannotChangeOnlyResponsibleScientist'))
+        return
+      } else {
+        // Regular participant changing role (not becoming responsible)
+        const participantExists = proposalStore.currentProposal?.participants?.some(
+          (p) => p.researcher.email?.toLowerCase() === participant.email?.toLowerCase(),
+        )
+
+        if (participantExists) {
+          const updatedParticipants: IParticipant[] =
+            proposalStore.currentProposal?.participants?.map((p) => {
+              if (p.researcher.email?.toLowerCase() === participant.email?.toLowerCase()) {
+                return {
+                  ...p,
+                  participantRole: {
+                    ...p.participantRole,
+                    role: newRole,
+                  },
+                }
+              }
+              return p
+            }) ?? []
+
+          await proposalStore.updateParticipants(proposalId, updatedParticipants)
+        } else {
+          showErrorMessage(t('proposal.participantNotFound'))
+          return
+        }
       }
     }
 
-    participant.participantRole = newRole
-    const researcher = researcherIdentities.value.find((r) => r.email === participant.email)
-    if (researcher) {
-      researcher.participantRole = newRole
-    }
+    await proposalStore.setCurrentProposal(proposalId)
 
-    const updatedParticipants: IParticipant[] =
-      proposalStore.currentProposal?.participants?.map((p) => {
-        if (p.researcher.email === participant.email) {
-          return {
-            ...p,
-            participantRole: {
-              ...p.participantRole,
-              role: newRole,
-            },
-          }
-        }
-        if (
-          newRole === ParticipantRole.ResponsibleScientist &&
-          p.participantRole.role === ParticipantRole.ResponsibleScientist &&
-          p.researcher.email !== participant.email
-        ) {
-          return {
-            ...p,
-            participantRole: {
-              ...p.participantRole,
-              role: ParticipantRole.ParticipatingScientist,
-            },
-          }
-        }
-        return p
-      }) ?? []
-
-    await proposalStore.updateParticipants(proposalId, updatedParticipants)
-
-    // Refresh researcher identities to get updated data from backend
     researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
     participantsCount.value = researcherIdentities.value.length
 

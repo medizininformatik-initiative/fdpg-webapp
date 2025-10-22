@@ -16,6 +16,7 @@ import type {
   IUpload,
   ISelectedCohort,
   IParticipant,
+  IApplicant,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -457,6 +458,26 @@ export const useProposalStore = defineStore('Proposal', {
           participants: updatedProposal.participants,
         }
       }
+    },
+
+    async updateApplicantParticipantRole(id: string, applicant: IApplicant): Promise<void> {
+      await this.apiService.updateApplicantParticipantRole(id, applicant)
+      // Update the current proposal if it matches the updated proposal
+      if (this.currentProposal?._id === id) {
+        this.currentProposal = {
+          ...this.currentProposal,
+          applicant: {
+            ...this.currentProposal.applicant,
+            ...applicant,
+          },
+        }
+      }
+    },
+
+    async makeParticipantResponsible(id: string, participantId: string): Promise<void> {
+      await this.apiService.makeParticipantResponsible(id, participantId)
+      // Refresh the proposal to get the updated data
+      await this.setCurrentProposal(id)
     },
 
     async createDizDetails(proposalId: string, data: IDizDetails): Promise<void> {
