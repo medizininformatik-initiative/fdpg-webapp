@@ -250,18 +250,10 @@ const getParticipantRoleItems = (participant: ParticipantInfo): DropdownItem[] =
       (r) => r.participantRole === ParticipantRole.ResponsibleScientist && r.email !== participant.email,
     )
 
-  const participantIsApplicant = isParticipantApplicant(proposalStore.currentProposal!, participant.email)
-
   return Object.values(ParticipantRole).map((role) => ({
     label: `roles.participantRole_${role}`,
     kind: 'basic',
     action: () => handleParticipantRoleSelect(participant, role),
-    // Disable if user has no permission, if trying to change the only Responsible Scientist,
-    // or if applicant is trying to become ParticipatingScientist
-    disabled:
-      !userHasPermission.value ||
-      (isOnlyResponsibleScientist && role !== ParticipantRole.ResponsibleScientist) ||
-      (participantIsApplicant && role === ParticipantRole.ParticipatingScientist),
   }))
 }
 
