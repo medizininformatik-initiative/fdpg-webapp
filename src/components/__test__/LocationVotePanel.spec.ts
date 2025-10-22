@@ -6,6 +6,7 @@ import { ProposalStatus } from '@/types/proposal.types'
 import type { MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -14,6 +15,10 @@ vi.mock('vue-i18n', () => ({
       value: 'de-DE',
     },
   })),
+}))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
 }))
 
 describe('LocationVotePanel.vue', () => {

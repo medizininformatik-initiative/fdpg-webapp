@@ -23,10 +23,7 @@
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import FdpgSelect from '@/components/FdpgSelect.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
-import { MII_LOCATIONS, SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
-import { MiiLocation } from '@/types/location.enum'
 import type { ILocation } from '@/types/location.types'
 import type { IAddressees } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'

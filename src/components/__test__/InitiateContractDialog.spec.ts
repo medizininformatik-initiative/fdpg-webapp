@@ -4,8 +4,7 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { ElButton, ElIcon, type UploadFile } from 'element-plus'
 import FdpgUpload from '../FdpgUpload.vue'
 import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
-import type { MiiLocation } from '@/types/location.enum'
-import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({

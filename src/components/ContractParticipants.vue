@@ -58,7 +58,7 @@
         role="row"
         class="contract-row"
       >
-        <div>{{ MII_LOCATIONS[location.location].display }}</div>
+        <div>{{ locationLookUpMapRef[location.location].display }}</div>
         <div class="contract-info">
           <div class="contract-status" :class="location.status.style">{{ $t(location.status.text) }}</div>
           <div class="contract-date">
@@ -84,20 +84,24 @@
 </template>
 
 <script setup lang="ts">
-import { MII_LOCATIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useLocationStore } from '@/stores/locations/location.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import type { ILocation } from '@/types/location.types'
 import { Role } from '@/types/oidc.types'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 
 type StatusTagStyle = 'pending' | 'accepted' | 'rejected'
 const proposalStore = useProposalStore()
 const authStore = useAuthStore()
+const locationStore = useLocationStore()
 
 const isResearcher = computed(() => authStore.singleKnownRole === Role.Researcher)
 const signedContractsCount = computed(() => proposalStore.currentProposal?.signedContractsCount ?? 0)
 const signedContractsPendingCount = computed(() => proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
+
+const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
 
 const uacFullyApproved = computed(() => {
   const conditionAccepted =
@@ -172,6 +176,11 @@ const isFullView = ref(false)
 const toggleFullView = () => {
   isFullView.value = !isFullView.value
 }
+
+onMounted(async () => {
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
+})
 </script>
 
 <style lang="scss" scoped>

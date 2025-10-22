@@ -15,7 +15,7 @@
             @click="handleDownload(uacCondition.uploadId)"
             @keydown.enter="handleDownload(uacCondition.uploadId)"
           >
-            {{ MII_LOCATIONS[uacCondition.location].display }}:
+            {{ locationLookUpMapRef[uacCondition.location]?.display }}:
             {{ getFileName(uacCondition.uploadId) }}
           </div>
         </div>
@@ -54,13 +54,14 @@
 <script setup lang="ts">
 import useDownload from '@/composables/use-download'
 import useNotifications from '@/composables/use-notifications'
-import { MII_LOCATIONS } from '@/constants'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IConditionalApproval } from '@/types/proposal.types'
-import { computed, onMounted, reactive, ref, type PropType } from 'vue'
+import { computed, onMounted, reactive, ref, type PropType, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgTextEditor from './FdpgTextEditor.vue'
 import { useI18n } from 'vue-i18n'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   uacCondition: {
@@ -82,6 +83,9 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const { showErrorMessage } = useNotifications()
 const proposalStore = useProposalStore()
+
+const locationStore = useLocationStore()
+const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
 
 const { t } = useI18n()
 const requiredValidation = {
@@ -143,6 +147,9 @@ onMounted(async () => {
   const dataAmount = props.uacCondition.dataAmount
   emit('disableButton', { value: !(typeof dataAmount === 'number' && dataAmount >= 0), button: 'positive' })
   emit('disableButton', { value: props.isDisabled || !props.isDraft, button: 'negative' })
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
 })
 </script>
 

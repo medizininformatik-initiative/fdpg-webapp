@@ -1,5 +1,5 @@
 import { Department } from '@/types/department.enum'
-import { Countries, MiiLocation } from '@/types/location.enum'
+import { Countries } from '@/types/location.enum'
 import type { IProposal, IProposalDetail } from '@/types/proposal.types'
 import {
   DeclineType,

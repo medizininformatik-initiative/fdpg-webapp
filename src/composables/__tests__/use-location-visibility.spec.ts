@@ -1,7 +1,6 @@
 import { proposalCountMock } from '@/mocks/proposal-counts.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { CommentType } from '@/types/comment.interface'
-import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
@@ -33,8 +32,8 @@ describe('UseLocationVisibility', () => {
     const message = computed(
       () =>
         ({
-          locations: [MiiLocation.KC],
-          owner: { location: [MiiLocation.MHH], role: Role.Admin },
+          locations: ['KC'],
+          owner: { location: ['MHH'], role: Role.Admin },
         }) as unknown as IVisibilityMessage,
     )
     const { visibility } = useLocationVisibility(message, CommentType.PROPOSAL_MESSAGE_TO_OWNER, false, mockLocations)
@@ -108,7 +107,7 @@ describe('UseLocationVisibility', () => {
     const message = computed(
       () =>
         ({
-          locations: [MiiLocation.KC],
+          locations: ['KC'],
           owner: { role: Role.Admin },
         }) as unknown as IVisibilityMessage,
     )

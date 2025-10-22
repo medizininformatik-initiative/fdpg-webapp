@@ -6,7 +6,6 @@ import { CommentType, type ICommentDetail } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
 import { ElButton } from 'element-plus'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
-import { MiiLocation } from '@/types/location.enum'
 import LocationSelect from '../LocationSelect.vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import type { MockedObject } from 'vitest'
@@ -45,8 +44,8 @@ describe('MessageCenterAnswerCreator.vue', () => {
     wrapper = mount(MessageCenterAnswerCreator, {
       props: {
         message: {
-          owner: { role: Role.DizMember, miiLocation: MiiLocation.Charité },
-          locations: [MiiLocation.Charité],
+          owner: { role: Role.DizMember, miiLocation: 'Charité' },
+          locations: ['Charité'],
         } as ICommentDetail,
         type: CommentType.PROPOSAL_MESSAGE_TO_OWNER,
         possibleLocations: [...mockLocations],
@@ -75,17 +74,17 @@ describe('MessageCenterAnswerCreator.vue', () => {
   })
 
   it('should update computed values', async () => {
-    wrapper.findComponent(LocationSelect).vm.$emit('update:modelValue', [MiiLocation.Charité])
+    wrapper.findComponent(LocationSelect).vm.$emit('update:modelValue', ['Charité'])
     await flushPromises()
-    expect(wrapper.findComponent(LocationSelect).vm.modelValue).toEqual([MiiLocation.Charité])
-    expect(wrapper.vm.visibilityMessage.locations).toEqual([MiiLocation.Charité])
+    expect(wrapper.findComponent(LocationSelect).vm.modelValue).toEqual(['Charité'])
+    expect(wrapper.vm.visibilityMessage.locations).toEqual(['Charité'])
   })
 
   it('should change minimum selection to empty array', async () => {
     wrapper.setProps({
       message: {
         owner: { role: Role.DizMember, miiLocation: [] },
-        locations: [MiiLocation.Charité],
+        locations: ['Charité'],
       } as unknown as ICommentDetail,
       type: CommentType.PROPOSAL_MESSAGE_TO_OWNER,
     })

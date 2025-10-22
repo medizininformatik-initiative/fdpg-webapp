@@ -6,8 +6,8 @@ import { CommentType, type IAnswerDetail } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
 import type { MockedObject } from 'vitest'
 import { ElButton } from 'element-plus'
-import { MiiLocation } from '@/types/location.enum'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -16,6 +16,10 @@ vi.mock('vue-i18n', () => ({
       value: 'de-DE',
     },
   })),
+}))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
 }))
 
 describe('MessageCenterItem.vue', () => {
@@ -27,7 +31,7 @@ describe('MessageCenterItem.vue', () => {
       props: {
         message: {
           owner: { role: Role.DizMember },
-          locations: [MiiLocation.Charité, MiiLocation.UKAU],
+          locations: ['Charité', 'UKAU'],
         } as IAnswerDetail,
         type: CommentType.PROPOSAL_MESSAGE_TO_OWNER,
       },
@@ -65,11 +69,11 @@ describe('MessageCenterItem.vue', () => {
 
     wrapper.setProps({
       message: {
-        owner: { role: Role.DizMember, miiLocation: MiiLocation.Charité },
-        locations: [MiiLocation.Charité, MiiLocation.UKAU],
+        owner: { role: Role.DizMember, miiLocation: 'Charité' },
+        locations: ['Charité', 'UKAU'],
       },
     })
     await flushPromises()
-    expect(wrapper.find('.message-owner').text()).toContain(`${Role.DizMember}, ${MiiLocation.Charité}`)
+    expect(wrapper.find('.message-owner').text()).toContain(`${Role.DizMember}, ${'Charité'}`)
   })
 })

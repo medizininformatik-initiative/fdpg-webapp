@@ -27,12 +27,13 @@ import EditProfileDialog from '@/components/EditProfileDialog.vue'
 import DefinitionCard from '@/components/Shared/DefinitionCard.vue'
 import type { IDefinitionCardVirtual, IVirtualWrap } from '@/components/Shared/definition-card.types'
 import useNotifications from '@/composables/use-notifications'
-import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useLocationStore } from '@/stores/locations/location.store'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useUserStore } from '@/stores/user.store'
+import type { ILocation } from '@/types/location.types'
 import type { IOidc, IOidcProfile, IUserFromExternalOrganization, IUserFromMii } from '@/types/oidc.types'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -40,6 +41,9 @@ const authStore = useAuthStore()
 const userStore = useUserStore()
 const messageBoxStore = useMessageBoxStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+
+const locationStore = useLocationStore()
+const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
 
 const isPasswordResetDisabled = ref(false)
 const resetPassword = () => {
@@ -139,18 +143,21 @@ const organizationCardConfig = computed(() => {
   return undefined
 })
 
-const miiLocationCard: IDefinitionCardVirtual<IVirtualWrap<IOidcProfile & IUserFromMii>, 'content'> = {
-  kind: 'virtual',
-  key: 'content',
-  cardLabel: 'general.applicant',
-  terms: [
-    {
-      label: 'proposal.fullCorrectNameOfTheInstitutionFacilityJurPerson',
-      size: 24,
-      definitions: [[{ key: 'MII_LOCATION', kind: 'lookup', lookupMap: MII_LOCATIONS, lookupKey: 'display' }]],
-    },
-  ],
-}
+const miiLocationCard: ComputedRef<IDefinitionCardVirtual<IVirtualWrap<IOidcProfile & IUserFromMii>, 'content'>> =
+  computed(() => ({
+    kind: 'virtual',
+    key: 'content',
+    cardLabel: 'general.applicant',
+    terms: [
+      {
+        label: 'proposal.fullCorrectNameOfTheInstitutionFacilityJurPerson',
+        size: 24,
+        definitions: [
+          [{ key: 'MII_LOCATION', kind: 'lookup', lookupMap: locationLookUpMapRef.value, lookupKey: 'display' }],
+        ],
+      },
+    ],
+  }))
 
 const externalOrganizationCard: IDefinitionCardVirtual<IOidcProfile & IUserFromExternalOrganization, 'organization'> = {
   kind: 'virtual',
@@ -178,6 +185,11 @@ const externalOrganizationCard: IDefinitionCardVirtual<IOidcProfile & IUserFromE
     },
   ],
 }
+
+onMounted(async () => {
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
+})
 </script>
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;

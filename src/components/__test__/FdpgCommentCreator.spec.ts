@@ -2,7 +2,6 @@ import FdpgCommentCreator from '../FdpgCommentCreator.vue'
 import { CommentType } from '@/types/comment.interface'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
-import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
@@ -67,8 +66,8 @@ describe('FdpgCommentCreator.vue', () => {
             updatedAt: 'string',
             _id: 'mockedCommentId',
             isDone: isDone,
-            owner: { role: Role.Researcher, miiLocation: MiiLocation.Charité },
-            locations: [MiiLocation.Charité],
+            owner: { role: Role.Researcher, miiLocation: 'Charité' },
+            locations: ['Charité'],
             referenceObjectId: 'string',
             content: 'contentMock',
             type: CommentType.PROPOSAL_MESSAGE_TO_LOCATION,

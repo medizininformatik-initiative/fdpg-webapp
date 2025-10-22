@@ -138,7 +138,7 @@
               <el-collapse-item v-for="conditionalApproval in table.conditionalApprovals" class="condition-row">
                 <template #title>
                   <div class="el-collapse-item-title">
-                    {{ MII_LOCATIONS[conditionalApproval.location].display }}
+                    {{ locationLookUpMapRef[conditionalApproval.location].display }}
                     <div class="condition-interaction">
                       <div class="condition-data-amount">
                         {{ t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
@@ -197,20 +197,20 @@
 import useDownload from '@/composables/use-download'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
-import { MII_LOCATIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import type { MiiLocation } from '@/types/location.enum'
 import { ElTable } from 'element-plus'
 import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { UseCaseUpload } from '@/types/upload.types'
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { ref, computed, nextTick, onMounted, type Ref } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
 import { DueDateEnum } from '@/types/due-date.enum'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -271,6 +271,9 @@ const tableColumns: IColumnOption[] = [
 ]
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
+const locationStore = useLocationStore()
+const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
+
 const { uploadsForType: contractConditions } = useUpload(proposalId, [UseCaseUpload.ContractCondition])
 const uploadsMap = computed<Record<string, IUpload>>(() => {
   return contractConditions.value.reduce(
@@ -318,8 +321,8 @@ const mapTableData = (
 ): ITableData => {
   return {
     rowId,
-    fullName: MII_LOCATIONS[location]?.display ?? 'unknown',
-    city: MII_LOCATIONS[location]?.city ?? 'unknown',
+    fullName: locationLookUpMapRef.value[location]?.display ?? 'unknown',
+    city: locationLookUpMapRef.value[location]?.definition ?? 'unknown',
     dataAmount,
     declineReason,
     location,
@@ -527,12 +530,15 @@ const handleRevertLocation = (location: string) => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
   const collapseItemHeaders = document.querySelectorAll('.el-collapse-item__header')
   collapseItemHeaders.forEach(function (el) {
     el.removeAttribute('tabindex')
     el.removeAttribute('rol')
   })
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
 })
 </script>
 
