@@ -112,6 +112,7 @@ const locationOptions: ComputedRef<
       return { label: location.display, value: loc._id }
     })
     .filter((entry) => !!entry)
+    .sort((a, b) => ('' + a.label).localeCompare(b.label))
 })
 
 const select = ref()

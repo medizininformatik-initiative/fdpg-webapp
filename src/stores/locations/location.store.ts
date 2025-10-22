@@ -19,7 +19,7 @@ export const useLocationStore = defineStore('Location', {
         return this.allLocations
       }
 
-      const data = await this.apiService.getAll()
+      const data = ((await this.apiService.getAll()) || []).sort((a, b) => ('' + a._id).localeCompare(b._id))
 
       if (data.length > 0) {
         this.allLocations = [...data]
