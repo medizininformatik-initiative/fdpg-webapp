@@ -23,11 +23,7 @@
       access-for-maintenance
     ></ProjectReports>
     <ProjectHistory />
-    <MessageCenter
-      :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER"
-      :reviewMode="isParticipatingScientist"
-      :possible-locations="possibleLocations"
-    />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
   </el-container>
 
   <SignDialog v-model="isSignDialogOpen" @accept-contract="handleContractSignConfirm" />
@@ -75,12 +71,15 @@ import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store
 import useDraftDownload from '@/composables/use-draft-download'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
+const authStore = useAuthStore()
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -341,7 +340,11 @@ const projectTodos = computed<IProjectTodo[]>(() => {
   ]
 })
 
-const isParticipatingScientist = computed(() => proposalStore.currentProposal?.isParticipatingScientist)
+const isParticipatingScientist = computed(() =>
+  proposalStore.currentProposal
+    ? isUserParticipatingScientist(proposalStore.currentProposal, authStore.profile)
+    : false,
+)
 
 const fetchProposal = async () => {
   try {

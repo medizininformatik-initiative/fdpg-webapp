@@ -15,7 +15,7 @@
           :data-testId="projectTodo.testId + '__false'"
           @click="projectTodo.action(false)"
         >
-          <i class="fa-solid fa-xmark"></i>
+          <i class="bi bi-x"></i>
         </el-button>
         <el-button
           :disabled="isDisabled || positiveChildDisableButton"
@@ -23,7 +23,7 @@
           :data-testId="projectTodo.testId + '__true'"
           @click="projectTodo.action(true, uacCondition?.dataAmount, uacCondition?.conditionReasoning)"
         >
-          <i class="fa-solid fa-check"></i>
+          <i class="bi bi-check2"></i>
         </el-button>
       </div>
     </div>

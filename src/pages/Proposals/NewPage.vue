@@ -286,12 +286,13 @@ import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IProposal } from '@/types/proposal.types'
+import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { transformForm } from '@/utils/form-transform'
+import * as ProposalPermissions from '@/utils/proposal-permissions.util'
 import {
   maxLengthValidationFunc,
   numberValidationFunc,
@@ -425,6 +426,7 @@ const fileList = ref([])
 const bypassDebounce = ref(false)
 const isAutoSaving = ref(false)
 const hasFormChanged = ref(false)
+const isBiosampleToggleInProgress = ref(false)
 
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
@@ -558,12 +560,33 @@ const rules = ref<Record<string, any>>({
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
-  const status = proposalForm.value?.status
-  return status === undefined || status === ProposalStatus.Draft || status === ProposalStatus.Rework
+  return ProposalPermissions.isProposalEditable(proposalForm.value)
 }
 
+// Comprehensive permission checks using utility functions
+const proposalPermissions = computed(() => {
+  if (!proposalForm.value) {
+    return {
+      isOwner: false,
+      isParticipating: false,
+      isResponsible: false,
+      isEditor: false,
+      hasEditingRights: false,
+      canEdit: false,
+      canSubmit: false,
+      isReviewMode: true,
+    }
+  }
+
+  return ProposalPermissions.getProposalPermissions(
+    proposalForm.value,
+    authStore.profile,
+    proposalStore.currentProposal?.isParticipatingScientist,
+  )
+})
+
 const isReviewMode = computed(() => {
-  return !isProposalEditable() || isParticipatingScientist.value
+  return proposalPermissions.value.isReviewMode
 })
 const isParticipatingScientist = computed(() => {
   return proposalStore.currentProposal?.isParticipatingScientist !== undefined
@@ -583,6 +606,38 @@ const isMIISelected = computed(() => {
 })
 const isDifeSelected = computed(() => {
   return platform?.value?.includes(PlatformIdentifier.DIFE)
+})
+
+// Keep biosamples state stable: clear/init only on BIOSAMPLE toggle to avoid empty autosaves
+watch(hasBiosamples, async (enabled) => {
+  const up = proposalForm.value?.userProject
+  if (!up) return
+
+  isBiosampleToggleInProgress.value = true
+
+  if (!enabled) {
+    if (up.informationOnRequestedBioSamples) {
+      // Reset to an empty object that satisfies the type; payload transform will drop it when BIOSAMPLE is off
+      ;(up as IUserProject).informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
+  } else {
+    if (!up.informationOnRequestedBioSamples) {
+      up.informationOnRequestedBioSamples = {
+        noSampleRequired: false,
+        laboratoryResources: '',
+        biosamples: [],
+      }
+    }
+  }
+
+  await nextTick()
+  setTimeout(() => {
+    isBiosampleToggleInProgress.value = false
+  }, 100) // Cooldown to prevent autosave during toggle
 })
 
 const getFormValues = () => {
@@ -680,6 +735,7 @@ const getStepFields = (allFields: any[], stepFieldPaths: string[]) => {
 // Helper function to validate a single field
 const validateSingleField = async (field: any): Promise<boolean> => {
   if (!field.prop) return true
+  if (!isProposalEditable()) return true
 
   try {
     let hasErrors = false
@@ -696,6 +752,8 @@ const validateSingleField = async (field: any): Promise<boolean> => {
 
 // Helper function to validate step fields
 const validateStepFields = async (stepFields: any[]): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   const validationResults = await Promise.all(stepFields.map((field) => validateSingleField(field)))
   return validationResults.every((result) => result)
 }
@@ -735,6 +793,8 @@ const nextStep = async () => {
 
 // Helper function to validate multiple steps
 const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promise<boolean> => {
+  // For non-editable proposals, treat as having no validation errors
+  if (!isProposalEditable()) return false
   for (const stepValue of stepsToValidate) {
     const stepFieldPaths = stepFieldsMap[stepValue] || []
 
@@ -750,6 +810,11 @@ const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promi
   return false // no errors
 }
 const handleSubmit = async () => {
+  // Skip validation flow if proposal is not editable
+  if (!isProposalEditable()) {
+    await updateStepStatus()
+    return
+  }
   // Validate all fields before submission
   await formRef.value?.validate(() => {})
   await waitForValidation()
@@ -829,6 +894,8 @@ let isInitialValidationComplete = false
 const onValidate = async (prop: FormItemProp, isValid: boolean) => {
   // No validation here - only update progress
   if (initialLoad) return
+  // Skip any validation-triggered progress updates when not editable
+  if (!isProposalEditable()) return
   await updateProgressOnly()
 }
 
@@ -851,6 +918,11 @@ const shouldSkipAutoSave = () => {
 
   // Skip for new proposals without project abbreviation
   if (!proposalId.value && !proposalForm.value?.projectAbbreviation?.trim()) {
+    return true
+  }
+
+  // Skip autosave during BIOSAMPLE toggle stabilization
+  if (isBiosampleToggleInProgress.value) {
     return true
   }
 
@@ -931,6 +1003,8 @@ const shouldSkipManualSave = () => {
 
 // Helper function to perform form validation
 const performFormValidation = async (): Promise<boolean> => {
+  // Skip validation for non-editable proposals
+  if (!isProposalEditable()) return true
   await formRef.value?.validate(() => {})
   await waitForValidation()
   await updateStepStatus()
@@ -1058,6 +1132,8 @@ const validateFormSilently = async () => {
   if (!formRef.value) {
     return
   }
+  // Do not run silent validation when proposal is not editable
+  if (!isProposalEditable()) return
 
   const allFields = formRef.value.fields || []
 

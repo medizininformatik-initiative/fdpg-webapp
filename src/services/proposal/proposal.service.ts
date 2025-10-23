@@ -18,6 +18,7 @@ import type {
   ISelectedCohort,
   IParticipant,
   IDizDetails,
+  IApplicant,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -357,6 +358,14 @@ export class ProposalService {
   async removeParticipant(id: string, participantId: string): Promise<IProposal> {
     const response = await this.apiClient.delete(`${this.basePath}/${id}/participants/${participantId}`)
     return response.data
+  }
+
+  async updateApplicantParticipantRole(id: string, applicant: IApplicant): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/applicant/participant-role`, applicant)
+  }
+
+  async makeParticipantResponsible(id: string, participantId: string): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${id}/participants/${participantId}/make-responsible`)
   }
 
   async createDizDetails(proposalId: string, data: IDizDetails): Promise<IDizDetails> {

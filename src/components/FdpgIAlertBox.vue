@@ -32,6 +32,20 @@ const props = defineProps<{
   width: 100%;
 }
 
+.custom-alert :deep(.el-alert__icon) {
+  width: auto !important;
+  height: auto !important;
+  margin-right: 16px;
+}
+
+.custom-alert :deep(.el-icon) {
+  width: auto !important;
+  height: 150px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
 .custom-alert :deep(.el-alert__title),
 .custom-alert :deep(.el-alert__description) {
   margin: 0;
@@ -46,8 +60,11 @@ const props = defineProps<{
 }
 
 .alert-logo {
-  width: 25px;
-  height: 25px;
+  width: auto !important;
+  height: 150px !important;
+  max-width: none !important;
+  max-height: none !important;
+  object-fit: contain;
 }
 
 .el-alert {

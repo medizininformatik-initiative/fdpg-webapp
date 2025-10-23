@@ -107,7 +107,7 @@ const messagesForType = computed<ICommentDetail[]>(() => {
 })
 
 const firstOpenIndex = computed<number>(() => {
-  for (let i = 0; i < messagesForType.value.length; i++) {
+  for (let i = messagesForType.value.length - 1; i >= 0; i--) {
     const comment = messagesForType.value[i]
     const hasUndoneAnswer = comment.answers.some((answer) => !answer.isDone)
     const isOpen = hasUndoneAnswer || !comment.isDone

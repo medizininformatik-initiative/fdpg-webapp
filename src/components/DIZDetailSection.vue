@@ -5,16 +5,7 @@
     </h2>
 
     <section class="diz-details__container">
-      <div v-if="allDizDetails.length === 0" class="empty-state">
-        <el-icon class="empty-icon">
-          <Document />
-        </el-icon>
-        <p>{{ t('general.noData') }}</p>
-        <el-button v-if="editable" type="primary" @click="toggleCreateMode" :disabled="isSubmitting">
-          {{ t('general.create') }}
-        </el-button>
-      </div>
-      <el-collapse v-else v-model="activeCollapse">
+      <el-collapse v-model="activeCollapse">
         <el-collapse-item :title="t('proposal.dizDetailsTitle')" name="diz-details">
           <template #title>
             <h3 tabindex="0" role="button">
@@ -23,32 +14,44 @@
           </template>
 
           <div class="table-container">
-            <el-table :data="allDizDetails" stripe style="width: 100%">
+            <el-table :data="tableData" stripe style="width: 100%">
               <el-table-column
                 prop="localProjectIdentifier"
                 :label="t('proposal.localProjectIdentifier')"
                 min-width="200"
               >
                 <template #default="{ row }">
-                  <span v-if="row.localProjectIdentifier" class="project-identifier">
-                    {{ row.localProjectIdentifier }}
-                  </span>
-                  <span v-else class="empty-value">—</span>
+                  <FdpgFormItem prop="localProjectIdentifier">
+                    <FdpgInput
+                      v-model="row.localProjectIdentifier"
+                      placeholder="proposal.localProjectIdentifier"
+                      :is-disabled="!editable"
+                      class="border-0"
+                    />
+                  </FdpgFormItem>
                 </template>
               </el-table-column>
 
               <el-table-column prop="documentationLinks" :label="t('proposal.documentationLinks')" min-width="300">
                 <template #default="{ row }">
-                  <div v-if="row.documentationLinks" v-html="row.documentationLinks" class="ql-editor"></div>
-                  <span v-else class="empty-value">—</span>
+                  <FdpgFormItem prop="documentationLinks">
+                    <FdpgTextEditor
+                      v-model="row.documentationLinks"
+                      type="textarea"
+                      :placeholder="t('proposal.documentationLinks')"
+                      :disabled="!editable"
+                    />
+                  </FdpgFormItem>
                 </template>
               </el-table-column>
 
               <el-table-column v-if="editable" width="120" fixed="right">
                 <template #default="{ row }">
-                  <el-button v-if="row.location === userLocation" type="primary" size="small" @click="startEdit(row)">
-                    {{ t('general.edit') }}
-                  </el-button>
+                  <div class="edit-actions">
+                    <el-button type="primary" size="small" @click="handleSave">
+                      {{ t('general.save') }}
+                    </el-button>
+                  </div>
                 </template>
               </el-table-column>
             </el-table>
@@ -63,45 +66,11 @@
         :project-todo="projectTodo"
       ></ProjectTodoLargeItem>
     </template>
-    <!-- Create/Edit Modal -->
-    <el-dialog
-      v-model="showFormModal"
-      :title="isEditing ? t('general.edit') : t('general.create')"
-      width="600px"
-      :before-close="handleModalClose"
-      v-if="isEditing || canCreateForCurrentLocation"
-    >
-      <el-form :model="formData" :rules="rules" ref="formRef" label-width="200px">
-        <div class="form-group">
-          <FdpgFormItem :label="t('proposal.localProjectIdentifier')" prop="localProjectIdentifier">
-            <FdpgInput v-model="formData.localProjectIdentifier" placeholder="proposal.localProjectIdentifier" />
-          </FdpgFormItem>
-        </div>
-        <div class="form-group">
-          <FdpgFormItem :label="t('proposal.documentationLinks')" prop="documentationLinks">
-            <FdpgTextEditor
-              v-model="formData.documentationLinks"
-              type="textarea"
-              :placeholder="t('proposal.documentationLinks')"
-            />
-          </FdpgFormItem>
-        </div>
-      </el-form>
-
-      <template #footer>
-        <el-button @click="handleModalClose">
-          {{ t('general.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="handleSave">
-          {{ t('general.save') }}
-        </el-button>
-      </template>
-    </el-dialog>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, type PropType } from 'vue'
+import { ref, computed, reactive, type PropType, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { Document } from '@element-plus/icons-vue'
@@ -115,6 +84,7 @@ import FdpgTextEditor from './FdpgTextEditor.vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import ProjectTodoLargeItem from '@/components/ProjectTodoLargeItem.vue'
 import type { IProjectTodo } from '@/types/project-todo.interface'
+import type { MiiLocation } from '@/types/location.enum'
 
 const props = defineProps({
   editable: { type: Boolean, default: false },
@@ -133,19 +103,10 @@ const showFormModal = ref(false)
 const isSubmitting = ref(false)
 const formRef = ref<FormInstance>()
 const editingItem = ref<IDizDetails | null>(null)
-
 const formData = reactive({
   localProjectIdentifier: '',
   documentationLinks: '',
 })
-
-const rules: FormRules = {
-  documentationLinks: [
-    { required: true, message: t('general.requiredField'), trigger: 'blur' },
-    { max: 5000, message: t('general.maxCharacters', { max: 5000 }), trigger: 'blur' },
-  ],
-  localProjectIdentifier: [{ max: 500, message: t('general.maxCharacters', { max: 500 }), trigger: 'blur' }],
-}
 
 const proposalId = computed(() => route.params.id as string)
 const userLocation = computed(() => {
@@ -156,67 +117,46 @@ const userLocation = computed(() => {
   return null
 })
 
-const allDizDetails = computed(() => proposalStore.currentProposal?.dizDetails || [])
-
-const canCreateForCurrentLocation = computed(() => {
-  return !allDizDetails.value.some((diz) => diz.location === userLocation.value)
+const dizDetails = computed<IDizDetails[]>(() => proposalStore.currentProposal?.dizDetails || [])
+// Replace the allDizDetails computed property with tableData
+const tableData = computed<IDizDetails[]>(() => {
+  const userLocationDetails = dizDetails.value.find((diz) => diz.location === userLocation.value)
+  if (userLocationDetails) {
+    return [userLocationDetails]
+  } else
+    return [
+      {
+        localProjectIdentifier: '',
+        documentationLinks: '',
+        location: userLocation.value as MiiLocation,
+      },
+    ]
 })
 
-const isEditing = computed(() => editingItem.value !== null)
-
-const toggleCreateMode = () => {
-  editingItem.value = null
-  resetForm()
-  showFormModal.value = true
-}
-
-const startEdit = (item: IDizDetails) => {
-  editingItem.value = item
-  formData.localProjectIdentifier = item.localProjectIdentifier || ''
-  formData.documentationLinks = item.documentationLinks || ''
-  showFormModal.value = true
-}
-
-const handleModalClose = () => {
-  showFormModal.value = false
-  resetForm()
-  editingItem.value = null
-}
-
-const resetForm = () => {
-  formData.localProjectIdentifier = ''
-  formData.documentationLinks = ''
-}
-
+// Update handleSave method
 const handleSave = async () => {
-  if (!formRef.value) return
-
-  const isValid = await formRef.value.validate()
-  if (!isValid) return
-
   isSubmitting.value = true
   try {
-    if (editingItem.value) {
-      if (!editingItem.value._id) {
-        throw new Error('Missing DIZ details ID for update.')
-      }
-      await proposalStore.updateDizDetails(proposalId.value, editingItem.value._id as string, {
-        _id: editingItem.value._id as string,
-        localProjectIdentifier: formData.localProjectIdentifier || undefined,
-        documentationLinks: formData.documentationLinks,
-        location: editingItem.value.location,
-      })
-      showSuccessMessage(t('proposal.dizDetailsUpdated'))
-    } else {
+    if (!tableData.value[0]._id) {
+      // Create new DIZ details
       await proposalStore.createDizDetails(proposalId.value, {
-        localProjectIdentifier: formData.localProjectIdentifier || undefined,
-        documentationLinks: formData.documentationLinks,
-        location: userLocation.value,
+        localProjectIdentifier: tableData.value[0].localProjectIdentifier,
+        documentationLinks: tableData.value[0].documentationLinks,
+        location: userLocation.value as MiiLocation,
       })
       showSuccessMessage(t('proposal.dizDetailsCreated'))
+    } else {
+      // Update existing DIZ details
+      await proposalStore.updateDizDetails(proposalId.value, tableData.value[0]._id as string, {
+        _id: tableData.value[0]._id as string,
+        localProjectIdentifier: tableData.value[0].localProjectIdentifier,
+        documentationLinks: tableData.value[0].documentationLinks,
+        location: userLocation.value as MiiLocation,
+      })
+      showSuccessMessage(t('proposal.dizDetailsUpdated'))
     }
 
-    handleModalClose()
+    editingItem.value = null
   } catch (error) {
     showErrorMessage()
   } finally {
@@ -288,20 +228,9 @@ const handleSave = async () => {
     background-color: white;
   }
 }
-
-.empty-state {
-  text-align: center;
-  padding: 40px;
-
-  .empty-icon {
-    font-size: 48px;
-    color: $gray-800;
-    margin-bottom: 16px;
-  }
-
-  p {
-    color: $gray-900;
-    margin-bottom: 20px;
+.border-0 {
+  :deep(.el-input__inner) {
+    border: none !important;
   }
 }
 </style>
