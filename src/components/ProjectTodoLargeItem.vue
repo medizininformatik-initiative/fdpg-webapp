@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { computed, ref, type PropType } from 'vue'
+import { computed, type PropType, ref } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
 
@@ -152,7 +152,7 @@ const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; butt
             background-color: $green;
           }
           &.negative {
-            background-color: $red-100;
+            background-color: $red;
           }
 
           i {

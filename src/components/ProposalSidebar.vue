@@ -130,8 +130,8 @@ const progressPercentage = computed(() => {
     background-color: $blue;
     color: $blue;
     &.is-error {
-      background-color: $red-100 !important;
-      border-color: $red-100 !important;
+      background-color: $red !important;
+      border-color: $red !important;
     }
   }
   .el-step__icon {
@@ -146,9 +146,9 @@ const progressPercentage = computed(() => {
   }
   &.is-error {
     .el-step__icon {
-      background-color: $red-100 !important;
+      background-color: $red !important;
       color: $white !important;
-      border-color: $red-100 !important;
+      border-color: $red !important;
     }
   }
   &.is-success {
@@ -224,7 +224,7 @@ const progressPercentage = computed(() => {
 
         .progress-text {
           font-size: 16px;
-          color: $gray-800;
+          color: $gray-900;
           font-weight: 500;
         }
 

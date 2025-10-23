@@ -77,9 +77,9 @@
 
 <script setup lang="ts">
 import type { IReportGet } from '@/types/proposal.types'
-import { computed, ref, defineAsyncComponent, onMounted } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { getLocaleDateString } from '@/utils/date.util'
 import ReportGallery from '@/components/ReportGallery.vue'
 import useNotifications from '@/composables/use-notifications'
@@ -208,11 +208,11 @@ const resetForm = () => {
       color: $blue;
     }
     .reports--icon__disable {
-      color: $gray-700;
+      color: $gray-900;
       cursor: not-allowed;
     }
     .reports--icon__disable:hover {
-      color: $gray-700;
+      color: $gray-900;
     }
   }
 }

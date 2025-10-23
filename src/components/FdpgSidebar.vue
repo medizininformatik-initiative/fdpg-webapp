@@ -253,8 +253,8 @@ const secondaryMenu: SidebarMenu[] = [
           text-overflow: ellipsis;
 
           &--critical {
-            background: $red-100;
-            border-color: $red-100;
+            background: $red;
+            border-color: $red;
             color: $white;
           }
 

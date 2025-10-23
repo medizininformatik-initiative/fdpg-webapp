@@ -107,15 +107,15 @@ import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useUserStore } from '@/stores/user.store'
-import type { IResearcherIdentity } from '@/types/proposal.types'
-import { ParticipantType, ParticipantRole, ProposalStatus } from '@/types/proposal.types'
+import type { IParticipant, IResearcherIdentity } from '@/types/proposal.types'
+import { ParticipantRole, ParticipantType, ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import { isParticipatingScientist, isParticipantApplicant } from '@/utils/proposal-permissions.util'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
+import { isParticipantApplicant, isParticipatingScientist } from '@/utils/proposal-permissions.util'
+
 const { params } = useRoute()
 const proposalId = params.id as string
 
@@ -512,7 +512,7 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
 
 .participants {
   border-radius: 4px;
-  border: 1px solid $gray-700;
+  border: 1px solid $gray-900;
 
   .participant-item {
     border-bottom: 1px solid $gray-700;

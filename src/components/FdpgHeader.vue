@@ -228,7 +228,7 @@ const goToProfile = () => {
 
         &.is-link {
           font-weight: 400;
-          color: $gray-800;
+          color: $gray-900;
           text-decoration-line: underline;
           text-decoration-color: $gray-500;
 

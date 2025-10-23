@@ -33,11 +33,11 @@ defineProps({
     margin: 0 0.5rem 0 0;
   }
   &.danger {
-    color: $red-100;
+    color: $red;
   }
 
   &.pending {
-    color: $gray-700;
+    color: $gray-900;
   }
 
   &.active {
