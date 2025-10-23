@@ -57,7 +57,7 @@
       <PanelLockedStatus v-if="showLockedStatus" />
       <template v-else>
         <PanelLocationVote v-if="showLocationVoting && proposal" :proposal="proposal" />
-        <PanelLocationStatus v-if="proposal?.locationState && !isRegisteringProposal" :proposal="proposal" />
+        <PanelLocationStatus v-if="proposal?.locationState && !isRegisteringForm" :proposal="proposal" />
         <PanelResearcherStatus v-if="showResearcherStatus" :proposal="proposal" />
       </template>
 
@@ -120,7 +120,7 @@ const props = defineProps({
     type: String as PropType<CardType>,
     required: true,
   },
-  isRegisteringProposal: {
+  isRegisteringForm: {
     type: Boolean,
     default: false,
   },

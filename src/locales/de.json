@@ -925,7 +925,9 @@
     "DATA_RESEARCH": "Publikationen hochladen",
     "DATA_CORRUPT": "Datenprüfung",
     "FINISHED_PROJECT": "Abschlussprüfung",
-    "READY_TO_ARCHIVE": "Archivieren"
+    "READY_TO_ARCHIVE": "Archivieren",
+    "READY_TO_PUBLISH": "bereit für die Veröffentlichung",
+    "PUBLISHED": "publiziert"
   },
   "departments": {
     "1000": "Pädiatrie",

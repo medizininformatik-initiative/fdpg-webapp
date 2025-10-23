@@ -52,7 +52,7 @@
           @keydown.left="focusPreviousCard($event)"
           @keydown.tab="handleTab($event)"
           @focus="handleFocus($event)"
-          :isRegisteringProposal="proposal.isRegister"
+          :isRegisteringForm="proposal.isRegisteringForm"
         />
       </el-col>
     </el-row>

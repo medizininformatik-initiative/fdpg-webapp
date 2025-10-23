@@ -667,9 +667,9 @@ const isDifeSelected = computed(() => {
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
-  // Set isRegister flag for registering forms
+  // Set isRegisteringForm flag for registering forms
   if (isRegisteringForm.value) {
-    formData.isRegister = true
+    formData.isRegisteringForm = true
   }
 
   // If MII is not selected, remove MII-specific fields

@@ -584,7 +584,7 @@ export interface IProposal {
   isParticipatingScientist?: boolean
   deadlines: Deadlines
 
-  isRegister?: boolean
+  isRegisteringForm?: boolean
 }
 
 export enum FdpgTaskType {
@@ -649,7 +649,7 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
-  isRegister: boolean
+  isRegisteringForm: boolean
 }
 
 export interface IDeclineReason {
