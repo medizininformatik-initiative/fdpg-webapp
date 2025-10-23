@@ -165,6 +165,12 @@ const mainMenuMap: Menu = {
       title: 'sidebar.published',
       icon: 'bi bi-journal-check',
     },
+    {
+      kind: MenuType.Route,
+      to: RouteName.Archive,
+      title: 'general.archive',
+      icon: 'bi bi-archive-fill',
+    },
   ],
 }
 

@@ -39,7 +39,7 @@ import usePanels from '@/composables/use-panels'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IDashboardAction } from '@/types/dashboard-actions.interface'
 import { RouteName } from '@/types/route-name.enum'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FdpgSortSelect from '../FdpgSortSelect.vue'
 import { sortOptions } from './constants'
@@ -84,9 +84,6 @@ const createProposal = () => {
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
 }
-onMounted(() => {
-  configStore.getAlertConfig()
-})
 </script>
 
 <style lang="scss" scoped>

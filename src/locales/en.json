@@ -68,7 +68,13 @@
     "boolean_false": "No",
     "upload": "Upload",
     "noData": "No Data.",
-    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone."
+    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone.",
+    "changelogs": "Changelogs",
+    "syncLocations": "Sync Locations",
+    "field": "Field",
+    "oldValue": "Old Value",
+    "newValue": "New Value",
+    "approve": "Save Changes"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -521,7 +527,7 @@
     "participantCategory_BIOSAMPLE_RECEIVER": "Bio sample recipient",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Receipt of data and biological samples",
     "participantCategory_PROJECT_LEADER": "Project Manager",
-    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Another project leader",
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Participating scientist",
     "termsDialogTitle": "Accept Terms and Conditions",
     "lockProposal": "Lock proposal",
     "lockModalDescription": "Please note that this will disable any function of the proposal.\n The lock can be reversed at any time.",
@@ -590,7 +596,7 @@
     "reviewUacConditionFile": "Your UAC has attached the following document to its decision.",
     "updateAdditionalLocationInformationTodoTitle": "Provide additional information with your decision",
     "updateAdditionalLocationInformationTodoDescription": "In case of an acception, please provide the following information for the project.",
-    "updateAdditionalLocationLegalBasis": "The legal basis is the Broad Consent",
+    "updateAdditionalLocationLegalBasis": "The legal basis is the Broad Consent of the MII",
     "updateAdditionalLocationPublicationName": "We have a standard formulation from all locations for the contract appendix, which lists how the locations should be named in acknowledgements of publications. You only need to enter details here if you wish to make a project-specific change to this text. Let us know about permanent changes via the comments.",
     "updateAdditionalLocationPublicationNamePlaceholder": "Here, you can enter the name of your location as it should appear in scientific publications.",
     "contractPendingLocationCount": "Pending for {count} locations",
@@ -782,7 +788,8 @@
     "projectUrl": "Project URL",
     "projectLogo": "Project Logo",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
-    "pleaseSelectProcedures": "Please select or enter procedures"
+    "pleaseSelectProcedures": "Please select or enter procedures",
+    "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

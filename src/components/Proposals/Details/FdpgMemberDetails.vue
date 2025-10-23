@@ -530,12 +530,12 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
   },
   {
     type: 'primary',
-    label: 'proposal.acceptProposal',
+    label: 'proposal.acceptProposalToPublish',
     action: handleAcceptProposalClick,
     testId: 'button__acceptProposal',
     position: 'right',
-    isHidden: status.value !== ProposalStatus.FdpgCheck || !proposalStore.currentProposal?.isRegister,
-    isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
+    isHidden: status.value !== ProposalStatus.FdpgCheck || !isRegisteringForm.value,
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',

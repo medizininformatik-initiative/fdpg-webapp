@@ -68,7 +68,13 @@
     "boolean_false": "Nein",
     "upload": "Hochladen",
     "noData": "Keine Daten.",
-    "deleteConfirmation": "Sind Sie sicher, dass Sie diese verwaiste Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+    "deleteConfirmation": "Sind Sie sicher, dass Sie diese verwaiste Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "changelogs": "Changelogs",
+    "syncLocations": "Standorte synchronisieren",
+    "field": "Feld",
+    "oldValue": "Alter Wert",
+    "newValue": "Neuer Wert",
+    "approve": "Änderungen speichern"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -520,8 +526,8 @@
     "participantCategory_DATA_RECEIVER": "Empfang von Daten",
     "participantCategory_BIOSAMPLE_RECEIVER": "Empfang von Bioproben",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Empfang von Daten und Bioproben",
-    "participantCategory_PROJECT_LEADER": "Projektleiter",
-    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterer Projektleiter",
+    "participantCategory_PROJECT_LEADER": "Projektleiteung",
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterere Beteiligte",
     "termsDialogTitle": "Nutzungsordnung zustimmen",
     "lockProposal": "Antrag sperren",
     "lockModalDescription": "Bitte beachten Sie, dass dadurch jede Antragsfunktion deaktiviert wird.\n Die Sperrung kann jederzeit rückgängig gemacht werden.",
@@ -590,7 +596,7 @@
     "reviewUacConditionFile": "Ihr UAC hat seiner Entscheidung das folgende Dokument beigelegt.",
     "updateAdditionalLocationInformationTodoTitle": "Bereitstellung zusätzlicher Informationen mit Ihrer Entscheidung",
     "updateAdditionalLocationInformationTodoDescription": "Im Falle eines Projektteilnahme, teilen Sie bitte die unten aufgeführten Informationen zum Projekt mit.",
-    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent",
+    "updateAdditionalLocationLegalBasis": "Rechtsgrundlage ist der Broad Consent der MII",
     "updateAdditionalLocationPublicationName": "Für den Vertragsanhang, in dem aufgeführt ist, wie die Standorte in Acknowlegements von Publikationen benannt werden sollen, haben wir von allen Standorten eine Standardformulieren. Sie müssen hier nur Angaben machen, falls Sie eine projektspezifische Änderung an diesem Text vornehmen möchten. Bitte teilen Sie uns dauerhafte Änderungen an den Vorgaben zur Nennung in Publikationen über die Kommentare mit.",
     "updateAdditionalLocationPublicationNamePlaceholder": "Hier können Sie den Namen Ihres Standorts eingeben, wie er in wissenschaftlichen Publikationen erscheinen soll.",
     "contractPendingLocationCount": "Ausstehend für {count} Standorte",
@@ -782,7 +788,8 @@
     "projectUrl": "Projekt-URL",
     "projectLogo": "Projektlogo",
     "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
-    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein"
+    "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
+    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
