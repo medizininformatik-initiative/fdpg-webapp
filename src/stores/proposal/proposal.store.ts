@@ -513,6 +513,9 @@ export const useProposalStore = defineStore('Proposal', {
     async downloadLocationCsv(proposalId: string): Promise<void> {
       await this.apiService.downloadLocationCsv(proposalId)
     },
+    async copyAsInternalRegistration(proposalId: string): Promise<string> {
+      return await this.apiService.copyAsInternalRegistration(proposalId)
+    },
   },
 
   getters: {

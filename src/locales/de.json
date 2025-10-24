@@ -74,7 +74,8 @@
     "field": "Feld",
     "oldValue": "Alter Wert",
     "newValue": "Neuer Wert",
-    "approve": "Änderungen speichern"
+    "approve": "Änderungen speichern",
+    "value": "Wert"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -789,7 +790,14 @@
     "projectLogo": "Projektlogo",
     "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
     "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
-    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein"
+    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein",
+    "acceptProposalModalTitle": "Antrag zur Veröffentlichung annehmen",
+    "acceptProposalModalDescription": "Dieser Antrag wird als bereit zur Veröffentlichung im FDPG-Register markiert.",
+    "acceptProposalToPublish": "Zur Veröffentlichung annehmen",
+    "registerProjectModalTitle": "Projekt zur Veröffentlichung registrieren",
+    "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
+    "registerProject": "Projekt registrieren",
+    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

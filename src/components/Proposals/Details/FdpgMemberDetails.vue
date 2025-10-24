@@ -279,7 +279,36 @@ const handleAcceptProposalClick = () => {
       decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToPublish) : undefined,
   })
 }
+const handleRegisterProjectClick = async () => {
+  messageBoxStore.setMessageBoxInfo({
+    ...messageBoxDefaults,
+    title: 'proposal.registerProjectModalTitle',
+    message: 'proposal.registerProjectModalDescription',
+    confirmButtonText: 'proposal.registerProject',
+    cancelButtonText: 'general.cancel',
+    callback: async (decision: DecisionType) => {
+      if (decision === 'confirm') {
+        try {
+          isSubmitting.value = true
 
+          const copyId = await proposalStore.copyAsInternalRegistration(proposalId.value)
+
+          showSuccessMessage('proposal.projectCopiedForRegistration')
+
+          // Navigate to register/edit route with the new copy ID
+          router.push({
+            name: RouteName.RegisterProject,
+            params: { id: copyId },
+          })
+        } catch (error: any) {
+          showErrorMessage(error?.message || error?.toString() || 'general.genericError')
+        } finally {
+          isSubmitting.value = false
+        }
+      }
+    },
+  })
+}
 const handleToLocationCheckClick = () => {
   const messageComponent = markRaw(
     defineComponent({
@@ -534,7 +563,24 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleAcceptProposalClick,
     testId: 'button__acceptProposal',
     position: 'right',
-    isHidden: status.value !== ProposalStatus.FdpgCheck || !isRegisteringForm.value,
+    isHidden: !(status.value === ProposalStatus.FdpgCheck && isRegisteringForm.value),
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: 'proposal.registerProject',
+    action: handleRegisterProjectClick,
+    testId: 'button__registerProject',
+    position: 'right',
+    isHidden:
+      isRegisteringForm.value ||
+      ![
+        ProposalStatus.Contracting,
+        ProposalStatus.ExpectDataDelivery,
+        ProposalStatus.DataResearch,
+        ProposalStatus.DataCorrupt,
+        ProposalStatus.FinishedProject,
+      ].includes(status.value),
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {

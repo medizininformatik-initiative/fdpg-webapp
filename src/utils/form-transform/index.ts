@@ -137,5 +137,6 @@ export const transformForm = (
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
     isRegisteringForm: form?.isRegisteringForm ?? false,
+    isInternalRegistration: form?.isInternalRegistration ?? false,
   }
 }

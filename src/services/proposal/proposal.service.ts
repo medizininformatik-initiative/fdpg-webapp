@@ -464,4 +464,8 @@ export class ProposalService {
       throw new Error(error.message || 'An unexpected error occurred while exporting files')
     }
   }
+  async copyAsInternalRegistration(proposalId: string): Promise<string> {
+    const response = await this.apiClient.post<{ id: string }>(`/proposals/${proposalId}/copy-for-registration`)
+    return response.data.id
+  }
 }
