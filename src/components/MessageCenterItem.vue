@@ -69,6 +69,7 @@ const props = defineProps({
   possibleLocations: {
     type: Array as PropType<ILocation[]>,
     required: true,
+    default: [],
   },
 })
 
@@ -99,7 +100,9 @@ const ownerText = computed(() => {
 })
 
 const computedMessage = computed(() => props.message)
-const { visibility } = useLocationVisibility(computedMessage, props.type, true, props.possibleLocations)
+const visibility = computed(
+  () => useLocationVisibility(computedMessage, props.type, true, props.possibleLocations)?.visibility,
+)
 const locations = computed(() => {
   return computedMessage.value.locations?.map((location) => locationLookUpMapRef.value[location]?.display) ?? []
 })

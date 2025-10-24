@@ -58,7 +58,7 @@
         role="row"
         class="contract-row"
       >
-        <div>{{ locationLookUpMapRef[location.location].display }}</div>
+        <div>{{ locationLookUpMapRef[location.location]?.display ?? `unknown ${location.location}` }}</div>
         <div class="contract-info">
           <div class="contract-status" :class="location.status.style">{{ $t(location.status.text) }}</div>
           <div class="contract-date">

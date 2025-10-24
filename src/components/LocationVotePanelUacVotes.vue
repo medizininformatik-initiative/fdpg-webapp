@@ -322,8 +322,8 @@ const mapTableData = (
 ): ITableData => {
   return {
     rowId,
-    fullName: locationLookUpMapRef.value[location]?.display ?? 'unknown',
-    city: locationLookUpMapRef.value[location]?.definition ?? 'unknown',
+    fullName: locationLookUpMapRef.value[location]?.display ?? `unknown ${location}`,
+    city: locationLookUpMapRef.value[location]?.definition ?? `unknown city ${location}`,
     dataAmount,
     declineReason,
     location,

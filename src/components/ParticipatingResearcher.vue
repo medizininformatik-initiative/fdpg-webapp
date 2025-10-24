@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
 import type { DropdownItem } from '@/types/dropdown.types'
@@ -116,12 +116,17 @@ import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { isParticipatingScientist, isParticipantApplicant } from '@/utils/proposal-permissions.util'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 const { params } = useRoute()
 const proposalId = params.id as string
 
 const proposalStore = useProposalStore()
 const userStore = useUserStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+const locationStore = useLocationStore()
+const activeLocationsRef = ref<ILocation[]>([])
+
 const { t } = useI18n()
 
 interface ParticipantAction {
@@ -505,6 +510,11 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
     showErrorMessage()
   }
 }
+
+onMounted(async () => {
+  const allActive = await locationStore.getAllActive()
+  activeLocationsRef.value = allActive
+})
 </script>
 
 <style lang="scss">

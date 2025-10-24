@@ -26,7 +26,7 @@
       v-if="isMessageToLocation"
       style="width: 580px"
       v-model="locationSelection"
-      :placeholder="visibility || ''"
+      :placeholder="visibility.value || ''"
       :minimum-selection="minimumSelection"
       :all-locations="possibleLocations"
     />
@@ -71,6 +71,7 @@ const props = defineProps({
   possibleLocations: {
     type: Array as PropType<ILocation[]>,
     required: true,
+    default: [],
   },
 })
 
@@ -90,7 +91,9 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
   }
 })
 
-const { visibility } = useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)
+const visibility = computed(
+  () => useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)?.visibility,
+)
 
 const emit = defineEmits(['close', 'save', 'update:modelValue'])
 const comment = useVModel(props, 'modelValue', emit)

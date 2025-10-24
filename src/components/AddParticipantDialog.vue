@@ -13,7 +13,7 @@
           readonly
           @userSelected="keycloakUser = $event"
         />
-        <ProjectInstitute v-model="participant.institute" :form-ref="dialogFormRef" readonly />
+        <ProjectInstitute v-model="participant.institute" :form-ref="dialogFormRef" readonly :locations="locations" />
         <ProjectParticipantCategory
           v-model="participant.participantCategory"
           :ParticipatingScientists="true"
@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import FdpgDialog from '@/components/FdpgDialog.vue'
 import { useVModel } from '@vueuse/core'
-import { defineEmits, defineProps, ref, watch } from 'vue'
+import { defineEmits, defineProps, ref, watch, type PropType } from 'vue'
 import ProjectInstitute from '@/pages/Proposals/ProjectInstitute.vue'
 import ProjectParticipantCategory from '@/pages/Proposals/ProjectParticipantCategory.vue'
 import ProjectParticipantRole from '@/pages/Proposals/ProjectParticipantRole.vue'
@@ -46,6 +46,7 @@ import type { IParticipant } from '@/types/proposal.types'
 import { ParticipantType, ParticipantRole } from '@/types/proposal.types'
 import type { FormInstance } from 'element-plus'
 import type { IKeycloakUser } from '@/types/user.types'
+import type { ILocation } from '@/types/location.types'
 
 const emit = defineEmits(['update:modelValue', 'submit'])
 
@@ -54,6 +55,11 @@ const props = defineProps({
     type: Boolean,
     required: true,
     default: false,
+  },
+  locations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
   },
 })
 const createInitialParticipant = (): IParticipant => ({

@@ -35,6 +35,7 @@
         :review-mode="reviewMode"
         :form-ref="formRef"
         :identifier="`participants.${index}`"
+        :locations="locations"
       ></ProjectInstitute>
       <TaskViewer :object-id="participant.institute._id" />
 
@@ -82,6 +83,7 @@ import ProjectInstitute from '../ProjectInstitute.vue'
 import ProjectParticipantCategory from '../ProjectParticipantCategory.vue'
 import ProjectResearcher from '../ProjectResearcher.vue'
 import ParticipatingScientistsCollapsed from './ParticipatingScientistsCollapsed.vue'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   modelValue: {
@@ -99,6 +101,12 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+  },
+
+  locations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
   },
 })
 

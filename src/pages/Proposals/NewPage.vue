@@ -165,6 +165,7 @@
             v-model="proposalForm.projectResponsible"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :locations="allLocations"
           />
           <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
 
@@ -177,6 +178,7 @@
             v-model="proposalForm.participants"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :locations="allLocations"
           />
         </div>
 
