@@ -139,7 +139,7 @@ const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const isSubmitting = ref(false)
-const isRegisteringForm = computed(() => proposalStore.currentProposal?.isRegisteringForm || false)
+const isRegisteringForm = computed(() => proposalStore.currentProposal?.register?.isRegisteringForm || false)
 
 const openReviewPage = () => {
   if (isRegisteringForm.value) {

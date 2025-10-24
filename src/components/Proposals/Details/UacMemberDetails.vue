@@ -101,7 +101,13 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 
 const openProposal = () => {
-  router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  const isRegisteringForm = proposalStore.currentProposal?.register?.isRegisteringForm || false
+
+  if (isRegisteringForm) {
+    router.push({ name: RouteName.RegisterProject, params: { id: params.id } })
+  } else {
+    router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  }
 }
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()

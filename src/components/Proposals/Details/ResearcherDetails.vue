@@ -106,7 +106,11 @@ const status = computed(() => proposalStore.currentProposal?.status as ProposalS
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const openProposal = (anchor?: string) => {
-  if (anchor) {
+  const isRegisteringForm = proposalStore.currentProposal?.register?.isRegisteringForm || false
+
+  if (isRegisteringForm) {
+    router.push({ name: RouteName.RegisterProject, params: { id: proposalId.value } })
+  } else if (anchor) {
     router.push({ name: RouteName.EditProposal, params: { id: proposalId.value }, query: { anchor } })
   } else {
     router.push({ name: RouteName.EditProposal, params: { id: proposalId.value } })

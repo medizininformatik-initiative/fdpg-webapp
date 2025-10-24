@@ -11,7 +11,7 @@
     :platform="PlatformIdentifier.Mii"
     :formRef="formRef"
     v-model="typeOfUseForm"
-    v-if="isMiiSelected"
+    v-if="isMiiSelected || isRegisteringForm"
     :is-registering-form="isRegisteringForm"
   />
 

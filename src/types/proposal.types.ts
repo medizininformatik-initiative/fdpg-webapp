@@ -584,8 +584,11 @@ export interface IProposal {
   isParticipatingScientist?: boolean
   deadlines: Deadlines
 
-  isRegisteringForm?: boolean
-  isInternalRegistration?: boolean
+  register?: {
+    isRegisteringForm?: boolean
+    isInternalRegistration?: boolean
+    originalProposalId?: string
+  }
 }
 
 export enum FdpgTaskType {
@@ -650,8 +653,11 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
-  isRegisteringForm: boolean
-  isInternalRegistration?: boolean
+  register?: {
+    isRegisteringForm?: boolean
+    isInternalRegistration?: boolean
+    originalProposalId?: string
+  }
 }
 
 export interface IDeclineReason {

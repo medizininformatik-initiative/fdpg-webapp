@@ -100,7 +100,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/components/Proposals/Details/DetailComponent.vue'),
         props: true,
         meta: {
-          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
         },
       },
       {
@@ -108,6 +115,16 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.ReviewProposal,
         component: () => import('@/pages/Proposals/ReviewProposal.vue'),
         props: true,
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
       },
     ],
   },
