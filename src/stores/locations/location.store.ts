@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { LocationService } from '@/services/locations/location.service'
-import type { ILocation, ILocationSyncChangelog } from '@/types/location.types'
+import type { ILocation, ILocationKeyLabel, ILocationSyncChangelog } from '@/types/location.types'
 
 export interface ILocationState {
   apiService: LocationService
@@ -28,9 +28,7 @@ export const useLocationStore = defineStore('Location', {
       return data
     },
 
-    async getLocationLookupMap(): Promise<{
-      [k: string]: ILocation
-    }> {
+    async getLocationLookupMap(): Promise<Record<string, ILocation>> {
       const all = await this.getAll()
       return Object.fromEntries(all.map((location) => [location._id, location]))
     },
@@ -72,6 +70,11 @@ export const useLocationStore = defineStore('Location', {
     async updateLocation(location: ILocation): Promise<ILocation> {
       const data = await this.apiService.updateLocation(location)
       return data
+    },
+
+    async getKeyLabelMap(): Promise<Record<string, ILocationKeyLabel>> {
+      const all = await this.apiService.getKeyLabel()
+      return Object.fromEntries(all.map((l) => [l._id, l]))
     },
   },
 })

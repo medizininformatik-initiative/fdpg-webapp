@@ -1,5 +1,5 @@
 import { ApiClient } from '@/httpClients/api/api.client'
-import type { ILocation, ILocationSyncChangelog } from '@/types/location.types'
+import type { ILocation, ILocationKeyLabel, ILocationSyncChangelog } from '@/types/location.types'
 
 export class LocationService {
   private basePath = '/locations'
@@ -58,6 +58,26 @@ export class LocationService {
       throw new Error(errorMessage)
     } else {
       throw new Error(error.message || 'An unexpected error occurred while exporting files')
+    }
+  }
+
+  async getKeyLabel(): Promise<ILocationKeyLabel[]> {
+    try {
+      const response = await this.apiClient.get(`${this.basePath}/key-label`)
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch key-label:', error)
+
+      let errorMessage = 'Failed to get key-label due to an unknown error.'
+      if (error.response) {
+        errorMessage = `API Error: Server responded with status ${error.response.status}. Data: ${JSON.stringify(error.response.data)}`
+      } else if (error.request) {
+        errorMessage = 'API Error: No response received from server.'
+      } else {
+        errorMessage = `API Error: ${error.message}`
+      }
+
+      throw new Error(errorMessage, { cause: error })
     }
   }
 }

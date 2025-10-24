@@ -210,7 +210,7 @@ import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store
 import { useI18n } from 'vue-i18n'
 import { DueDateEnum } from '@/types/due-date.enum'
 import { useLocationStore } from '@/stores/locations/location.store'
-import type { ILocation } from '@/types/location.types'
+import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
@@ -272,7 +272,7 @@ const tableColumns: IColumnOption[] = [
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const locationStore = useLocationStore()
-const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const { uploadsForType: contractConditions } = useUpload(proposalId, [UseCaseUpload.ContractCondition])
 const uploadsMap = computed<Record<string, IUpload>>(() => {

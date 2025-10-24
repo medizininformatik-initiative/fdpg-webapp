@@ -14,6 +14,11 @@ export interface ILocation {
   deprecated: boolean
 }
 
+export interface ILocationKeyLabel {
+  _id: string
+  display: string
+}
+
 export interface ILocationSyncChangelog {
   _id: string
   created: Date

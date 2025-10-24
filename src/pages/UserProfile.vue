@@ -43,7 +43,7 @@ const messageBoxStore = useMessageBoxStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const locationStore = useLocationStore()
-const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const isPasswordResetDisabled = ref(false)
 const resetPassword = () => {

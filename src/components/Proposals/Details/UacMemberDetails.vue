@@ -91,9 +91,7 @@ const showContractingParticipants = computed(() => {
 
 const locationStore = useLocationStore()
 
-const locationMapRef: Ref<{
-  [k: string]: ILocation
-}> = ref({})
+const locationMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const possibleLocations = computed(() =>
   (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])

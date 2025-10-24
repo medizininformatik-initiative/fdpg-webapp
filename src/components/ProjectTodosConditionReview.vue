@@ -85,7 +85,7 @@ const { showErrorMessage } = useNotifications()
 const proposalStore = useProposalStore()
 
 const locationStore = useLocationStore()
-const locationLookUpMapRef: Ref<{ [k: string]: ILocation }> = ref({})
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const { t } = useI18n()
 const requiredValidation = {

@@ -135,18 +135,18 @@ import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
-import type { ILocation } from '@/types/location.types'
+import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
 
 const authStore = useAuthStore()
 
 const sections = computed(
   () =>
     [
-      applicantSection,
-      projectResponsibilitySection,
+      applicantSection(locationMapRef.value),
+      projectResponsibilitySection(locationMapRef.value),
       projectUserSection,
-      participantSection,
-      userProjectSection(authStore.assignedDataSources),
+      participantSection(locationMapRef.value),
+      userProjectSection(authStore.assignedDataSources, locationMapRef.value),
       requestedDataSection,
       biosampleSection(authStore.assignedDataSources),
     ] as DefinitionSection<IProposal, keyof IProposal>[],
@@ -163,9 +163,7 @@ const commentStore = useCommentStore()
 
 const locationStore = useLocationStore()
 
-const locationMapRef: Ref<{
-  [k: string]: ILocation
-}> = ref({})
+const locationMapRef: Ref<Record<string, ILocationKeyLabel>> = ref({})
 
 const possibleLocations = computed(() =>
   (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])
