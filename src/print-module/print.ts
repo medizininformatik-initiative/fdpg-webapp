@@ -14,9 +14,7 @@ import { createPinia } from 'pinia'
 
 const main = async () => {
   const app = createApp(AppPrint)
-
-  const pinia = createPinia()
-  app.use(i18n).use(router).use(ElementPlus).use(pinia)
+  app.use(i18n).use(router).use(ElementPlus)
 
   /**
    * Creates and injects an error overlay onto the page.
