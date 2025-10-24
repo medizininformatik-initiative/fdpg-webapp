@@ -74,7 +74,8 @@
     "field": "Field",
     "oldValue": "Old Value",
     "newValue": "New Value",
-    "approve": "Save Changes"
+    "approve": "Save Changes",
+    "value": "Value"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -919,13 +920,15 @@
     "REWORK": "Rework",
     "FDPG_CHECK": "FDPG Check",
     "LOCATION_CHECK": "Location Check",
-    "RESEARCHER_CONTRACTING": "Sing contracting",
+    "RESEARCHER_CONTRACTING": "Sign contracting",
     "LOCATION_CONTRACTING": "Contracting",
     "EXPECT_DATA_DELIVERY": "Expect datadelivery",
     "DATA_RESEARCH": "Upload publications",
     "DATA_CORRUPT": "Data being checked",
     "FINISHED_PROJECT": "Final check",
-    "READY_TO_ARCHIVE": "Archive"
+    "READY_TO_ARCHIVE": "Archive",
+    "READY_TO_PUBLISH": "Ready to Publish",
+    "PUBLISHED": "Published"
   },
   "departments": {
     "1000": "Pediatrics",

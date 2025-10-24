@@ -43,6 +43,20 @@ export const useLocationStore = defineStore('Location', {
     async getAllChangelogs(): Promise<ILocationSyncChangelog[]> {
       const data = await this.apiService.getAllChangelogs()
       return data
+        .map((changelog) => {
+          changelog.created = new Date(changelog.created)
+          return changelog
+        })
+        .sort((a, b) => {
+          if (a.status === 'PENDING' && b.status !== 'PENDING') {
+            return -1
+          }
+          if (a.status !== 'PENDING' && b.status === 'PENDING') {
+            return 1
+          }
+
+          return b.created.getTime() - a.created.getTime()
+        })
     },
 
     async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
@@ -52,6 +66,11 @@ export const useLocationStore = defineStore('Location', {
 
     async syncLocations(): Promise<ILocationSyncChangelog[]> {
       const data = await this.apiService.syncLocations()
+      return data
+    },
+
+    async updateLocation(location: ILocation): Promise<ILocation> {
+      const data = await this.apiService.updateLocation(location)
       return data
     },
   },

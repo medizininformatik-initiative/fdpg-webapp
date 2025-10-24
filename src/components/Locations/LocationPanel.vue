@@ -16,15 +16,10 @@
 
     <el-tabs v-model="activeTab">
       <el-tab-pane :label="t('general.locations')" name="locations">
-        <LocationOverviewTable :locations="locationsRef" :loading="isLoading" />
+        <LocationOverviewTable :locations="locationsRef" :loading="isLoading" @updateLocation="updateLocation" />
       </el-tab-pane>
       <el-tab-pane :label="t('general.changelogs') + (pendingCount > 0 ? ` (${pendingCount})` : '')" name="changelogs">
-        <LocationChangelogOverview
-          :changelogs="changelogRef"
-          :loading="isLoading"
-          @setStatus="setChangelogStatus"
-          @syncLocations="syncLocations"
-        />
+        <LocationChangelogOverview :changelogs="changelogRef" :loading="isLoading" @setStatus="setChangelogStatus" />
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -72,6 +67,15 @@ const syncLocations = async () => {
   })
 }
 
+const updateLocation = async (location: ILocation) => {
+  await wrapWithLoading(async () => {
+    await locationStore.updateLocation(location)
+
+    const locations = await locationStore.getAll(false)
+    locationsRef.value = locations
+  })
+}
+
 const setLoading = (loading: boolean) => {
   isLoading.value = loading
 }
@@ -95,11 +99,6 @@ onMounted(async () => {
 
     const changelogs = await locationStore.getAllChangelogs()
     changelogRef.value = changelogs
-      .map((changelog) => {
-        changelog.created = new Date(changelog.created)
-        return changelog
-      })
-      .sort((a, b) => b.created.getTime() - a.created.getTime())
   })
 })
 </script>
