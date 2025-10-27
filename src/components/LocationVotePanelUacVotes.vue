@@ -138,7 +138,7 @@
               <el-collapse-item v-for="conditionalApproval in table.conditionalApprovals" class="condition-row">
                 <template #title>
                   <div class="el-collapse-item-title">
-                    {{ locationLookUpMapRef[conditionalApproval.location].display }}
+                    {{ locationLookUpMapRef?.[conditionalApproval.location]?.display }}
                     <div class="condition-interaction">
                       <div class="condition-data-amount">
                         {{ t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}

@@ -3,12 +3,12 @@
     v-model="dialogOpen"
     class="initiate-contract-dialog"
     width="50%"
-    :title="$t('proposal.toContractingModalTitle')"
+    :title="t('proposal.toContractingModalTitle')"
     :before-close="closeDialog"
     :show-close="false"
   >
     <div>
-      <p>{{ $t('proposal.toContractingModalDescription') }}</p>
+      <p>{{ t('proposal.toContractingModalDescription') }}</p>
       <div v-if="contractDraft" class="fdpg-upload-list-item">
         <p class="fdpg-upload-file__name">{{ contractDraft.name }}</p>
         <span>({{ (contractDraft.size / 1024).toFixed(1) }}KB)</span>
@@ -29,7 +29,7 @@
         @change="handleUploadFile"
       >
         <el-button v-if="!contractDraft" class="upload-button" link>
-          {{ $t('proposal.chooseAFile') }}
+          {{ t('proposal.chooseAFile') }}
           <template #icon>
             <el-icon class="bi-paperclip"></el-icon>
           </template>
@@ -38,15 +38,11 @@
     </div>
     <div>
       <FdpgLabel html-for="general.locations" />
-      <FdpgSelect
+      <LocationSelect
         v-model="selectedLocations"
-        multiple
-        filterable
-        data-testId="checkboxgroup__initiateContract.selecteLocations"
-        test-id-extension="__checkboxgroup__initiateContract.selecteLocations"
         placeholder="proposal.pleaseSelectYourLocations"
-        :options="locationOptions"
-        shouldDisplayCheckAll
+        :minimum-selection="[]"
+        :all-locations="possibleLocations"
       />
     </div>
     <template #footer>
@@ -56,7 +52,7 @@
         </el-button>
         <el-button
           type="primary"
-          :disabled="!contractDraft || !selectedLocations?.length || isSubmitting"
+          :disabled="initiateContractButtonDisabled"
           data-testid="button__initiateContract"
           @click="initiateContract"
         >
@@ -69,11 +65,10 @@
 
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref, watchEffect, type PropType, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect, type ComputedRef, type PropType, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import FdpgDialog from '@/components/FdpgDialog.vue'
-import FdpgSelect from '@/components/FdpgSelect.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { UseCaseUpload } from '@/types/upload.types'
@@ -81,6 +76,7 @@ import { useVModel } from '@vueuse/core'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 import { useI18n } from 'vue-i18n'
+import LocationSelect from './LocationSelect.vue'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContract'])
 
@@ -98,8 +94,6 @@ const props = defineProps({
     required: true,
   },
 })
-
-const { t } = useI18n()
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
@@ -120,28 +114,35 @@ const handleRemoveFile = () => {
   contractDraft.value = null
 }
 
+const initiateContractButtonDisabled = computed(
+  () => !contractDraft.value || !selectedLocations.value?.length || props.isSubmitting,
+)
+
+const { t } = useI18n()
+
 const locationStore = useLocationStore()
 
 const locationsMap: Ref<Record<string, ILocation>> = ref({})
 
-const locationOptions = computed(() => {
-  return props.locations
-    .map((id) => {
-      const location = locationsMap.value[id]
-      if (!location) {
-        console.warn(`Missing location '${id}'`)
-        return null
-      }
-      return { label: location.display, value: id }
-    })
-    .filter((entr) => entr)
-})
+const possibleLocations: ComputedRef<ILocation[]> = computed(() =>
+  props.locations.map((locId) => locationsMap.value[locId]),
+)
+
+watch(
+  () => possibleLocations.value,
+  () => console.log({ val: possibleLocations.value }),
+)
+
+watch(
+  () => locationsMap.value,
+  () => console.log({ val: locationsMap.value }),
+)
 
 const selectedLocations = ref<string[]>([])
 
 onMounted(async () => {
-  const locationsArray = await locationStore.getAll()
-  locationsMap.value = Object.fromEntries(locationsArray.map((location) => [location._id, location]))
+  const locMap = await locationStore.getLocationLookupMap()
+  locationsMap.value = locMap
 })
 
 const { showErrorMessage } = useNotifications()
@@ -152,6 +153,4 @@ const initiateContract = () => {
     emit('initiateContract', contractDraft.value, selectedLocations.value)
   }
 }
-
-watchEffect(() => (selectedLocations.value = props.locations))
 </script>
