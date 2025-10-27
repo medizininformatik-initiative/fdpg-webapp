@@ -616,7 +616,7 @@ const rules = ref<Record<string, any>>({
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
-  return ProposalPermissions.isProposalEditable(proposalForm.value)
+  return ProposalPermissions.isProposalEditable(proposalForm.value, authStore.singleKnownRole)
 }
 
 // Comprehensive permission checks using utility functions
@@ -638,6 +638,7 @@ const proposalPermissions = computed(() => {
     proposalForm.value,
     authStore.profile,
     proposalStore.currentProposal?.isParticipatingScientist,
+    authStore.singleKnownRole,
   )
 })
 
@@ -671,12 +672,12 @@ const getFormValues = () => {
   if (isRegisteringForm.value) {
     formData.register = {
       isRegisteringForm: true,
-      isInternalRegistration: false, // External registration by users
+      isInternalRegistration: proposalForm.value?.register?.isInternalRegistration ?? false,
     }
   }
 
   // If MII is not selected, remove MII-specific fields
-  if (!isMIISelected.value) {
+  if (!isMIISelected.value && !isRegisteringForm.value) {
     // Remove MII-specific fields
     delete formData.requestedData
     delete formData.userProject?.addressees

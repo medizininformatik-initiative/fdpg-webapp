@@ -136,10 +136,12 @@ export const transformForm = (
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
-    register: {
-      isRegisteringForm: form?.register?.isRegisteringForm ?? false,
-      isInternalRegistration: form?.register?.isInternalRegistration ?? false,
-      originalProposalId: form?.register?.originalProposalId,
-    },
+    register: form?.register
+      ? {
+          isRegisteringForm: form.register.isRegisteringForm,
+          isInternalRegistration: form.register.isInternalRegistration,
+          originalProposalId: form.register.originalProposalId,
+        }
+      : undefined,
   }
 }
