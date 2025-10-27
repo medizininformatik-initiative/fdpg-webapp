@@ -75,7 +75,9 @@
     "oldValue": "Old Value",
     "newValue": "New Value",
     "approve": "Save Changes",
-    "value": "Value"
+    "value": "Value",
+    "published": "Published",
+    "readyForPublication": "Ready for publication "
   },
   "sidebar": {
     "dashboard": "Dashboard",

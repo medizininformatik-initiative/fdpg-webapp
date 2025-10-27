@@ -31,15 +31,14 @@ const RESEARCHER_PANELS: PanelType[] = [
   { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.ResearcherFinished },
 ]
 
-// Published page panels for researchers, UAC, DIZ, and registering members
 const PUBLISHED_PANELS: PanelType[] = [
   { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.PublishedDraft },
   { type: CardType.Pending, header: 'general.pending', query: PanelQuery.PublishedPending },
   { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.PublishedCompleted },
 ]
 
-// FDPG Published page panels
 const FDPG_PUBLISHED_PANELS: PanelType[] = [
+  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.FdpgPublishedDraft },
   { type: CardType.Requested, header: 'general.requested', query: PanelQuery.FdpgPublishedRequested },
   { type: CardType.Pending, header: 'general.readyForPublication', query: PanelQuery.FdpgPublishedReady },
   { type: CardType.Completed, header: 'general.published', query: PanelQuery.FdpgPublishedPublished },

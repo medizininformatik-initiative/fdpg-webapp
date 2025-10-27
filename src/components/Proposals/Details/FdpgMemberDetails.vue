@@ -589,7 +589,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleToLocationCheckClick,
     testId: 'button__toLocationCheck',
     position: 'right',
-    isHidden: status.value !== ProposalStatus.FdpgCheck,
+    isHidden: status.value !== ProposalStatus.FdpgCheck || isRegisteringForm.value,
     isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
@@ -597,6 +597,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__downloadLocationCsv',
     action: handleDownloadLocationCsvClick,
     position: 'right',
+    isHidden: isRegisteringForm.value,
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
@@ -605,7 +606,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__initiateContract',
     action: handleToContractingClick,
     position: 'right',
-    isHidden: status.value !== ProposalStatus.LocationCheck,
+    isHidden: status.value !== ProposalStatus.LocationCheck || isRegisteringForm.value,
     isDisabled: uacFullyApproved.value.length <= 0 || proposalStore.currentProposal?.isLocked,
   },
   {
@@ -614,7 +615,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__toExpectDataDelivery',
     action: handleToExpectDataDeliveryClick,
     position: 'right',
-    isHidden: status.value !== ProposalStatus.Contracting,
+    isHidden: status.value !== ProposalStatus.Contracting || isRegisteringForm.value,
     isDisabled:
       (proposalStore.currentProposal ? proposalStore.currentProposal?.signedContracts?.length <= 0 : true) ||
       proposalStore.currentProposal?.isLocked,
@@ -626,7 +627,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleFinishProjectClick,
     position: 'right',
     isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.DataResearch,
+    isHidden: status.value !== ProposalStatus.DataResearch || isRegisteringForm.value,
   },
   {
     label: 'proposal.finishProjectDecline',
@@ -634,7 +635,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleFinishProjectDeclineClick,
     position: 'left',
     isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.FinishedProject,
+    isHidden: status.value !== ProposalStatus.FinishedProject || isRegisteringForm.value,
   },
 ])
 

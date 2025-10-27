@@ -101,19 +101,7 @@ const fetchProposals = async () => {
   displayCount.value = props.defaultLength
   try {
     loading.value = true
-    // Use fetchRegistered for any Register panel queries, otherwise use regular fetch
-    if (
-      props.panel.query === PanelQuery.RegisterDraftProposals ||
-      props.panel.query === PanelQuery.RegisterSubmittedProposals
-    ) {
-      await proposalStore.fetchRegistered({
-        sortBy: props.sortBy,
-        order: props.sortOrder,
-        panelQuery: props.panel.query,
-      })
-    } else {
-      await proposalStore.fetch({ sortBy: props.sortBy, order: props.sortOrder, panelQuery: props.panel.query })
-    }
+    await proposalStore.fetch({ sortBy: props.sortBy, order: props.sortOrder, panelQuery: props.panel.query })
     loading.value = false
   } catch (error) {
     loading.value = false

@@ -55,10 +55,6 @@ export enum PanelQuery {
   FdpgOngoingInWork = 'FDPG_ONGOING_IN_WORK',
   FdpgFinished = 'FDPG_FINISHED',
 
-  // Register
-  RegisterDraftProposals = 'REGISTER_DRAFT_PROPOSALS',
-  RegisterSubmittedProposals = 'REGISTER_SUBMITTED_PROPOSALS',
-
   // Published Page Panels
   PublishedDraft = 'PUBLISHED_DRAFT',
   PublishedPending = 'PUBLISHED_PENDING',
@@ -68,6 +64,7 @@ export enum PanelQuery {
   FdpgPublishedRequested = 'FDPG_PUBLISHED_REQUESTED',
   FdpgPublishedReady = 'FDPG_PUBLISHED_READY',
   FdpgPublishedPublished = 'FDPG_PUBLISHED_PUBLISHED',
+  FdpgPublishedDraft = 'FDPG_PUBLISHED_DRAFT',
 }
 
 export interface ISortAndOrderBy<T> {

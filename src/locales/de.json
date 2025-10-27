@@ -75,7 +75,9 @@
     "oldValue": "Alter Wert",
     "newValue": "Neuer Wert",
     "approve": "Änderungen speichern",
-    "value": "Wert"
+    "value": "Wert",
+    "published": "publiziert",
+    "readyForPublication": "publikationsreif"
   },
   "sidebar": {
     "dashboard": "Dashboard",
