@@ -128,16 +128,6 @@ const possibleLocations: ComputedRef<ILocation[]> = computed(() =>
   props.locations.map((locId) => locationsMap.value[locId]),
 )
 
-watch(
-  () => possibleLocations.value,
-  () => console.log({ val: possibleLocations.value }),
-)
-
-watch(
-  () => locationsMap.value,
-  () => console.log({ val: locationsMap.value }),
-)
-
 const selectedLocations = ref<string[]>([])
 
 onMounted(async () => {
