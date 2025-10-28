@@ -11,7 +11,7 @@
       <p>{{ t('proposal.toContractingModalDescription') }}</p>
       <div v-if="contractDraft" class="fdpg-upload-list-item">
         <p class="fdpg-upload-file__name">{{ contractDraft.name }}</p>
-        <span>({{ (contractDraft.size / 1024).toFixed(1) }}KB)</span>
+        <span>({{ ((contractDraft?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
         <el-icon
           class="el-icon-close"
           data-testId="icon__removeInitiateContractFile"
@@ -115,7 +115,7 @@ const handleRemoveFile = () => {
 }
 
 const initiateContractButtonDisabled = computed(
-  () => !contractDraft.value || !selectedLocations.value?.length || props.isSubmitting,
+  () => !contractDraft.value || (selectedLocations.value?.length ?? 0) <= 0 || props.isSubmitting,
 )
 
 const { t } = useI18n()
@@ -124,15 +124,22 @@ const locationStore = useLocationStore()
 
 const locationsMap: Ref<Record<string, ILocation>> = ref({})
 
-const possibleLocations: ComputedRef<ILocation[]> = computed(() =>
-  props.locations.map((locId) => locationsMap.value[locId]),
+watch(
+  () => [props.locations, locationsMap],
+  () => {
+    possibleLocations.value = [...props.locations.map((locId) => locationsMap.value[locId])]
+  },
 )
+
+const possibleLocations: Ref<ILocation[]> = ref([])
 
 const selectedLocations = ref<string[]>([])
 
 onMounted(async () => {
   const locMap = await locationStore.getLocationLookupMap()
   locationsMap.value = locMap
+
+  selectedLocations.value = [...props.locations]
 })
 
 const { showErrorMessage } = useNotifications()
@@ -143,4 +150,7 @@ const initiateContract = () => {
     emit('initiateContract', contractDraft.value, selectedLocations.value)
   }
 }
+
+// for testing
+defineExpose({ contractDraft, initiateContractButtonDisabled, selectedLocations, isSubmitting: props.isSubmitting })
 </script>

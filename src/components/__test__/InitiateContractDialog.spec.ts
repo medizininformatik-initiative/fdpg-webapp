@@ -6,6 +6,7 @@ import FdpgUpload from '../FdpgUpload.vue'
 import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
+import { nextTick } from 'vue'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
