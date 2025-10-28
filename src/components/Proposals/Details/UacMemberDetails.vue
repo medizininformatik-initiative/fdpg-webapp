@@ -305,6 +305,6 @@ onMounted(async () => {
 }
 
 .reject-button {
-  background-color: $red-100 !important;
+  background-color: $red !important;
 }
 </style>

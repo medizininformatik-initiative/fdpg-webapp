@@ -34,7 +34,7 @@
     }
 
     &.is-disabled {
-      background-color: $gray-700;
+      background-color: $gray-800;
     }
 
     &.is-plain {
@@ -47,6 +47,7 @@
         box-shadow: 0 0 5px 0 color.adjust($blue, $lightness: 30%);
       }
     }
+
     &.is-link {
       color: $blue;
 
@@ -66,11 +67,11 @@
   }
 
   &.el-button--danger {
-    background-color: $red-100;
+    background-color: $red;
 
     &:active:not(.is-disabled) {
-      background-color: color.adjust($red-100, $lightness: -3%);
-      box-shadow: 0 0 5px 0 color.adjust($red-100, $lightness: 30%);
+      background-color: color.adjust($red, $lightness: -3%);
+      box-shadow: 0 0 5px 0 color.adjust($red, $lightness: 30%);
     }
   }
 
@@ -97,11 +98,13 @@
       }
     }
   }
-  &.el-button--primary{
+
+  &.el-button--primary {
     &:active:not(.is-disabled) {
       box-shadow: none
     }
   }
+
   /*
     button size override
   */
@@ -262,7 +265,7 @@
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red-100;
+          color: $red;
         }
       }
     }
@@ -270,6 +273,10 @@
     .form-group--collapsed__actions {
       min-width: fit-content;
     }
+  }
+
+  .el-form-item__error {
+    color: $red;
   }
 }
 
@@ -297,7 +304,7 @@
           background-color: $green;
 
           &::after {
-            border-color: $white;
+            border-color: $black;
           }
         }
       }
@@ -385,12 +392,41 @@
 .el-checkbox__input.is-checked .el-checkbox__inner::after {
   transform: rotate(45deg) scaleY(1) !important;
 }
+
 .ql-editor h1 {
   font-size: 2rem;
 }
-.data-source-list-drawer-content-item{
+
+.data-source-list-drawer-content-item {
   .el-collapse-item__header {
     height: auto !important;
     padding: 10px 0 !important;
   }
 }
+
+.el-table {
+  .el-table__empty-text {
+    color: $gray-900;
+  }
+}
+
+.el-badge {
+  .el-badge__content--danger {
+    background-color: $red;
+  }
+}
+
+.el-select {
+  .el-select__placeholder {
+    &.is-transparent {
+      color: $gray-900;
+    }
+  }
+
+  .el-select__tags-text {
+    color: $gray-900;
+  }
+}
+
+
+

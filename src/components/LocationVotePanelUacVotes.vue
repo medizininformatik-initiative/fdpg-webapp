@@ -154,7 +154,7 @@
                           :disabled="conditionalApproval.reviewedAt !== undefined"
                           :data-testId="'button__condition-decline__' + conditionalApproval.location"
                           @click="acceptCondition(conditionalApproval._id, false)"
-                          ><i class="el-icon-close" role="button"
+                          ><i class="bi bi-x" role="button"
                         /></el-button>
                         <el-button
                           class="positive"
@@ -163,7 +163,7 @@
                           :data-testId="'button__condition-accept__' + conditionalApproval.location"
                           @click="acceptCondition(conditionalApproval._id, true)"
                         >
-                          <i class="el-icon-check" role="button" />
+                          <i class="bi bi-check2" role="button" />
                         </el-button>
                       </div>
                     </div>
@@ -205,10 +205,10 @@ import { ElTable } from 'element-plus'
 import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { UseCaseUpload } from '@/types/upload.types'
-import { ref, computed, nextTick, onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
 import { DueDateEnum } from '@/types/due-date.enum'
 
@@ -560,7 +560,7 @@ onMounted(() => {
         background-color: $blue;
       }
       &--red {
-        background-color: $red-100;
+        background-color: $red;
       }
       &--gray {
         background-color: $gray-900;
@@ -708,8 +708,8 @@ onMounted(() => {
         }
 
         &.rejected {
-          background-color: color.adjust($red-100, $lightness: 40%);
-          border-color: $red-100;
+          background-color: color.adjust($red, $lightness: 40%);
+          border-color: $red;
           color: $black;
         }
       }
@@ -757,7 +757,7 @@ onMounted(() => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red-100;
+            background-color: $red;
           }
 
           i {
@@ -779,7 +779,7 @@ onMounted(() => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red-100;
+            color: $red;
           }
 
           &.positive {
@@ -807,6 +807,6 @@ onMounted(() => {
 }
 
 :deep(.delayed) {
-  color: $red-100 !important;
+  color: $red !important;
 }
 </style>

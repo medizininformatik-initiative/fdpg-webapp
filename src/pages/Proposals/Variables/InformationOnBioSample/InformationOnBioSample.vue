@@ -29,7 +29,7 @@
         v-model="informationOnRequestedBioSamplesForm.laboratoryResources"
         :data-testId="'userProject.informationOnRequestedBioSamples.laboratoryResources'"
         :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-        :placeholder="$t('proposal.biosampleLaboratoryResourcesPlaceholder')"
+        :placeholder="t('proposal.biosampleLaboratoryResourcesPlaceholder')"
         size="medium"
         :formRef="formRef"
         :field-path="'userProject.informationOnRequestedBioSamples.laboratoryResources'"
@@ -84,7 +84,7 @@
                   :name="`biosample.type__radio__${index}`"
                   :data-testId="'biosample.type__radio__' + index + '__' + optionIndex"
                   :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                  size="small"
+                  :size="FdpgInputSize.Small"
                 >
                   {{ option.label }}
                 </FdpgRadio>
@@ -161,7 +161,7 @@
                       :key="optionIndex"
                       :label="option.label"
                       :value="option.value"
-                      size="small"
+                      :size="FdpgInputSize.Small"
                       :name="`biosample.sampleCode__checkbox__${index}`"
                       :data-testId="'biosample.sampleCode__checkbox__' + index + '__' + optionIndex"
                       :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
@@ -193,7 +193,7 @@
               <FdpgTextEditor
                 v-model="biosample.method"
                 :data-testId="'biosample.method__' + index"
-                :placeholder="$t('proposal.biosampleMethodPlaceholder')"
+                :placeholder="t('proposal.biosampleMethodPlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
                 :formRef="formRef"
                 :field-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].method`"
@@ -222,7 +222,7 @@
                 v-model="biosample.externalLabTransferDetails"
                 :data-testId="'biosample.externalLabTransferDetails__' + index"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
-                :placeholder="$t('proposal.externalLabTransferDetailsPlaceholder')"
+                :placeholder="t('proposal.externalLabTransferDetailsPlaceholder')"
                 :formRef="formRef"
                 :field-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransferDetails`"
               />
@@ -242,7 +242,7 @@
     @click="handleAddAnotherBiosample"
   >
     <i class="el-icon-plus" aria-hidden="true" />
-    <span class="add-text">{{ $t('proposal.addMoreBioSamples') }}</span>
+    <span class="add-text">{{ t('proposal.addMoreBioSamples') }}</span>
   </el-button>
 </template>
 
@@ -258,7 +258,7 @@ import { maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import { onBeforeUnmount, ref } from 'vue'
+import { ref } from 'vue'
 import InformationOnBioSampleCollapsed from './InformationOnBioSampleCollapsed.vue'
 import Fdpgcheckbox from '@/components/FdpgCheckbox.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
@@ -266,6 +266,7 @@ import FdpgRadio from '@/components/FdpgRadio.vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { FdpgInputSize } from '@/types/component.types'
+import type { TranslationSchema } from '@/plugins/i18n'
 
 const { t } = useI18n()
 
@@ -299,16 +300,18 @@ const informationOnRequestedBioSamplesForm = useVModel(props, 'modelValue', emit
 
 if (informationOnRequestedBioSamplesForm.value === undefined) {
   informationOnRequestedBioSamplesForm.value = {
+    noSampleRequired: false,
+    laboratoryResources: '',
     biosamples: [],
   }
 }
+
 if (
-  !informationOnRequestedBioSamplesForm.value?.biosamples ||
-  !informationOnRequestedBioSamplesForm.value?.biosamples.length
+  informationOnRequestedBioSamplesForm.value?.biosamples &&
+  Array.isArray(informationOnRequestedBioSamplesForm.value.biosamples) &&
+  informationOnRequestedBioSamplesForm.value.biosamples.length === 0
 ) {
-  informationOnRequestedBioSamplesForm.value = {
-    biosamples: [mapBiosample() as IBiosample],
-  }
+  informationOnRequestedBioSamplesForm.value.biosamples.push(mapBiosample() as IBiosample)
 }
 
 const biosampleRules = {
@@ -355,10 +358,6 @@ const handleRemove = async (id: number) => {
     biosampleSectionActiveKey.value = Math.max(biosampleSectionActiveKey.value - 1, 0)
   }
 }
-
-onBeforeUnmount(() => {
-  informationOnRequestedBioSamplesForm.value = undefined
-})
 </script>
 <style lang="scss" scoped>
 .biosample-radio-group {

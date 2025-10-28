@@ -258,7 +258,7 @@ const addContractAppendix = async () => {
 
         i {
           font-size: 16px !important;
-          color: $gray-700;
+          color: $gray-900;
         }
 
         &:hover,

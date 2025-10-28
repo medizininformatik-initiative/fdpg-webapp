@@ -15,7 +15,7 @@
           :data-testId="projectTodo.testId + '__false'"
           @click="projectTodo.action(false)"
         >
-          <i class="fa-solid fa-xmark"></i>
+          <i class="bi bi-x"></i>
         </el-button>
         <el-button
           :disabled="isDisabled || positiveChildDisableButton"
@@ -23,7 +23,7 @@
           :data-testId="projectTodo.testId + '__true'"
           @click="projectTodo.action(true, uacCondition?.dataAmount, uacCondition?.conditionReasoning)"
         >
-          <i class="fa-solid fa-check"></i>
+          <i class="bi bi-check2"></i>
         </el-button>
       </div>
     </div>
@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import { computed, ref, type PropType } from 'vue'
+import { computed, type PropType, ref } from 'vue'
 import ProjectTodosConditionReview from './ProjectTodosConditionReview.vue'
 import ProjectTodosAdditionalLocationInformation from './ProjectTodosAdditionalLocationInformation.vue'
 
@@ -152,7 +152,7 @@ const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; butt
             background-color: $green;
           }
           &.negative {
-            background-color: $red-100;
+            background-color: $red;
           }
 
           i {
