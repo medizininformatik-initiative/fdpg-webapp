@@ -80,7 +80,6 @@ const emit = defineEmits(['updateLocation'])
 
 const updateLocation = (updatedLocation: ILocation) => {
   const persistedLoc = props.locations.find((loc) => loc._id === updatedLocation._id)
-  console.log({ persistedLoc, updatedLocation })
   if (editableKeys.every((k) => updatedLocation[k] === persistedLoc?.[k])) {
     return
   }

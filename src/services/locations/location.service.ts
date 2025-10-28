@@ -5,11 +5,6 @@ export class LocationService {
   private basePath = '/locations'
   private apiClient = new ApiClient().client
 
-  async update(location: ILocation): Promise<ILocation> {
-    const response = await this.apiClient.post(`${this.basePath}/${location._id}`, location)
-    return response.data
-  }
-
   async get(id: string): Promise<ILocation> {
     const response = await this.apiClient.get(`${this.basePath}/${id}`)
     return response.data
@@ -28,12 +23,12 @@ export class LocationService {
   }
 
   async updateLocation(location: ILocation): Promise<ILocation> {
-    const response = await this.apiClient.post(`${this.basePath}/${location._id}`, location)
+    const response = await this.apiClient.put(`${this.basePath}/${location._id}`, location)
     return response.data
   }
 
   async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
-    const response = await this.apiClient.post(`${this.basePath}/changelogs/${changelog._id}/status`, changelog)
+    const response = await this.apiClient.put(`${this.basePath}/changelogs/${changelog._id}/status`, changelog)
     return response.data
   }
 
