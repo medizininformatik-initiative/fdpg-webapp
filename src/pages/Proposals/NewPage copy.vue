@@ -130,7 +130,6 @@ import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { transformForm } from '@/utils/form-transform'
 import {
-  checkValueShouldBeTrue,
   maxLengthValidationFunc,
   numberValidationFunc,
   projectAbbreviationValidationFunc,
@@ -141,7 +140,7 @@ import {
   startDateInPastValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
-import { ElForm, type FormInstance, type FormItemProp } from 'element-plus'
+import { ElForm, type FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -151,6 +150,7 @@ import ProjectResponsibility from './ProjectResponsibility.vue'
 import ProjectUser from './ProjectUser.vue'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
 import { CommentType, type ICommentDetail } from '@/types/comment.interface'
+
 defineProps({
   userRole: {
     type: String as PropType<Role>,
@@ -644,7 +644,7 @@ onMounted(async () => {
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red-100;
+          color: $red;
         }
 
         margin: 0;

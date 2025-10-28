@@ -296,8 +296,6 @@ import {
   maxLengthValidationFunc,
   numberValidationFunc,
   projectAbbreviationValidationFunc,
-  requiredIfEmptyValidationFunc,
-  requiredUploadFunc,
   requiredValidationFunc,
   specialCharactersValidationFunc,
 } from '@/validations'
@@ -1571,7 +1569,7 @@ onMounted(async () => {
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red-100;
+          color: $red;
         }
 
         margin: 0;

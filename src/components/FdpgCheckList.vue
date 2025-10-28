@@ -61,12 +61,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, type PropType } from 'vue'
+import { computed, onMounted, type PropType, ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
-import { ProposalStatus, type IChecklistItem, type IFdpgChecklist } from '@/types/proposal.types'
+import { type IChecklistItem, type IFdpgChecklist, ProposalStatus } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
-import { ElCard, ElCol, ElRow, ElCheckbox, ElCollapse, ElCollapseItem } from 'element-plus'
+import { ElCard, ElCheckbox, ElCol, ElCollapse, ElCollapseItem, ElRow } from 'element-plus'
 
 const props = defineProps({
   modelValue: {
@@ -153,7 +153,7 @@ onMounted(() => {
         background-color: $blue;
       }
       &.red {
-        background-color: $red-100;
+        background-color: $red;
       }
       &.gray {
         background-color: $gray-900;
@@ -301,8 +301,8 @@ onMounted(() => {
         }
 
         &.rejected {
-          background-color: color.adjust($red-100, $lightness: 40%);
-          border-color: $red-100;
+          background-color: color.adjust($red, $lightness: 40%);
+          border-color: $red;
           color: $black;
         }
       }
@@ -350,7 +350,7 @@ onMounted(() => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red-100;
+            background-color: $red;
           }
 
           i {
@@ -372,7 +372,7 @@ onMounted(() => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red-100;
+            color: $red;
           }
 
           &.positive {

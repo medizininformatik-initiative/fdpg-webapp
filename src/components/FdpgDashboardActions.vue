@@ -65,6 +65,9 @@ defineProps({
       &.fdpg-dashboard-action--green {
         border-color: $green;
         background-image: url('/src/assets/img/dashboard/background/green-dot.png');
+        .el-button--success {
+          color: $black;
+        }
       }
 
       &:focus-visible {

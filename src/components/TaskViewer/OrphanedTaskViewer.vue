@@ -42,7 +42,7 @@
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import { computed, ref } from 'vue'
@@ -131,7 +131,7 @@ const deleteTask = (commentId: string) => {
 
   &__title {
     margin: 0 0 0.5rem 0;
-    color: $red-100;
+    color: $red;
     font-size: 1.1rem;
     font-weight: 600;
   }

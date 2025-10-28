@@ -44,7 +44,6 @@ import useLocationVisibility from '@/composables/use-location-visibility'
 import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, IAnswerDetail, ICommentDetail } from '@/types/comment.interface'
-import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -139,13 +138,13 @@ const couldAnswer = computed(() => {
 
   &.is-done {
     .message-content {
-      color: $gray-700;
+      color: $gray-900;
     }
     .message-header {
       color: $gray-700;
 
       .message-owner {
-        color: $gray-700;
+        color: $gray-900;
       }
     }
   }
