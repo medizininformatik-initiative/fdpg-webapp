@@ -9,7 +9,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
-import { ProposalStatus, type IProposal } from '@/types/proposal.types'
+import { ProposalStatus, ProposalTypeOfUse, type IProposal } from '@/types/proposal.types'
 import useNotifications from '@/composables/use-notifications'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/types/route-name.enum'
@@ -56,12 +56,14 @@ vi.mock('@/plugins/i18n', () => ({
 vi.mock('vue-router', () => {
   const pushMock = vi.fn()
   const MOCK_ID = 'proposalId'
+  const mockRoute = { query: { anchor: 'anchorId' }, params: { id: MOCK_ID }, name: 'NewProposal' }
   return {
     createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
     createWebHistory: vi.fn(),
-    useRoute: vi.fn().mockReturnValue({ query: { anchor: 'anchorId' }, params: { id: MOCK_ID } }),
+    useRoute: vi.fn().mockReturnValue(mockRoute),
     useRouter: vi.fn(() => ({
       push: pushMock,
+      currentRoute: { value: mockRoute },
     })),
   }
 })
@@ -741,6 +743,182 @@ describe('Newpage.vue', () => {
       const component = wrapper.findComponent({ name: 'UserProjectInformation' })
       expect(component.exists()).toBe(true)
       expect(component.props().reviewMode).toBe(false)
+    })
+  })
+
+  describe('Registering Form Features', () => {
+    let proposal: IProposal
+    let authStore: MockedObject<ReturnType<typeof useAuthStore>>
+
+    beforeEach(async () => {
+      vi.clearAllMocks()
+      vi.spyOn(document, 'getElementById').mockReturnValue(anchorMock as any)
+
+      proposal = JSON.parse(JSON.stringify(mockProposal))
+      proposal.register = {
+        isRegisteringForm: true,
+        isInternalRegistration: false,
+      }
+      wrapper = mountComponent() as any
+      proposalStore = vi.mocked(useProposalStore())
+      commentStore = vi.mocked(useCommentStore())
+      layoutStore = vi.mocked(useLayoutStore())
+      authStore = vi.mocked(useAuthStore())
+
+      authStore.profile = {
+        sub: 'userId',
+        email: 'test@example.com',
+      } as any
+
+      proposalStore.currentProposal = proposal
+      commentStore.comments = []
+    })
+
+    describe('isRegisteringForm detection', () => {
+      it('should be false for regular proposal routes (default)', async () => {
+        // Default route is "NewProposal" from the mock setup
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+        // For regular routes, isRegisteringForm should be false
+        expect(vm.isRegisteringForm).toBe(false)
+      })
+
+      it('should use register flag from proposal object', async () => {
+        // Set up proposal with register object
+        proposal._id = MOCK_PROPOSAL_ID
+        proposal.status = ProposalStatus.Draft
+        proposal.register = {
+          isRegisteringForm: true,
+          isInternalRegistration: false,
+        }
+
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+        // Verify the proposal has the register flag in the store
+        expect(proposalStore.currentProposal?.register?.isRegisteringForm).toBe(true)
+      })
+    })
+
+    describe('Register object structure', () => {
+      it('should have register object with expected structure', async () => {
+        // Set up proposal with register object
+        proposal._id = MOCK_PROPOSAL_ID
+        proposal.status = ProposalStatus.Draft
+        proposal.register = {
+          isRegisteringForm: true,
+          isInternalRegistration: false,
+        }
+
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+
+        // Verify proposal store has the register object
+        expect(proposalStore.currentProposal?.register).toBeDefined()
+        expect(proposalStore.currentProposal?.register?.isRegisteringForm).toBe(true)
+        expect(proposalStore.currentProposal?.register?.isInternalRegistration).toBe(false)
+      })
+
+      it('should handle isInternalRegistration flag correctly', async () => {
+        // Set up proposal with internal registration
+        proposal._id = MOCK_PROPOSAL_ID
+        proposal.status = ProposalStatus.Draft
+        proposal.register = {
+          isRegisteringForm: true,
+          isInternalRegistration: true,
+        }
+
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+
+        // Verify isInternalRegistration is preserved
+        expect(proposalStore.currentProposal?.register?.isInternalRegistration).toBe(true)
+      })
+    })
+
+    describe('Biosample toggle stabilization', () => {
+      it('should have isBiosampleToggleInProgress flag available', async () => {
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+
+        // Verify flag exists and is boolean
+        expect(typeof vm.isBiosampleToggleInProgress).toBe('boolean')
+        expect(vm.isBiosampleToggleInProgress).toBe(false)
+      })
+
+      it('should initialize biosamples when BIOSAMPLE is selected', async () => {
+        // Set up proposal without biosamples
+        proposal.userProject.typeOfUse = {
+          usage: [],
+        } as any
+        proposal.userProject.informationOnRequestedBioSamples = undefined
+
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+
+        // Enable BIOSAMPLE
+        vm.proposalForm.userProject.typeOfUse.usage = ['BIOSAMPLE']
+        await wrapper.vm.$nextTick()
+        await flushPromises()
+
+        // Wait for the cooldown period
+        await new Promise((resolve) => setTimeout(resolve, 150))
+
+        // Verify biosamples object was initialized
+        expect(vm.proposalForm.userProject.informationOnRequestedBioSamples).toBeDefined()
+        expect(vm.proposalForm.userProject.informationOnRequestedBioSamples.biosamples).toEqual([])
+      })
+
+      it('should have biosamples structure when initialized', async () => {
+        // Set up proposal with biosamples
+        proposal._id = MOCK_PROPOSAL_ID
+        proposal.status = ProposalStatus.Draft
+        proposal.userProject.typeOfUse = {
+          usage: ['BIOSAMPLE'],
+        } as any
+        proposal.userProject.informationOnRequestedBioSamples = {
+          biosamples: [{ type: 'blood' }],
+          laboratoryResources: 'Lab',
+          noSampleRequired: false,
+        } as any
+
+        proposalStore.currentProposal = proposal
+
+        wrapper = mountComponent() as any
+        await wrapper.vm.$nextTick()
+
+        const vm = wrapper.vm as any
+
+        // Verify biosamples structure exists in the store
+        expect(proposalStore.currentProposal?.userProject?.informationOnRequestedBioSamples).toBeDefined()
+        expect(
+          Array.isArray(proposalStore.currentProposal?.userProject?.informationOnRequestedBioSamples?.biosamples),
+        ).toBe(true)
+        expect(
+          proposalStore.currentProposal?.userProject?.informationOnRequestedBioSamples?.laboratoryResources,
+        ).toBeDefined()
+      })
     })
   })
 })

@@ -16,13 +16,18 @@ vi.mock('vue-i18n', () => ({
   })),
 }))
 
-vi.mock('vue-router', () => ({
-  createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
-  createWebHistory: vi.fn(),
-  useRouter: vi.fn(() => ({
-    push: vi.fn(),
-  })),
-}))
+vi.mock('vue-router', () => {
+  const mockRoute = { query: {}, params: {}, name: 'Dashboard' }
+  return {
+    createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
+    createWebHistory: vi.fn(),
+    useRoute: vi.fn().mockReturnValue(mockRoute),
+    useRouter: vi.fn(() => ({
+      push: vi.fn(),
+      currentRoute: { value: mockRoute },
+    })),
+  }
+})
 
 let authStore: ReturnType<typeof useAuthStore>
 

@@ -7,6 +7,15 @@ import { mockProposal } from '@/mocks/proposal.mock'
 import { MiiLocation } from '@/types/location.enum'
 import { ElSelect } from 'element-plus'
 
+vi.mock('vue-i18n', () => ({
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockImplementation((key: string) => key),
+    locale: {
+      value: 'de-DE',
+    },
+  })),
+}))
+
 vi.mock('@/plugins/i18n', () => ({
   i18n: {
     global: {
