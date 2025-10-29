@@ -75,7 +75,9 @@
     "oldValue": "Alter Wert",
     "newValue": "Neuer Wert",
     "approve": "Änderungen speichern",
-    "value": "Wert"
+    "value": "Wert",
+    "published": "publiziert",
+    "readyForPublication": "publikationsreif"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -790,7 +792,14 @@
     "projectLogo": "Projektlogo",
     "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
     "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
-    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein"
+    "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein",
+    "acceptProposalModalTitle": "Antrag zur Veröffentlichung annehmen",
+    "acceptProposalModalDescription": "Dieser Antrag wird als bereit zur Veröffentlichung im FDPG-Register markiert.",
+    "acceptProposalToPublish": "Zur Veröffentlichung annehmen",
+    "registerProjectModalTitle": "Projekt zur Veröffentlichung registrieren",
+    "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
+    "registerProject": "Projekt registrieren",
+    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -970,5 +979,11 @@
     "0700": "Gastroenterologie",
     "0800": "Pneumologie",
     "0900": "Rheumatologie"
+  },
+  "location": {
+    "failedSetChangelogStatus": "Fehler beim setzen des Status",
+    "failedToSync": "Fehler beim synchronisieren der Standorte",
+    "failedToUpdate": "Standort konnte nicht aktualisiert werden",
+    "errorOnSetup": "Fehler beim laden der Daten"
   }
 }

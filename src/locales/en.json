@@ -75,7 +75,9 @@
     "oldValue": "Old Value",
     "newValue": "New Value",
     "approve": "Save Changes",
-    "value": "Value"
+    "value": "Value",
+    "published": "Published",
+    "readyForPublication": "Ready for publication "
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -790,7 +792,14 @@
     "projectLogo": "Project Logo",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "pleaseSelectProcedures": "Please select or enter procedures",
-    "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist"
+    "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist",
+    "acceptProposalModalTitle": "Accept Proposal for Publication",
+    "acceptProposalModalDescription": "This proposal will be marked as ready to publish to the FDPG register.",
+    "acceptProposalToPublish": "Accept for Publication",
+    "registerProjectModalTitle": "Register Project for Publication",
+    "registerProjectModalDescription": "This will create a copy of this project as a registration form. You can then fill in publication details and publish it to the FDPG register. The original project will remain unchanged.",
+    "registerProject": "Register Project",
+    "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details."
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -970,5 +979,11 @@
     "0700": "Gastroenterology",
     "0800": "Pneumology",
     "0900": "Rheumatology"
+  },
+  "location": {
+    "failedSetChangelogStatus": "Error on setting the Status",
+    "failedToSync": "Error on synchronizing the locations",
+    "failedToUpdate": "Error on updating location",
+    "errorOnSetup": "Error on fetching data"
   }
 }

@@ -57,14 +57,14 @@ const setChangelogStatus = async (changelog: ILocationSyncChangelog, status: Loc
 
     const locations = await locationStore.getAll(false)
     locationsRef.value = locations
-  })
+  }, 'location.failedSetChangelogStatus')
 }
 
 const syncLocations = async () => {
   await wrapWithLoading(async () => {
     const updatedChangelogs = await locationStore.syncLocations()
     changelogRef.value = [...updatedChangelogs]
-  })
+  }, 'location.failedToSync')
 }
 
 const updateLocation = async (location: ILocation) => {
@@ -73,20 +73,20 @@ const updateLocation = async (location: ILocation) => {
 
     const locations = await locationStore.getAll(false)
     locationsRef.value = locations
-  })
+  }, 'location.failedToUpdate')
 }
 
 const setLoading = (loading: boolean) => {
   isLoading.value = loading
 }
 
-const wrapWithLoading = async (cb: Function) => {
+const wrapWithLoading = async (cb: Function, errorMessage: string) => {
   setLoading(true)
   try {
     await cb()
   } catch (e) {
     console.warn(e)
-    showErrorMessage()
+    showErrorMessage(errorMessage)
   } finally {
     setLoading(false)
   }
@@ -99,7 +99,7 @@ onMounted(async () => {
 
     const changelogs = await locationStore.getAllChangelogs()
     changelogRef.value = changelogs
-  })
+  }, 'location.errorOnSetup')
 })
 </script>
 
