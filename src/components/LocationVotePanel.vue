@@ -102,7 +102,7 @@ const progressItems = computed(() => {
       }
 
       &.danger :deep(.el-progress-bar__inner) {
-        background-color: $red-100;
+        background-color: $red;
       }
 
       .progress-content {

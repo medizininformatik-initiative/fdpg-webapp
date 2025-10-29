@@ -203,10 +203,10 @@ import { ElTable } from 'element-plus'
 import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { UseCaseUpload } from '@/types/upload.types'
-import { ref, computed, nextTick, onMounted, type Ref } from 'vue'
+import { computed, nextTick, onMounted, type Ref, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
 import { DueDateEnum } from '@/types/due-date.enum'
 import { useLocationStore } from '@/stores/locations/location.store'
@@ -566,7 +566,7 @@ onMounted(async () => {
         background-color: $blue;
       }
       &--red {
-        background-color: $red-100;
+        background-color: $red;
       }
       &--gray {
         background-color: $gray-900;
@@ -714,8 +714,8 @@ onMounted(async () => {
         }
 
         &.rejected {
-          background-color: color.adjust($red-100, $lightness: 40%);
-          border-color: $red-100;
+          background-color: color.adjust($red, $lightness: 40%);
+          border-color: $red;
           color: $black;
         }
       }
@@ -763,7 +763,7 @@ onMounted(async () => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red-100;
+            background-color: $red;
           }
 
           i {
@@ -785,7 +785,7 @@ onMounted(async () => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red-100;
+            color: $red;
           }
 
           &.positive {
@@ -813,6 +813,6 @@ onMounted(async () => {
 }
 
 :deep(.delayed) {
-  color: $red-100 !important;
+  color: $red !important;
 }
 </style>

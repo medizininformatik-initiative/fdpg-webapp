@@ -253,8 +253,8 @@ onMounted(async () => {
     }
 
     &.rejected {
-      background-color: color.adjust($red-100, $lightness: 40%);
-      border-color: $red-100;
+      background-color: color.adjust($red, $lightness: 40%);
+      border-color: $red;
       color: $black;
     }
   }

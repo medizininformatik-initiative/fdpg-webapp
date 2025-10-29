@@ -144,6 +144,6 @@ const acceptContract = () => {
 <style lang="scss">
 @use '@/assets/sass/variable' as *;
 .no-contract-hint {
-  color: $red-100;
+  color: $red;
 }
 </style>

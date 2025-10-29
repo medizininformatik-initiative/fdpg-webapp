@@ -84,14 +84,14 @@ defineProps({
           background-color: $gray-200;
 
           &::after {
-            border-color: $green;
+            border-color: $black;
             transform: rotate(45deg) scaleY(1);
           }
         }
       }
 
       .el-radio__label {
-        color: $white;
+        color: $black;
       }
     }
 

@@ -90,7 +90,7 @@
 <script setup lang="ts">
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { CardType } from '@/types/component.types'
 import { Role } from '@/types/oidc.types'
 import type { IProposalDetail } from '@/types/proposal.types'
@@ -246,11 +246,11 @@ const deleteProposal = () => {
 
     &.warn {
       .title {
-        background-color: $red-100;
+        background-color: $red;
       }
 
       .due-date {
-        color: $red-100;
+        color: $red;
       }
     }
 
