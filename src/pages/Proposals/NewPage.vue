@@ -1459,7 +1459,7 @@ onMounted(async () => {
   layoutStore.resetSteps()
 
   const locations = await locationStore.getAllActive()
-  allLocations.value = locations
+  allLocations.value = locations.filter((location) => location.dataIntegrationCenter)
 
   try {
     await proposalStore.setCurrentProposal(params.id as string)
