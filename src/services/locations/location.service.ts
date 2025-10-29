@@ -1,0 +1,78 @@
+import { ApiClient } from '@/httpClients/api/api.client'
+import type { ILocation, ILocationKeyLabel, ILocationSyncChangelog } from '@/types/location.types'
+
+export class LocationService {
+  private basePath = '/locations'
+  private apiClient = new ApiClient().client
+
+  async get(id: string): Promise<ILocation> {
+    const response = await this.apiClient.get(`${this.basePath}/${id}`)
+    return response.data
+  }
+
+  async getAll(): Promise<ILocation[]> {
+    const response = await this.apiClient.get(this.basePath)
+
+    return response.data
+  }
+
+  async getAllChangelogs(): Promise<ILocationSyncChangelog[]> {
+    const response = await this.apiClient.get(`${this.basePath}/changelogs`)
+
+    return response.data
+  }
+
+  async updateLocation(location: ILocation): Promise<ILocation> {
+    const response = await this.apiClient.put(`${this.basePath}/${location._id}`, location)
+    return response.data
+  }
+
+  async setChangelogStatus(changelog: ILocationSyncChangelog): Promise<ILocationSyncChangelog> {
+    const response = await this.apiClient.put(`${this.basePath}/changelogs/${changelog._id}/status`, changelog)
+    return response.data
+  }
+
+  async syncLocations(): Promise<ILocationSyncChangelog[]> {
+    const response = await this.apiClient.get(`${this.basePath}/sync`)
+    return response.data
+  }
+
+  async catch(error: any) {
+    if (error.response) {
+      const status = error.response.status
+      let errorData = error.response.data
+      if (errorData instanceof Blob) {
+        try {
+          const text = await errorData.text()
+          errorData = JSON.parse(text)
+        } catch (parseError) {
+          console.warn('Could not parse error response as JSON:', parseError)
+        }
+      }
+      const errorMessage = errorData?.message || errorData?.error || `Export failed with status ${status}`
+      throw new Error(errorMessage)
+    } else {
+      throw new Error(error.message || 'An unexpected error occurred while exporting files')
+    }
+  }
+
+  async getKeyLabel(): Promise<ILocationKeyLabel[]> {
+    try {
+      const response = await this.apiClient.get(`${this.basePath}/key-label`)
+      return response.data
+    } catch (error) {
+      console.error('Failed to fetch key-label:', error)
+
+      let errorMessage = 'Failed to get key-label due to an unknown error.'
+      if (error.response) {
+        errorMessage = `API Error: Server responded with status ${error.response.status}. Data: ${JSON.stringify(error.response.data)}`
+      } else if (error.request) {
+        errorMessage = 'API Error: No response received from server.'
+      } else {
+        errorMessage = `API Error: ${error.message}`
+      }
+
+      throw new Error(errorMessage, { cause: error })
+    }
+  }
+}

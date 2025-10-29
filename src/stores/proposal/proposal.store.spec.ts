@@ -23,8 +23,6 @@ import type { IDeclineUacApproval } from '@/types/uac-approval.types'
 import type { IDizApproval } from '@/types/diz-approval.types'
 import type { IDeclineContract } from '@/types/sign-contract.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
-import { setImmediate } from 'timers'
-import type { MiiLocation } from '@/types/location.enum'
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { DueDateEnum, type Deadlines } from '@/types/due-date.enum'
@@ -158,8 +156,8 @@ describe('Proposal Store', () => {
     proposalService.initContracting.mockResolvedValueOnce(mockProposal)
     const file = new File([new Blob(['1'], { type: 'image/png' })], 'test.png')
     const proposalId = 'proposalId'
-    await store.initContracting(proposalId, file, ['MRI', 'KC'] as MiiLocation[])
-    expect(proposalService.initContracting).toHaveBeenCalledWith(proposalId, file, ['MRI', 'KC'] as MiiLocation[])
+    await store.initContracting(proposalId, file, ['MRI', 'KC'])
+    expect(proposalService.initContracting).toHaveBeenCalledWith(proposalId, file, ['MRI', 'KC'])
   })
 
   it('should call the service to uploadFile', async () => {

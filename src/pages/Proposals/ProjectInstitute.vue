@@ -117,7 +117,8 @@ import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import type { SelectOption } from '@/components/FdpgSelect.vue'
 import FdpgSelect from '@/components/FdpgSelect.vue'
-import { SORTED_ACTIVE_LOCATION_OPTIONS, countryOptions } from '@/constants'
+import { countryOptions } from '@/constants'
+import type { ILocation } from '@/types/location.types'
 import type { IInstitute } from '@/types/proposal.types'
 import { emailValidationFunc, maxLengthValidationFunc, requiredValidationFunc } from '@/validations'
 import { useVModel } from '@vueuse/core'
@@ -150,6 +151,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+
+  locations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
+  },
 })
 
 const emit = defineEmits(['update:modelValue'])
@@ -160,7 +167,7 @@ const locationOptions = [
     label: t('proposal.otherOrganization'),
     value: undefined,
   } as SelectOption,
-  ...SORTED_ACTIVE_LOCATION_OPTIONS,
+  ...props.locations.map((loc) => ({ label: loc.display, value: loc._id })),
 ]
 
 const institute = useVModel(props, 'modelValue', emit)

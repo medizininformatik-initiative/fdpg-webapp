@@ -21,7 +21,7 @@
 
     <div class="divider" />
     <FdpgCheckNotes v-if="proposalStore.currentProposal?.fdpgCheckNotes" />
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION" />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION" :possible-locations="possibleLocations" />
   </el-container>
 
   <SignDialog v-model="isSignDialogOpen" @accept-contract="handleContractSignConfirm" />
@@ -71,12 +71,14 @@ import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import DIZDetailSection from '@/components/DIZDetailSection.vue'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 const { t } = useI18n()
 const showPublications = ref(false)
 const messageBoxStore = useMessageBoxStore()
@@ -115,6 +117,15 @@ const router = useRouter()
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+const locationStore = useLocationStore()
+
+const locationMapRef: Ref<Record<string, ILocation>> = ref({})
+
+const possibleLocations = computed(() =>
+  (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])
+    .map((locId) => locationMapRef.value?.[locId])
+    .filter((loc) => loc),
+)
 
 const openProposal = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
@@ -507,6 +518,9 @@ watch(
 
 onMounted(async () => {
   await fetchProposal()
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationMapRef.value = lm
 })
 </script>
 

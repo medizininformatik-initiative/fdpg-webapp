@@ -16,7 +16,6 @@ import { Role } from '@/types/oidc.types'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import { useLayoutStore } from '@/stores/layout.store'
 import type { UploadFile } from 'element-plus'
-import type { MiiLocation } from '@/types/location.enum'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createI18n } from 'vue-i18n'
 
@@ -257,13 +256,10 @@ describe('FdpgMemberDetails', () => {
 
         expect(contractDialog.exists()).toBeTruthy()
 
-        contractDialog.vm.$emit('initiate-contract', contractFile, ['MRI', 'KC'] as MiiLocation[])
+        contractDialog.vm.$emit('initiate-contract', contractFile, ['MRI', 'KC'])
         await flushPromises()
 
-        expect(proposalStore.initContracting).toHaveBeenCalledWith('proposalId', contractFile.raw, [
-          'MRI',
-          'KC',
-        ] as MiiLocation[])
+        expect(proposalStore.initContracting).toHaveBeenCalledWith('proposalId', contractFile.raw, ['MRI', 'KC'])
         expect(showSuccessMessage).toHaveBeenCalledWith('general.submitted')
         expect(router.push).toHaveBeenCalledWith({ name: layoutStore.lastDashboard })
       })

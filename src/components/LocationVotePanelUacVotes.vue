@@ -138,7 +138,7 @@
               <el-collapse-item v-for="conditionalApproval in table.conditionalApprovals" class="condition-row">
                 <template #title>
                   <div class="el-collapse-item-title">
-                    {{ MII_LOCATIONS[conditionalApproval.location].display }}
+                    {{ locationLookUpMapRef?.[conditionalApproval.location]?.display }}
                     <div class="condition-interaction">
                       <div class="condition-data-amount">
                         {{ t('proposal.conditionApprovalDataVolume', { amount: conditionalApproval.dataAmount }) }}
@@ -197,27 +197,27 @@
 import useDownload from '@/composables/use-download'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
-import { MII_LOCATIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import type { MiiLocation } from '@/types/location.enum'
 import { ElTable } from 'element-plus'
 import type { IConditionalApproval, IDeclineReason, IUacApproval, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { UseCaseUpload } from '@/types/upload.types'
-import { computed, nextTick, onMounted, ref } from 'vue'
+import { computed, nextTick, onMounted, type Ref, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
 import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { useI18n } from 'vue-i18n'
 import { DueDateEnum } from '@/types/due-date.enum'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
 
 const proposalStore = useProposalStore()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
 const authStore = useAuthStore()
 const messageBoxStore = useMessageBoxStore()
 const { t } = useI18n()
-interface IPanelInputConfig<T extends MiiLocation | IConditionalApproval | IUacApproval> {
+interface IPanelInputConfig<T extends string | IConditionalApproval | IUacApproval> {
   data: T[]
   title: TranslationSchema
   indicator: 'green' | 'blue' | 'red' | 'grey'
@@ -246,7 +246,7 @@ interface ITableData {
   dataAmount?: number
   declineReason?: IDeclineReason
   revert?: boolean
-  location?: MiiLocation
+  location?: string
   isLate?: boolean
 }
 
@@ -270,6 +270,9 @@ const tableColumns: IColumnOption[] = [
   { prop: 'revert', label: 'proposal.revert', minWidth: 50 },
 ]
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+
+const locationStore = useLocationStore()
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const { uploadsForType: contractConditions } = useUpload(proposalId, [UseCaseUpload.ContractCondition])
 const uploadsMap = computed<Record<string, IUpload>>(() => {
@@ -312,15 +315,15 @@ const locationCheckDueDate = computed<Date | null>(() => {
 
 const mapTableData = (
   rowId: number,
-  location: MiiLocation,
+  location: string,
   dataAmount?: number,
   declineReason?: IDeclineReason,
   isLate?: boolean,
 ): ITableData => {
   return {
     rowId,
-    fullName: MII_LOCATIONS[location]?.display ?? 'unknown',
-    city: MII_LOCATIONS[location]?.city ?? 'unknown',
+    fullName: locationLookUpMapRef.value[location]?.display ?? `unknown ${location}`,
+    city: locationLookUpMapRef.value[location]?.definition ?? `unknown city ${location}`,
     dataAmount,
     declineReason,
     location,
@@ -369,7 +372,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
       ...(currentProposal?.dizApprovedLocations ?? []),
       ...(currentProposal?.dizConditionApprovedLocations ?? []),
     ]
-    const pendingLocations: IPanelInputConfig<MiiLocation> = {
+    const pendingLocations: IPanelInputConfig<string> = {
       data,
       title: 'proposal.pendingVotes',
       indicator: 'grey',
@@ -446,7 +449,7 @@ const tables = computed<IPanelVoteConfig[]>(() => {
 
   panels.push(...tablesWithDataAmount)
 
-  const excludedLocations: IPanelInputConfig<MiiLocation> = (() => {
+  const excludedLocations: IPanelInputConfig<string> = (() => {
     const data = currentProposal?.requestedButExcludedLocations ?? []
     return {
       data,
@@ -506,7 +509,7 @@ const triggerRowClick = async (event: Event) => {
   currentRowsFocusable?.focus()
 }
 
-const revertLocation = async (location: MiiLocation) => {
+const revertLocation = async (location: string) => {
   try {
     await proposalStore.revertLocationVote(proposalId.value, location)
     showSuccessMessage(t('general.submitted'))
@@ -515,7 +518,7 @@ const revertLocation = async (location: MiiLocation) => {
   }
 }
 
-const handleRevertLocation = (location: MiiLocation) => {
+const handleRevertLocation = (location: string) => {
   messageBoxStore.setMessageBoxInfo({
     cancelButtonText: 'general.cancel',
     confirmButtonText: 'proposal.revertVote',
@@ -528,12 +531,15 @@ const handleRevertLocation = (location: MiiLocation) => {
   })
 }
 
-onMounted(() => {
+onMounted(async () => {
   const collapseItemHeaders = document.querySelectorAll('.el-collapse-item__header')
   collapseItemHeaders.forEach(function (el) {
     el.removeAttribute('tabindex')
     el.removeAttribute('rol')
   })
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
 })
 </script>
 

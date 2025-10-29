@@ -1,7 +1,7 @@
 <template>
   <section role="region" class="section contract-participants">
     <h2>
-      {{ $t('proposal.xContractParticipants', { count: signedContractsCount + signedContractsPendingCount + 1 }) }}
+      {{ t('proposal.xContractParticipants', { count: signedContractsCount + signedContractsPendingCount + 1 }) }}
     </h2>
     <section role="menubar" class="tab-bar">
       <div
@@ -12,7 +12,7 @@
         @click="setActiveTab('owner')"
         @keydown.enter="setActiveTab('owner')"
       >
-        {{ $t('general.applicant') }}
+        {{ t('general.applicant') }}
       </div>
       <div
         role="menuitem"
@@ -23,7 +23,7 @@
         @keydown.enter="setActiveTab('locations')"
       >
         {{
-          $t('proposal.xLocations', {
+          t('proposal.xLocations', {
             count: signedContractsCount + signedContractsPendingCount,
           })
         }}
@@ -34,7 +34,7 @@
       <section role="row" class="contract-row">
         <div>{{ ownerRow.ownerName }}</div>
         <div class="contract-info">
-          <div class="contract-status" :class="ownerRow.status.style">{{ $t(ownerRow.status.text) }}</div>
+          <div class="contract-status" :class="ownerRow.status.style">{{ t(ownerRow.status.text) }}</div>
           <div class="contract-date">
             {{ ownerRow.signedAt }}
           </div>
@@ -45,10 +45,10 @@
     <section v-show="activeTab === 'locations'" role="region">
       <section v-if="isResearcher" role="row" class="contract-researcher-row">
         <div>
-          {{ $t('proposal.contractPendingLocationCount', { count: signedContractsPendingCount }) }}
+          {{ t('proposal.contractPendingLocationCount', { count: signedContractsPendingCount }) }}
         </div>
         <div>
-          {{ $t('proposal.contractAcceptedLocationCount', { count: signedContractsCount }) }}
+          {{ t('proposal.contractAcceptedLocationCount', { count: signedContractsCount }) }}
         </div>
       </section>
       <section
@@ -58,9 +58,9 @@
         role="row"
         class="contract-row"
       >
-        <div>{{ MII_LOCATIONS[location.location].display }}</div>
+        <div>{{ locationLookUpMapRef[location.location]?.display ?? `unknown ${location.location}` }}</div>
         <div class="contract-info">
-          <div class="contract-status" :class="location.status.style">{{ $t(location.status.text) }}</div>
+          <div class="contract-status" :class="location.status.style">{{ t(location.status.text) }}</div>
           <div class="contract-date">
             {{ location.signedAt ? new Date(location.signedAt).toLocaleDateString() : '-' }}
           </div>
@@ -75,7 +75,7 @@
         @click="toggleFullView()"
         @keydown.enter="toggleFullView()"
       >
-        <span>{{ isFullView ? $t('dashboard.showLess') : $t('dashboard.showMore') }}</span>
+        <span>{{ isFullView ? t('dashboard.showLess') : t('dashboard.showMore') }}</span>
         <span v-if="!isFullView"> ({{ uacFullyApproved.length - 3 }})</span>
         <i :class="isFullView ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" aria-hidden="true" />
       </div>
@@ -84,20 +84,26 @@
 </template>
 
 <script setup lang="ts">
-import { MII_LOCATIONS } from '@/constants'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useLocationStore } from '@/stores/locations/location.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import type { ILocation } from '@/types/location.types'
 import { Role } from '@/types/oidc.types'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 type StatusTagStyle = 'pending' | 'accepted' | 'rejected'
+const { t } = useI18n()
 const proposalStore = useProposalStore()
 const authStore = useAuthStore()
+const locationStore = useLocationStore()
 
 const isResearcher = computed(() => authStore.singleKnownRole === Role.Researcher)
 const signedContractsCount = computed(() => proposalStore.currentProposal?.signedContractsCount ?? 0)
 const signedContractsPendingCount = computed(() => proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
+
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const uacFullyApproved = computed(() => {
   const conditionAccepted =
@@ -172,6 +178,11 @@ const isFullView = ref(false)
 const toggleFullView = () => {
   isFullView.value = !isFullView.value
 }
+
+onMounted(async () => {
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
+})
 </script>
 
 <style lang="scss" scoped>

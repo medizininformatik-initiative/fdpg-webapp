@@ -1,4 +1,3 @@
-import type { MiiLocation } from '@/types/location.enum'
 import type { Role } from './oidc.types'
 import type { IVersion } from './version.interface'
 
@@ -26,14 +25,14 @@ interface VersionItem {
 }
 
 export interface IComment {
-  locations: MiiLocation[]
+  locations: string[]
   content: string
   type: CommentType
   versionOfItem?: VersionItem
 }
 
 export interface ICommentOwner {
-  miiLocation?: MiiLocation
+  miiLocation?: string
   role: Role
 }
 export interface ICommentDetail {
@@ -42,7 +41,7 @@ export interface ICommentDetail {
   _id: string
   isDone?: boolean
   owner: ICommentOwner
-  locations: MiiLocation[]
+  locations: string[]
   referenceObjectId: string
   content: string
   type: CommentType
@@ -57,7 +56,7 @@ export interface IAnswerDetail {
   updatedAt: string
   _id: string
   owner: ICommentOwner
-  locations?: MiiLocation[]
+  locations?: string[]
   isDone: boolean
 }
 

@@ -4,6 +4,7 @@
       :message="message"
       :type="type"
       :is-answer-mode="isAnswerMode"
+      :possible-locations="possibleLocations"
       @toggle-answer-mode="toggleAnswerMode"
       @create-answer="handleAnswerCreate"
       @mark-as-done="handleCommentDone(message._id, !message.isDone)"
@@ -12,6 +13,7 @@
       v-if="isAnswerMode"
       :message="message"
       :type="type"
+      :possible-locations="possibleLocations"
       @toggle-answer-mode="toggleAnswerMode"
       @create-answer="handleAnswerCreate"
     />
@@ -21,6 +23,7 @@
         :message="answer"
         :is-answer="true"
         :type="type"
+        :possible-locations="possibleLocations"
         @mark-as-done="handleAnswerDone(message._id, answer._id, !answer.isDone)"
       />
     </template>
@@ -35,6 +38,7 @@ import type { PropType } from 'vue'
 import { ref } from 'vue'
 import MessageCenterAnswerCreator from './MessageCenterAnswerCreator.vue'
 import MessageCenterItem from './MessageCenterItem.vue'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   message: {
@@ -47,6 +51,10 @@ const props = defineProps({
   },
   showDoneComments: {
     type: Boolean,
+    required: true,
+  },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
     required: true,
   },
 })

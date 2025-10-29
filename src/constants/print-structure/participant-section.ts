@@ -1,6 +1,6 @@
 import type { IDefinitionCard, IDefinitionSectionArray } from '@/components/Shared/definition-card.types'
+import type { ILocationKeyLabel } from '@/types/location.types'
 import type { IParticipant, IProposal } from '@/types/proposal.types'
-import { MII_LOCATIONS } from '..'
 
 const researcherCard: IDefinitionCard<IParticipant, 'researcher'> = {
   key: 'researcher',
@@ -24,7 +24,7 @@ const researcherCard: IDefinitionCard<IParticipant, 'researcher'> = {
   ],
 }
 
-const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
+const instituteCard = (locationMap: Record<string, ILocationKeyLabel>): IDefinitionCard<IParticipant, 'institute'> => ({
   key: 'institute',
   cardLabel: 'proposal.detailsOfTheInstitutionFacility',
   terms: [
@@ -37,7 +37,7 @@ const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
           {
             key: 'miiLocation',
             kind: 'lookup',
-            lookupMap: MII_LOCATIONS,
+            lookupMap: locationMap,
             lookupKey: 'display',
           },
         ],
@@ -66,7 +66,7 @@ const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
       definitions: [[{ key: 'email' }]],
     },
   ],
-}
+})
 
 const categoryCard: IDefinitionCard<IParticipant, 'participantCategory'> = {
   key: 'participantCategory',
@@ -80,13 +80,19 @@ const categoryCard: IDefinitionCard<IParticipant, 'participantCategory'> = {
   ],
 }
 
-const participantsCards = [researcherCard, instituteCard, categoryCard]
+const participantsCards = (locationMap: Record<string, ILocationKeyLabel>) => [
+  researcherCard,
+  instituteCard(locationMap),
+  categoryCard,
+]
 
-export const participantSection: IDefinitionSectionArray<IProposal, 'participants', 'researcher'> = {
+export const participantSection = (
+  locationMap: Record<string, ILocationKeyLabel>,
+): IDefinitionSectionArray<IProposal, 'participants', 'researcher'> => ({
   sectionLabel: 'proposal.participatingScientists',
   arrayLabel: [{ key: 'firstName' }, { key: 'lastName' }],
   arrayLabelKey: 'researcher',
   kind: 'array',
   key: 'participants',
-  mapping: participantsCards,
-}
+  mapping: participantsCards(locationMap),
+})

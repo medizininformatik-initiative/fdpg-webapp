@@ -24,6 +24,7 @@
       v-if="authStore.hasFdpgLevelPermissions() && !isDraft"
       :object-id="dto[card.key]._id"
       :type="CommentType.PROPOSAL_TASK"
+      :possible-locations="possibleLocations"
     />
     <div v-else class="fdpg-section-spacer"></div>
   </template>
@@ -35,6 +36,7 @@ import type { DefinitionCards, DefinitionCardsVirtual } from '@/components/Share
 import DefinitionCard from '@/components/Shared/DefinitionCard.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { CommentType } from '@/types/comment.interface'
+import type { ILocation } from '@/types/location.types'
 import type { PropType } from 'vue'
 import { defineAsyncComponent } from 'vue'
 
@@ -72,6 +74,10 @@ defineProps({
   hideReviewCheckbox: {
     type: Boolean,
     default: false,
+  },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
 })
 
