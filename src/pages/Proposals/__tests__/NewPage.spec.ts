@@ -20,6 +20,7 @@ import { mockCommentDetailForTask } from '@/mocks/comment.mock'
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
@@ -71,6 +72,10 @@ vi.mock('@/composables/use-notifications', () => ({
     showSuccessMessage: vi.fn(),
     showErrorMessage: vi.fn(),
   }),
+}))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
 }))
 
 const mountComponent = (withPinia = true) => {
