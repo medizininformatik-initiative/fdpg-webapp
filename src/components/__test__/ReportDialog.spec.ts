@@ -10,6 +10,21 @@ import useNotifications from '@/composables/use-notifications'
 import FdpgUpload from '../FdpgUpload.vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+vi.mock('vue-i18n', () => ({
+  createI18n: vi.fn(),
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockImplementation((key: string) => key),
+  })),
+}))
+
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
+}))
+
 vi.mock('@/validations', () => ({
   checkValueShouldBeTrue: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
   maxLengthValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),

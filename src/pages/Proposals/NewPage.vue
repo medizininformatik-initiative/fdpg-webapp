@@ -64,7 +64,7 @@
           />
 
           <RegisterVariableSelection
-            v-model="proposalForm.userProject.generalProjectInformation"
+            v-model="proposalForm.registerInfo!"
             :review-mode="isReviewMode"
             v-if="isRegisteringForm"
           />
@@ -76,11 +76,11 @@
           <ProjectAddresses
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
-            v-if="isMIISelected"
+            v-if="isMIISelected || isRegisteringForm"
             :isRegisteringForm="isRegisteringForm"
           />
 
-          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
+          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected || isRegisteringForm">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -157,6 +157,7 @@
           <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
           <UserProjectInformation
             v-model="proposalForm.userProject"
+            v-model:register-info="proposalForm.registerInfo"
             :form-ref="formRef"
             :file-list="fileList"
             :review-mode="isReviewMode"
@@ -318,6 +319,7 @@ import { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
@@ -464,10 +466,13 @@ const activeStep = computed(() => {
   return layoutStore.activeStep
 })
 const isRegisteringForm = computed(() => {
-  return (
+  if (
     router.currentRoute.value.name === RouteName.RegisterNewProject ||
     router.currentRoute.value.name === RouteName.RegisterProject
-  )
+  ) {
+    return true
+  }
+  return proposalForm.value?.type === ProposalType.RegisteringForm
 })
 
 // Sync registration form state with layout store
@@ -699,12 +704,14 @@ watch(hasBiosamples, async (enabled) => {
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
-  // Set register object for registering forms
+  // Set type and registerInfo for registering forms
   if (isRegisteringForm.value) {
-    formData.register = {
-      isRegisteringForm: true,
-      isInternalRegistration: proposalForm.value?.register?.isInternalRegistration ?? false,
+    formData.type = ProposalType.RegisteringForm
+    formData.registerInfo = {
+      isInternalRegistration: proposalForm.value?.registerInfo?.isInternalRegistration ?? false,
     }
+  } else {
+    formData.type = ProposalType.ApplicationForm
   }
 
   // If MII is not selected, remove MII-specific fields

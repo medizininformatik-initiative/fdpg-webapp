@@ -8,39 +8,39 @@
   <el-card class="form-group">
     <el-row :gutter="20">
       <el-col :sm="24" :md="12">
-        <FdpgFormItem prop="userProject.generalProjectInformation.diagnoses">
+        <FdpgFormItem prop="registerInfo.diagnoses">
           <FdpgLabel html-for="proposal.diagnoses" />
           <el-input-tag
-            v-model="generalProjectInformationForm.diagnoses"
-            data-testId="generalProjectInformationForm.diagnoses"
+            v-model="registerInfoForm.diagnoses"
+            data-testId="registerInfoForm.diagnoses"
             :placeholder="t('proposal.diagnosesPlaceholder')"
-            :disabled="reviewMode || generalProjectInformationForm.isDone"
+            :disabled="reviewMode"
             style="width: 100%"
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" :md="12">
-        <FdpgFormItem prop="userProject.generalProjectInformation.procedures">
+        <FdpgFormItem prop="registerInfo.procedures">
           <FdpgLabel html-for="proposal.procedures" />
           <el-input-tag
-            v-model="generalProjectInformationForm.procedures"
-            data-testId="generalProjectInformationForm.procedures"
+            v-model="registerInfoForm.procedures"
+            data-testId="registerInfoForm.procedures"
             :placeholder="t('proposal.proceduresPlaceholder')"
-            :disabled="reviewMode || generalProjectInformationForm.isDone"
+            :disabled="reviewMode"
             style="width: 100%"
           />
         </FdpgFormItem>
       </el-col>
     </el-row>
   </el-card>
-  <TaskViewer :object-id="generalProjectInformationForm._id" />
+  <TaskViewer :object-id="registerInfoForm?._id" />
 </template>
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
-import type { IGeneralProjectInformation } from '@/types/proposal.types'
+import type { IRegisterInfo } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -49,7 +49,7 @@ const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<IGeneralProjectInformation>,
+    type: Object as PropType<IRegisterInfo>,
     required: true,
   },
   reviewMode: {
@@ -60,5 +60,5 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue'])
 
-const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
+const registerInfoForm = useVModel(props, 'modelValue', emit)
 </script>

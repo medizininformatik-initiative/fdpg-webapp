@@ -104,11 +104,11 @@
       <!-- Register-specific fields -->
       <template v-if="isRegisteringForm">
         <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.projectCategory">
+          <FdpgFormItem prop="registerInfo.projectCategory">
             <FdpgLabel required html-for="proposal.projectCategory" />
             <el-select
-              v-model="generalProjectInformationForm.projectCategory"
-              data-testId="generalProjectInformationForm.projectCategory"
+              v-model="registerInfoForm.projectCategory"
+              data-testId="registerInfoForm.projectCategory"
               placeholder="proposal.pleaseSelectProjectCategory"
               :disabled="reviewMode || generalProjectInformationForm.isDone"
               style="width: 100%"
@@ -123,10 +123,10 @@
           </FdpgFormItem>
         </el-col>
         <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.legalBasis">
+          <FdpgFormItem prop="registerInfo.legalBasis">
             <div class="fdpg-checkbox-wrapper">
               <el-checkbox
-                v-model="generalProjectInformationForm.legalBasis"
+                v-model="registerInfoForm.legalBasis"
                 class="fdpg-checkbox"
                 :disabled="isDisabled"
                 name="legalBasis"
@@ -138,13 +138,13 @@
           </FdpgFormItem>
         </el-col>
         <el-col :sm="24">
-          <FdpgFormItem prop="userProject.generalProjectInformation.projectUrl">
+          <FdpgFormItem prop="registerInfo.projectUrl">
             <FdpgLabel required html-for="proposal.projectUrl" />
             <FdpgInput
-              v-model="generalProjectInformationForm.projectUrl"
-              data-testId="generalProjectInformationForm.projectUrl"
+              v-model="registerInfoForm.projectUrl"
+              data-testId="registerInfoForm.projectUrl"
+              :disabled="reviewMode || registerInfoForm.isDone"
               placeholder="proposal.pleaseEnterTheProjectUrl"
-              :disabled="reviewMode || generalProjectInformationForm.isDone"
             />
           </FdpgFormItem>
         </el-col>
@@ -188,7 +188,7 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
-import type { IGeneralProjectInformation } from '@/types/proposal.types'
+import type { IGeneralProjectInformation, IProposal } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
@@ -202,6 +202,11 @@ const props = defineProps({
   modelValue: {
     type: Object as PropType<IGeneralProjectInformation>,
     required: true,
+  },
+  registerInfo: {
+    type: Object as PropType<IProposal['registerInfo']>,
+    required: false,
+    default: () => ({}),
   },
   formRef: {
     type: Object as PropType<FormInstance>,
@@ -226,9 +231,10 @@ const props = defineProps({
 const { showInfoMessage } = useNotifications()
 const { t } = useI18n()
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:registerInfo'])
 
 const generalProjectInformationForm = useVModel(props, 'modelValue', emit)
+const registerInfoForm = useVModel(props, 'registerInfo', emit, { eventName: 'update:registerInfo' })
 const projectFundingEditor = ref()
 
 const projectCategories = computed(() => [

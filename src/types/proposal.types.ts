@@ -10,6 +10,7 @@ import type { Deadlines } from './due-date.enum'
 import type { DifeTypeOfUse } from './dife-type-of-use.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { PseudonymizationInfoOptions } from './PseudonymizationInfo.enum'
+import { ProposalType } from './proposal-type.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -133,11 +134,6 @@ export interface IGeneralProjectInformation extends WithIdAndIsDone {
   fundingReferenceNumber: string
   desiredStartTimeType: string | undefined
   keywords: string[]
-  projectCategory: string
-  diagnoses: string[]
-  procedures: string[]
-  legalBasis: boolean
-  projectUrl: string
 }
 
 export interface IProjectDetails extends WithIdAndIsDone {
@@ -551,6 +547,7 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
+  registerInfo?: IRegisterInfo
 
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
@@ -583,12 +580,7 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
-
-  register?: {
-    isRegisteringForm?: boolean
-    isInternalRegistration?: boolean
-    originalProposalId?: string
-  }
+  type: ProposalType
 }
 
 export enum FdpgTaskType {
@@ -653,8 +645,8 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
-  register?: {
-    isRegisteringForm?: boolean
+  type: ProposalType
+  registerInfo?: {
     isInternalRegistration?: boolean
     originalProposalId?: string
   }
@@ -708,4 +700,14 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+export interface IRegisterInfo extends WithIdAndIsDone {
+  isInternalRegistration: boolean
+  originalProposalId: string
+  // Register-specific fields
+  projectUrl: string
+  legalBasis: boolean
+  projectCategory: string
+  diagnoses: string[]
+  procedures: string[]
 }

@@ -97,6 +97,7 @@ import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort, IUpload } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
@@ -139,7 +140,7 @@ const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const isSubmitting = ref(false)
-const isRegisteringForm = computed(() => proposalStore.currentProposal?.register?.isRegisteringForm || false)
+const isRegisteringForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
 
 const openReviewPage = () => {
   if (isRegisteringForm.value) {

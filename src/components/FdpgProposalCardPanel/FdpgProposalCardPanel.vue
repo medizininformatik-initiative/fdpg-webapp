@@ -52,7 +52,7 @@
           @keydown.left="focusPreviousCard($event)"
           @keydown.tab="handleTab($event)"
           @focus="handleFocus($event)"
-          :isRegisteringForm="proposal.register?.isRegisteringForm"
+          :isRegisteringForm="proposal.type === ProposalType.RegisteringForm"
         />
       </el-col>
     </el-row>
@@ -63,6 +63,7 @@
 import FdpgProposalCard from '@/components/FdpgProposalCardPanel/FdpgProposalCard/FdpgProposalCard.vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { PanelType } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import { SortDirection, PanelQuery } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
 import type { PropType } from 'vue'

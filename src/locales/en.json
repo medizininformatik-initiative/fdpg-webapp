@@ -790,6 +790,7 @@
     "researcherInstituteUnknown": "unnamed institute",
     "projectUrl": "Project URL",
     "projectLogo": "Project Logo",
+    "pleaseEnterTheProjectUrl": "Please enter the project URL",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "pleaseSelectProcedures": "Please select or enter procedures",
     "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist",
@@ -979,5 +980,11 @@
     "0700": "Gastroenterology",
     "0800": "Pneumology",
     "0900": "Rheumatology"
+  },
+  "location": {
+    "failedSetChangelogStatus": "Error on setting the Status",
+    "failedToSync": "Error on synchronizing the locations",
+    "failedToUpdate": "Error on updating location",
+    "errorOnSetup": "Error on fetching data"
   }
 }

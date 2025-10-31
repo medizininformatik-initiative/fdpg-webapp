@@ -2,6 +2,7 @@
   <div class="form-group-wrapper">
     <GeneralProjectInformation
       v-model="userProjectForm.generalProjectInformation"
+      v-model:register-info="registerInfoForm"
       :review-mode="reviewMode"
       :form-ref="formRef"
       :is-registering-form="isRegisteringForm"
@@ -29,7 +30,7 @@
 <script setup lang="ts">
 import type { IAttachmentsInterface } from '@/types/component.interface'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IUserProject } from '@/types/proposal.types'
+import type { IUserProject, IProposal } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import { computed, type PropType } from 'vue'
@@ -42,6 +43,11 @@ const props = defineProps({
   modelValue: {
     type: Object as PropType<IUserProject>,
     required: true,
+  },
+  registerInfo: {
+    type: Object as PropType<IProposal['registerInfo']>,
+    required: false,
+    default: () => ({}),
   },
   formRef: {
     type: Object as PropType<FormInstance>,
@@ -74,9 +80,10 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:registerInfo'])
 
 const userProjectForm = useVModel(props, 'modelValue', emit)
+const registerInfoForm = useVModel(props, 'registerInfo', emit, { eventName: 'update:registerInfo' })
 
 const isMIISelected = computed(() => {
   return props.platform.includes(PlatformIdentifier.Mii)

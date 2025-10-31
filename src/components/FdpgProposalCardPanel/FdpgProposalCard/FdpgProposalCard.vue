@@ -95,6 +95,7 @@ import { CardType } from '@/types/component.types'
 import { Role } from '@/types/oidc.types'
 import type { IProposalDetail } from '@/types/proposal.types'
 import { FdpgTaskType, ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { getDateDiff } from '@/utils/date.util'
 import type { PropType } from 'vue'
@@ -130,6 +131,7 @@ const emits = defineEmits(['delete', 'duplicate'])
 
 const submittedAgo = computed(() => Math.abs(getDateDiff(props.proposal.submittedAt, 0)))
 const editedAgo = computed(() => Math.abs(getDateDiff(props.proposal.updatedAt, 0)))
+const isRegisteringForm = computed(() => props.proposal.type === ProposalType.RegisteringForm)
 
 const authStore = useAuthStore()
 const showLocationVoting = computed(() => {

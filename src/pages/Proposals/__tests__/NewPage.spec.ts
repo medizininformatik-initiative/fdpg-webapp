@@ -10,6 +10,7 @@ import { useCommentStore } from '@/stores/comment/comment.store'
 import type { MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
 import { ProposalStatus, ProposalTypeOfUse, type IProposal } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import useNotifications from '@/composables/use-notifications'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/types/route-name.enum'
@@ -755,9 +756,17 @@ describe('Newpage.vue', () => {
       vi.spyOn(document, 'getElementById').mockReturnValue(anchorMock as any)
 
       proposal = JSON.parse(JSON.stringify(mockProposal))
-      proposal.register = {
-        isRegisteringForm: true,
+      proposal.type = ProposalType.RegisteringForm
+      proposal.registerInfo = {
         isInternalRegistration: false,
+        legalBasis: false,
+        procedures: [],
+        projectCategory: '',
+        projectUrl: '',
+        diagnoses: [],
+        isDone: false,
+        _id: '',
+        originalProposalId: '',
       }
       wrapper = mountComponent() as any
       proposalStore = vi.mocked(useProposalStore())
@@ -785,13 +794,21 @@ describe('Newpage.vue', () => {
         expect(vm.isRegisteringForm).toBe(false)
       })
 
-      it('should use register flag from proposal object', async () => {
-        // Set up proposal with register object
+      it('should use type from proposal object', async () => {
+        // Set up proposal with type
         proposal._id = MOCK_PROPOSAL_ID
         proposal.status = ProposalStatus.Draft
-        proposal.register = {
-          isRegisteringForm: true,
+        proposal.type = ProposalType.RegisteringForm
+        proposal.registerInfo = {
           isInternalRegistration: false,
+          legalBasis: false,
+          procedures: [],
+          projectCategory: '',
+          projectUrl: '',
+          diagnoses: [],
+          isDone: false,
+          _id: '',
+          originalProposalId: '',
         }
 
         proposalStore.currentProposal = proposal
@@ -800,19 +817,27 @@ describe('Newpage.vue', () => {
         await wrapper.vm.$nextTick()
 
         const vm = wrapper.vm as any
-        // Verify the proposal has the register flag in the store
-        expect(proposalStore.currentProposal?.register?.isRegisteringForm).toBe(true)
+        // Verify the proposal has the correct type in the store
+        expect(proposalStore.currentProposal?.type).toBe(ProposalType.RegisteringForm)
       })
     })
 
-    describe('Register object structure', () => {
-      it('should have register object with expected structure', async () => {
-        // Set up proposal with register object
+    describe('RegisterInfo object structure', () => {
+      it('should have registerInfo object with expected structure', async () => {
+        // Set up proposal with registerInfo object
         proposal._id = MOCK_PROPOSAL_ID
         proposal.status = ProposalStatus.Draft
-        proposal.register = {
-          isRegisteringForm: true,
+        proposal.type = ProposalType.RegisteringForm
+        proposal.registerInfo = {
           isInternalRegistration: false,
+          legalBasis: false,
+          procedures: [],
+          projectCategory: '',
+          projectUrl: '',
+          diagnoses: [],
+          isDone: false,
+          _id: '',
+          originalProposalId: '',
         }
 
         proposalStore.currentProposal = proposal
@@ -822,19 +847,27 @@ describe('Newpage.vue', () => {
 
         const vm = wrapper.vm as any
 
-        // Verify proposal store has the register object
-        expect(proposalStore.currentProposal?.register).toBeDefined()
-        expect(proposalStore.currentProposal?.register?.isRegisteringForm).toBe(true)
-        expect(proposalStore.currentProposal?.register?.isInternalRegistration).toBe(false)
+        // Verify proposal store has the correct type and registerInfo
+        expect(proposalStore.currentProposal?.type).toBe(ProposalType.RegisteringForm)
+        expect(proposalStore.currentProposal?.registerInfo).toBeDefined()
+        expect(proposalStore.currentProposal?.registerInfo?.isInternalRegistration).toBe(false)
       })
 
       it('should handle isInternalRegistration flag correctly', async () => {
         // Set up proposal with internal registration
         proposal._id = MOCK_PROPOSAL_ID
         proposal.status = ProposalStatus.Draft
-        proposal.register = {
-          isRegisteringForm: true,
+        proposal.type = ProposalType.RegisteringForm
+        proposal.registerInfo = {
           isInternalRegistration: true,
+          legalBasis: false,
+          procedures: [],
+          projectCategory: '',
+          projectUrl: '',
+          diagnoses: [],
+          isDone: false,
+          _id: '',
+          originalProposalId: '',
         }
 
         proposalStore.currentProposal = proposal
@@ -845,7 +878,7 @@ describe('Newpage.vue', () => {
         const vm = wrapper.vm as any
 
         // Verify isInternalRegistration is preserved
-        expect(proposalStore.currentProposal?.register?.isInternalRegistration).toBe(true)
+        expect(proposalStore.currentProposal?.registerInfo?.isInternalRegistration).toBe(true)
       })
     })
 
@@ -868,7 +901,6 @@ describe('Newpage.vue', () => {
         proposal.userProject.typeOfUse = {
           usage: [],
         } as any
-        proposal.userProject.informationOnRequestedBioSamples = undefined
 
         proposalStore.currentProposal = proposal
 

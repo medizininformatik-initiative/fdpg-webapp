@@ -76,11 +76,6 @@ const transformGeneralProjectInformation = (
     projectFunding: transformEmptyStringToUndefined(generalProjectInformation?.projectFunding),
     fundingReferenceNumber: transformEmptyStringToUndefined(generalProjectInformation?.fundingReferenceNumber),
     keywords: generalProjectInformation?.keywords ?? [],
-    projectUrl: transformEmptyStringToUndefined(generalProjectInformation?.projectUrl),
-    legalBasis: generalProjectInformation?.legalBasis ?? false,
-    projectCategory: transformEmptyStringToUndefined(generalProjectInformation?.projectCategory),
-    diagnoses: generalProjectInformation?.diagnoses ?? [],
-    procedures: generalProjectInformation?.procedures ?? [],
   }
 }
 
@@ -247,7 +242,9 @@ export const transformBiosamples = (
   return transformToApi ? undefined : [mapBiosample()]
 }
 
-const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>): ISelectionOfCases => {
+const transformSelectionOfCases = (
+  selectionOfCases?: DeepPartial<ISelectionOfCases>,
+): DeepPartial<ISelectionOfCases> => {
   return {
     difeSelectionOfCases: {
       selectedCases: selectionOfCases?.difeSelectionOfCases?.selectedCases ?? [],
@@ -258,7 +255,9 @@ const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>
   }
 }
 
-const transformVariableSelection = (variableSelection?: IVariableSelectionData): IVariableSelectionData => {
+const transformVariableSelection = (
+  variableSelection?: DeepPartial<IVariableSelectionData>,
+): DeepPartial<IVariableSelectionData> => {
   return {
     [PlatformIdentifier.DIFE]: {
       typeOfUse: variableSelection?.DIFE?.typeOfUse,
@@ -269,7 +268,7 @@ const transformVariableSelection = (variableSelection?: IVariableSelectionData):
   }
 }
 
-export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort => {
+export const mapSelectedCohorts = (cohort?: DeepPartial<ISelectedCohort>): DeepPartial<ISelectedCohort> => {
   return {
     _id: cohort?._id ?? NEW_ID,
     feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
@@ -280,13 +279,17 @@ export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort =>
   }
 }
 
-export const transformCohorts = (cohorts?: ICohort): ICohort => {
-  return {
-    selectedCohorts: cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ?? [],
-    details: transformEmptyStringToUndefined(cohorts?.details),
-    _id: cohorts?._id,
-    isDone: cohorts?.isDone,
-  }
+export const transformCohorts = (cohorts?: DeepPartial<ICohort>): DeepPartial<ICohort> | undefined => {
+  return cohorts
+    ? {
+        selectedCohorts:
+          cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ??
+          (cohorts?._id ? [] : [{ _id: MiiLocation.VirtualAll }]),
+        details: transformEmptyStringToUndefined(cohorts?.details),
+        _id: cohorts?._id ?? NEW_ID,
+        isDone: cohorts?.isDone ?? false,
+      }
+    : undefined
 }
 
 export const transformUserProject = (

@@ -1,5 +1,6 @@
 import type { IProposal } from '@/types/proposal.types'
 import { ParticipantRole, ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import { Role } from '@/types/oidc.types'
 
@@ -22,7 +23,7 @@ export function isProposalEditable(proposal?: IProposal, singleKnownRole?: Role)
   const status = proposal?.status
 
   // FDPG members can always edit registering forms
-  if (singleKnownRole === Role.FdpgMember && proposal?.register?.isRegisteringForm) {
+  if (singleKnownRole === Role.FdpgMember && proposal?.type === ProposalType.RegisteringForm) {
     return true
   }
 
@@ -130,7 +131,7 @@ export function hasEditingPermissions(
   }
 
   // FDPG members can always edit registering forms
-  if (singleKnownRole === Role.FdpgMember && proposal?.register?.isRegisteringForm) {
+  if (singleKnownRole === Role.FdpgMember && proposal?.type === ProposalType.RegisteringForm) {
     return true
   }
 
