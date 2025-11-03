@@ -1,7 +1,7 @@
 <template>
   <section class="section" v-if="checklist">
     <h2 class="section-title">
-      {{ $t('proposal.checklistTitle') }}
+      {{ t('proposal.checklistTitle') }}
     </h2>
     <ElCard>
       <ElRow>
@@ -30,7 +30,7 @@
                     ]"
                   ></span
                   >{{
-                    $t(`proposal.${table.title}`, {
+                    t(`proposal.${table.title}`, {
                       checkedCount: table.tableData?.filter((item) => item.isAnswered).length,
                       optionsCount: table.tableData?.length,
                     })
@@ -49,14 +49,43 @@
       </ElCard>
     </section>
 
-    <el-checkbox
-      v-model="checklist.isRegistrationLinkSent"
-      @change="updateChecklist('isRegistrationLinkSent', $event)"
-      class="fdpg-checkbox"
-      :size="FdpgInputSize.Small"
-    >
-      {{ $t('proposal.isRegistrationLinkSentLabel') }}
-    </el-checkbox>
+    <div class="section__status">
+      <el-checkbox
+        v-model="checklist.isRegistrationLinkSent"
+        @change="updateChecklist('isRegistrationLinkSent', $event)"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
+      >
+        {{ t('proposal.isRegistrationLinkSentLabel') }}
+      </el-checkbox>
+
+      <el-checkbox
+        v-model="checklist.initialViewing"
+        @change="updateChecklist('initialViewing', $event)"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
+      >
+        {{ t('proposal.initialViewingLabel') }}
+      </el-checkbox>
+
+      <el-checkbox
+        v-model="checklist.depthCheck"
+        @change="updateChecklist('depthCheck', $event)"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
+      >
+        {{ t('proposal.depthCheckLabel') }}
+      </el-checkbox>
+
+      <el-checkbox
+        v-model="checklist.ethicsCheck"
+        @change="updateChecklist('ethicsCheck', $event)"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
+      >
+        {{ t('proposal.ethicsCheckLabel') }}
+      </el-checkbox>
+    </div>
   </section>
 </template>
 
@@ -67,6 +96,8 @@ import { FdpgInputSize } from '@/types/component.types'
 import { type IChecklistItem, type IFdpgChecklist, ProposalStatus } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
 import { ElCard, ElCheckbox, ElCol, ElCollapse, ElCollapseItem, ElRow } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+import FdpgInternalCheckNote from './FdpgInternalCheckNote.vue'
 
 const props = defineProps({
   modelValue: {
@@ -103,11 +134,13 @@ const tables = computed(() => {
   ]
 })
 
+const { t } = useI18n()
+
 const emit = defineEmits(['update:listItem'])
 
 const activeName = ref<string>('projectProperties')
 
-const updateChecklist = (key: string, value: any) => {
+const updateChecklist = (key: keyof IFdpgChecklist, value: any) => {
   if (props.checklist && key in props.checklist) {
     emit('update:listItem', { [key]: value })
   }
@@ -131,6 +164,13 @@ onMounted(() => {
     margin: 2rem 0;
   }
 }
+
+.section__status {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .checklist {
   padding: 20px;
   border-radius: 10px;

@@ -334,6 +334,9 @@ describe('ProposalService', () => {
         checkListVerification: [],
         projectProperties: [],
         isRegistrationLinkSent: true,
+        initialViewing: true,
+        depthCheck: true,
+        ethicsCheck: true,
         fdpgInternalCheckNotes: '',
       },
     }
@@ -341,6 +344,9 @@ describe('ProposalService', () => {
     const proposalId = 'proposalId'
     const checklist: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: true,
+      initialViewing: true,
+      depthCheck: true,
+      ethicsCheck: true,
     }
     const response = await service.updateFdpgChecklist(proposalId, checklist)
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/fdpg-checklist`, checklist)
