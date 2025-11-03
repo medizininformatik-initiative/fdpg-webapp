@@ -85,7 +85,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/components/Proposals/Details/DetailComponent.vue'),
         props: true,
         meta: {
-          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.DataManagementOffice,
+          ],
         },
       },
       {

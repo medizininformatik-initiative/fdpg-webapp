@@ -790,6 +790,7 @@
     "researcherInstituteUnknown": "unnamed institute",
     "projectUrl": "Project URL",
     "projectLogo": "Project Logo",
+    "pleaseEnterTheProjectUrl": "Please enter the project URL",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "pleaseSelectProcedures": "Please select or enter procedures",
     "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist",
@@ -820,7 +821,9 @@
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",
     "participantRole_PARTICIPATING_SCIENTIST": "Participant Scientist",
     "participantRole_RESEARCHER": "Editor",
-    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist"
+    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist",
+    "DataManagementOffice": "Data Management Office",
+    "HEADER_DataManagementOffice": "DMO"
   },
   "countries": {
     "AD": "Andorra",

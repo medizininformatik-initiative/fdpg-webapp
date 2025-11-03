@@ -790,6 +790,7 @@
     "researcherInstituteUnknown": "unbenanntes Institut",
     "projectUrl": "Projekt-URL",
     "projectLogo": "Projektlogo",
+    "pleaseEnterTheProjectUrl": "Bitte geben Sie die Projekt-URL ein",
     "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
     "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
     "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein",
@@ -820,7 +821,9 @@
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
     "participantRole_PARTICIPATING_SCIENTIST": "Beteiligte Wissenschaftler (keine Editorfunktion)",
     "participantRole_RESEARCHER": "Bearbeiter",
-    "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
+    "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler",
+    "DataManagementOffice": "Datenmanagementstelle",
+    "HEADER_DataManagementOffice": "DMST"
   },
   "countries": {
     "AD": "Andorra",

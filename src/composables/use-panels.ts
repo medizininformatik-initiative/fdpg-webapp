@@ -49,18 +49,24 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   ],
 }
 
+const DMO_PANELS: PanelType[] = [
+  { type: CardType.Pending, header: 'general.pending', query: PanelQuery.DmoPending },
+  { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.DmoApproved },
+]
+
 const PANEL_MAP = {
   [Role.Researcher]: RESEARCHER_PANELS,
   [Role.FdpgMember]: FDPG_PANELS,
   [Role.DataSourceMember]: FDPG_PANELS,
   [Role.DizMember]: DIZ_PANELS,
   [Role.UacMember]: UAC_PANELS,
+  [Role.DataManagementOffice]: DMO_PANELS,
 }
 
 export default (routeName: ComputedRef<RouteRecordName>) => {
   const proposalStore = useProposalStore()
   const authStore = useAuthStore()
-  const rolesWithBasicPanels = [Role.Researcher, Role.DizMember, Role.UacMember]
+  const rolesWithBasicPanels = [Role.Researcher, Role.DizMember, Role.UacMember, Role.DataManagementOffice]
 
   const panels = computed<PanelType[]>(() => {
     if (routeName.value === RouteName.Archive) {
