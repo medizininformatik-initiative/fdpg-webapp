@@ -49,9 +49,9 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   ],
 }
 
-const DMO_PANELS: PanelType[] = [
-  { type: CardType.Pending, header: 'general.pending', query: PanelQuery.DmoPending },
-  { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.DmoApproved },
+const DMS_PANELS: PanelType[] = [
+  { type: CardType.Pending, header: 'general.pending', query: PanelQuery.DmsPending },
+  { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.DmsApproved },
 ]
 
 const PANEL_MAP = {
@@ -60,7 +60,7 @@ const PANEL_MAP = {
   [Role.DataSourceMember]: FDPG_PANELS,
   [Role.DizMember]: DIZ_PANELS,
   [Role.UacMember]: UAC_PANELS,
-  [Role.DataManagementOffice]: DMO_PANELS,
+  [Role.DataManagementOffice]: DMS_PANELS,
 }
 
 export default (routeName: ComputedRef<RouteRecordName>) => {

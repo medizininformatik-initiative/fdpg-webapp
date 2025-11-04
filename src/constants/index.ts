@@ -128,7 +128,7 @@ export const PanelQueryObj = {
   },
 
   [Role.DataManagementOffice]: {
-    [CardType.Pending]: PanelQuery.DmoPending,
-    [CardType.Ongoing]: PanelQuery.DmoApproved,
+    [CardType.Pending]: PanelQuery.DmsPending,
+    [CardType.Ongoing]: PanelQuery.DmsApproved,
   },
 }

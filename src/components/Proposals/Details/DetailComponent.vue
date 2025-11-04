@@ -3,7 +3,7 @@
   <FdpgMemberDetails v-if="singleKnownRole === Role.FdpgMember || singleKnownRole === Role.DataSourceMember" />
   <DizMemberDetails v-if="singleKnownRole === Role.DizMember" />
   <UacMemberDetails v-if="singleKnownRole === Role.UacMember" />
-  <DmoMemberDetails v-if="singleKnownRole === Role.DataManagementOffice" />
+  <DmsMemberDetails v-if="singleKnownRole === Role.DataManagementOffice" />
 </template>
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
@@ -14,7 +14,7 @@ const ResearcherDetails = defineAsyncComponent(() => import('./ResearcherDetails
 const FdpgMemberDetails = defineAsyncComponent(() => import('./FdpgMemberDetails.vue'))
 const DizMemberDetails = defineAsyncComponent(() => import('./DizMemberDetails.vue'))
 const UacMemberDetails = defineAsyncComponent(() => import('./UacMemberDetails.vue'))
-const DmoMemberDetails = defineAsyncComponent(() => import('./DmoMemberDetails.vue'))
+const DmsMemberDetails = defineAsyncComponent(() => import('./DmsMemberDetails.vue'))
 const authStore = useAuthStore()
 const singleKnownRole = computed(() => authStore.singleKnownRole)
 </script>

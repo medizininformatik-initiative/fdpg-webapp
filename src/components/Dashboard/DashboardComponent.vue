@@ -2,7 +2,7 @@
   <ResearcherDashboard v-if="singleKnownRole === Role.Researcher" />
   <FdpgMemberDashboard v-else-if="isFdpgLevelUser" />
   <DizAndUacMemberDashboard v-else-if="singleKnownRole === Role.DizMember || singleKnownRole === Role.UacMember" />
-  <DmoDashboard v-else-if="singleKnownRole === Role.DataManagementOffice" />
+  <DmsDashboard v-else-if="singleKnownRole === Role.DataManagementOffice" />
   <AdminDashboard v-else-if="singleKnownRole === Role.Admin" />
   <NoRoleDashboard v-else />
 </template>
@@ -14,7 +14,7 @@ import { Role } from '@/types/oidc.types'
 const ResearcherDashboard = defineAsyncComponent(() => import('./ResearcherDashboard.vue'))
 const FdpgMemberDashboard = defineAsyncComponent(() => import('./FdpgMemberDashboard.vue'))
 const DizAndUacMemberDashboard = defineAsyncComponent(() => import('./LocationDashboard.vue'))
-const DmoDashboard = defineAsyncComponent(() => import('./DmoDashboard.vue'))
+const DmsDashboard = defineAsyncComponent(() => import('./DmsDashboard.vue'))
 const AdminDashboard = defineAsyncComponent(() => import('./AdminDashboard.vue'))
 const NoRoleDashboard = defineAsyncComponent(() => import('./NoRoleDashboard.vue'))
 const authStore = useAuthStore()

@@ -3,22 +3,11 @@
     <DetailTopBar :buttons="topBarButtons"></DetailTopBar>
     <QuickInfo :items="quickInfo"></QuickInfo>
     <AppendixInfo></AppendixInfo>
-    <!-- <ReviewMemberCohortSelection
-      v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
-      v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
-      :enable-edit="false"
-      @add-cohort="() => {}"
-      @remove-cohort="() => {}"
-    /> -->
-    <ProjectStatus :proposal-status="status"></ProjectStatus>
-    <!-- <ContractParticipants v-if="showContractingParticipants" /> -->
-    <!-- <LocationVotePanel v-if="showLocationVotePanel" /> -->
 
+    <ProjectStatus :proposal-status="status"></ProjectStatus>
     <ProjectHistory />
 
     <div class="divider" />
-    <!-- <FdpgCheckNotes v-if="proposalStore.currentProposal?.fdpgCheckNotes" /> -->
-    <!-- <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION" :possible-locations="possibleLocations" /> -->
   </el-container>
 </template>
 
@@ -28,24 +17,18 @@ import DetailTopBar from '@/components/DetailTopBar.vue'
 import ProjectStatus from '@/components/ProjectStatus.vue'
 import ProjectHistory from '@/components/Proposals/Details/ProjectHistory.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
-import ContractParticipants from '@/components/ContractParticipants.vue'
-import LocationVotePanel from '@/components/LocationVotePanel.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useLayoutStore } from '@/stores/layout.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { useMessageBoxStore } from '@/stores/messageBox.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
-import { LocationState, ProposalStatus, type IEditAdditionalLocationProposalInformation } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
-import type { ContractDecision } from '@/types/sign-contract.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
-import type { UploadFile } from 'element-plus'
 import { computed, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 
@@ -55,22 +38,6 @@ const messageBoxStore = useMessageBoxStore()
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
-
-const showContractingParticipants = computed(() => {
-  return (
-    status.value === ProposalStatus.Contracting ||
-    status.value === ProposalStatus.ExpectDataDelivery ||
-    status.value === ProposalStatus.DataResearch ||
-    status.value === ProposalStatus.DataCorrupt ||
-    status.value === ProposalStatus.ReadyToArchive ||
-    status.value === ProposalStatus.FinishedProject ||
-    status.value === ProposalStatus.Archived ||
-    status.value === ProposalStatus.Rejected
-  )
-})
-const showLocationVotePanel = computed(() => {
-  return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
-})
 
 const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
