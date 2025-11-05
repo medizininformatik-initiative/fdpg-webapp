@@ -55,6 +55,7 @@ const props = defineProps({
   edit: {
     type: Boolean,
     default: false,
+    required: false,
   },
   type: {
     type: String as PropType<CommentType>,
@@ -68,6 +69,7 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+    required: false,
   },
   possibleLocations: {
     type: Array as PropType<ILocation[]>,
