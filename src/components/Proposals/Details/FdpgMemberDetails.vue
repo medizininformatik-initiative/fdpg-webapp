@@ -59,6 +59,11 @@
     ></FdpgCheckNotes>
     <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
     <MessageCenter
+      v-if="showDmsComments"
+      :type="CommentType.PROPOSAL_MESSAGE_TO_DMST"
+      :possible-locations="possibleLocations"
+    />
+    <MessageCenter
       v-if="proposalStore.currentProposal?.status !== ProposalStatus.Draft"
       :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION"
       :possible-locations="possibleLocations"
@@ -127,7 +132,15 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
 const showPublicationsAndReports = ref(false)
-const currentProposalStatus = [
+const showPublicationsProposalStatus = [
+  ProposalStatus.ExpectDataDelivery,
+  ProposalStatus.DataResearch,
+  ProposalStatus.DataCorrupt,
+  ProposalStatus.FinishedProject,
+  ProposalStatus.ReadyToArchive,
+]
+
+const showDmsCommentStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
   ProposalStatus.DataCorrupt,
@@ -612,6 +625,8 @@ const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
 
+const showDmsComments = computed(() => showDmsCommentStatus.includes(status.value))
+
 const handleCohortEdit = async () => {
   await fetchProposal()
 }
@@ -646,7 +661,7 @@ const fetchProposal = async () => {
   try {
     const data = await proposalStore.setCurrentProposal(params.id as string)
     showPublicationsAndReports.value =
-      (data.status ? currentProposalStatus.includes(data.status) : false) ||
+      (data.status ? showPublicationsProposalStatus.includes(data.status) : false) ||
       (data.status === 'ARCHIVED' && data.publications.length > 0)
 
     const lastDashboard = layoutStore.lastDashboard
