@@ -51,39 +51,14 @@
 
     <div class="section__status">
       <el-checkbox
-        v-model="checklist.isRegistrationLinkSent"
-        @change="updateChecklist('isRegistrationLinkSent', $event)"
+        v-for="checklistStatus in booleanCheckListStatusFields"
+        :key="checklistStatus"
+        v-model="checklist[checklistStatus] as boolean"
+        @change="updateChecklist(checklistStatus, $event)"
         class="fdpg-checkbox"
         :size="FdpgInputSize.Small"
       >
-        {{ t('proposal.isRegistrationLinkSentLabel') }}
-      </el-checkbox>
-
-      <el-checkbox
-        v-model="checklist.initialViewing"
-        @change="updateChecklist('initialViewing', $event)"
-        class="fdpg-checkbox"
-        :size="FdpgInputSize.Small"
-      >
-        {{ t('proposal.initialViewingLabel') }}
-      </el-checkbox>
-
-      <el-checkbox
-        v-model="checklist.depthCheck"
-        @change="updateChecklist('depthCheck', $event)"
-        class="fdpg-checkbox"
-        :size="FdpgInputSize.Small"
-      >
-        {{ t('proposal.depthCheckLabel') }}
-      </el-checkbox>
-
-      <el-checkbox
-        v-model="checklist.ethicsCheck"
-        @change="updateChecklist('ethicsCheck', $event)"
-        class="fdpg-checkbox"
-        :size="FdpgInputSize.Small"
-      >
-        {{ t('proposal.ethicsCheckLabel') }}
+        {{ t(`proposal.${checklistStatus}Label`) }}
       </el-checkbox>
     </div>
   </section>
@@ -139,6 +114,13 @@ const { t } = useI18n()
 const emit = defineEmits(['update:listItem'])
 
 const activeName = ref<string>('projectProperties')
+
+const booleanCheckListStatusFields: (keyof IFdpgChecklist)[] = [
+  'isRegistrationLinkSent',
+  'initialViewing',
+  'depthCheck',
+  'ethicsCheck',
+]
 
 const updateChecklist = (key: keyof IFdpgChecklist, value: any) => {
   if (props.checklist && key in props.checklist) {
