@@ -65,15 +65,12 @@ const userStore = useUserStore()
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
 
-// Use the standard emit that v-model expects
 const emit = defineEmits(['update:modelValue'])
 
 const emailOptions = ref<{ label: string; value: string }[]>([])
 const isLoading = ref(false)
 
-// This function now handles all updates to the parent
 const getUserByEmail = async (email: string) => {
-  // Handles the 'clearable' button
   if (!email) {
     emit('update:modelValue', null)
     return
@@ -89,15 +86,14 @@ const getUserByEmail = async (email: string) => {
         lastName: user.lastName,
         email: user.email,
       }
-      // Emit the full object back to the parent's v-model
       emit('update:modelValue', selected)
     } else {
       showErrorMessage('User not found for the provided email.')
-      emit('update:modelValue', null) // Clear selection if user not found
+      emit('update:modelValue', null)
     }
   } catch (error) {
     showErrorMessage('Error fetching user by email: ' + error)
-    emit('update:modelValue', null) // Clear selection on error
+    emit('update:modelValue', null)
   }
 }
 
