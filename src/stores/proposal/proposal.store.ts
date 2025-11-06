@@ -274,6 +274,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     }, 500),
 
@@ -327,6 +328,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     },
 
