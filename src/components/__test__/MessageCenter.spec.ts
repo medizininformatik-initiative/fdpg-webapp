@@ -8,9 +8,9 @@ import { CommentType } from '@/types/comment.interface'
 import FdpgCommentForm from '../FdpgCommentForm.vue'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import useNotifications from '@/composables/use-notifications'
-import { MiiLocation } from '@/types/location.enum'
 import { ElSwitch } from 'element-plus'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { mockLocations, useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -50,6 +50,10 @@ vi.mock('@/plugins/i18n', () => ({
   },
 }))
 
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
 describe('MessageCenter.vue', () => {
   let authStore: MockedObject<ReturnType<typeof useAuthStore>>
   let commentStore: MockedObject<ReturnType<typeof useCommentStore>>
@@ -62,6 +66,7 @@ describe('MessageCenter.vue', () => {
     wrapper = mount(MessageCenter, {
       props: {
         type: CommentType.PROPOSAL_MESSAGE_TO_OWNER,
+        possibleLocations: [...mockLocations],
       },
       global: {
         plugins: [createTestingPinia()],
@@ -81,8 +86,8 @@ describe('MessageCenter.vue', () => {
         updatedAt: 'string',
         _id: 'string',
         isDone: true,
-        owner: { miiLocation: MiiLocation.Charité, role: Role.Admin },
-        locations: [MiiLocation.Charité],
+        owner: { miiLocation: 'Charité', role: Role.Admin },
+        locations: ['Charité'],
         referenceObjectId: 'string',
         content: 'string',
         type: CommentType.PROPOSAL_MESSAGE_TO_LOCATION,
@@ -94,8 +99,8 @@ describe('MessageCenter.vue', () => {
             createdAt: 'string',
             updatedAt: 'string',
             _id: 'string',
-            owner: { miiLocation: MiiLocation.Charité, role: Role.Admin },
-            locations: [MiiLocation.Charité],
+            owner: { miiLocation: 'Charité', role: Role.Admin },
+            locations: ['Charité'],
             isDone: true,
           },
         ],

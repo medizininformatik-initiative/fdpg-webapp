@@ -23,7 +23,7 @@
       access-for-maintenance
     ></ProjectReports>
     <ProjectHistory />
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
   </el-container>
 
   <SignDialog v-model="isSignDialogOpen" @accept-contract="handleContractSignConfirm" />
@@ -64,12 +64,14 @@ import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import AppendixInfo from '../../AppendixInfo.vue'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import useDraftDownload from '@/composables/use-draft-download'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
 
@@ -101,6 +103,16 @@ const showContractingParticipants = computed(() => {
     status.value === ProposalStatus.Rejected
   )
 })
+
+const locationStore = useLocationStore()
+
+const locationMapRef: Ref<Record<string, ILocation>> = ref({})
+
+const possibleLocations = computed(() =>
+  (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])
+    .map((locId) => locationMapRef.value?.[locId])
+    .filter((loc) => loc),
+)
 
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
@@ -375,6 +387,9 @@ const fetchComments = async () => {
 onMounted(async () => {
   await fetchProposal()
   await fetchComments()
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationMapRef.value = lm
 })
 </script>
 

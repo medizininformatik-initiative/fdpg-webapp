@@ -1,42 +1,43 @@
 <template>
   <section ref="select" class="location-select">
     <el-select
-      v-model="selection"
-      :placeholder="$t(placeholder)"
+      v-model="vModel"
+      :placeholder="t(placeholder)"
       popper-class="location-dropdown"
-      :multiple="true"
+      multiple
       @visible-change="handleDropDownChange"
       collapse-tags
       :max-collapse-tags="3"
       :placement="placement"
     >
-      <el-option-group v-for="group in groupOptions" :key="group.label" :label="group.label">
-        <el-option
-          v-for="item in group.options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value"
-          :disabled="disabled"
-          :data-testId="'option__' + item.value + testIdExtension"
-          :class="vModel.includes(MiiLocation.VirtualAll) ? 'selected' : ''"
-        />
-      </el-option-group>
+      <template #header>
+        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll"> All </el-checkbox>
+      </template>
+      <el-option
+        v-for="item in locationOptions"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+        :disabled="disabled"
+        :data-testId="'option__' + item.value + testIdExtension"
+      />
     </el-select>
   </section>
 </template>
 
 <script setup lang="ts">
-import useLocationGrouping from '@/composables/use-location-grouping'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { MiiLocation } from '@/types/location.enum'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
+import type { ILocation } from '@/types/location.types'
 import { useVModel } from '@vueuse/core'
-import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import type { CheckboxValueType } from 'element-plus'
+import type { ComputedRef, PropType } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
+
 const props = defineProps({
   modelValue: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   placeholder: {
@@ -48,7 +49,7 @@ const props = defineProps({
     default: '',
   },
   minimumSelection: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   placement: {
@@ -59,46 +60,42 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  allOptionLabel: {
-    type: String,
-    required: false,
+  allLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
   isRegisteringForm: {
     type: Boolean,
     default: false,
   },
 })
+
 const { t } = useI18n()
+
 const emit = defineEmits(['update:modelValue'])
 const vModel = useVModel(props, 'modelValue', emit)
+
+const checkAll = ref(false)
+const indeterminate = ref(false)
 const proposalStore = useProposalStore()
-const selection = computed({
-  get() {
-    return vModel.value
+
+const locationMap = computed(() => Object.fromEntries(props.allLocations.map((location) => [location._id, location])))
+
+watch(
+  () => props.modelValue,
+  (newVal, oldVal) => {
+    checkAll.value = newVal.length === props.allLocations.length
   },
-  set(values) {
-    const wasOldVirtualAll = vModel.value.includes(MiiLocation.VirtualAll)
-    const isVirtualAll = values.includes(MiiLocation.VirtualAll)
+  { deep: true },
+)
 
-    const selectionValues = (groupOptions.value || [])
-      .flatMap((groupOption) => groupOption.options)
-      .map((option) => option.value as MiiLocation)
-
-    let result: MiiLocation[] = []
-
-    if (wasOldVirtualAll && values.length === 0) {
-      result = []
-    } else if (wasOldVirtualAll) {
-      result = selectionValues.filter((optionVal) => !values.includes(optionVal))
-    } else if (isVirtualAll || values.length === selectionValues.length - 1) {
-      result = [MiiLocation.VirtualAll]
-    } else {
-      result = values
-    }
-
-    vModel.value = result
-  },
-})
+const handleCheckAll = (val: CheckboxValueType) => {
+  if (val) {
+    vModel.value = props.allLocations.map((loc) => loc._id)
+  } else {
+    vModel.value = []
+  }
+}
 
 const setMinimumSelection = () => {
   if (vModel.value.length <= 0 && props.minimumSelection.length > 0) {
@@ -106,7 +103,24 @@ const setMinimumSelection = () => {
   }
 }
 
-const { groupOptions: baseGroupOptions } = useLocationGrouping(undefined, props.allOptionLabel)
+const locationOptions: ComputedRef<
+  {
+    label: string
+    value: string
+  }[]
+> = computed(() => {
+  return props.allLocations
+    .map((loc) => {
+      const location = locationMap.value[loc._id]
+      if (!location) {
+        console.warn(`Missing location '${loc._id}'`)
+        return null
+      }
+      return { label: location.display, value: loc._id }
+    })
+    .filter((entry) => !!entry)
+    .sort((a, b) => ('' + a.label).localeCompare(b.label))
+})
 
 const select = ref()
 
@@ -121,30 +135,6 @@ const handleDropDownChange = (value: boolean) => {
     setMinimumSelection()
   }
 }
-const groupOptions = computed(() => {
-  if (props.isRegisteringForm && selectedDataSources.value?.includes(PlatformIdentifier.DIFE)) {
-    const modifiedOptions = baseGroupOptions.map((group) => {
-      if (group.label === t('general.locations')) {
-        const hasDIFE = group.options.find((option) => option.value === 'DIFE')
-        if (!hasDIFE) {
-          return {
-            ...group,
-            options: [
-              ...group.options,
-              {
-                label: 'DIFE',
-                value: 'DIFE',
-              },
-            ],
-          }
-        }
-      }
-      return group
-    })
-    return modifiedOptions
-  }
-  return baseGroupOptions
-})
 </script>
 
 <style lang="scss" scoped>

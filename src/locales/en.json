@@ -79,6 +79,16 @@
     "value": "Value",
     "published": "Published",
     "readyForPublication": "Ready for publication "
+    "deleteConfirmation": "Are you sure you want to delete this orphaned task? This action cannot be undone.",
+    "changelogs": "Changelogs",
+    "syncLocations": "Sync Locations",
+    "field": "Field",
+    "oldValue": "Old Value",
+    "newValue": "New Value",
+    "approve": "Save Changes",
+    "value": "Value",
+    "published": "Published",
+    "readyForPublication": "Ready for publication "
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -354,6 +364,9 @@
     "checklistVerification": "Checklist verification ({checkedCount}/{optionsCount})",
     "checklistGenericError": "It was not possible to save the checklist",
     "isRegistrationLinkSentLabel": "I have sent a registration link to the applicant and all participating scientists",
+    "initialViewingLabel": "Initial Viewing",
+    "depthCheckLabel": "Deeper Check",
+    "ethicsCheckLabel": "Ethics Check",
     "initialViewingLabel": "Initial Viewing",
     "depthCheckLabel": "Deeper Check",
     "ethicsCheckLabel": "Ethics Check",
@@ -797,6 +810,7 @@
     "projectUrl": "Project URL",
     "projectLogo": "Project Logo",
     "pleaseEnterTheProjectUrl": "Please enter the project URL",
+    "pleaseEnterTheProjectUrl": "Please enter the project URL",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "pleaseSelectProcedures": "Please select or enter procedures",
     "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist",
@@ -840,6 +854,9 @@
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",
     "participantRole_PARTICIPATING_SCIENTIST": "Participant Scientist",
     "participantRole_RESEARCHER": "Editor",
+    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist",
+    "DataManagementOffice": "Data Management Office",
+    "HEADER_DataManagementOffice": "DMO"
     "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist",
     "DataManagementOffice": "Data Management Office",
     "HEADER_DataManagementOffice": "DMO"
@@ -952,11 +969,15 @@
     "FDPG_CHECK": "FDPG Check",
     "LOCATION_CHECK": "Location Check",
     "RESEARCHER_CONTRACTING": "Sign contracting",
+    "RESEARCHER_CONTRACTING": "Sign contracting",
     "LOCATION_CONTRACTING": "Contracting",
     "EXPECT_DATA_DELIVERY": "Expect datadelivery",
     "DATA_RESEARCH": "Upload publications",
     "DATA_CORRUPT": "Data being checked",
     "FINISHED_PROJECT": "Final check",
+    "READY_TO_ARCHIVE": "Archive",
+    "READY_TO_PUBLISH": "Ready to Publish",
+    "PUBLISHED": "Published"
     "READY_TO_ARCHIVE": "Archive",
     "READY_TO_PUBLISH": "Ready to Publish",
     "PUBLISHED": "Published"

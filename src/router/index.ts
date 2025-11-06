@@ -30,6 +30,15 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/locations',
+        name: RouteName.Locations,
+        component: () => import('@/components/Locations/LocationOverview.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+        },
+      },
+      {
         path: '/pending',
         name: RouteName.Pending,
         component: () => import('@/components/Dashboard/DashboardComponent.vue'),

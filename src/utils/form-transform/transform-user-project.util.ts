@@ -1,5 +1,4 @@
 import type { DeepPartial } from '@/types/deep-partial.type'
-import { MiiLocation } from '@/types/location.enum'
 import type {
   IAddressees,
   IBiosample,
@@ -158,7 +157,7 @@ const transformAddressees = (addressees?: DeepPartial<IAddressees>): DeepPartial
   return {
     _id: addressees?._id,
     isDone: addressees?.isDone ?? false,
-    desiredLocations: addressees?.desiredLocations ?? (addressees?._id ? [] : [MiiLocation.VirtualAll]),
+    desiredLocations: addressees?.desiredLocations ?? [],
   }
 }
 const transformTypeOfUse = (typeOfUse?: DeepPartial<ITypeOfUse>): DeepPartial<ITypeOfUse> => {

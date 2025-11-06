@@ -1,4 +1,3 @@
-import type { MiiLocation } from './location.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { Salutation } from './salutation.enum'
 
@@ -25,7 +24,7 @@ export interface IUserFromDataSource extends IFdpgBaseUser {
 }
 
 export interface IUserFromMii extends IFdpgBaseUser {
-  MII_LOCATION: MiiLocation
+  MII_LOCATION: string
 }
 
 export interface IUserFromExternalOrganization extends IFdpgBaseUser {

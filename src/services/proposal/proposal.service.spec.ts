@@ -18,7 +18,6 @@ import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IDeclineContract, ISignContract } from '@/types/sign-contract.types'
 import { DirectUpload } from '@/types/upload.types'
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
-import type { MiiLocation } from '@/types/location.enum'
 import { DueDateEnum } from '@/types/due-date.enum'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
@@ -245,7 +244,7 @@ describe('ProposalService', () => {
     const proposalId = 'proposalId'
     const file = new File([new Blob(['1'], { type: 'image/png' })], 'test.png')
     const formData = new FormData()
-    const locations = ['MRI', 'KC'] as MiiLocation[]
+    const locations = ['MRI', 'KC'] as string[]
     formData.append('file', file as Blob)
     formData.append('locations', JSON.stringify(locations))
     const response = await service.initContracting(proposalId, file, locations)
@@ -335,6 +334,9 @@ describe('ProposalService', () => {
         checkListVerification: [],
         projectProperties: [],
         isRegistrationLinkSent: true,
+        initialViewing: true,
+        depthCheck: true,
+        ethicsCheck: true,
         fdpgInternalCheckNotes: '',
       },
     }
@@ -342,6 +344,9 @@ describe('ProposalService', () => {
     const proposalId = 'proposalId'
     const checklist: Partial<IFdpgChecklist> = {
       isRegistrationLinkSent: true,
+      initialViewing: true,
+      depthCheck: true,
+      ethicsCheck: true,
     }
     const response = await service.updateFdpgChecklist(proposalId, checklist)
     expect(apiClient.put).toHaveBeenCalledWith(`${basePath}/${proposalId}/fdpg-checklist`, checklist)

@@ -57,11 +57,12 @@
     <FdpgCheckNotes
       v-if="status === ProposalStatus.FdpgCheck || proposalStore.currentProposal?.fdpgCheckNotes"
     ></FdpgCheckNotes>
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER"></MessageCenter>
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
     <MessageCenter
       v-if="proposalStore.currentProposal?.status !== ProposalStatus.Draft"
       :type="CommentType.PROPOSAL_MESSAGE_TO_LOCATION"
-    ></MessageCenter>
+      :possible-locations="possibleLocations"
+    />
 
     <InitiateContractDialog
       v-model="isInitiateContractDialogOpen"
@@ -96,7 +97,7 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort, IUpload } from '@/types/proposal.types'
+import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
@@ -104,7 +105,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, reactive, ref, markRaw, nextTick, watch, onUnmounted } from 'vue'
+import { computed, defineComponent, onMounted, ref, markRaw, watch, onUnmounted, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -113,13 +114,14 @@ import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import type { MiiLocation } from '@/types/location.enum'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
-import type { Deadlines, DueDateEnum } from '@/types/due-date.enum'
-import { statusToDueDatesMap } from '@/utils/deadlines'
+import type { Deadlines } from '@/types/due-date.enum'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { UpdateQueue } from '@/utils/promise-queue.util'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -142,6 +144,16 @@ const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const isSubmitting = ref(false)
 const isRegisteringForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
+
+const locationStore = useLocationStore()
+
+const locationMapRef: Ref<Record<string, ILocation>> = ref({})
+
+const possibleLocations = computed(() =>
+  (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])
+    .map((locId) => locationMapRef.value?.[locId])
+    .filter((loc) => loc),
+)
 
 const openReviewPage = () => {
   if (isRegisteringForm.value) {
@@ -188,13 +200,13 @@ watch(
   { deep: true },
 )
 
-const handleContractSignConfirm = async (file: UploadFile, selectedLocations: MiiLocation[]) => {
+const handleContractSignConfirm = async (file: UploadFile, selectedLocations: string[]) => {
   isSubmitting.value = true
   await initContracting(selectedLocations, file?.raw)
   isSubmitting.value = false
 }
 
-const initContracting = async (selectedLocations: MiiLocation[], file?: File) => {
+const initContracting = async (selectedLocations: string[], file?: File) => {
   if (!file) {
     showErrorMessage(t('general.failedSubmit'))
     return
@@ -802,12 +814,18 @@ const isChecklistDone = computed(() => {
   return (
     verification.every((item: IChecklistItem) => item.isAnswered) &&
     checklist.isRegistrationLinkSent &&
+    checklist.initialViewing &&
+    checklist.ethicsCheck &&
+    checklist.ethicsCheck &&
     projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })
 
 onMounted(async () => {
   await fetchProposal()
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationMapRef.value = lm
 })
 </script>
 

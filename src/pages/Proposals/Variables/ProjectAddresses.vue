@@ -13,6 +13,7 @@
         style="width: 100%"
         :closable="false"
         :is-registering-form="isRegisteringForm"
+        :all-locations="allLocations"
       />
     </FdpgFormItem>
   </el-card>
@@ -23,10 +24,8 @@
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
-import FdpgSelect from '@/components/FdpgSelect.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
-import { MII_LOCATIONS, SORTED_ACTIVE_LOCATION_OPTIONS } from '@/constants'
-import { MiiLocation } from '@/types/location.enum'
+import type { ILocation } from '@/types/location.types'
 import type { IAddressees } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
@@ -44,10 +43,14 @@ const props = defineProps({
   isRegisteringForm: {
     type: Boolean,
     default: false,
+
+  allLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
   },
 })
 
-const minimumSelection: MiiLocation[] = [] // [MiiLocation.VirtualAll]
+const minimumSelection: string[] = [] // [MiiLocation.VirtualAll]
 
 const emit = defineEmits(['update:modelValue'])
 

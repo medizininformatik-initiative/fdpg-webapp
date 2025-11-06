@@ -1,6 +1,6 @@
 import type { IDefinitionCard, IDefinitionSectionObject } from '@/components/Shared/definition-card.types'
+import type { ILocationKeyLabel } from '@/types/location.types'
 import type { IApplicant, IParticipant, IProposal } from '@/types/proposal.types'
-import { MII_LOCATIONS } from '..'
 
 const researcherCard: IDefinitionCard<IApplicant, 'researcher'> = {
   key: 'researcher',
@@ -24,7 +24,7 @@ const researcherCard: IDefinitionCard<IApplicant, 'researcher'> = {
   ],
 }
 
-const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
+const instituteCard = (locationMap: Record<string, ILocationKeyLabel>): IDefinitionCard<IParticipant, 'institute'> => ({
   key: 'institute',
   cardLabel: 'proposal.detailsOfTheInstitutionFacility',
   terms: [
@@ -36,7 +36,7 @@ const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
           {
             key: 'miiLocation',
             kind: 'lookup',
-            lookupMap: MII_LOCATIONS,
+            lookupMap: locationMap,
             lookupKey: 'display',
           },
         ],
@@ -65,7 +65,7 @@ const instituteCard: IDefinitionCard<IParticipant, 'institute'> = {
       definitions: [[{ key: 'email' }]],
     },
   ],
-}
+})
 
 const categoryCard: IDefinitionCard<IParticipant, 'participantCategory'> = {
   key: 'participantCategory',
@@ -79,11 +79,17 @@ const categoryCard: IDefinitionCard<IParticipant, 'participantCategory'> = {
   ],
 }
 
-const applicantCards = [researcherCard, instituteCard, categoryCard]
+const applicantCards = (locationMap: Record<string, ILocationKeyLabel>) => [
+  researcherCard,
+  instituteCard(locationMap),
+  categoryCard,
+]
 
-export const applicantSection: IDefinitionSectionObject<IProposal, 'applicant'> = {
+export const applicantSection = (
+  locationMap: Record<string, ILocationKeyLabel>,
+): IDefinitionSectionObject<IProposal, 'applicant'> => ({
   sectionLabel: 'proposal.applicant',
   kind: 'object',
   key: 'applicant',
-  mapping: applicantCards,
-}
+  mapping: applicantCards(locationMap),
+})

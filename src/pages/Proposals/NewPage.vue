@@ -78,6 +78,7 @@
             :review-mode="isReviewMode"
             v-if="isMIISelected || isRegisteringForm"
             :isRegisteringForm="isRegisteringForm"
+            :all-locations="allLocations"
           />
 
           <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected || isRegisteringForm">
@@ -187,6 +188,7 @@
             :form-ref="formRef"
             :review-mode="isReviewMode"
             :is-registering-form="isRegisteringForm"
+            :locations="allLocations"
           />
           <ProjectUser
             v-model="proposalForm.projectUser"
@@ -205,6 +207,7 @@
             :form-ref="formRef"
             :review-mode="isReviewMode"
             :is-registering-form="isRegisteringForm"
+            :locations="allLocations"
           />
         </div>
 
@@ -334,7 +337,7 @@ import {
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
 import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -365,6 +368,8 @@ import RegisterVariableSelection from './Variables/RegisterVariableSelection.vue
 import { debounce } from 'lodash-es'
 
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
+import type { ILocation } from '@/types/location.types'
+import { useLocationStore } from '@/stores/locations/location.store'
 // Map each step to its corresponding form fields
 const stepFieldsMap: Record<number, string[]> = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -432,6 +437,8 @@ defineProps({
 
 const { t } = useI18n()
 
+const locationStore = useLocationStore()
+
 const layoutStore = useLayoutStore()
 const commentStore = useCommentStore()
 const router = useRouter()
@@ -463,6 +470,8 @@ const isBiosampleToggleInProgress = ref(false)
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
 const isSubmissionDialogOpen = ref(false)
+
+const allLocations: Ref<ILocation[]> = ref([])
 
 const activeStep = computed(() => {
   return layoutStore.activeStep
@@ -1599,6 +1608,9 @@ onMounted(async () => {
 
   // MOVE resetSteps() HERE - before any validation
   layoutStore.resetSteps()
+
+  const locations = await locationStore.getAllActive()
+  allLocations.value = locations.filter((location) => location.dataIntegrationCenter)
 
   try {
     await proposalStore.setCurrentProposal(params.id as string)

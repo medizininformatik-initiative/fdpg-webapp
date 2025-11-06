@@ -36,6 +36,7 @@
         :review-mode="reviewMode"
         :form-ref="formRef"
         identifier="projectResponsible"
+        :locations="locations"
       ></ProjectInstitute>
 
       <TaskViewer :object-id="projectResponsible.institute._id" />
@@ -66,6 +67,7 @@ import type { PropType } from 'vue'
 import ProjectInstitute from './ProjectInstitute.vue'
 import ProjectParticipantCategory from './ProjectParticipantCategory.vue'
 import ProjectResearcher from './ProjectResearcher.vue'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   modelValue: {
@@ -86,6 +88,11 @@ const props = defineProps({
   isRegisteringForm: {
     type: Boolean,
     default: false,
+  },
+  locations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
   },
 })
 

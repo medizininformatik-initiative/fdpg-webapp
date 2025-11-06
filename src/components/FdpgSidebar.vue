@@ -97,6 +97,11 @@ const fdpgRoleSidebar: SidebarMenu[] = [
     to: RouteName.Archive,
     title: 'general.archive',
   },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Locations,
+    title: 'general.locations',
+  },
 ]
 
 const mainMenuMap: Menu = {

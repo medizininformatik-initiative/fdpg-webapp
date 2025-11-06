@@ -26,8 +26,9 @@
       v-if="isMessageToLocation"
       style="width: 580px"
       v-model="locationSelection"
-      :placeholder="visibility || ''"
+      :placeholder="visibility.value || ''"
       :minimum-selection="minimumSelection"
+      :all-locations="possibleLocations"
     />
   </section>
 </template>
@@ -38,12 +39,12 @@ import { useVModel } from '@vueuse/core'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { MiiLocation } from '@/types/location.enum'
-import type { PropType } from 'vue'
-import { computed, ref } from 'vue'
+import type { PropType, Ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   modelValue: {
@@ -67,6 +68,11 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
+  },
 })
 
 const authStore = useAuthStore()
@@ -75,8 +81,8 @@ const isMessageToLocation = computed(() => {
   const isMessageToLocation = props.type === CommentType.PROPOSAL_MESSAGE_TO_LOCATION
   return isMessageToLocation && answerIsFromFdpg
 })
-const locationSelection = ref<MiiLocation[]>([MiiLocation.VirtualAll])
-const minimumSelection = [MiiLocation.VirtualAll]
+const locationSelection = ref<string[]>([])
+const minimumSelection: string[] = []
 
 const visibilityMessage = computed<IVisibilityMessage>(() => {
   return {
@@ -85,7 +91,9 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
   }
 })
 
-const { visibility } = useLocationVisibility(visibilityMessage, props.type, false)
+const visibility = computed(
+  () => useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)?.visibility,
+)
 
 const emit = defineEmits(['close', 'save', 'update:modelValue'])
 const comment = useVModel(props, 'modelValue', emit)

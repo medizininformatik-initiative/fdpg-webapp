@@ -1,6 +1,6 @@
 import type { IDefinitionCard, IDefinitionSectionObject } from '@/components/Shared/definition-card.types'
+import type { ILocationKeyLabel } from '@/types/location.types'
 import type { IProjectResponsible, IProposal } from '@/types/proposal.types'
-import { MII_LOCATIONS } from '..'
 
 const projectResponsibilityCard: IDefinitionCard<IProjectResponsible, 'projectResponsibility'> = {
   key: 'projectResponsibility',
@@ -40,7 +40,9 @@ const projectResponsibleCard: IDefinitionCard<IProjectResponsible, 'researcher'>
   ],
 }
 
-const instituteCard: IDefinitionCard<IProjectResponsible, 'institute'> = {
+const instituteCard = (
+  locationMap: Record<string, ILocationKeyLabel>,
+): IDefinitionCard<IProjectResponsible, 'institute'> => ({
   key: 'institute',
   cardLabel: 'proposal.detailsOfTheInstitutionFacility',
   hideIfOtherValueIsTruthy: ['projectResponsibility', 'applicantIsProjectResponsible'],
@@ -54,7 +56,7 @@ const instituteCard: IDefinitionCard<IProjectResponsible, 'institute'> = {
           {
             key: 'miiLocation',
             kind: 'lookup',
-            lookupMap: MII_LOCATIONS,
+            lookupMap: locationMap,
             lookupKey: 'display',
           },
         ],
@@ -83,7 +85,7 @@ const instituteCard: IDefinitionCard<IProjectResponsible, 'institute'> = {
       definitions: [[{ key: 'email' }]],
     },
   ],
-}
+})
 
 const categoryCard: IDefinitionCard<IProjectResponsible, 'participantCategory'> = {
   key: 'participantCategory',
@@ -98,11 +100,18 @@ const categoryCard: IDefinitionCard<IProjectResponsible, 'participantCategory'> 
   ],
 }
 
-const projectResponsibilityCards = [projectResponsibilityCard, projectResponsibleCard, instituteCard, categoryCard]
+const projectResponsibilityCards = (locationMap: Record<string, ILocationKeyLabel>) => [
+  projectResponsibilityCard,
+  projectResponsibleCard,
+  instituteCard(locationMap),
+  categoryCard,
+]
 
-export const projectResponsibilitySection: IDefinitionSectionObject<IProposal, 'projectResponsible'> = {
+export const projectResponsibilitySection = (
+  locationMap: Record<string, ILocationKeyLabel>,
+): IDefinitionSectionObject<IProposal, 'projectResponsible'> => ({
   sectionLabel: 'proposal.projectResponsible',
   kind: 'object',
   key: 'projectResponsible',
-  mapping: projectResponsibilityCards,
-}
+  mapping: projectResponsibilityCards(locationMap),
+})

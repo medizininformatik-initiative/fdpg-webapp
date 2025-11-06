@@ -1,6 +1,5 @@
-import type { IAnswerDetail, IComment, ICommentDetail, ICreateAnswer } from '@/types/comment.interface';
+import type { IAnswerDetail, IComment, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
-import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 
 export const mockCommentAnswerDetail: IAnswerDetail = {
@@ -14,7 +13,7 @@ export const mockCommentAnswerDetail: IAnswerDetail = {
   _id: 'answerId',
   owner: {
     role: Role.DizMember,
-    miiLocation: MiiLocation.UMG,
+    miiLocation: 'UMG',
   },
   locations: [],
   isDone: false,
@@ -50,6 +49,6 @@ export const mockCommentCreate: IComment = {
 }
 
 export const mockCommentAnswerCreate: ICreateAnswer = {
-  locations: [MiiLocation.UMG],
+  locations: ['UMG'],
   content: 'Content of comment',
 }

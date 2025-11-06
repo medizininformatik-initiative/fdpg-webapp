@@ -4,8 +4,9 @@ import { flushPromises, mount, type VueWrapper } from '@vue/test-utils'
 import { ElButton, ElIcon, type UploadFile } from 'element-plus'
 import FdpgUpload from '../FdpgUpload.vue'
 import type { FindAllComponentsSelector } from '@vue/test-utils/dist/types'
-import type { MiiLocation } from '@/types/location.enum'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
+import { nextTick } from 'vue'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -25,13 +26,21 @@ vi.mock('vue-router', () => ({
   })),
 }))
 
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
 describe('InitiateContractDialog.vue', () => {
   let wrapper: VueWrapper
+
   beforeEach(() => {
+    vi.clearAllMocks()
+
     wrapper = mount(InitiateContractDialog, {
       props: {
         modelValue: true,
-        locations: ['MRI', 'KC'] as MiiLocation[],
+        locations: ['MRI', 'KC'],
+        isSubmitting: false,
       },
       global: {
         plugins: [createTestingPinia()],

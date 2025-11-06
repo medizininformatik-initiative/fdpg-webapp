@@ -37,6 +37,9 @@ describe('FdpgCheckList.vue', () => {
           checkListVerification: [],
           projectProperties: [],
           isRegistrationLinkSent: false,
+          initialViewing: false,
+          depthCheck: false,
+          ethicsCheck: false,
           fdpgInternalCheckNotes: '',
         },
         isDisabled: false,
@@ -57,7 +60,7 @@ describe('FdpgCheckList.vue', () => {
   it('should have h2 element filled by t func values', async () => {
     const title = wrapper.find('.section-title')
     expect(title.exists()).toBe(true)
-    expect(title.text()).toBe('proposal.checklistTitle')
+    expect(title.text()).toBe('title')
   })
 
   it('should be always visible', async () => {
