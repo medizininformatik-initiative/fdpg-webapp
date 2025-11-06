@@ -26,14 +26,12 @@
 </template>
 
 <script setup lang="ts">
-import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { ILocation } from '@/types/location.types'
 import { useVModel } from '@vueuse/core'
 import type { CheckboxValueType } from 'element-plus'
 import type { ComputedRef, PropType } from 'vue'
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
 
 const props = defineProps({
   modelValue: {
@@ -64,10 +62,6 @@ const props = defineProps({
     type: Array as PropType<ILocation[]>,
     required: true,
   },
-  isRegisteringForm: {
-    type: Boolean,
-    default: false,
-  },
 })
 
 const { t } = useI18n()
@@ -77,7 +71,6 @@ const vModel = useVModel(props, 'modelValue', emit)
 
 const checkAll = ref(false)
 const indeterminate = ref(false)
-const proposalStore = useProposalStore()
 
 const locationMap = computed(() => Object.fromEntries(props.allLocations.map((location) => [location._id, location])))
 
@@ -125,9 +118,7 @@ const locationOptions: ComputedRef<
 const select = ref()
 
 const openState = ref(false)
-const selectedDataSources = computed(() => {
-  return proposalStore.currentProposal?.selectedDataSources
-})
+
 const handleDropDownChange = (value: boolean) => {
   openState.value = value
 
@@ -136,6 +127,8 @@ const handleDropDownChange = (value: boolean) => {
   }
 }
 </script>
+
+<style></style>
 
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;

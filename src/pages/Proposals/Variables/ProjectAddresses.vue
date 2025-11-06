@@ -43,7 +43,7 @@ const props = defineProps({
   isRegisteringForm: {
     type: Boolean,
     default: false,
-
+  },
   allLocations: {
     type: Array as PropType<ILocation[]>,
     required: true,
