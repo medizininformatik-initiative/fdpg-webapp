@@ -18,7 +18,7 @@ const dueDateForManagementSiteConfirmation = computed(() => {
 
   const baseDate = new Date(baseDateString)
   const dueDate = new Date()
-  dueDate.setDate(baseDate.getDate() - 3)
+  dueDate.setDate(baseDate.getDate() + 3)
   return dueDate
 })
 

@@ -10,7 +10,7 @@ const { t } = useI18n()
 const locationStore = useLocationStore()
 const proposalStore = useProposalStore()
 
-const locationSelectModel = ref<string | undefined>(undefined)
+const locationSelectModel = ref<string>('')
 const isDmsOverrideDialogOpen = ref<boolean>(false)
 
 const dataManagementSite = computed(() => {
