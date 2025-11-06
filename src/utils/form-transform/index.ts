@@ -54,12 +54,17 @@ const transformRegisterInfo = (registerInfo?: DeepPartial<IRegisterInfo>): DeepP
     _id: registerInfo?._id,
     isDone: registerInfo?.isDone ?? false,
     isInternalRegistration: registerInfo?.isInternalRegistration ?? false,
-    originalProposalId: registerInfo?.originalProposalId ?? '',
-    projectUrl: transformEmptyStringToUndefined(registerInfo?.projectUrl) ?? '',
+    originalProposalId: transformEmptyStringToUndefined(registerInfo?.originalProposalId),
+    projectUrl: transformEmptyStringToUndefined(registerInfo?.projectUrl),
     legalBasis: registerInfo?.legalBasis ?? false,
-    projectCategory: transformEmptyStringToUndefined(registerInfo?.projectCategory) ?? '',
+    projectCategory: transformEmptyStringToUndefined(registerInfo?.projectCategory),
     diagnoses: registerInfo?.diagnoses?.map(transformEmptyStringToUndefined) ?? [],
     procedures: registerInfo?.procedures?.map(transformEmptyStringToUndefined) ?? [],
+    syncStatus: registerInfo?.syncStatus,
+    lastSyncedAt: registerInfo?.lastSyncedAt,
+    lastSyncError: registerInfo?.lastSyncError,
+    syncRetryCount: registerInfo?.syncRetryCount,
+    acptPluginId: registerInfo?.acptPluginId,
   }
 }
 

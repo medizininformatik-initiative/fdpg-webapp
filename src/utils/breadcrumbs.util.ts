@@ -15,6 +15,9 @@ export const getLastDashboardTitle = (name: RouteName): TranslationSchema => {
     case 'Completed': {
       return 'general.completed'
     }
+    case 'Published': {
+      return 'sidebar.published'
+    }
     case 'Archive': {
       return 'general.archive'
     }

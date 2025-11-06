@@ -20,6 +20,7 @@
     "applicantEmail": "Contact",
     "requiredField": "Required field!",
     "invalidField": "Invalid field!",
+    "invalidUrl": "Please enter a valid URL (e.g., https://example.com)",
     "oneFieldRequired": "One of the two fields is mandatory",
     "maxCharLimit": "Exceeding the max character limit of {length}",
     "startDateInPast": "The start time must be in the future",
@@ -97,7 +98,7 @@
     "process": "PENDING",
     "progress": "Progress:",
     "completed": "{progress}% filled out",
-    "published": "published"
+    "published": "Published"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -184,7 +185,8 @@
     "noRole": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days.",
     "xOngoingProjectContracts": "{x} ongoing project contracts",
     "xCompletedProjectContracts": "{x} completed project contracts",
-    "registerProject": "Register a project"
+    "registerProject": "Register a project",
+    "comingUp": "Coming up ({count})"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -352,11 +354,15 @@
     "checklistVerification": "Checklist verification ({checkedCount}/{optionsCount})",
     "checklistGenericError": "It was not possible to save the checklist",
     "isRegistrationLinkSentLabel": "I have sent a registration link to the applicant and all participating scientists",
+    "initialViewingLabel": "Initial Viewing",
+    "depthCheckLabel": "Deeper Check",
+    "ethicsCheckLabel": "Ethics Check",
     "isUniqueLabel": "I have checked the project title and confirm the uniqueness of the project proposal",
     "isAttachmentsCheckedLabel": "I have checked the contents of all attachments and confirm their completeness",
     "isCheckedLabel": "I have reviewed the project proposal and have marked areas to be revised as a task for the applicant",
     "messagesToApplicants": "Messages to applicant",
     "messagesToLocations": "Messages to locations",
+    "messagesToDms": "Messages to DMS",
     "messagesToFdpg": "Messages to FDPG",
     "uniquenessGivenDescription": "Please look manually or on the basis of the project proposals if there are already similar projects. \\nConfirm the uniqueness of the project or request changes in the title or reject the project proposal with reasons.",
     "checkedAreas": "Checked areas ({isDoneCount}/{fieldCount})",
@@ -800,7 +806,20 @@
     "registerProjectModalTitle": "Register Project for Publication",
     "registerProjectModalDescription": "This will create a copy of this project as a registration form. You can then fill in publication details and publish it to the FDPG register. The original project will remain unchanged.",
     "registerProject": "Register Project",
-    "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details."
+    "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
+    "syncToWebsite": "Sync to Website",
+    "resync": "Re-Sync to Website",
+    "retrySync": "Retry Sync",
+    "syncing": "Syncing...",
+    "synced": "Synced",
+    "outOfSync": "Out of Sync",
+    "syncFailed": "Sync Failed",
+    "notSynced": "Not Synced",
+    "confirmSync": "Confirm Sync",
+    "sync": "Sync",
+    "syncAll": "Sync All",
+    "confirmBulkSync": "Confirm Bulk Sync",
+    "bulkSyncResults": "Bulk Sync Results"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -821,7 +840,9 @@
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",
     "participantRole_PARTICIPATING_SCIENTIST": "Participant Scientist",
     "participantRole_RESEARCHER": "Editor",
-    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist"
+    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist",
+    "DataManagementOffice": "Data Management Office",
+    "HEADER_DataManagementOffice": "DMO"
   },
   "countries": {
     "AD": "Andorra",
@@ -986,5 +1007,22 @@
     "failedToSync": "Error on synchronizing the locations",
     "failedToUpdate": "Error on updating location",
     "errorOnSetup": "Error on fetching data"
+  },
+  "dataDelivery": {
+    "dataManagementSiteAbbreviation": "DMS",
+    "dataManagementSite": "Data Management Site",
+    "selectDataManagementSite": "Select data management site",
+    "selectDataManagementSiteInfoText": "Choose a data management site to receive the delivery from.",
+    "sendRequest": "Send Request",
+    "requestStatus": "Request Status",
+    "dueDate": "Due Date",
+    "newRequest": "New Request",
+    "newRequestConfirmationQuestion": "Request new data management site?",
+    "oldRequestOverrideInfo": "Your current request for the site {dms} will be overridden.",
+    "proceedAnywayQuestion": "Proceed anyway?",
+    "cancel": "Cancel",
+    "PENDING": "Pending",
+    "ACCEPTED": "Confirmed",
+    "DENIED": "Denied"
   }
 }

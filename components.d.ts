@@ -150,6 +150,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     SignDialog: typeof import('./src/components/SignDialog.vue')['default']
     SubmissionDialog: typeof import('./src/components/SubmissionDialog.vue')['default']
+    SyncButton: typeof import('./src/components/Proposals/SyncButton.vue')['default']
     TaskViewer: typeof import('./src/components/TaskViewer/TaskViewer.vue')['default']
     TermsDialog: typeof import('./src/components/TermsDialog.vue')['default']
     UacAcceptProposalDialog: typeof import('./src/components/UacAcceptProposalDialog.vue')['default']

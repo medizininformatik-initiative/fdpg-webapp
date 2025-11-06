@@ -710,4 +710,9 @@ export interface IRegisterInfo extends WithIdAndIsDone {
   projectCategory: string
   diagnoses: string[]
   procedures: string[]
+  syncStatus?: string
+  lastSyncedAt?: string
+  lastSyncError?: string
+  syncRetryCount?: number
+  acptPluginId?: string
 }

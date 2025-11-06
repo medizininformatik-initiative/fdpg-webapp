@@ -374,8 +374,8 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.variableSelection.DIFE.typeOfUseExplanation',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
-    'userProject.generalProjectInformation.diagnoses',
-    'userProject.generalProjectInformation.procedures',
+    'registerInfo.diagnoses',
+    'registerInfo.procedures',
   ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
@@ -399,7 +399,9 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.generalProjectInformation.projectFunding',
     'userProject.generalProjectInformation.fundingReferenceNumber',
     'userProject.plannedPublication.publications',
-    'userProject.generalProjectInformation.projectUrl',
+    'registerInfo.projectUrl',
+    'registerInfo.projectCategory',
+    'registerInfo.legalBasis',
   ],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
 
@@ -543,12 +545,6 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
-      // Register-specific fields
-      projectCategory: isRegisteringForm.value ? [requiredValidationFunc('string'), maxLengthValidationFunc(200)] : [],
-      projectUrl: isRegisteringForm.value ? [requiredValidationFunc('string'), maxLengthValidationFunc(500)] : [],
-      projectCatchphrases: isRegisteringForm.value ? [] : [],
-      diagnoses: isRegisteringForm.value ? [requiredValidationFunc('array')] : [],
-      procedures: isRegisteringForm.value ? [requiredValidationFunc('array')] : [],
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
@@ -614,6 +610,84 @@ const rules = ref<Record<string, any>>({
     dataInfo: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
     desiredDataAmount: requiredValidationFunc('number'),
     desiredControlDataAmount: [requiredValidationFunc('number')],
+  },
+  registerInfo: {
+    // Required fields for ALL registering forms
+    projectCategory: [
+      {
+        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.trim().length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else if (value.length > 200) {
+            callback(new Error(t('general.maxLengthExceeded', { max: 200 })))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    projectUrl: [
+      {
+        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.trim().length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else if (value.length > 500) {
+            callback(new Error(t('general.maxLengthExceeded', { max: 500 })))
+          } else {
+            // Validate URL format
+            try {
+              new URL(value)
+              callback()
+            } catch {
+              callback(new Error(t('general.invalidUrl')))
+            }
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    diagnoses: [
+      {
+        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    procedures: [
+      {
+        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    legalBasis: null,
   },
   status: null,
 })
@@ -704,12 +778,9 @@ watch(hasBiosamples, async (enabled) => {
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
-  // Set type and registerInfo for registering forms
+  // Set type for registering forms
   if (isRegisteringForm.value) {
     formData.type = ProposalType.RegisteringForm
-    formData.registerInfo = {
-      isInternalRegistration: proposalForm.value?.registerInfo?.isInternalRegistration ?? false,
-    }
   } else {
     formData.type = ProposalType.ApplicationForm
   }

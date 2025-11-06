@@ -477,4 +477,31 @@ export class ProposalService {
     const response = await this.apiClient.post<{ id: string }>(`/proposals/${proposalId}/copy-for-registration`)
     return response.data.id
   }
+
+  async syncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+    const response = await this.apiClient.post<{ success: boolean; error?: string }>(`/proposals/${proposalId}/sync`)
+    return response.data
+  }
+
+  async retrySyncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+    const response = await this.apiClient.post<{ success: boolean; error?: string }>(
+      `/proposals/${proposalId}/retry-sync`,
+    )
+    return response.data
+  }
+
+  async syncAllProposals(): Promise<{
+    total: number
+    synced: number
+    failed: number
+    errors: Array<{ projectAbbreviation: string; error: string }>
+  }> {
+    const response = await this.apiClient.post<{
+      total: number
+      synced: number
+      failed: number
+      errors: Array<{ projectAbbreviation: string; error: string }>
+    }>(`/proposals/sync-all`)
+    return response.data
+  }
 }

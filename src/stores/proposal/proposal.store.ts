@@ -88,33 +88,6 @@ export const useProposalStore = defineStore('Proposal', {
       return data
     },
 
-    async fetchRegistered(sortAndFilterBy: ISortAndOrderBy<any>): Promise<IProposalDetail[]> {
-      const { panelQuery } = sortAndFilterBy
-      const data = await this.apiService.getAllRegistered(sortAndFilterBy)
-      this.proposals[panelQuery] = data
-
-      this.counts[panelQuery] = data.reduce(
-        (acc, proposal) => {
-          proposal.computedDueDate = proposal.dueDateForStatus ? getDateDiff(proposal.dueDateForStatus, 0) : undefined
-          if (proposal.computedDueDate !== undefined && proposal.computedDueDate < 0) {
-            acc.critical++
-          } else if (proposal.computedDueDate !== undefined) {
-            acc.high++
-          } else {
-            acc.low++
-          }
-          return acc
-        },
-        {
-          total: data.length,
-          critical: 0,
-          high: 0,
-          low: 0,
-        },
-      )
-      return data
-    },
-
     async createProposal(proposal: DeepPartial<IProposal>): Promise<IProposal> {
       return this.apiService.create(proposal)
     },
@@ -536,6 +509,46 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async copyAsInternalRegistration(proposalId: string): Promise<string> {
       return await this.apiService.copyAsInternalRegistration(proposalId)
+    },
+
+    async syncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.syncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async retrySyncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.retrySyncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async syncAllProposals(): Promise<{
+      total: number
+      synced: number
+      failed: number
+      errors: Array<{ projectAbbreviation: string; error: string }>
+    }> {
+      const result = await this.apiService.syncAllProposals()
+
+      if (Object.keys(this.proposals).length > 0) {
+        const panelQuery = Object.keys(this.proposals)[0] as PanelQuery
+        await this.fetch({
+          panelQuery,
+          order: this.currentSortDirection,
+          sortBy: this.currentSortField,
+        })
+      }
+
+      return result
     },
   },
 

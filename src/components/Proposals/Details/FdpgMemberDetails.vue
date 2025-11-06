@@ -89,6 +89,7 @@ import ProjectReports from '@/components/ProjectReports.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import useDraftDownload from '@/composables/use-draft-download'
+import { useProposalSync } from '@/composables/use-proposal-sync'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
@@ -277,7 +278,7 @@ const handleAcceptProposalClick = () => {
     confirmButtonText: 'proposal.acceptProposal',
     cancelButtonText: 'general.cancel',
     callback: async (decision: DecisionType) =>
-      decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToPublish) : undefined,
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Published) : undefined,
   })
 }
 const handleRegisterProjectClick = async () => {
@@ -411,6 +412,21 @@ const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErr
 const handleExportProposalPdfClick = async () => {
   if (proposalId.value && !isDownloadLoading.value) {
     await downloadFile()
+  }
+}
+
+const {
+  isSyncing,
+  canSync,
+  shouldShowSyncButton,
+  syncDisabledReason,
+  buttonLabel: syncButtonLabel,
+  syncProposal: performSync,
+} = useProposalSync()
+
+const handleSyncProposalClick = async () => {
+  if (proposalId.value) {
+    await performSync(proposalId.value)
   }
 }
 
@@ -609,6 +625,17 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'right',
     isHidden: status.value !== ProposalStatus.LocationCheck || isRegisteringForm.value,
     isDisabled: uacFullyApproved.value.length <= 0 || proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: syncButtonLabel.value as any,
+    testId: 'button__syncToWebsite',
+    action: handleSyncProposalClick,
+    position: 'right',
+    isHidden: !isRegisteringForm.value || !shouldShowSyncButton.value,
+    isDisabled: !canSync.value || isSyncing.value || proposalStore.currentProposal?.isLocked,
+    isLoading: isSyncing.value,
+    tooltip: syncDisabledReason.value || undefined,
   },
   {
     type: 'primary',
