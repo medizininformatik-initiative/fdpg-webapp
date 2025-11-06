@@ -352,6 +352,9 @@
     "checklistVerification": "Checklist verification ({checkedCount}/{optionsCount})",
     "checklistGenericError": "It was not possible to save the checklist",
     "isRegistrationLinkSentLabel": "I have sent a registration link to the applicant and all participating scientists",
+    "initialViewingLabel": "Initial Viewing",
+    "depthCheckLabel": "Deeper Check",
+    "ethicsCheckLabel": "Ethics Check",
     "isUniqueLabel": "I have checked the project title and confirm the uniqueness of the project proposal",
     "isAttachmentsCheckedLabel": "I have checked the contents of all attachments and confirm their completeness",
     "isCheckedLabel": "I have reviewed the project proposal and have marked areas to be revised as a task for the applicant",
@@ -790,6 +793,7 @@
     "researcherInstituteUnknown": "unnamed institute",
     "projectUrl": "Project URL",
     "projectLogo": "Project Logo",
+    "pleaseEnterTheProjectUrl": "Please enter the project URL",
     "pleaseSelectDiagnoses": "Please select or enter diagnoses",
     "pleaseSelectProcedures": "Please select or enter procedures",
     "applicantCannotBeParticipatingScientist": "Applicant cannot be participating scientist",
@@ -820,7 +824,9 @@
     "roleAccessDenied": "Unfortunately you don't have any access to this information.",
     "participantRole_PARTICIPATING_SCIENTIST": "Participant Scientist",
     "participantRole_RESEARCHER": "Editor",
-    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist"
+    "participantRole_RESPONSIBLE_SCIENTIST": "Responsible Scientist",
+    "DataManagementOffice": "Data Management Office",
+    "HEADER_DataManagementOffice": "DMO"
   },
   "countries": {
     "AD": "Andorra",

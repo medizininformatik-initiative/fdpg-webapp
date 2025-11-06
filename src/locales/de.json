@@ -352,6 +352,9 @@
     "checklistVerification": "Checkliste Prüfung ({checkedCount}/{optionsCount})",
     "checklistGenericError": "Die Checkliste konnte nicht gespeichert werden",
     "isRegistrationLinkSentLabel": "Ich habe einen Registrierungslink an den Antragsteller und alle beteiligten Wissenschaftler gesendet",
+    "initialViewingLabel": "Initiale Überprüfung",
+    "depthCheckLabel": "Tiefere Überprüfung",
+    "ethicsCheckLabel": "Ethikprüfung",
     "isUniqueLabel": "Ich habe den Projekttitel geprüft und bestätige die Einzigartigkeit des Projektantrages",
     "isAttachmentsCheckedLabel": "Ich habe die Inhalte aller Anhänge geprüft und bestätige deren Vollständigkeit",
     "isCheckedLabel": "Ich habe den Projektantrag geprüft und habe zu überarbeitende Bereiche als Aufgabe für den Antragsteller markiert",
@@ -790,6 +793,7 @@
     "researcherInstituteUnknown": "unbenanntes Institut",
     "projectUrl": "Projekt-URL",
     "projectLogo": "Projektlogo",
+    "pleaseEnterTheProjectUrl": "Bitte geben Sie die Projekt-URL ein",
     "pleaseSelectDiagnoses": "Bitte wählen oder geben Sie Diagnosen ein",
     "pleaseSelectProcedures": "Bitte wählen oder geben Sie Prozeduren ein",
     "applicantCannotBeParticipatingScientist": "Bewerber kann kein teilnehmender Wissenschaftler sein",
@@ -820,7 +824,9 @@
     "roleAccessDenied": "Leider haben Sie keinen Zugang zu diesen Informationen.",
     "participantRole_PARTICIPATING_SCIENTIST": "Beteiligte Wissenschaftler (keine Editorfunktion)",
     "participantRole_RESEARCHER": "Bearbeiter",
-    "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler"
+    "participantRole_RESPONSIBLE_SCIENTIST": "verantwortlichen Wissenschaftler",
+    "DataManagementOffice": "Datenmanagementstelle",
+    "HEADER_DataManagementOffice": "DMST"
   },
   "countries": {
     "AD": "Andorra",

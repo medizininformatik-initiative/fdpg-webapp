@@ -52,6 +52,9 @@ export const useProposalStore = defineStore('Proposal', {
     counts: {},
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
+      initialViewing: false,
+      depthCheck: false,
+      ethicsCheck: false,
       checkListVerification: [],
       fdpgInternalCheckNotes: '',
       projectProperties: [],
@@ -238,6 +241,12 @@ export const useProposalStore = defineStore('Proposal', {
 
         if ('isRegistrationLinkSent' in updatedItem) {
           checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('initialViewing' in updatedItem) {
+          checklistData.initialViewing = updatedItem.initialViewing
+        } else if ('depthCheck' in updatedItem) {
+          checklistData.depthCheck = updatedItem.depthCheck
+        } else if ('ethicsCheck' in updatedItem) {
+          checklistData.ethicsCheck = updatedItem.ethicsCheck
         } else if ('fdpgInternalCheckNotes' in updatedItem) {
           checklistData.fdpgInternalCheckNotes =
             updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
@@ -285,6 +294,12 @@ export const useProposalStore = defineStore('Proposal', {
 
         if ('isRegistrationLinkSent' in updatedItem) {
           checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('initialViewing' in updatedItem) {
+          checklistData.initialViewing = updatedItem.initialViewing
+        } else if ('depthCheck' in updatedItem) {
+          checklistData.depthCheck = updatedItem.depthCheck
+        } else if ('ethicsCheck' in updatedItem) {
+          checklistData.ethicsCheck = updatedItem.ethicsCheck
         } else if ('fdpgInternalCheckNotes' in updatedItem) {
           checklistData.fdpgInternalCheckNotes =
             updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
