@@ -79,6 +79,7 @@
             v-if="isMIISelected || isRegisteringForm"
             :isRegisteringForm="isRegisteringForm"
             :all-locations="allLocations"
+            :selected-data-sources="proposalForm.selectedDataSources"
           />
 
           <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected || isRegisteringForm">
@@ -1579,6 +1580,29 @@ watch(
   () => proposalForm.value?.selectedDataSources,
   (newSelectedDataSources) => {
     layoutStore.setDatasourceSelected(!!newSelectedDataSources?.length)
+  },
+  { immediate: true, deep: true },
+)
+
+watch(
+  () => proposalForm.value?.selectedDataSources,
+  (newSelectedDataSources) => {
+    if (newSelectedDataSources?.includes(PlatformIdentifier.DIFE) && isRegisteringForm.value) {
+      const hasDifeLocation = allLocations.value.some((loc) => loc._id === 'DIFE')
+
+      if (!hasDifeLocation) {
+        const difeLocation: ILocation = {
+          _id: 'DIFE',
+          externalCode: 'DIFE',
+          display: 'DIFE',
+          consortium: 'DIFE',
+          dataIntegrationCenter: false,
+          dataManagementCenter: false,
+          deprecated: false,
+        }
+        allLocations.value.push(difeLocation)
+      }
+    }
   },
   { immediate: true, deep: true },
 )
