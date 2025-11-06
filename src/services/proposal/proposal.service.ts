@@ -1,24 +1,27 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import type { ISortAndOrderBy } from '@/types/sort-filter.types'
-import type {
-  IFdpgChecklist,
-  IProposal,
-  IProposalDetail,
-  IProposalMarkConditionAcceptedReturnDto,
-  IResearcherIdentity,
-  IPublicationGet,
-  IUpload,
-  ProposalStatus,
-  IPublicationCreateAndUpdate,
-  IReportGet,
-  IReportCreate,
-  IReportUpdate,
-  IEditAdditionalLocationProposalInformation,
-  FdpgChecklistItemUpdateResponse,
-  ISelectedCohort,
-  IParticipant,
-  IDizDetails,
-  IApplicant,
+import {
+  DeliveryAcceptance,
+  type FdpgChecklistItemUpdateResponse,
+  type IApplicant,
+  type IDataDelivery,
+  type IDataDeliveryRequestDto,
+  type IDizDetails,
+  type IEditAdditionalLocationProposalInformation,
+  type IFdpgChecklist,
+  type IParticipant,
+  type IProposal,
+  type IProposalDetail,
+  type IProposalMarkConditionAcceptedReturnDto,
+  type IPublicationCreateAndUpdate,
+  type IPublicationGet,
+  type IReportCreate,
+  type IReportGet,
+  type IReportUpdate,
+  type IResearcherIdentity,
+  type ISelectedCohort,
+  type IUpload,
+  type ProposalStatus,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -27,6 +30,7 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
+import type { AxiosResponse } from 'axios'
 
 export class ProposalService {
   private basePath = '/proposals'
@@ -454,6 +458,33 @@ export class ProposalService {
       throw new Error('Could not generate location CSV download link')
     }
   }
+
+  async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.post<IDataDelivery, AxiosResponse<IDataDelivery>, IDataDeliveryRequestDto>(
+          `${this.basePath}/${proposalId}/data-delivery`,
+          { dataManagementSite: dmsId, acceptance: DeliveryAcceptance.PENDING, delivery: null },
+        )
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<IDataDelivery, AxiosResponse<IDataDelivery>, IDataDeliveryRequestDto>(
+          `${this.basePath}/${proposalId}/data-delivery`,
+          { dataManagementSite: dmsId, acceptance: DeliveryAcceptance.PENDING },
+        )
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
   async catch(error: any) {
     if (error.response) {
       const status = error.response.status
