@@ -60,6 +60,7 @@
       v-model="currentProjectAssignee"
       :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
       :data-sources="selectedDataSources"
+      @update:model-value="onProjectAssigneeChange"
     />
 
     <FdpgCheckNotes
@@ -105,7 +106,13 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort } from '@/types/proposal.types'
+import type {
+  IChecklistItem,
+  IFdpgChecklist,
+  IProjectAssignee,
+  IProposal,
+  ISelectedCohort,
+} from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
@@ -708,6 +715,16 @@ const updateChecklistItem = async (item: Partial<IFdpgChecklist>) => {
       throw error
     }
   })
+}
+
+const onProjectAssigneeChange = async (newAssignee?: IProjectAssignee) => {
+  console.log({ newAssignee })
+  try {
+    await proposalStore.updateProjectAssignee(proposalId.value, newAssignee)
+    await fetchProposal()
+  } catch {
+    showErrorMessage()
+  }
 }
 
 onUnmounted(() => {

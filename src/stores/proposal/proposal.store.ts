@@ -17,6 +17,7 @@ import type {
   ISelectedCohort,
   IParticipant,
   IApplicant,
+  IProjectAssignee,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -520,6 +521,10 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async downloadLocationCsv(proposalId: string): Promise<void> {
       await this.apiService.downloadLocationCsv(proposalId)
+    },
+
+    async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+      await this.apiService.updateProjectAssignee(proposalId, projectAssignee)
     },
   },
 

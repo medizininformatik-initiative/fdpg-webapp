@@ -1,6 +1,18 @@
 <template>
-  <FdpgLabel required size="medium" class="form-label-mt-4 scrollAnker" html-for="proposal.personalDetails" />
+  <FdpgLabel required size="medium" class="form-label-mt-4 scrollAnker" html-for="proposal.projectAssignee" />
   <el-card class="form-group">
+    <tempalte v-if="modelValue">
+      <el-row :gutter="20">
+        <el-col :sm="24" :md="12">
+          <FdpgLabel html-for="proposal.firstName" />
+          <p>{{ modelValue.firstName }}</p>
+        </el-col>
+        <el-col :sm="24" :md="12">
+          <FdpgLabel html-for="proposal.lastName" />
+          <p>{{ modelValue.lastName }}</p>
+        </el-col>
+      </el-row>
+    </tempalte>
     <el-row :gutter="20">
       <el-col :sm="24" :md="12">
         <FdpgLabel html-for="proposal.emailAddress" />

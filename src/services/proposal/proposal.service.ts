@@ -19,6 +19,7 @@ import type {
   IParticipant,
   IDizDetails,
   IApplicant,
+  IProjectAssignee,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -454,6 +455,11 @@ export class ProposalService {
       throw new Error('Could not generate location CSV download link')
     }
   }
+
+  async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
+  }
+
   async catch(error: any) {
     if (error.response) {
       const status = error.response.status
