@@ -5,7 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import type { VueWrapper } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
 import FdpgMemberDashboard from '../FdpgMemberDashboard.vue'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({

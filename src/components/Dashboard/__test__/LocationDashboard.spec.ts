@@ -3,9 +3,10 @@ import { RouteName } from '@/types/route-name.enum'
 import { createTestingPinia } from '@pinia/testing'
 import type { VueWrapper } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
-import LocationDashboard from '../LocationDashboard.vue'
 import FdpgSortSelect from '@/components/FdpgSortSelect.vue'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
+import LocationDashboard from '../LocationDashboard.vue'
+
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockReturnValue('Test'),
@@ -16,12 +17,14 @@ vi.mock('vue-i18n', () => ({
 }))
 
 const mockRoute = RouteName.Dashboard
+const mockPush = vi.fn()
 vi.mock('vue-router', () => ({
   createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
   createWebHistory: vi.fn(),
-  createRouter: vi.fn().mockImplementation(() => ({ beforeEach: vi.fn() })),
-  createWebHistory: vi.fn(),
   useRoute: vi.fn(() => mockRoute),
+  useRouter: vi.fn(() => ({
+    push: mockPush,
+  })),
 }))
 
 describe('LocationDashboard.vue', () => {

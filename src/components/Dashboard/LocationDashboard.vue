@@ -2,8 +2,8 @@
   <div class="fdpg-dashboard-page">
     <div class="header">
       <div>
-        <h2 class="project-overview">{{ $t('dashboard.projectOverview') }}</h2>
-        <p class="project-count">{{ $t('dashboard.projects', { count: proposalCount.total }) }}</p>
+        <h2 class="project-overview">{{ t('dashboard.projectOverview') }}</h2>
+        <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
 
       <FdpgSortSelect
@@ -45,6 +45,9 @@ import { RouteName } from '@/types/route-name.enum'
 import FdpgTable from '../FdpgTable.vue'
 import { Role } from '@/types/oidc.types'
 import { tableColumns } from '@/constants'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const route = useRoute()
