@@ -1,5 +1,7 @@
 <template>
-  <FdpgLabel required size="medium" class="form-label-mt-4 scrollAnker" html-for="proposal.projectAssignee" />
+  <h2 class="section-title">
+    {{ t('proposal.projectAssignee') }}
+  </h2>
   <el-card class="form-group">
     <tempalte v-if="modelValue">
       <el-row :gutter="20">

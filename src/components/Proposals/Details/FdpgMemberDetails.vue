@@ -44,6 +44,13 @@
       @remove-cohort="removeCohort"
     />
 
+    <FdpgProjectAssignee
+      v-model="currentProjectAssignee"
+      :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
+      :data-sources="selectedDataSources"
+      @update:model-value="onProjectAssigneeChange"
+    />
+
     <FdpgCheckList
       v-model="fdpgChecklist"
       :status="status"
@@ -55,13 +62,6 @@
     <ProjectHistory />
 
     <div class="divider" />
-
-    <FdpgProjectAssignee
-      v-model="currentProjectAssignee"
-      :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
-      :data-sources="selectedDataSources"
-      @update:model-value="onProjectAssigneeChange"
-    />
 
     <FdpgCheckNotes
       v-if="status === ProposalStatus.FdpgCheck || proposalStore.currentProposal?.fdpgCheckNotes"
