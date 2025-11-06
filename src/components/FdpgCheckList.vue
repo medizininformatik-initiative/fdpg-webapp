@@ -53,7 +53,7 @@
       <el-checkbox
         v-for="checklistStatus in booleanCheckListStatusFields"
         :key="checklistStatus"
-        v-model="checklist[checklistStatus] as boolean"
+        v-model="checklist[checklistStatus]"
         @change="updateChecklist(checklistStatus, $event)"
         class="fdpg-checkbox"
         :size="FdpgInputSize.Small"
@@ -115,12 +115,7 @@ const emit = defineEmits(['update:listItem'])
 
 const activeName = ref<string>('projectProperties')
 
-const booleanCheckListStatusFields: (keyof IFdpgChecklist)[] = [
-  'isRegistrationLinkSent',
-  'initialViewing',
-  'depthCheck',
-  'ethicsCheck',
-]
+const booleanCheckListStatusFields = ['isRegistrationLinkSent', 'initialViewing', 'depthCheck', 'ethicsCheck'] as const
 
 const updateChecklist = (key: keyof IFdpgChecklist, value: any) => {
   if (props.checklist && key in props.checklist) {
