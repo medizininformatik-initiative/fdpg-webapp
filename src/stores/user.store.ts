@@ -1,4 +1,6 @@
 import { UserService } from '@/services/user/user.service'
+import type { Role } from '@/types/oidc.types'
+import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IResearcherIdentity } from '@/types/proposal.types'
 import type { IKeycloakUser, IUpdateUser, IUserEmailsResponse } from '@/types/user.types'
 import { defineStore } from 'pinia'
@@ -38,8 +40,13 @@ export const useUserStore = defineStore('User', {
       const user = await this.apiService.getUserByEmail(email)
       return user
     },
-    async searchEmailsByPrefix(prefix: string, excludeEmails: string[] = []): Promise<IUserEmailsResponse> {
-      const data = await this.apiService.searchEmailsByPrefix(prefix)
+    async searchEmailsByPrefix(
+      prefix: string,
+      excludeEmails: string[] = [],
+      roles: Role[] = [],
+      dataSources: PlatformIdentifier[] = [],
+    ): Promise<IUserEmailsResponse> {
+      const data = await this.apiService.searchEmailsByPrefix(prefix, roles, dataSources)
       if (excludeEmails.length > 0) {
         const excludeSet = new Set(excludeEmails.map((email) => email.toLowerCase()))
 

@@ -18,6 +18,7 @@
 
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
+
     <div class="section">
       <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
@@ -54,9 +55,17 @@
     <ProjectHistory />
 
     <div class="divider" />
+
+    <FdpgProjectAssignee
+      v-model="currentProjectAssignee"
+      :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
+      :data-sources="selectedDataSources"
+    />
+
     <FdpgCheckNotes
       v-if="status === ProposalStatus.FdpgCheck || proposalStore.currentProposal?.fdpgCheckNotes"
     ></FdpgCheckNotes>
+
     <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
     <MessageCenter
       v-if="proposalStore.currentProposal?.status !== ProposalStatus.Draft"
@@ -120,6 +129,8 @@ import { UpdateQueue } from '@/utils/promise-queue.util'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
+import FdpgProjectAssignee from '@/components/FdpgProjectAssignee.vue'
+import { Role } from '@/types/oidc.types'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -151,6 +162,9 @@ const possibleLocations = computed(() =>
     .map((locId) => locationMapRef.value?.[locId])
     .filter((loc) => loc),
 )
+
+const currentProjectAssignee = computed(() => proposalStore?.currentProposal?.projectAssignee ?? null)
+const selectedDataSources = computed(() => proposalStore?.currentProposal?.selectedDataSources ?? [])
 
 const openReviewPage = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })

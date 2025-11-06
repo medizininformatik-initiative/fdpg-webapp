@@ -582,6 +582,7 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+  projectAssignee?: IProjectAssignee
 }
 
 export enum FdpgTaskType {
@@ -696,4 +697,11 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+
+export interface IProjectAssignee {
+  userId: string
+  firstName?: string
+  lastName?: string
+  email: string
 }
