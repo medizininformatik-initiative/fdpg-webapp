@@ -3,10 +3,10 @@
     <div class="header">
       <div class="lead">
         <h2 class="title">
-          {{ $t(header.main) }}
+          {{ t(header.main) }}
         </h2>
         <p class="description">
-          {{ $t(header.sub, { x: proposalCount.total }) }}
+          {{ t(header.sub, { x: proposalCount.total }) }}
         </p>
       </div>
       <FdpgSortSelect
@@ -18,18 +18,19 @@
       />
     </div>
     <template v-for="(panel, index) in panels" :key="'panel' + index">
-      <FdpgProposalCardPanel
-        v-if="!panel.isTable"
-        :panel="panel"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-      />
       <FdpgTable
         v-if="panel.isTable"
+        :table-header="panel.header"
         :panel="panel"
         :columns="tableColumns[panel.query]"
         :user-role="Role.FdpgMember"
         @row-click="handleRowClick"
+      />
+      <FdpgProposalCardPanel
+        v-else
+        :panel="panel"
+        :sort-by="proposalStore.currentSortField"
+        :sort-order="proposalStore.currentSortDirection"
       />
     </template>
   </div>
@@ -49,6 +50,9 @@ import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { sortOptions } from './constants'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const route = useRoute()
@@ -92,7 +96,7 @@ proposalStore.setCurrentProposal(undefined)
 
 const { panels, proposalCount } = usePanels(routeName)
 
-const handleRowClick = ({ id }) => {
+const handleRowClick = ({ id }: { id: string }) => {
   router.push({ name: RouteName.ProposalDetails, params: { id } })
 }
 </script>
