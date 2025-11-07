@@ -5,7 +5,6 @@ import {
   type FdpgChecklistItemUpdateResponse,
   type IApplicant,
   type IDataDelivery,
-  type IDataDeliveryRequestDto,
   type IDizDetails,
   type IEditAdditionalLocationProposalInformation,
   type IFdpgChecklist,
@@ -462,10 +461,15 @@ export class ProposalService {
   async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {
     try {
       return (
-        await this.apiClient.post<IDataDelivery, AxiosResponse<IDataDelivery>, IDataDeliveryRequestDto>(
-          `${this.basePath}/${proposalId}/data-delivery`,
-          { dataManagementSite: dmsId, acceptance: DeliveryAcceptance.PENDING, delivery: null },
-        )
+        await this.apiClient.post<
+          IDataDelivery,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery`, {
+          dataManagementSite: dmsId,
+          acceptance: DeliveryAcceptance.PENDING,
+          delivery: null,
+        })
       ).data
     } catch (error: any) {
       throw new Error(error)
@@ -475,10 +479,14 @@ export class ProposalService {
   async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
     try {
       return (
-        await this.apiClient.put<IDataDelivery, AxiosResponse<IDataDelivery>, IDataDeliveryRequestDto>(
-          `${this.basePath}/${proposalId}/data-delivery`,
-          { dataManagementSite: dmsId, acceptance: DeliveryAcceptance.PENDING },
-        )
+        await this.apiClient.put<
+          IDataDelivery,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery`, {
+          dataManagementSite: dmsId,
+          acceptance: DeliveryAcceptance.PENDING,
+        })
       ).data
     } catch (error: any) {
       throw new Error(error)

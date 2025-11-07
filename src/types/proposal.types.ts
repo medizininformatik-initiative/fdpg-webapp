@@ -511,7 +511,6 @@ export interface IOwner {
 // !!
 export interface IProposal {
   _id?: string
-  participants: IParticipant[]
   applicant: IApplicant
   projectResponsible: IProjectResponsible
   projectUser: IProjectUser
@@ -699,12 +698,6 @@ export interface IDataDelivery {
   delivery?: IDeliveryInfo | null
   createdAt: string
   updatedAt: string
-}
-
-export interface IDataDeliveryRequestDto {
-  dataManagementSite: string
-  acceptance: DeliveryAcceptance
-  delivery?: IDeliveryInfo | null
 }
 
 export interface IDeliveryInfo {

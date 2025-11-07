@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import { useLocationStore } from '@/stores/locations/location.store.ts'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import FdpgSelect, { type SelectOption } from '@/components/FdpgSelect.vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import FdpgDialog from '@/components/FdpgDialog.vue'
@@ -35,7 +35,7 @@ const handleSubmit = async () => {
   isDmsOverrideDialogOpen.value = false
 }
 
-watchEffect(() => {
+onMounted(() => {
   locationStore.getAll()
 })
 </script>
