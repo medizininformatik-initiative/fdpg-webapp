@@ -718,7 +718,6 @@ const updateChecklistItem = async (item: Partial<IFdpgChecklist>) => {
 }
 
 const onProjectAssigneeChange = async (newAssignee?: IProjectAssignee) => {
-  console.log({ newAssignee })
   try {
     await proposalStore.updateProjectAssignee(proposalId.value, newAssignee)
     await fetchProposal()
