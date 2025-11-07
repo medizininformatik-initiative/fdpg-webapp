@@ -1,5 +1,5 @@
 <template>
-  <h3 class="title">{{ $t('dashboard.inProcess', { count: proposals.length }) }}</h3>
+  <h3 class="title">{{ t(tableHeader, { count: proposals.length }) }}</h3>
   <el-table
     :data="proposals"
     :default-sort="{ prop: 'address', order: 'descending' }"
@@ -70,6 +70,7 @@ import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import FdpgTableDueDateRow from './FdpgTableDueDateRow.vue'
+import { useI18n } from 'vue-i18n'
 
 enum ColumnType {
   Tag = 'tag',
@@ -100,9 +101,15 @@ const props = defineProps({
     type: String as PropType<Role>,
     required: true,
   },
+  tableHeader: {
+    type: String,
+    required: true,
+  },
 })
 
 defineEmits(['row-click'])
+
+const { t } = useI18n()
 
 const defaultLength = ref<number>(6)
 const displayCount = ref<number>(defaultLength.value)
