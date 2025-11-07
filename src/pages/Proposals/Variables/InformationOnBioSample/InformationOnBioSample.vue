@@ -63,7 +63,6 @@
       >
         <el-row :gutter="20">
           <el-col :sm="24">
-            <!-- Biosample Type - Always shown -->
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].type`"
               :rules="biosampleRules.type"
@@ -91,7 +90,6 @@
               </el-radio-group>
             </FdpgFormItem>
 
-            <!-- Biosample Type Details - Always shown -->
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].typeDetails`"
               :rules="isRegisteringForm ? [] : biosampleRules.typeDetails"
@@ -106,7 +104,6 @@
             </FdpgFormItem>
           </el-col>
 
-          <!-- Requirements, Count, Optional - Only for non-register forms -->
           <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].requirements`"
@@ -145,7 +142,6 @@
             </FdpgFormItem>
           </el-col>
 
-          <!-- Sample Code - Always shown -->
           <el-col :sm="24">
             <FdpgFormItem :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].sampleCode`">
               <FdpgLabel html-for="proposal.sampleCode" />
@@ -183,7 +179,6 @@
             </FdpgFormItem>
           </el-col>
 
-          <!-- Method and External Lab Transfer - Only for non-register forms -->
           <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].method`"

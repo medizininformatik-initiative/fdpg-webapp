@@ -17,15 +17,10 @@ export function useProposalSync() {
   const lastSyncedAt = computed(() => proposal.value?.registerInfo?.lastSyncedAt)
   const retryCount = computed(() => proposal.value?.registerInfo?.syncRetryCount || 0)
 
-  /**
-   * Check if registerInfo has all required fields for sync
-   * All registering forms (internal and external) require these fields
-   */
   const hasRequiredRegisterInfo = computed(() => {
     const registerInfo = proposal.value?.registerInfo
     if (!registerInfo) return false
 
-    // All registering forms require these fields for sync
     const hasProjectUrl = !!registerInfo.projectUrl && registerInfo.projectUrl.trim().length > 0
     const hasProjectCategory = !!registerInfo.projectCategory && registerInfo.projectCategory.trim().length > 0
     const hasDiagnoses = registerInfo.diagnoses && registerInfo.diagnoses.length > 0
@@ -34,9 +29,6 @@ export function useProposalSync() {
     return hasProjectUrl && hasProjectCategory && hasDiagnoses && hasProcedures
   })
 
-  /**
-   * Get list of missing required fields
-   */
   const missingRequiredFields = computed(() => {
     const registerInfo = proposal.value?.registerInfo
     if (!registerInfo) return []
@@ -57,20 +49,14 @@ export function useProposalSync() {
     return missing
   })
 
-  /**
-   * Check if sync button should be visible
-   * Show button for Published forms that are OutOfSync, SyncFailed, or Syncing
-   */
   const shouldShowSyncButton = computed(() => {
     if (!proposal.value) return false
 
     const status = proposal.value.status
     const currentSyncStatus = syncStatus.value
 
-    // Only show for Published registering forms
     if (status !== ProposalStatus.Published) return false
 
-    // Show for forms that need syncing
     return (
       currentSyncStatus === SyncStatus.OutOfSync ||
       currentSyncStatus === SyncStatus.SyncFailed ||
@@ -78,21 +64,15 @@ export function useProposalSync() {
     )
   })
 
-  /**
-   * Check if sync can actually be performed
-   * Requires all validation to pass
-   */
   const canSync = computed(() => {
     if (!shouldShowSyncButton.value) return false
 
     const currentSyncStatus = syncStatus.value
 
-    // Can sync if OutOfSync (form was edited after publishing) AND has required fields
     if (currentSyncStatus === SyncStatus.OutOfSync) {
       return hasRequiredRegisterInfo.value
     }
 
-    // Can retry if SyncFailed  AND has required fields
     if (currentSyncStatus === SyncStatus.SyncFailed) {
       return hasRequiredRegisterInfo.value
     }
@@ -172,10 +152,8 @@ export function useProposalSync() {
           let result
 
           if (isRetry.value) {
-            // Retry sync
             result = await proposalStore.retrySyncProposal(proposalId)
           } else {
-            // Normal sync
             result = await proposalStore.syncProposal(proposalId)
           }
 
@@ -193,10 +171,6 @@ export function useProposalSync() {
     })
   }
 
-  /**
-   * Bulk sync all eligible proposals
-   * Shows progress and results
-   */
   const syncAllProposals = async (): Promise<void> => {
     messageBoxStore.setMessageBoxInfo({
       cancelButtonText: 'general.cancel',

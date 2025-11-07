@@ -4,7 +4,6 @@
     @update:model-value="$emit('update:modelValue', $event)"
     type="date"
     format="DD/MM/YYYY"
-    value-format="YYYY-MM-DD"
     class="fdpg-date-picker"
     :placeholder="placeholder ? t(placeholder) : ''"
     :disabled-date="disabledDate"
@@ -56,11 +55,11 @@ const emit = defineEmits(['update:modelValue'])
 
 const disabledDate = (time: Date) => {
   if (props.minDate && props.maxDate) {
-    return time < props.minDate || time > props.maxDate
+    return time <= props.minDate || time >= props.maxDate
   } else if (props.minDate) {
-    return time < props.minDate
+    return time <= props.minDate
   } else if (props.maxDate) {
-    return time > props.maxDate
+    return time >= props.maxDate
   } else {
     return false
   }

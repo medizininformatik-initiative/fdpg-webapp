@@ -566,7 +566,6 @@ const rules = ref<Record<string, any>>({
       hypothesisAndQuestionProjectGoals: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       materialAndMethods: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       executiveSummaryUac: [requiredValidationFunc('string'), maxLengthValidationFunc(3000)],
-      // Register-specific field - literature is already in the component
       literature: isRegisteringForm.value ? [maxLengthValidationFunc(10000)] : [],
     },
     ethicVote: {

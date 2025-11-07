@@ -45,7 +45,6 @@
 <script setup lang="ts">
 import { useLayoutStore } from '@/stores/layout.store'
 import { CreatPrposalSteps } from '@/types/create-proposal-steps.enum'
-import { ProposalType } from '@/types/proposal-type.enum'
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
@@ -57,13 +56,6 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
-
-const isRegisteringForm = computed(() => {
-  if (route.name === 'RegisterNewProject' || route.name === 'RegisterProject') {
-    return true
-  }
-  return proposalStore.currentProposal?.type === ProposalType.RegisteringForm
-})
 
 const filteredSteps = computed(() => {
   return layoutStore.filteredSteps

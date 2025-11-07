@@ -267,7 +267,7 @@ const transformVariableSelection = (
   }
 }
 
-export const mapSelectedCohorts = (cohort?: DeepPartial<ISelectedCohort>): DeepPartial<ISelectedCohort> => {
+export const mapSelectedCohorts = (cohort?: ISelectedCohort): ISelectedCohort => {
   return {
     _id: cohort?._id ?? NEW_ID,
     feasibilityQueryId: cohort?.feasibilityQueryId ?? 0,
@@ -278,17 +278,13 @@ export const mapSelectedCohorts = (cohort?: DeepPartial<ISelectedCohort>): DeepP
   }
 }
 
-export const transformCohorts = (cohorts?: DeepPartial<ICohort>): DeepPartial<ICohort> | undefined => {
-  return cohorts
-    ? {
-        selectedCohorts:
-          cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ??
-          (cohorts?._id ? [] : [{ _id: MiiLocation.VirtualAll }]),
-        details: transformEmptyStringToUndefined(cohorts?.details),
-        _id: cohorts?._id ?? NEW_ID,
-        isDone: cohorts?.isDone ?? false,
-      }
-    : undefined
+export const transformCohorts = (cohorts?: ICohort): ICohort => {
+  return {
+    selectedCohorts: cohorts?.selectedCohorts?.map((c) => mapSelectedCohorts(c)) ?? [],
+    details: transformEmptyStringToUndefined(cohorts?.details),
+    _id: cohorts?._id,
+    isDone: cohorts?.isDone,
+  }
 }
 
 export const transformUserProject = (
