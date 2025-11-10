@@ -7,7 +7,11 @@
     <form class="dms__form" @submit.prevent="handleSubmit">
       <div v-if="dataManagementSite" id="dms-help" class="dms__help">
         <p>
-          {{ t('dataDelivery.oldRequestOverrideInfo', { dms: locationLookupMap[dataManagementSite]?.display }) }}
+          {{
+            t('dataDelivery.oldRequestOverrideInfo', {
+              dms: locationLookupMap[dataManagementSite]?.display ?? dataManagementSite,
+            })
+          }}
         </p>
         <p class="dms__help">{{ t('dataDelivery.proceedAnywayQuestion') }}</p>
       </div>

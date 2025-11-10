@@ -3,10 +3,10 @@
     <h2>{{ t('dataDelivery.dataManagementSiteAbbreviation') }}</h2>
 
     <template v-if="isLocationInquiryStep">
-      <MissingDataDeliverySetup v-if="!dataDelivery" />
-      <div>
-        <DmsRequestOverview :data-delivery="dataDelivery" />
-        <el-button class="dms__reset" link @click="() => setDialogOpenState(true)">
+      <MissingDataDeliverySetup v-if="!dataDelivery" data-testid="missing-dms" />
+      <div v-else>
+        <DmsRequestOverview data-testid="overview" :data-delivery="dataDelivery" />
+        <el-button data-testid="request-new" class="dms__reset" link @click="() => setDialogOpenState(true)">
           {{ t('dataDelivery.newRequest') }}
         </el-button>
       </div>

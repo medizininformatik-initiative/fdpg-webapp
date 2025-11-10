@@ -17,11 +17,11 @@
     <tbody>
       <tr v-if="dataDelivery.dataManagementSite">
         <td class="dms__td dms__td--left">
-          {{ locationLookupMap[dataDelivery.dataManagementSite]?.display }}
+          {{ locationLookupMap[dataDelivery.dataManagementSite]?.display ?? dataDelivery.dataManagementSite }}
         </td>
 
         <td class="dms__td dms__td--center">
-          <span class="dms__status" :data-variant="dataDelivery.acceptance">
+          <span :data-testId="`dataDelivery.${dataDelivery.acceptance}`" class="dms__status">
             {{ t(`dataDelivery.${dataDelivery.acceptance}`) }}
           </span>
         </td>
