@@ -77,7 +77,8 @@
     "approve": "Save Changes",
     "value": "Value",
     "published": "Published",
-    "readyForPublication": "Ready for publication "
+    "readyForPublication": "Ready for publication ",
+    "invalidUrl": "Invalid URL"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -139,7 +140,8 @@
     "CONTRACT_UPDATED": "Contact draft has been updated",
     "PARTICIPANT_ADDED": "Participant {participantName} was added to the project",
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
-    "PARTICIPANT_UPDATED": "Participants were updated"
+    "PARTICIPANT_UPDATED": "Participants were updated",
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}"
   },
   "header": {
     "login": "Login",
@@ -208,6 +210,7 @@
     "participatingScientistsInfo": "Participants are all those who contribute to achieving the project goal (e.g. project managers, other employees of the applicant institution, external third parties or institutions involved in the project, external laboratory service providers, independent scientists). At a minimum, those who have direct access to data or biomaterial must be listed. Keep the list of participants short; especially in the case of large projects, it is not necessary to list every single person.",
     "removeParticipant": "Remove person",
     "firstName": "First name",
+    "lastName": "Last name",
     "pleaseEnterTheFirstName": "Please enter the first name.",
     "researcherTitle": "Title",
     "pleaseEnterTheResearcherTitle": "Please enter the full title.",
@@ -707,7 +710,7 @@
     "submitApplicationTitle": "You have completed the form completely.",
     "submitApplicationContent": "You have completed the form completely. You can submit it directly, download the information as a PDF, or return to the application form to make changes.",
     "submitApplicationErrorTitle": "You have not yet completed the form completely.",
-    "submitApplicationErrorContent": "You haven't completed all required fields yet. You can save the application as a draft or return to the application form and enter the missing information.",
+    "submitApplicationErrorContent": "You have not yet filled in all the mandatory fields. You can save the application as a draft or return to the application form and fill in the missing information. If in doubt, please check whether there are any blue comments still visible and tick them off. Sometimes comments are not visible behind people's entries because they are collapsed. If you still cannot submit, please contact info{'@'}forschen-fuer-gesundheit.de. Sometimes there are comments that are no longer visible to you because they are no longer assigned to a form field after the release change. We can check these off for you in the application. ",
     "backToForm": "Back to the application form",
     "cohortSelection": "Cohort selection and data selection",
     "addCohortAutomatic": "Add JSON description automatically",
@@ -818,7 +821,8 @@
     "sync": "Sync",
     "syncAll": "Sync All",
     "confirmBulkSync": "Confirm Bulk Sync",
-    "bulkSyncResults": "Bulk Sync Results"
+    "bulkSyncResults": "Bulk Sync Results",
+    "projectAssignee": "Project assignee"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -1022,6 +1026,10 @@
     "cancel": "Cancel",
     "PENDING": "Pending",
     "ACCEPTED": "Confirmed",
-    "DENIED": "Denied"
+    "DENIED": "Denied",
+    "noDataDeliveryInitiatedHeader": "No data delivery initiated yet.",
+    "noDataDeliveryInitiatedBody": "Initiate a data delivery for the {dms} data management center or request a new data management center.",
+    "openSelectDmsDialog": "Request new data management site",
+    "createDataDelivery": "Initiate data delivery"
   }
 }

@@ -77,7 +77,8 @@
     "approve": "Änderungen speichern",
     "value": "Wert",
     "published": "publiziert",
-    "readyForPublication": "publikationsreif"
+    "readyForPublication": "publikationsreif",
+    "invalidUrl": "ungültige URL"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -139,7 +140,8 @@
     "CONTRACT_UPDATED": "Vertragsentwurf wurde aktualisiert",
     "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
     "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
-    "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert"
+    "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert",
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}"
   },
   "header": {
     "login": "Anmelden",
@@ -208,6 +210,7 @@
     "participatingScientistsInfo": "Beteiligte Personen sind alle, die zur Erreichung des Projektziels beitragen (z.B. Projektleiter, weitere Mitarbeiter der antragstellenden Institution, (projekt-)externe mitwirkende Dritte oder Institutionen, externer Labordienstleister, selbstständige Wissenschaftler). Mindestens sind diejenigen anzugeben, die direkten Zugang zu Daten oder Biomaterial erhalten. Halten Sie die Benennung der Beteiligten kurz, insbesondere bei Großprojekten ist es nicht erforderlich, jede einzelne Person aufzuführen.",
     "removeParticipant": "Person entfernen",
     "firstName": "Vorname",
+    "lastName": "Nachname",
     "pleaseEnterTheFirstName": "Bitte geben Sie den Vornamen an.",
     "researcherTitle": "Titel",
     "pleaseEnterTheResearcherTitle": "Bitte geben Sie den vollständigen Titel an.",
@@ -707,7 +710,7 @@
     "submitApplicationTitle": "Sie haben das Formular vollständig ausgefüllt.",
     "submitApplicationContent": "Sie haben das Formular vollständig ausgefüllt. Sie können es direkt abschicken, sich die Eingaben als PDF herunterladen oder wieder zurück zum Antragsformular, um Änderungen vorzunehmen.",
     "submitApplicationErrorTitle": "Sie haben das Formular noch nicht vollständig ausgefüllt.",
-    "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen.",
+    "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen. Bitte prüfen Sie im Zweifel, ob noch irgendwo blaue Kommentare zu sehen sind und haken Sie sie ab. Manchmal sind Kommentare hinter den Einträgen von Personen nicht zusehen, weil sie zusammengeklappt sind. Wenn Sie dann immer noch nicht einreichen können, wenden Sie sich an info{'@'}forschen-fuer-gesundheit.de. Manchmal gibt es Kommentare, die für Sie nicht mehr sichtbar sind, weil sie nach dem Releaswechsel keinem Formularfeld mehr zugeordnet sind. Die können wir in der Anwendung für Sie abhaken. ",
     "backToForm": "Zurück zum Antragsformular",
     "cohortSelection": "Kohortenauswahl und Datenselektion",
     "addCohortAutomatic": "JSON-Beschreibung automatisch hinzufügen",
@@ -818,7 +821,8 @@
     "sync": "Synchronisieren",
     "syncAll": "Alle synchronisieren",
     "confirmBulkSync": "Massensynchronisation bestätigen",
-    "bulkSyncResults": "Ergebnisse der Massensynchronisation"
+    "bulkSyncResults": "Ergebnisse der Massensynchronisation",
+    "projectAssignee": "Abtretungsempfänger:in"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -1022,6 +1026,10 @@
     "cancel": "Zurück",
     "PENDING": "Ausstehend",
     "ACCEPTED": "Bestätigt",
-    "DENIED": "Abgelehnt"
+    "DENIED": "Abgelehnt",
+    "noDataDeliveryInitiatedHeader": "Noch keine Datenlieferung  angestoßen",
+    "noDataDeliveryInitiatedBody": "Stoßen Sie für die Datenmanagementstelle {dms} eine Datenlieferung an oder fragen Sie eine neue Datenmanagementstelle an.",
+    "openSelectDmsDialog": "Neue Datenmanagementstelle anfragen",
+    "createDataDelivery": "Datenlieferung anstoßen"
   }
 }
