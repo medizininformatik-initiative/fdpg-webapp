@@ -132,7 +132,7 @@ const organizationCardConfig = computed(() => {
       dto: {
         content: authStore.profile,
       },
-      card: miiLocationCard,
+      card: miiLocationCard.value,
     }
   } else if (authStore.profile && 'organization' in authStore.profile) {
     return {
@@ -153,7 +153,14 @@ const miiLocationCard: ComputedRef<IDefinitionCardVirtual<IVirtualWrap<IOidcProf
         label: 'proposal.fullCorrectNameOfTheInstitutionFacilityJurPerson',
         size: 24,
         definitions: [
-          [{ key: 'MII_LOCATION', kind: 'lookup', lookupMap: locationLookUpMapRef.value, lookupKey: 'display' }],
+          [
+            {
+              key: 'MII_LOCATION',
+              kind: 'lookup',
+              lookupMap: locationLookUpMapRef.value,
+              lookupKey: 'display',
+            },
+          ],
         ],
       },
     ],

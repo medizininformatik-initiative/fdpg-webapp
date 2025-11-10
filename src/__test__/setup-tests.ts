@@ -1,4 +1,5 @@
 import { config } from '@vue/test-utils'
+import '@testing-library/jest-dom/vitest'
 
 config.global.mocks = {
   $t: (key: string, obj?: any) => key + (obj ? JSON.stringify(obj) : ''),

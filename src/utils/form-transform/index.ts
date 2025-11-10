@@ -138,6 +138,7 @@ export const transformForm = (
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
+    dataDelivery: form?.dataDelivery,
     projectAssignee: form?.projectAssignee,
   }
 }
