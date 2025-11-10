@@ -15,6 +15,7 @@ const DIZ_PANELS: PanelType[] = [
   { type: CardType.Pending, header: 'general.pending', query: PanelQuery.DizPending },
   { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.DizOngoing },
   { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.DizFinished },
+  { type: CardType.ComingUp, header: 'dashboard.comingUp', isTable: true, query: PanelQuery.DizComingUp },
 ]
 
 const UAC_PANELS: PanelType[] = [
@@ -34,18 +35,18 @@ const RESEARCHER_PANELS: PanelType[] = [
 const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   [RouteName.Dashboard]: [
     { type: CardType.Requested, header: 'dashboard.forTesting', query: PanelQuery.FdpgRequestedToCheck },
-    { type: CardType.Ongoing, header: 'dashboard.ongoing', isTable: true, query: PanelQuery.FdpgRequestedInWork },
+    { type: CardType.Ongoing, header: 'dashboard.inProcess', isTable: true, query: PanelQuery.FdpgRequestedInWork },
   ],
   [RouteName.Pending]: [
     { type: CardType.Pending, header: 'dashboard.forTesting', query: PanelQuery.FdpgPendingToCheck },
-    { type: CardType.Pending, header: 'dashboard.ongoing', isTable: true, query: PanelQuery.FdpgPendingInWork },
+    { type: CardType.Pending, header: 'dashboard.inProcess', isTable: true, query: PanelQuery.FdpgPendingInWork },
   ],
   [RouteName.Ongoing]: [
     { type: CardType.Ongoing, header: 'dashboard.forTesting', query: PanelQuery.FdpgOngoingToCheck },
-    { type: CardType.Ongoing, header: 'dashboard.ongoing', isTable: true, query: PanelQuery.FdpgOngoingInWork },
+    { type: CardType.Ongoing, header: 'dashboard.inProcess', isTable: true, query: PanelQuery.FdpgOngoingInWork },
   ],
   [RouteName.Completed]: [
-    { type: CardType.Completed, header: 'dashboard.ongoing', isTable: true, query: PanelQuery.FdpgFinished },
+    { type: CardType.Completed, header: 'dashboard.inProcess', isTable: true, query: PanelQuery.FdpgFinished },
   ],
 }
 

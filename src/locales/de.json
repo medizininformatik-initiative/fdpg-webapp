@@ -184,7 +184,8 @@
     "noRole": "Es tut uns leid. Derzeit haben Sie keine zugewiesene Rolle und können das Portal noch nicht nutzen. Nach Ihrer Registrierung findet ein manueller Freischaltungsschritt statt. Sie werden informiert, wenn dieser erfolgt ist. Je nach Aufkommen kann dies 1-2 Tage dauern.",
     "xOngoingProjectContracts": "{x} laufende Projektverträge",
     "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
-    "registerProject": "Projekt registrieren"
+    "registerProject": "Projekt registrieren",
+    "comingUp": "Demnächst ({count})"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -352,11 +353,15 @@
     "checklistVerification": "Checkliste Prüfung ({checkedCount}/{optionsCount})",
     "checklistGenericError": "Die Checkliste konnte nicht gespeichert werden",
     "isRegistrationLinkSentLabel": "Ich habe einen Registrierungslink an den Antragsteller und alle beteiligten Wissenschaftler gesendet",
+    "initialViewingLabel": "Initiale Überprüfung",
+    "depthCheckLabel": "Tiefere Überprüfung",
+    "ethicsCheckLabel": "Ethikprüfung",
     "isUniqueLabel": "Ich habe den Projekttitel geprüft und bestätige die Einzigartigkeit des Projektantrages",
     "isAttachmentsCheckedLabel": "Ich habe die Inhalte aller Anhänge geprüft und bestätige deren Vollständigkeit",
     "isCheckedLabel": "Ich habe den Projektantrag geprüft und habe zu überarbeitende Bereiche als Aufgabe für den Antragsteller markiert",
     "messagesToApplicants": "Mitteilungen an Antragsteller",
     "messagesToLocations": "Mitteilungen an Standorte",
+    "messagesToDms": "Mitteilungen an DMST",
     "messagesToFdpg": "Mitteilungen an FDPG",
     "uniquenessGivenDescription": "Bitte schauen Sie manuell oder anhand der Projektvorschläge, ob es bereits ähnliche Projekte gibt. \\nBestätigen Sie die Einzigartigkeit des Projektes oder fordern Sie Änderungen im Titel an bzw. lehnen den Projektantrag mit Begründung ab.",
     "checkedAreas": "Geprüfte Bereiche ({isDoneCount}/{fieldCount})",
@@ -800,7 +805,14 @@
     "registerProjectModalTitle": "Projekt zur Veröffentlichung registrieren",
     "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
     "registerProject": "Projekt registrieren",
-    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus."
+    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
+    "syncToWebsite": "Mit Website synchronisieren",
+    "resync": "Erneut synchronisieren",
+    "retrySync": "Synchronisation wiederholen",
+    "syncing": "Synchronisiert...",
+    "synced": "Synchronisiert",
+    "outOfSync": "Nicht synchronisiert",
+    "syncFailed": "Synchronisation fehlgeschlagen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -988,5 +1000,22 @@
     "failedToSync": "Fehler beim synchronisieren der Standorte",
     "failedToUpdate": "Standort konnte nicht aktualisiert werden",
     "errorOnSetup": "Fehler beim laden der Daten"
+  },
+  "dataDelivery": {
+    "dataManagementSiteAbbreviation": "DMST",
+    "dataManagementSite": "Datenmanagementstelle",
+    "selectDataManagementSite": "Datenmanagementstelle wählen",
+    "selectDataManagementSiteInfoText": "Wähle eine Datenmanagementstelle von der aus die Lieferung erfolgt.",
+    "sendRequest": "Anfrage senden",
+    "requestStatus": "Anfragestatus",
+    "dueDate": "Ablaufdatum",
+    "newRequest": "Neue Anfrage",
+    "newRequestConfirmationQuestion": "Neue Datenmanagementstelle anfragen?",
+    "oldRequestOverrideInfo": "Die derzeitige Anfrage für die Datenmanagementstelle {dms} wird überschrieben.",
+    "proceedAnywayQuestion": "Trotzdem fortfahren?",
+    "cancel": "Zurück",
+    "PENDING": "Ausstehend",
+    "ACCEPTED": "Bestätigt",
+    "DENIED": "Abgelehnt"
   }
 }

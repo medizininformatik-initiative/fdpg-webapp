@@ -50,6 +50,7 @@
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
+    <ProjectDMSOverview />
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
 
@@ -103,7 +104,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, ref, markRaw, watch, onUnmounted, type Ref } from 'vue'
+import { computed, defineComponent, markRaw, onMounted, onUnmounted, ref, type Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -111,7 +112,7 @@ import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines } from '@/types/due-date.enum'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
@@ -119,6 +120,8 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { UpdateQueue } from '@/utils/promise-queue.util'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
+import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -712,6 +715,9 @@ const isChecklistDone = computed(() => {
   return (
     verification.every((item: IChecklistItem) => item.isAnswered) &&
     checklist.isRegistrationLinkSent &&
+    checklist.initialViewing &&
+    checklist.ethicsCheck &&
+    checklist.ethicsCheck &&
     projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })

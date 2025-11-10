@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import usePanels from '@/composables/use-panels'
 import type { SidebarRouteMenu } from '@/types/sidebar-menu.types'
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import { computed } from 'vue'
 
 const props = defineProps({

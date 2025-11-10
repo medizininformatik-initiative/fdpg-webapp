@@ -43,7 +43,7 @@ describe('UsePanels', () => {
     authStore.singleKnownRole = Role.DizMember
     const { panels, proposalCount } = usePanels(routeName)
 
-    expect(panels.value.length).toEqual(4)
+    expect(panels.value.length).toEqual(5)
     expect(proposalCount.value.total).toEqual(4 * 6)
     expect(proposalCount.value.critical).toEqual(4 * 1)
     expect(proposalCount.value.high).toEqual(4 * 2)
@@ -52,6 +52,7 @@ describe('UsePanels', () => {
     expect(panels.value[1].query).toEqual(PanelQuery.DizPending)
     expect(panels.value[2].query).toEqual(PanelQuery.DizOngoing)
     expect(panels.value[3].query).toEqual(PanelQuery.DizFinished)
+    expect(panels.value[4].query).toEqual(PanelQuery.DizComingUp)
   })
 
   it('should return the panels for the uac member', async () => {
