@@ -1,11 +1,11 @@
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import {
+  ProposalTypeOfUse,
   type IFdpgChecklist,
   type IOwner,
   type IProposal,
   type IRequestedData,
-  ProposalTypeOfUse,
 } from '@/types/proposal.types'
 import type { IVersion } from '@/types/version.interface'
 import { transformEmptyStringToUndefined } from '../empty-string.util'
@@ -139,5 +139,6 @@ export const transformForm = (
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
     dataDelivery: form?.dataDelivery,
+    projectAssignee: form?.projectAssignee,
   }
 }

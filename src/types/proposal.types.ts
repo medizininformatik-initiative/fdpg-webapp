@@ -330,6 +330,9 @@ export enum ProjectHistoryType {
   ParticipantAdded = 'PARTICIPANT_ADDED',
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
+
+  // Misc
+  ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }
 
 export enum UploadFileType {
@@ -582,6 +585,7 @@ export interface IProposal {
   isParticipatingScientist?: boolean
   deadlines: Deadlines
   dataDelivery?: IDataDelivery | null
+  projectAssignee?: IProjectAssignee
 }
 
 export enum FdpgTaskType {
@@ -729,4 +733,11 @@ export enum DeliveryAcceptance {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   DENIED = 'DENIED',
+}
+
+export interface IProjectAssignee {
+  userId: string
+  firstName?: string
+  lastName?: string
+  email: string
 }

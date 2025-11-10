@@ -77,7 +77,8 @@
     "approve": "Änderungen speichern",
     "value": "Wert",
     "published": "publiziert",
-    "readyForPublication": "publikationsreif"
+    "readyForPublication": "publikationsreif",
+    "invalidUrl": "ungültige URL"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -139,7 +140,8 @@
     "CONTRACT_UPDATED": "Vertragsentwurf wurde aktualisiert",
     "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
     "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
-    "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert"
+    "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert",
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}"
   },
   "header": {
     "login": "Anmelden",
@@ -208,6 +210,7 @@
     "participatingScientistsInfo": "Beteiligte Personen sind alle, die zur Erreichung des Projektziels beitragen (z.B. Projektleiter, weitere Mitarbeiter der antragstellenden Institution, (projekt-)externe mitwirkende Dritte oder Institutionen, externer Labordienstleister, selbstständige Wissenschaftler). Mindestens sind diejenigen anzugeben, die direkten Zugang zu Daten oder Biomaterial erhalten. Halten Sie die Benennung der Beteiligten kurz, insbesondere bei Großprojekten ist es nicht erforderlich, jede einzelne Person aufzuführen.",
     "removeParticipant": "Person entfernen",
     "firstName": "Vorname",
+    "lastName": "Nachname",
     "pleaseEnterTheFirstName": "Bitte geben Sie den Vornamen an.",
     "researcherTitle": "Titel",
     "pleaseEnterTheResearcherTitle": "Bitte geben Sie den vollständigen Titel an.",
@@ -812,7 +815,14 @@
     "syncing": "Synchronisiert...",
     "synced": "Synchronisiert",
     "outOfSync": "Nicht synchronisiert",
-    "syncFailed": "Synchronisation fehlgeschlagen"
+    "syncFailed": "Synchronisation fehlgeschlagen",
+    "notSynced": "Nicht synchronisiert",
+    "confirmSync": "Synchronisation bestätigen",
+    "sync": "Synchronisieren",
+    "syncAll": "Alle synchronisieren",
+    "confirmBulkSync": "Massensynchronisation bestätigen",
+    "bulkSyncResults": "Ergebnisse der Massensynchronisation",
+    "projectAssignee": "Abtretungsempfänger:in"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

@@ -21,6 +21,7 @@ import {
   type ISelectedCohort,
   type IUpload,
   type ProposalStatus,
+  IProjectAssignee,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -491,6 +492,10 @@ export class ProposalService {
     } catch (error: any) {
       throw new Error(error)
     }
+  }
+
+  async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
   }
 
   async catch(error: any) {

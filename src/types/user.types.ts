@@ -1,4 +1,5 @@
 import type { Role } from './oidc.types'
+import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { Salutation } from './salutation.enum'
 
 export interface ICreateUser {
@@ -29,6 +30,8 @@ export interface IUserEmailsResponse {
 
 export interface IUserEmailsQuery {
   startsWith?: string
+  roles?: Role[]
+  dataSources?: PlatformIdentifier[]
 }
 
 export interface IKeycloakUser {
