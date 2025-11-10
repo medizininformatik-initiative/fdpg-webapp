@@ -517,7 +517,6 @@ export interface IOwner {
 // !!
 export interface IProposal {
   _id?: string
-  participants: IParticipant[]
   applicant: IApplicant
   projectResponsible: IProjectResponsible
   projectUser: IProjectUser
@@ -582,6 +581,7 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+  dataDelivery?: IDataDelivery | null
 }
 
 export enum FdpgTaskType {
@@ -696,4 +696,37 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+
+export interface IDataDelivery {
+  dataManagementSite: string
+  acceptance: DeliveryAcceptance
+  delivery?: IDeliveryInfo | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IDeliveryInfo {
+  name: string
+  date: string
+  subDeliveries: ISubDelivery[]
+}
+
+export interface ISubDelivery {
+  location: string
+  status: SubDeliveryStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export enum SubDeliveryStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export enum DeliveryAcceptance {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
 }
