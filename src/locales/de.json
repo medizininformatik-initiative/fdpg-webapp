@@ -184,7 +184,8 @@
     "noRole": "Es tut uns leid. Derzeit haben Sie keine zugewiesene Rolle und können das Portal noch nicht nutzen. Nach Ihrer Registrierung findet ein manueller Freischaltungsschritt statt. Sie werden informiert, wenn dieser erfolgt ist. Je nach Aufkommen kann dies 1-2 Tage dauern.",
     "xOngoingProjectContracts": "{x} laufende Projektverträge",
     "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
-    "registerProject": "Projekt registrieren"
+    "registerProject": "Projekt registrieren",
+    "comingUp": "Demnächst ({count})"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -804,7 +805,14 @@
     "registerProjectModalTitle": "Projekt zur Veröffentlichung registrieren",
     "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
     "registerProject": "Projekt registrieren",
-    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus."
+    "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
+    "syncToWebsite": "Mit Website synchronisieren",
+    "resync": "Erneut synchronisieren",
+    "retrySync": "Synchronisation wiederholen",
+    "syncing": "Synchronisiert...",
+    "synced": "Synchronisiert",
+    "outOfSync": "Nicht synchronisiert",
+    "syncFailed": "Synchronisation fehlgeschlagen"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

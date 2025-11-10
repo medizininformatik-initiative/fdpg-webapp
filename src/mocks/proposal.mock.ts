@@ -345,6 +345,9 @@ export const mockProposal: IProposal = {
   ],
   fdpgChecklist: {
     isRegistrationLinkSent: true,
+    initialViewing: true,
+    depthCheck: true,
+    ethicsCheck: true,
     isUnique: true,
     isAttachmentsChecked: true,
     isChecked: true,

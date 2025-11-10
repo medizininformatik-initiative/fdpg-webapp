@@ -184,7 +184,8 @@
     "noRole": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days.",
     "xOngoingProjectContracts": "{x} ongoing project contracts",
     "xCompletedProjectContracts": "{x} completed project contracts",
-    "registerProject": "Register a project"
+    "registerProject": "Register a project",
+    "comingUp": "Coming up ({count})"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",

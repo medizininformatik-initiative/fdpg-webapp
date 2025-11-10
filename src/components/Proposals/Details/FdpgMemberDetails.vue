@@ -120,6 +120,7 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { UpdateQueue } from '@/utils/promise-queue.util'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 const messageBoxStore = useMessageBoxStore()
@@ -714,6 +715,9 @@ const isChecklistDone = computed(() => {
   return (
     verification.every((item: IChecklistItem) => item.isAnswered) &&
     checklist.isRegistrationLinkSent &&
+    checklist.initialViewing &&
+    checklist.ethicsCheck &&
+    checklist.ethicsCheck &&
     projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })

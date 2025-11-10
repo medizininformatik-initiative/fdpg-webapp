@@ -54,6 +54,9 @@ const transformChecklist = (
   if (!checklist) {
     return {
       isRegistrationLinkSent: false,
+      initialViewing: false,
+      depthCheck: false,
+      ethicsCheck: false,
       checkListVerification: [],
       fdpgInternalCheckNotes: '',
       projectProperties: [],

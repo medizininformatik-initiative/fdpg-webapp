@@ -420,6 +420,9 @@ export interface IChecklistItem {
 
 export interface IFdpgChecklist {
   isRegistrationLinkSent: boolean
+  initialViewing: boolean
+  depthCheck: boolean
+  ethicsCheck: boolean
   checkListVerification: IChecklistItem[]
   fdpgInternalCheckNotes: string | null
   projectProperties: IChecklistItem[]
@@ -428,6 +431,9 @@ export interface IFdpgChecklist {
 export type FdpgChecklistItemUpdateResponse =
   | IChecklistItem
   | { _id: 'isRegistrationLinkSent'; isRegistrationLinkSent: boolean }
+  | { _id: 'initialViewing'; initialViewing: boolean }
+  | { _id: 'depthCheck'; depthCheck: boolean }
+  | { _id: 'ethicsCheck'; ethicsCheck: boolean }
   | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: string | null }
 
 export interface IsDoneDetail {
