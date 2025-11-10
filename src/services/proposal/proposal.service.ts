@@ -495,12 +495,16 @@ export class ProposalService {
     failed: number
     errors: Array<{ projectAbbreviation: string; error: string }>
   }> {
-    const response = await this.apiClient.post<{
-      total: number
-      synced: number
-      failed: number
-      errors: Array<{ projectAbbreviation: string; error: string }>
-    }>(`/proposals/sync-all`)
-    return response.data
+    try {
+      const response = await this.apiClient.post<{
+        total: number
+        synced: number
+        failed: number
+        errors: Array<{ projectAbbreviation: string; error: string }>
+      }>(`/proposals/sync-all`)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.message || 'An unexpected error occurred while syncing all proposals')
+    }
   }
 }

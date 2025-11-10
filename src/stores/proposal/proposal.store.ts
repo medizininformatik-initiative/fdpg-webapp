@@ -555,14 +555,20 @@ export const useProposalStore = defineStore('Proposal', {
     }> {
       const result = await this.apiService.syncAllProposals()
 
-      if (Object.keys(this.proposals).length > 0) {
-        const panelQuery = Object.keys(this.proposals)[0] as PanelQuery
-        await this.fetch({
-          panelQuery,
-          order: this.currentSortDirection,
-          sortBy: this.currentSortField,
-        })
-      }
+      const fdpgPublishedPanels: PanelQuery[] = [
+        'FDPG_PUBLISHED_READY' as PanelQuery,
+        'FDPG_PUBLISHED_PUBLISHED' as PanelQuery,
+      ]
+
+      await Promise.all(
+        fdpgPublishedPanels.map((panelQuery) =>
+          this.fetch({
+            panelQuery,
+            order: this.currentSortDirection,
+            sortBy: this.currentSortField,
+          }),
+        ),
+      )
 
       return result
     },

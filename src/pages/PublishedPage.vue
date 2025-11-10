@@ -21,6 +21,17 @@
       </div>
     </div>
     <div v-for="panel in panels" :key="panel.query">
+      <div class="sync-button-wrapper">
+        <el-button
+          v-if="isFdpgMember && panel.query === PanelQuery.FdpgPublishedReady"
+          type="primary"
+          @click="handleSyncAllProposalsClick"
+          :disabled="isSyncAllDisabled"
+        >
+          {{ t('proposal.syncToWebsite') }}
+        </el-button>
+      </div>
+
       <FdpgProposalCardPanel
         :panel="panel"
         :sort-by="proposalStore.currentSortField"
@@ -29,7 +40,6 @@
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import FdpgProposalCardPanel from '@/components/FdpgProposalCardPanel/FdpgProposalCardPanel.vue'
 import FdpgSortSelect from '@/components/FdpgSortSelect.vue'
@@ -38,20 +48,44 @@ import usePanels from '@/composables/use-panels'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { RouteName } from '@/types/route-name.enum'
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { PanelQuery } from '@/types/sort-filter.types'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import { Role } from '@/types/oidc.types'
+import { useProposalSync } from '@/composables/use-proposal-sync'
+import useNotifications from '@/composables/use-notifications'
 
 const { t } = useI18n()
 const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Published)
 const proposalStore = useProposalStore()
 const { panels, proposalCount } = usePanels(routeName)
-
+const { showErrorMessage } = useNotifications()
 const layoutStore = useLayoutStore()
-
-// Reset the current proposal for next detail open
+const authStore = useAuthStore()
+const isFdpgMember = computed(() => authStore.singleKnownRole === Role.FdpgMember)
 proposalStore.setCurrentProposal(undefined)
+
+const { syncAllProposals, isSyncing } = useProposalSync()
+
+const readyPanelCount = computed(() => {
+  const counts = proposalStore.counts[PanelQuery.FdpgPublishedReady]
+  return counts?.total || 0
+})
+
+const isSyncAllDisabled = computed(() => {
+  return readyPanelCount.value === 0 || isSyncing.value
+})
+
+const handleSyncAllProposalsClick = async (): Promise<void> => {
+  try {
+    await syncAllProposals()
+  } catch (error: any) {
+    showErrorMessage(error.message || 'Unknown error')
+  }
+}
 
 onMounted(() => {
   layoutStore.setBreadcrumbs([])
@@ -90,5 +124,10 @@ onMounted(() => {
   font-size: 14px;
   color: #666;
   margin: 0;
+}
+.sync-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
 }
 </style>
