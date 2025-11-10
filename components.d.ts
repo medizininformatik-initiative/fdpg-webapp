@@ -29,12 +29,7 @@ declare module 'vue' {
     DmoDashboard: typeof import('./src/components/Dashboard/DmoDashboard.vue')['default']
     DmoDetails: typeof import('./src/components/Proposals/Details/DmoDetails.vue')['default']
     DmoMemberDetails: typeof import('./src/components/Proposals/Details/DmoMemberDetails.vue')['default']
-<<<<<<< HEAD
-    DmsDashboard: typeof import('./src/components/Dashboard/DmsDashboard.vue')['default']
-    DmsMemberDetails: typeof import('./src/components/Proposals/Details/DmsMemberDetails.vue')['default']
-=======
     DmsRequestOverview: typeof import('./src/components/DataDelivery/DmsRequestOverview.vue')['default']
->>>>>>> dev
     DocumentList: typeof import('./src/components/Proposals/Details/DocumentList.vue')['default']
     EditProfileDialog: typeof import('./src/components/EditProfileDialog.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
