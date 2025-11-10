@@ -144,4 +144,9 @@ export const PanelQueryObj = {
     [CardType.Completed]: PanelQuery.DizFinished,
     [CardType.Requested]: PanelQuery.DizRequested,
   },
+
+  [Role.DataManagementOffice]: {
+    [CardType.Pending]: PanelQuery.DmsPending,
+    [CardType.Ongoing]: PanelQuery.DmsApproved,
+  },
 }
