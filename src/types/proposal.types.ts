@@ -701,7 +701,7 @@ export interface IAlertConfigGet {
 export interface IDataDelivery {
   dataManagementSite: string
   acceptance: DeliveryAcceptance
-  delivery?: IDeliveryInfo | null
+  delivery?: IDeliveryInfo[]
   createdAt: string
   updatedAt: string
 }

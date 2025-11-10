@@ -50,7 +50,7 @@
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
-    <ProjectDMSOverview />
+    <ProjectDMSOverview v-if="shouldDisplayDmsOverview" />
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
 
@@ -137,6 +137,8 @@ const currentProposalStatus = [
   ProposalStatus.FinishedProject,
   ProposalStatus.ReadyToArchive,
 ]
+
+const shouldDisplayDmsOverview = computed(() => currentProposalStatus.includes(status.value))
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
