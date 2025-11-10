@@ -18,6 +18,7 @@
 
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
+
     <div class="section">
       <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
       <DocumentList
@@ -43,6 +44,13 @@
       @remove-cohort="removeCohort"
     />
 
+    <FdpgProjectAssignee
+      v-model="currentProjectAssignee"
+      :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
+      :data-sources="selectedDataSources"
+      @update:model-value="onProjectAssigneeChange"
+    />
+
     <FdpgCheckList
       v-model="fdpgChecklist"
       :status="status"
@@ -50,13 +58,16 @@
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
+    <ProjectDMSOverview />
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
     <ProjectHistory />
 
     <div class="divider" />
+
     <FdpgCheckNotes
       v-if="status === ProposalStatus.FdpgCheck || proposalStore.currentProposal?.fdpgCheckNotes"
     ></FdpgCheckNotes>
+
     <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_OWNER" :possible-locations="possibleLocations" />
     <MessageCenter
       v-if="showDmsComments"
@@ -101,14 +112,20 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { IChecklistItem, IFdpgChecklist, IProposal, ISelectedCohort } from '@/types/proposal.types'
+import type {
+  IChecklistItem,
+  IFdpgChecklist,
+  IProjectAssignee,
+  IProposal,
+  ISelectedCohort,
+} from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import type { UploadFile } from 'element-plus'
 import { ElContainer } from 'element-plus'
-import { computed, defineComponent, onMounted, ref, markRaw, watch, onUnmounted, type Ref } from 'vue'
+import { computed, defineComponent, markRaw, onMounted, onUnmounted, ref, type Ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
@@ -116,7 +133,7 @@ import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import FdpgChangeDeadlines from '@/components/FdpgChangeDeadlines.vue'
 import type { Deadlines } from '@/types/due-date.enum'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
@@ -124,6 +141,10 @@ import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { UpdateQueue } from '@/utils/promise-queue.util'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
+import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
+import FdpgProjectAssignee from '@/components/FdpgProjectAssignee.vue'
+import { Role } from '@/types/oidc.types'
 
 const messageBoxStore = useMessageBoxStore()
 const authStore = useAuthStore()
@@ -163,6 +184,9 @@ const possibleLocations = computed(() =>
     .map((locId) => locationMapRef.value?.[locId])
     .filter((loc) => loc),
 )
+
+const currentProjectAssignee = computed(() => proposalStore?.currentProposal?.projectAssignee ?? null)
+const selectedDataSources = computed(() => proposalStore?.currentProposal?.selectedDataSources ?? [])
 
 const openReviewPage = () => {
   router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
@@ -710,6 +734,15 @@ const updateChecklistItem = async (item: Partial<IFdpgChecklist>) => {
   })
 }
 
+const onProjectAssigneeChange = async (newAssignee?: IProjectAssignee) => {
+  try {
+    await proposalStore.updateProjectAssignee(proposalId.value, newAssignee)
+    await fetchProposal()
+  } catch {
+    showErrorMessage()
+  }
+}
+
 onUnmounted(() => {
   updateQueue.clear()
 })
@@ -727,6 +760,9 @@ const isChecklistDone = computed(() => {
   return (
     verification.every((item: IChecklistItem) => item.isAnswered) &&
     checklist.isRegistrationLinkSent &&
+    checklist.initialViewing &&
+    checklist.ethicsCheck &&
+    checklist.ethicsCheck &&
     projectProperties.every((item: IChecklistItem) => item.isAnswered)
   )
 })

@@ -29,3 +29,5 @@ pnpm-debug.log*
 /playwright-report/
 /playwright/.cache/
 components.d.ts
+.yarnrc.yml
+/.yarn/install-state.gz

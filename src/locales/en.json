@@ -77,7 +77,8 @@
     "approve": "Save Changes",
     "value": "Value",
     "published": "Published",
-    "readyForPublication": "Ready for publication "
+    "readyForPublication": "Ready for publication ",
+    "invalidUrl": "Invalid URL"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -97,7 +98,7 @@
     "process": "PENDING",
     "progress": "Progress:",
     "completed": "{progress}% filled out",
-    "published": "published"
+    "published": "Published"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -139,7 +140,8 @@
     "CONTRACT_UPDATED": "Contact draft has been updated",
     "PARTICIPANT_ADDED": "Participant {participantName} was added to the project",
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
-    "PARTICIPANT_UPDATED": "Participants were updated"
+    "PARTICIPANT_UPDATED": "Participants were updated",
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}"
   },
   "header": {
     "login": "Login",
@@ -184,7 +186,8 @@
     "noRole": "We are sorry. Currently you do not have an assigned role and cannot use the portal yet. After your registration, a manual activation step takes place. You will be informed when this has taken place. Depending on the volume, this may take 1-2 days.",
     "xOngoingProjectContracts": "{x} ongoing project contracts",
     "xCompletedProjectContracts": "{x} completed project contracts",
-    "registerProject": "Register a project"
+    "registerProject": "Register a project",
+    "comingUp": "Coming up ({count})"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -207,6 +210,7 @@
     "participatingScientistsInfo": "Participants are all those who contribute to achieving the project goal (e.g. project managers, other employees of the applicant institution, external third parties or institutions involved in the project, external laboratory service providers, independent scientists). At a minimum, those who have direct access to data or biomaterial must be listed. Keep the list of participants short; especially in the case of large projects, it is not necessary to list every single person.",
     "removeParticipant": "Remove person",
     "firstName": "First name",
+    "lastName": "Last name",
     "pleaseEnterTheFirstName": "Please enter the first name.",
     "researcherTitle": "Title",
     "pleaseEnterTheResearcherTitle": "Please enter the full title.",
@@ -804,7 +808,21 @@
     "registerProjectModalTitle": "Register Project for Publication",
     "registerProjectModalDescription": "This will create a copy of this project as a registration form. You can then fill in publication details and publish it to the FDPG register. The original project will remain unchanged.",
     "registerProject": "Register Project",
-    "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details."
+    "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
+    "syncToWebsite": "Sync to Website",
+    "resync": "Re-Sync to Website",
+    "retrySync": "Retry Sync",
+    "syncing": "Syncing...",
+    "synced": "Synced",
+    "outOfSync": "Out of Sync",
+    "syncFailed": "Sync Failed",
+    "notSynced": "Not Synced",
+    "confirmSync": "Confirm Sync",
+    "sync": "Sync",
+    "syncAll": "Sync All",
+    "confirmBulkSync": "Confirm Bulk Sync",
+    "bulkSyncResults": "Bulk Sync Results",
+    "projectAssignee": "Project assignee"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -992,5 +1010,22 @@
     "failedToSync": "Error on synchronizing the locations",
     "failedToUpdate": "Error on updating location",
     "errorOnSetup": "Error on fetching data"
+  },
+  "dataDelivery": {
+    "dataManagementSiteAbbreviation": "DMS",
+    "dataManagementSite": "Data Management Site",
+    "selectDataManagementSite": "Select data management site",
+    "selectDataManagementSiteInfoText": "Choose a data management site to receive the delivery from.",
+    "sendRequest": "Send Request",
+    "requestStatus": "Request Status",
+    "dueDate": "Due Date",
+    "newRequest": "New Request",
+    "newRequestConfirmationQuestion": "Request new data management site?",
+    "oldRequestOverrideInfo": "Your current request for the site {dms} will be overridden.",
+    "proceedAnywayQuestion": "Proceed anyway?",
+    "cancel": "Cancel",
+    "PENDING": "Pending",
+    "ACCEPTED": "Confirmed",
+    "DENIED": "Denied"
   }
 }

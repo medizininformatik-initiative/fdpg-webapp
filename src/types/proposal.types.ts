@@ -330,6 +330,9 @@ export enum ProjectHistoryType {
   ParticipantAdded = 'PARTICIPANT_ADDED',
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
+
+  // Misc
+  ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }
 
 export enum UploadFileType {
@@ -420,6 +423,9 @@ export interface IChecklistItem {
 
 export interface IFdpgChecklist {
   isRegistrationLinkSent: boolean
+  initialViewing: boolean
+  depthCheck: boolean
+  ethicsCheck: boolean
   checkListVerification: IChecklistItem[]
   fdpgInternalCheckNotes: string | null
   projectProperties: IChecklistItem[]
@@ -428,6 +434,9 @@ export interface IFdpgChecklist {
 export type FdpgChecklistItemUpdateResponse =
   | IChecklistItem
   | { _id: 'isRegistrationLinkSent'; isRegistrationLinkSent: boolean }
+  | { _id: 'initialViewing'; initialViewing: boolean }
+  | { _id: 'depthCheck'; depthCheck: boolean }
+  | { _id: 'ethicsCheck'; ethicsCheck: boolean }
   | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: string | null }
 
 export interface IsDoneDetail {
@@ -511,7 +520,6 @@ export interface IOwner {
 // !!
 export interface IProposal {
   _id?: string
-  participants: IParticipant[]
   applicant: IApplicant
   projectResponsible: IProjectResponsible
   projectUser: IProjectUser
@@ -576,6 +584,8 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+  dataDelivery?: IDataDelivery | null
+  projectAssignee?: IProjectAssignee
 }
 
 export enum FdpgTaskType {
@@ -690,4 +700,44 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+
+export interface IDataDelivery {
+  dataManagementSite: string
+  acceptance: DeliveryAcceptance
+  delivery?: IDeliveryInfo | null
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IDeliveryInfo {
+  name: string
+  date: string
+  subDeliveries: ISubDelivery[]
+}
+
+export interface ISubDelivery {
+  location: string
+  status: SubDeliveryStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export enum SubDeliveryStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export enum DeliveryAcceptance {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export interface IProjectAssignee {
+  userId: string
+  firstName?: string
+  lastName?: string
+  email: string
 }
