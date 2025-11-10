@@ -609,7 +609,8 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
         ProposalStatus.DataResearch,
         ProposalStatus.DataCorrupt,
         ProposalStatus.FinishedProject,
-      ].includes(status.value),
+      ].includes(status.value) ||
+      proposalStore.currentProposal?.regisrterFormId !== undefined,
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {

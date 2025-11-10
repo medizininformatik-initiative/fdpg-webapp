@@ -554,7 +554,7 @@ export interface IProposal {
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
   registerInfo?: IRegisterInfo
-
+  regisrterFormId?: string
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
