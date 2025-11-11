@@ -116,10 +116,8 @@ const toggleExpand = () => (isExpanded.value = !isExpanded.value)
 
   .todo-description {
     &--short {
-      width: 30%;
+      width: 100%;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
     &--long {
