@@ -169,7 +169,7 @@ const showDmsCommentStatus = [
   ProposalStatus.ReadyToArchive,
 ]
 
-const shouldDisplayDmsOverview = computed(() => currentProposalStatus.includes(status.value))
+const shouldDisplayDmsOverview = computed(() => showDmsCommentStatus.includes(status.value))
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
