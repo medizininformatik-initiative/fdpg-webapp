@@ -58,7 +58,11 @@ import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   type: {
-    type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
+    type: String as PropType<
+      | CommentType.PROPOSAL_MESSAGE_TO_OWNER
+      | CommentType.PROPOSAL_MESSAGE_TO_LOCATION
+      | CommentType.PROPOSAL_MESSAGE_TO_DMST
+    >,
     required: true,
   },
   reviewMode: {
@@ -82,6 +86,8 @@ const showDoneComments = ref(true)
 const titleForType = computed<TranslationSchema>(() => {
   if (props.type === CommentType.PROPOSAL_MESSAGE_TO_OWNER) {
     return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToApplicants' : 'proposal.messagesToFdpg'
+  } else if (props.type === CommentType.PROPOSAL_MESSAGE_TO_DMST) {
+    return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToDms' : 'proposal.messagesToFdpg'
   } else {
     return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToLocations' : 'proposal.messagesToFdpg'
   }

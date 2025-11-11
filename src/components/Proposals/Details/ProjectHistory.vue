@@ -23,30 +23,48 @@ const proposalStore = useProposalStore()
 const projectHistory = computed(() => proposalStore.currentProposal?.history ?? [])
 
 const historyList = computed(() => {
-  return projectHistory.value.length > 0
-    ? projectHistory.value.map((item) => {
-        const translationParameter: Record<string, string> = {}
-        if (item.type === ProjectHistoryType.FdpgLocationVoteReverted && item.location) {
+  if (projectHistory.value.length === 0) {
+    return []
+  }
+
+  return projectHistory.value.map((item) => {
+    const translationParameter: Record<string, string> = {}
+
+    switch (item.type) {
+      case ProjectHistoryType.FdpgLocationVoteReverted:
+        if (item.location) {
           translationParameter['location'] = item.location
         }
-        if (
-          (item.type === ProjectHistoryType.ParticipantAdded || item.type === ProjectHistoryType.ParticipantRemoved) &&
-          item.data?.participantName
-        ) {
+        break
+
+      case ProjectHistoryType.ParticipantAdded:
+      case ProjectHistoryType.ParticipantRemoved:
+        if (item.data?.participantName) {
           translationParameter['participantName'] = item.data.participantName as string
         }
-        return {
-          date: item.createdAt
-            ? new Date(item.createdAt).toLocaleDateString(undefined, {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })
-            : new Date().toLocaleDateString(),
-          label: t(`history.${item.type}`, translationParameter),
+        break
+
+      case ProjectHistoryType.ProjectAssigneChange:
+        if (item.data?.newAssigneeMail) {
+          translationParameter['newAssigneeMail'] = item.data.newAssigneeMail as string
         }
-      })
-    : []
+        break
+    }
+
+    const formattedDate = item.createdAt
+      ? new Date(item.createdAt).toLocaleDateString(undefined, {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+      : new Date().toLocaleDateString() // Fallback
+
+    // 5. Return the final object
+    return {
+      date: formattedDate,
+      label: t(`history.${item.type}`, translationParameter),
+    }
+  })
 })
 </script>
 

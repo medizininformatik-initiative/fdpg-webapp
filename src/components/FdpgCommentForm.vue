@@ -2,7 +2,7 @@
   <FdpgTextEditor
     v-model="comment"
     ref="inputRef"
-    :placeholder="$t('proposal.leaveAComment')"
+    :placeholder="t('proposal.leaveAComment')"
     v-if="!reviewMode"
   ></FdpgTextEditor>
   <section role="region" class="action-row">
@@ -14,13 +14,13 @@
         @click="handleSubmit"
       >
         <template v-if="edit">
-          {{ $t('general.save') }}
+          {{ t('general.save') }}
         </template>
         <template v-else>
-          {{ $t('general.create') }}
+          {{ t('general.create') }}
         </template>
       </el-button>
-      <el-button type="primary" class="cancel-button" plain @click="handleCancel">{{ $t('general.cancel') }}</el-button>
+      <el-button type="primary" class="cancel-button" plain @click="handleCancel">{{ t('general.cancel') }}</el-button>
     </div>
     <LocationSelect
       v-if="isMessageToLocation"
@@ -39,12 +39,13 @@ import { useVModel } from '@vueuse/core'
 import LocationSelect from '@/components/LocationSelect.vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import type { PropType, Ref } from 'vue'
-import { computed, onMounted, ref } from 'vue'
+import type { PropType } from 'vue'
+import { computed, ref } from 'vue'
 import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { CommentType } from '@/types/comment.interface'
 import type { ILocation } from '@/types/location.types'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   modelValue: {
@@ -54,6 +55,7 @@ const props = defineProps({
   edit: {
     type: Boolean,
     default: false,
+    required: false,
   },
   type: {
     type: String as PropType<CommentType>,
@@ -67,6 +69,7 @@ const props = defineProps({
   reviewMode: {
     type: Boolean,
     default: false,
+    required: false,
   },
   possibleLocations: {
     type: Array as PropType<ILocation[]>,
@@ -74,6 +77,8 @@ const props = defineProps({
     default: [],
   },
 })
+
+const { t } = useI18n()
 
 const authStore = useAuthStore()
 const isMessageToLocation = computed(() => {

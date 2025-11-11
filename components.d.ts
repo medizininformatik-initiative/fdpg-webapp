@@ -102,6 +102,7 @@ declare module 'vue' {
     FdpgMemberDetails: typeof import('./src/components/Proposals/Details/FdpgMemberDetails.vue')['default']
     FdpgMessageBox: typeof import('./src/components/FdpgMessageBox.vue')['default']
     FdpgNumberInput: typeof import('./src/components/FdpgNumberInput.vue')['default']
+    FdpgProjectAssignee: typeof import('./src/components/FdpgProjectAssignee.vue')['default']
     FdpgProposalCard: typeof import('./src/components/FdpgProposalCardPanel/FdpgProposalCard/FdpgProposalCard.vue')['default']
     FdpgProposalCardPanel: typeof import('./src/components/FdpgProposalCardPanel/FdpgProposalCardPanel.vue')['default']
     FdpgRadio: typeof import('./src/components/FdpgRadio.vue')['default']

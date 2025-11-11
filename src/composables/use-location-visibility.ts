@@ -17,7 +17,10 @@ export default (
 ) => {
   const { t } = useI18n()
   const visibility = computed<string | undefined>(() => {
-    if (message.value.locations === undefined || type === CommentType.PROPOSAL_MESSAGE_TO_OWNER) {
+    if (
+      message.value.locations === undefined ||
+      [CommentType.PROPOSAL_MESSAGE_TO_OWNER, CommentType.PROPOSAL_MESSAGE_TO_DMST].includes(type)
+    ) {
       return undefined
     } else if ((message.value.locations?.length ?? -1) === possibleLocations.length) {
       return t('proposal.commentVisibleForAll')
