@@ -158,6 +158,7 @@ declare module 'vue' {
     ReportDialog: typeof import('./src/components/ReportDialog.vue')['default']
     ReportGallery: typeof import('./src/components/ReportGallery.vue')['default']
     RequestNewDms: typeof import('./src/components/DataDelivery/RequestNewDms.vue')['default']
+    RequestNewDmsDialog: typeof import('./src/components/DataDelivery/RequestNewDmsDialog.vue')['default']
     ResearcherDashboard: typeof import('./src/components/Dashboard/ResearcherDashboard.vue')['default']
     ResearcherDetails: typeof import('./src/components/Proposals/Details/ResearcherDetails.vue')['default']
     ReviewAreaLabel: typeof import('./src/components/ReviewAreaLabel.vue')['default']

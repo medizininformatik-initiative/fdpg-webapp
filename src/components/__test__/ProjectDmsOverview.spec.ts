@@ -6,6 +6,11 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IProposal } from '@/types/proposal.types.ts'
 import { merge } from 'lodash-es'
 import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn(() => ({

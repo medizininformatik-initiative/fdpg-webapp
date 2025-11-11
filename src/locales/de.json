@@ -710,7 +710,7 @@
     "submitApplicationTitle": "Sie haben das Formular vollständig ausgefüllt.",
     "submitApplicationContent": "Sie haben das Formular vollständig ausgefüllt. Sie können es direkt abschicken, sich die Eingaben als PDF herunterladen oder wieder zurück zum Antragsformular, um Änderungen vorzunehmen.",
     "submitApplicationErrorTitle": "Sie haben das Formular noch nicht vollständig ausgefüllt.",
-    "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen.",
+    "submitApplicationErrorContent": "Sie haben noch nicht alle Pflichtfelder ausgefüllt. Sie können den Antrag als Entwurf speichern oder nochmal zurück zum Antragsformular und die fehlenden Angaben machen. Bitte prüfen Sie im Zweifel, ob noch irgendwo blaue Kommentare zu sehen sind und haken Sie sie ab. Manchmal sind Kommentare hinter den Einträgen von Personen nicht zusehen, weil sie zusammengeklappt sind. Wenn Sie dann immer noch nicht einreichen können, wenden Sie sich an info{'@'}forschen-fuer-gesundheit.de. Manchmal gibt es Kommentare, die für Sie nicht mehr sichtbar sind, weil sie nach dem Releaswechsel keinem Formularfeld mehr zugeordnet sind. Die können wir in der Anwendung für Sie abhaken. ",
     "backToForm": "Zurück zum Antragsformular",
     "cohortSelection": "Kohortenauswahl und Datenselektion",
     "addCohortAutomatic": "JSON-Beschreibung automatisch hinzufügen",
@@ -1026,6 +1026,10 @@
     "cancel": "Zurück",
     "PENDING": "Ausstehend",
     "ACCEPTED": "Bestätigt",
-    "DENIED": "Abgelehnt"
+    "DENIED": "Abgelehnt",
+    "noDataDeliveryInitiatedHeader": "Noch keine Datenlieferung  angestoßen",
+    "noDataDeliveryInitiatedBody": "Stoßen Sie für die Datenmanagementstelle {dms} eine Datenlieferung an oder fragen Sie eine neue Datenmanagementstelle an.",
+    "openSelectDmsDialog": "Neue Datenmanagementstelle anfragen",
+    "createDataDelivery": "Datenlieferung anstoßen"
   }
 }
