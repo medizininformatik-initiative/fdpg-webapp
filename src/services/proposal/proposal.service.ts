@@ -22,6 +22,7 @@ import {
   type ISelectedCohort,
   type IUpload,
   type ProposalStatus,
+  type IProjectAssignee,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'

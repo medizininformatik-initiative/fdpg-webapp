@@ -28,8 +28,8 @@ const handleSubmit = async () => {
   }
 }
 
-onMounted(() => {
-  locationStore.getAll()
+onMounted(async () => {
+  await locationStore.getAll()
 })
 </script>
 

@@ -25,7 +25,7 @@
         <template v-else>
           <div class="comment-card-header">
             <h5>
-              {{ $t('roles.' + comment.owner.role) }}
+              {{ t('roles.' + comment.owner.role) }}
               <span>{{
                 new Date(comment.updatedAt).toLocaleDateString(undefined, {
                   year: 'numeric',
@@ -39,10 +39,10 @@
           <div class="comment-card-actions">
             <div class="left">
               <el-button link size="large" class="edit-btn" @click="() => handleEditClick(index)">
-                {{ $t('general.edit') }}
+                {{ t('general.edit') }}
               </el-button>
               <el-button link class="delete-btn" @click="() => handleDeleteClick(comment._id)">
-                {{ $t('general.delete') }}
+                {{ t('general.delete') }}
               </el-button>
             </div>
           </div>
@@ -78,6 +78,7 @@ import { nextTick, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'
 import type { ILocation } from '@/types/location.types'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   objectId: {
@@ -93,6 +94,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const { t } = useI18n()
 
 const commentStore = useCommentStore()
 

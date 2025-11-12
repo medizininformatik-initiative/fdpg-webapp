@@ -8,6 +8,7 @@
     <ProjectTodos :project-todos="projectTodos" />
     <ProjectHistory />
 
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_DMST" :possible-locations="possibleLocations" />
     <div class="divider" />
   </el-container>
 </template>
@@ -31,6 +32,8 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import MessageCenter from '@/components/MessageCenter.vue'
+import { CommentType } from '@/types/comment.interface'
 import ProjectTodos from '@/components/ProjectTodos.vue'
 import type { IProjectTodo } from '@/types/project-todo.interface.ts'
 import { getLocaleDateString } from '@/utils/date.util.ts'
