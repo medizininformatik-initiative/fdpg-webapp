@@ -38,8 +38,9 @@ import { useI18n } from 'vue-i18n'
 const route = useRoute()
 const { t } = useI18n()
 const routeName = computed(() => route.name || RouteName.Dashboard)
-const proposalStore = useProposalStore()
 const { panels, proposalCount } = usePanels(routeName)
+
+const proposalStore = useProposalStore()
 
 // Reset the current proposal for next detail open
 proposalStore.setCurrentProposal(undefined)

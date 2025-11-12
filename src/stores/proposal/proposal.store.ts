@@ -1,25 +1,26 @@
 import { ProposalService } from '@/services/proposal/proposal.service'
 import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
-import type {
-  IApplicant,
-  IDataDelivery,
-  IDizDetails,
-  IEditAdditionalLocationProposalInformation,
-  IFdpgChecklist,
-  IParticipant,
-  IProposal,
-  IProposalCount,
-  IProposalDetail,
-  IPublicationCreateAndUpdate,
-  IReportCreate,
-  IReportUpdate,
-  IResearcherIdentity,
-  ISelectedCohort,
-  IUpload,
-  ProposalStatus,
-  SortableFields,
-  IProjectAssignee,
+import {
+  DeliveryAcceptance,
+  type IApplicant,
+  type IDataDelivery,
+  type IDizDetails,
+  type IEditAdditionalLocationProposalInformation,
+  type IFdpgChecklist,
+  type IParticipant,
+  type IProjectAssignee,
+  type IProposal,
+  type IProposalCount,
+  type IProposalDetail,
+  type IPublicationCreateAndUpdate,
+  type IReportCreate,
+  type IReportUpdate,
+  type IResearcherIdentity,
+  type ISelectedCohort,
+  type IUpload,
+  type ProposalStatus,
+  type SortableFields,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -537,7 +538,20 @@ export const useProposalStore = defineStore('Proposal', {
     async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
       const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, dmsId)
 
-      console.log('%cdataDelivery:', 'color: #d83', dataDelivery)
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateDmsAcceptanceForDataDelivery(
+      proposalId: string,
+      dmsId: string,
+      acceptance: DeliveryAcceptance,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.updateDmsAcceptanceForDataDelivery(proposalId, dmsId, acceptance)
+
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
       }
