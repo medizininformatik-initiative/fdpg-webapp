@@ -8,7 +8,7 @@
     <ProjectTodos :project-todos="projectTodos" />
     <ProjectHistory />
 
-    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_DMST" :possible-locations="possibleLocations" />
+    <MessageCenter :type="CommentType.PROPOSAL_MESSAGE_TO_DMST" :possible-locations="[]" />
     <div class="divider" />
   </el-container>
 </template>
@@ -27,7 +27,7 @@ import { DeliveryAcceptance, ProposalStatus } from '@/types/proposal.types'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
-import { computed, onMounted, ref, type Ref } from 'vue'
+import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useLocationStore } from '@/stores/locations/location.store'
@@ -83,10 +83,10 @@ const localDueDateForManagementSiteConfirmation = computed(() => {
 
 const dmsAsDataDeliveryPartnerAcceptanceTodo = computed<IProjectTodo>(() => {
   return {
-    title: 'Do you agree to act as DMS?',
-    description:
-      'The research portal has indicated that DMS is the data delivery partner for this project. Please confirm your acceptance. Due date: ' +
-      localDueDateForManagementSiteConfirmation.value,
+    title: t('dataDelivery.dmstQuestionOfAcceptanceHeader'),
+    description: t('dataDelivery.dmstQuestionOfAcceptanceBody', {
+      dueDate: localDueDateForManagementSiteConfirmation.value,
+    }),
     type: 'decision',
     readonly: false,
     action: handleDmsAcceptanceResponse,
@@ -175,11 +175,15 @@ const handleDmsAcceptanceResponse = async (isAccepted: boolean) => {
   const dmsId = proposalDataDelivery.value?.dataManagementSite
 
   if (proposalId !== undefined && proposalId !== '' && dmsId !== undefined && dmsId !== '') {
-    await proposalStore.updateDmsAcceptanceForDataDelivery(
-      proposalId,
-      dmsId,
-      isAccepted ? DeliveryAcceptance.ACCEPTED : DeliveryAcceptance.DENIED,
-    )
+    try {
+      await proposalStore.updateDmsAcceptanceForDataDelivery(
+        proposalId,
+        dmsId,
+        isAccepted ? DeliveryAcceptance.ACCEPTED : DeliveryAcceptance.DENIED,
+      )
+    } catch {
+      showErrorMessage()
+    }
   }
 }
 
