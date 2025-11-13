@@ -1030,6 +1030,8 @@
     "noDataDeliveryInitiatedHeader": "Noch keine Datenlieferung  angestoßen",
     "noDataDeliveryInitiatedBody": "Stoßen Sie für die Datenmanagementstelle {dms} eine Datenlieferung an oder fragen Sie eine neue Datenmanagementstelle an.",
     "openSelectDmsDialog": "Neue Datenmanagementstelle anfragen",
-    "createDataDelivery": "Datenlieferung anstoßen"
+    "createDataDelivery": "Datenlieferung anstoßen",
+    "dmstQuestionOfAcceptanceHeader": "Stimmen Sie als DMST zu?",
+    "dmstQuestionOfAcceptanceBody": "Das Forschungsdatenportal hat eine Datenlieferung bei Ihnen angefragt. Bitte antworten Sie bis zum {dueDate}"
   }
 }

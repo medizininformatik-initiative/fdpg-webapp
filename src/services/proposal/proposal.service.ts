@@ -9,6 +9,7 @@ import {
   type IEditAdditionalLocationProposalInformation,
   type IFdpgChecklist,
   type IParticipant,
+  type IProjectAssignee,
   type IProposal,
   type IProposalDetail,
   type IProposalMarkConditionAcceptedReturnDto,
@@ -487,6 +488,27 @@ export class ProposalService {
         >(`${this.basePath}/${proposalId}/data-delivery`, {
           dataManagementSite: dmsId,
           acceptance: DeliveryAcceptance.PENDING,
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async updateDmsAcceptanceForDataDelivery(
+    proposalId: string,
+    dmsId: string,
+    acceptance: DeliveryAcceptance,
+  ): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDataDelivery,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery`, {
+          dataManagementSite: dmsId,
+          acceptance,
         })
       ).data
     } catch (error: any) {
