@@ -105,6 +105,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  clickActionDisabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 defineEmits(['row-click'])
@@ -126,6 +130,10 @@ const fetchProposals = async () => {
 }
 
 const handleRowClick = async (row, event?: Event | KeyboardEvent) => {
+  if (props.clickActionDisabled) {
+    return
+  }
+
   await router.push({
     name: RouteName.ProposalDetails,
     params: { id: row._id },

@@ -365,6 +365,7 @@ export interface PanelType {
   query: PanelQuery
   header: string
   isTable?: boolean
+  hasClickAction: boolean
 }
 
 export interface IProposalHistory {
