@@ -1,22 +1,26 @@
 import { ProposalService } from '@/services/proposal/proposal.service'
 import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
-import type {
-  IProposal,
-  IProposalDetail,
-  IProposalCount,
-  ProposalStatus,
-  IFdpgChecklist,
-  IResearcherIdentity,
-  SortableFields,
-  IPublicationCreateAndUpdate,
-  IReportCreate,
-  IReportUpdate,
-  IEditAdditionalLocationProposalInformation,
-  IUpload,
-  ISelectedCohort,
-  IParticipant,
-  IApplicant,
+import {
+  DeliveryAcceptance,
+  type IApplicant,
+  type IDataDelivery,
+  type IDizDetails,
+  type IEditAdditionalLocationProposalInformation,
+  type IFdpgChecklist,
+  type IParticipant,
+  type IProjectAssignee,
+  type IProposal,
+  type IProposalCount,
+  type IProposalDetail,
+  type IPublicationCreateAndUpdate,
+  type IReportCreate,
+  type IReportUpdate,
+  type IResearcherIdentity,
+  type ISelectedCohort,
+  type IUpload,
+  type ProposalStatus,
+  type SortableFields,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
@@ -29,7 +33,6 @@ import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
-import type { IDizDetails } from '@/types/proposal.types'
 
 export interface IProposalState {
   apiService: ProposalService
@@ -571,6 +574,44 @@ export const useProposalStore = defineStore('Proposal', {
       )
 
       return result
+    },
+
+    async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.registerDataDeliveryRequestAtDms(proposalId, dmsId)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, dmsId)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateDmsAcceptanceForDataDelivery(
+      proposalId: string,
+      dmsId: string,
+      acceptance: DeliveryAcceptance,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.updateDmsAcceptanceForDataDelivery(proposalId, dmsId, acceptance)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+      await this.apiService.updateProjectAssignee(proposalId, projectAssignee)
     },
   },
 

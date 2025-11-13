@@ -116,6 +116,7 @@ const routes: RouteRecordRaw[] = [
             Role.DizMember,
             Role.UacMember,
             Role.RegisteringMember,
+            Role.DataManagementOffice,
           ],
         },
       },

@@ -1030,6 +1030,8 @@
     "noDataDeliveryInitiatedHeader": "No data delivery initiated yet.",
     "noDataDeliveryInitiatedBody": "Initiate a data delivery for the {dms} data management center or request a new data management center.",
     "openSelectDmsDialog": "Request new data management site",
-    "createDataDelivery": "Initiate data delivery"
+    "createDataDelivery": "Initiate data delivery",
+    "dmstQuestionOfAcceptanceHeader": "Do you agree to act as DMS?",
+    "dmstQuestionOfAcceptanceBody": "The research portal has indicated that DMS is the data delivery partner for this project. Please confirm your acceptance. Please anwer until {dueDate}"
   }
 }

@@ -30,6 +30,23 @@ const defaultColumns = [
   },
 ]
 export const tableColumns = {
+  // DIZ
+  [PanelQuery.DizComingUp]: [
+    ...defaultColumns,
+    {
+      prop: 'projectTitle',
+      header: 'dashboard.projectTitle',
+      sortable: true,
+    },
+    {
+      prop: 'computedDueDate',
+      header: 'dashboard.dueDate',
+      sortable: true,
+      type: 'dueDate',
+    },
+  ],
+
+  // FDPG
   [PanelQuery.FdpgRequestedInWork]: [
     ...defaultColumns,
     {
@@ -123,7 +140,13 @@ export const PanelQueryObj = {
   [Role.DizMember]: {
     [CardType.Pending]: PanelQuery.DizPending,
     [CardType.Ongoing]: PanelQuery.DizOngoing,
+    [CardType.ComingUp]: PanelQuery.DizComingUp,
     [CardType.Completed]: PanelQuery.DizFinished,
     [CardType.Requested]: PanelQuery.DizRequested,
+  },
+
+  [Role.DataManagementOffice]: {
+    [CardType.Pending]: PanelQuery.DmsPending,
+    [CardType.Ongoing]: PanelQuery.DmsApproved,
   },
 }

@@ -8,6 +8,7 @@ import type {
   IGeneralProjectInformation,
   IInformationOnRequestedBioSamples,
   IPlannedPublication,
+  IProjectAssignee,
   IProjectDetails,
   IPropertyRights,
   IPublication,

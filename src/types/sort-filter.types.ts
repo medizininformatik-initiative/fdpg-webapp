@@ -35,6 +35,7 @@ export enum PanelQuery {
   ResearcherFinished = 'RESEARCHER_FINISHED',
 
   // DIZ
+  DizComingUp = 'DIZ_COMING_UP',
   DizPending = 'DIZ_PENDING',
   DizOngoing = 'DIZ_ONGOING',
   DizFinished = 'DIZ_FINISHED',
@@ -65,6 +66,10 @@ export enum PanelQuery {
   FdpgPublishedReady = 'FDPG_PUBLISHED_READY',
   FdpgPublishedPublished = 'FDPG_PUBLISHED_PUBLISHED',
   FdpgPublishedDraft = 'FDPG_PUBLISHED_DRAFT',
+
+  // DataManagementOffice
+  DmsPending = 'DMS_PENDING',
+  DmsApproved = 'DMS_APPROVED',
 }
 
 export interface ISortAndOrderBy<T> {

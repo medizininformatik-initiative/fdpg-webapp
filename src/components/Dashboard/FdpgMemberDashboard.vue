@@ -18,18 +18,19 @@
       />
     </div>
     <template v-for="(panel, index) in panels" :key="'panel' + index">
-      <FdpgProposalCardPanel
-        v-if="!panel.isTable"
-        :panel="panel"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-      />
       <FdpgTable
         v-if="panel.isTable"
+        :table-header="panel.header"
         :panel="panel"
         :columns="tableColumns[panel.query]"
         :user-role="Role.FdpgMember"
-        @row-click="handleRowClick"
+        :click-action-disabled="!panel.hasClickAction"
+      />
+      <FdpgProposalCardPanel
+        v-else
+        :panel="panel"
+        :sort-by="proposalStore.currentSortField"
+        :sort-order="proposalStore.currentSortDirection"
       />
     </template>
   </div>
@@ -47,14 +48,13 @@ import { Role } from '@/types/oidc.types'
 import type { FdpgDashboardRoutes } from '@/types/route-name.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { sortOptions } from './constants'
 import { useI18n } from 'vue-i18n'
-import { open } from 'fs'
 
-const router = useRouter()
-const route = useRoute()
 const { t } = useI18n()
+
+const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 
 interface Header {
@@ -94,10 +94,6 @@ const proposalStore = useProposalStore()
 proposalStore.setCurrentProposal(undefined)
 
 const { panels, proposalCount } = usePanels(routeName)
-
-const handleRowClick = ({ id }) => {
-  router.push({ name: RouteName.ProposalDetails, params: { id } })
-}
 </script>
 
 <style lang="scss" scoped>

@@ -14,22 +14,13 @@
         @sort-order-change="proposalStore.toggleSortDirection()"
       />
     </div>
-    <template v-for="(panel, index) in panels" :key="'panel' + index">
-      <FdpgTable
-        v-if="panel.isTable"
-        :table-header="panel.header"
-        :panel="panel"
-        :columns="tableColumns[panel.query]"
-        :user-role="Role.DizMember"
-        :click-action-disabled="!panel.hasClickAction"
-      />
-      <FdpgProposalCardPanel
-        v-else
-        :panel="panel"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-      />
-    </template>
+    <FdpgProposalCardPanel
+      v-for="(panel, index) in panels"
+      :key="index"
+      :panel="panel"
+      :sort-by="proposalStore.currentSortField"
+      :sort-order="proposalStore.currentSortDirection"
+    />
   </div>
 </template>
 
@@ -42,16 +33,14 @@ import { sortOptions } from './constants'
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { RouteName } from '@/types/route-name.enum'
-import FdpgTable from '../FdpgTable.vue'
-import { Role } from '@/types/oidc.types'
-import { tableColumns } from '@/constants'
 import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n()
 const route = useRoute()
+const { t } = useI18n()
 const routeName = computed(() => route.name || RouteName.Dashboard)
-const proposalStore = useProposalStore()
 const { panels, proposalCount } = usePanels(routeName)
+
+const proposalStore = useProposalStore()
 
 // Reset the current proposal for next detail open
 proposalStore.setCurrentProposal(undefined)
@@ -63,15 +52,5 @@ proposalStore.setCurrentProposal(undefined)
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 29px;
-}
-.sort {
-  display: flex;
-  justify-content: space-between;
-  max-width: 500px;
-  align-items: center;
-  width: 100%;
-  .register-project-button {
-    margin-top: 14px;
-  }
 }
 </style>

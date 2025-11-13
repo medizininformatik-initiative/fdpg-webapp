@@ -5,6 +5,7 @@ export enum FdpgInputSize {
 
 export enum CardType {
   Draft = 'Draft',
+  ComingUp = 'ComingUp',
   Outstanding = 'Outstanding',
   Ongoing = 'Ongoing',
   Completed = 'Completed',

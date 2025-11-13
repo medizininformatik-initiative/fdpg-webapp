@@ -333,6 +333,9 @@ export enum ProjectHistoryType {
   ParticipantAdded = 'PARTICIPANT_ADDED',
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
+
+  // Misc
+  ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }
 
 export enum UploadFileType {
@@ -365,6 +368,7 @@ export interface PanelType {
   query: PanelQuery
   header: string
   isTable?: boolean
+  hasClickAction: boolean
 }
 
 export interface IProposalHistory {
@@ -520,7 +524,6 @@ export interface IOwner {
 // !!
 export interface IProposal {
   _id?: string
-  participants: IParticipant[]
   applicant: IApplicant
   projectResponsible: IProjectResponsible
   projectUser: IProjectUser
@@ -587,6 +590,8 @@ export interface IProposal {
   isParticipatingScientist?: boolean
   deadlines: Deadlines
   type: ProposalType
+  dataDelivery?: IDataDelivery | null
+  projectAssignee?: IProjectAssignee
 }
 
 export enum FdpgTaskType {
@@ -721,4 +726,44 @@ export interface IRegisterInfo extends WithIdAndIsDone {
   lastSyncError?: string
   syncRetryCount?: number
   acptPluginId?: string
+}
+
+export interface IDataDelivery {
+  dataManagementSite: string
+  acceptance: DeliveryAcceptance
+  delivery?: IDeliveryInfo[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IDeliveryInfo {
+  name: string
+  date: string
+  subDeliveries: ISubDelivery[]
+}
+
+export interface ISubDelivery {
+  location: string
+  status: SubDeliveryStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export enum SubDeliveryStatus {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export enum DeliveryAcceptance {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export interface IProjectAssignee {
+  userId: string
+  firstName?: string
+  lastName?: string
+  email: string
 }

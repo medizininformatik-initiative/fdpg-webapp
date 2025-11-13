@@ -173,6 +173,14 @@ const mainMenuMap: Menu = {
       icon: 'bi bi-archive-fill',
     },
   ],
+  [Role.DataManagementOffice]: [
+    {
+      kind: MenuType.Route,
+      to: RouteName.Dashboard,
+      title: 'sidebar.dashboard',
+      icon: 'bi bi-folder-fill',
+    },
+  ],
 }
 
 const secondaryMenu: SidebarMenu[] = [

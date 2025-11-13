@@ -115,6 +115,7 @@ import { useUserStore } from '@/stores/user.store'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useDebounceFn } from '@vueuse/core'
+import { Role } from '@/types/oidc.types'
 
 const props = defineProps({
   modelValue: {
@@ -204,7 +205,7 @@ const handleEmailSearch = async (query: string) => {
       currentResponsibleEmail.value ?? '',
     ]
 
-    const response = await userStore.searchEmailsByPrefix(query.trim(), excludeEmails)
+    const response = await userStore.searchEmailsByPrefix(query.trim(), excludeEmails, [Role.Researcher])
     emailOptions.value = response.emails.map((email) => ({ label: email, value: email }))
   } catch (error) {
     showErrorMessage('Error searching emails: ' + error)

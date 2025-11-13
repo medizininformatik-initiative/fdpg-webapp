@@ -2,7 +2,6 @@ import type { DeepPartial } from '@/types/deep-partial.type'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import {
   ProposalTypeOfUse,
-  type IChecklistItem,
   type IFdpgChecklist,
   type IOwner,
   type IProposal,
@@ -161,5 +160,7 @@ export const transformForm = (
     dizDetails: form?.dizDetails ?? [],
     type: form?.type,
     registerInfo: transformRegisterInfo(form?.registerInfo),
+    dataDelivery: form?.dataDelivery,
+    projectAssignee: form?.projectAssignee,
   }
 }
