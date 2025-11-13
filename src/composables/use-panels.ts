@@ -76,39 +76,6 @@ const FDPG_PUBLISHED_PANELS: PanelType[] = [
   },
 ]
 
-const PUBLISHED_PANELS: PanelType[] = [
-  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.PublishedDraft, hasClickAction: true },
-  { type: CardType.Pending, header: 'general.pending', query: PanelQuery.PublishedPending, hasClickAction: true },
-  {
-    type: CardType.Completed,
-    header: 'dashboard.completed',
-    query: PanelQuery.PublishedCompleted,
-    hasClickAction: true,
-  },
-]
-
-const FDPG_PUBLISHED_PANELS: PanelType[] = [
-  { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.FdpgPublishedDraft, hasClickAction: true },
-  {
-    type: CardType.Requested,
-    header: 'general.requested',
-    query: PanelQuery.FdpgPublishedRequested,
-    hasClickAction: true,
-  },
-  {
-    type: CardType.Pending,
-    header: 'general.readyForPublication',
-    query: PanelQuery.FdpgPublishedReady,
-    hasClickAction: true,
-  },
-  {
-    type: CardType.Completed,
-    header: 'general.published',
-    query: PanelQuery.FdpgPublishedPublished,
-    hasClickAction: true,
-  },
-]
-
 const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
   [RouteName.Dashboard]: [
     {

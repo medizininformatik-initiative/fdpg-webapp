@@ -5,10 +5,15 @@ import { computed } from 'vue'
 
 const mockPanels = () => {
   const RESEARCHER_PANELS: PanelType[] = [
-    { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.Draft },
-    { type: CardType.Pending, header: 'general.pending', query: PanelQuery.ResearcherPending },
-    { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.ResearcherOngoing },
-    { type: CardType.Completed, header: 'dashboard.completed', query: PanelQuery.ResearcherFinished },
+    { type: CardType.Draft, header: 'dashboard.draft', query: PanelQuery.Draft, hasClickAction: true },
+    { type: CardType.Pending, header: 'general.pending', query: PanelQuery.ResearcherPending, hasClickAction: true },
+    { type: CardType.Ongoing, header: 'dashboard.ongoing', query: PanelQuery.ResearcherOngoing, hasClickAction: true },
+    {
+      type: CardType.Completed,
+      header: 'dashboard.completed',
+      query: PanelQuery.ResearcherFinished,
+      hasClickAction: true,
+    },
   ]
 
   return RESEARCHER_PANELS
