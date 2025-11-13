@@ -60,7 +60,8 @@ export function useProposalSync() {
     return (
       currentSyncStatus === SyncStatus.OutOfSync ||
       currentSyncStatus === SyncStatus.SyncFailed ||
-      currentSyncStatus === SyncStatus.Syncing
+      currentSyncStatus === SyncStatus.Syncing ||
+      currentSyncStatus === SyncStatus.NotSynced
     )
   })
 
@@ -74,6 +75,10 @@ export function useProposalSync() {
     }
 
     if (currentSyncStatus === SyncStatus.SyncFailed) {
+      return hasRequiredRegisterInfo.value
+    }
+
+    if (currentSyncStatus === SyncStatus.NotSynced) {
       return hasRequiredRegisterInfo.value
     }
 
@@ -97,6 +102,7 @@ export function useProposalSync() {
     if (isSyncing.value) return 'proposal.syncing'
     if (syncStatus.value === SyncStatus.SyncFailed) return 'proposal.retrySync'
     if (syncStatus.value === SyncStatus.OutOfSync) return 'proposal.resync'
+
     return 'proposal.syncToWebsite'
   })
 
