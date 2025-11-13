@@ -21,7 +21,7 @@
         :panel="panel"
         :columns="tableColumns[panel.query]"
         :user-role="Role.DizMember"
-        @row-click="handleRowClick"
+        :click-action-disabled="!panel.hasClickAction"
       />
       <FdpgProposalCardPanel
         v-else
@@ -39,7 +39,7 @@ import usePanels from '@/composables/use-panels'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import FdpgSortSelect from '@/components/FdpgSortSelect.vue'
 import { sortOptions } from './constants'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { RouteName } from '@/types/route-name.enum'
 import FdpgTable from '../FdpgTable.vue'
@@ -49,7 +49,6 @@ import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
-const router = useRouter()
 const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 const proposalStore = useProposalStore()
@@ -57,10 +56,6 @@ const { panels, proposalCount } = usePanels(routeName)
 
 // Reset the current proposal for next detail open
 proposalStore.setCurrentProposal(undefined)
-
-const handleRowClick = ({ id }: { id: string }) => {
-  router.push({ name: RouteName.ProposalDetails, params: { id } })
-}
 </script>
 
 <style lang="scss" scoped>

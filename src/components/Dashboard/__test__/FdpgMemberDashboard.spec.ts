@@ -59,10 +59,4 @@ describe('FdpgMemberDashboard.vue', () => {
     selectElement.vm.$emit('sortChange', 'test')
     expect(proposalStore.setSortField).toHaveBeenLastCalledWith('test')
   })
-
-  it('calls the router to go to the detail page', () => {
-    const id = 'abc'
-    wrapper.vm.handleRowClick({ id, somethingElse: 'test' })
-    expect(mockPush).toBeCalledWith({ name: RouteName.ProposalDetails, params: { id } })
-  })
 })
