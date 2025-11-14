@@ -475,6 +475,11 @@ const {
 } = useProposalSync()
 
 const handleSyncProposalClick = async () => {
+  if (!canSync.value) {
+    showErrorMessage(syncDisabledReason.value)
+    return
+  }
+
   if (proposalId.value) {
     await performSync(proposalId.value)
   }
@@ -684,7 +689,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleSyncProposalClick,
     position: 'right',
     isHidden: !isRegisteringForm.value || !shouldShowSyncButton.value,
-    isDisabled: !canSync.value || isSyncing.value || proposalStore.currentProposal?.isLocked,
+    isDisabled: isSyncing.value || proposalStore.currentProposal?.isLocked,
     isLoading: isSyncing.value,
     tooltip: syncDisabledReason.value || undefined,
   },

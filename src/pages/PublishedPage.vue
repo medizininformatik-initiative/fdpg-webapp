@@ -28,7 +28,7 @@
           @click="handleSyncAllProposalsClick"
           :disabled="isSyncAllDisabled"
         >
-          {{ t('proposal.syncToWebsite') }}
+          {{ t('registeringForm.syncToWebsite') }}
         </el-button>
       </div>
 

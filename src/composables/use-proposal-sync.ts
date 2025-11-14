@@ -4,13 +4,13 @@ import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store
 import { SyncStatus } from '@/types/sync-status.enum'
 import { ProposalStatus } from '@/types/proposal.types'
 import useNotifications from '@/composables/use-notifications'
-
+import { useI18n } from 'vue-i18n'
 export function useProposalSync() {
   const proposalStore = useProposalStore()
   const messageBoxStore = useMessageBoxStore()
   const { showSuccessMessage, showErrorMessage } = useNotifications()
   const isSyncing = ref(false)
-
+  const { t } = useI18n()
   const proposal = computed(() => proposalStore.currentProposal)
   const syncStatus = computed(() => proposal.value?.registerInfo?.syncStatus)
   const syncError = computed(() => proposal.value?.registerInfo?.lastSyncError)
@@ -92,32 +92,32 @@ export function useProposalSync() {
     if (!shouldShowSyncButton.value) return null
 
     if (missingRequiredFields.value.length > 0) {
-      return `Cannot sync: Missing required fields (${missingRequiredFields.value.join(', ')}). Please complete the Registration Info section before syncing.`
+      return t('registeringForm.syncDisabledMissingFields', { fields: missingRequiredFields.value.join(', ') })
     }
 
-    return 'Cannot sync at this time'
+    return t('registeringForm.syncDisabledGeneric')
   })
 
   const buttonLabel = computed(() => {
-    if (isSyncing.value) return 'proposal.syncing'
-    if (syncStatus.value === SyncStatus.SyncFailed) return 'proposal.retrySync'
-    if (syncStatus.value === SyncStatus.OutOfSync) return 'proposal.resync'
+    if (isSyncing.value) return 'registeringForm.syncing'
+    if (syncStatus.value === SyncStatus.SyncFailed) return 'registeringForm.retrySync'
+    if (syncStatus.value === SyncStatus.OutOfSync) return 'registeringForm.resync'
 
-    return 'proposal.syncToWebsite'
+    return 'registeringForm.syncToWebsite'
   })
 
   const syncStatusLabel = computed(() => {
     switch (syncStatus.value) {
       case SyncStatus.Synced:
-        return 'proposal.synced'
+        return 'registeringForm.synced'
       case SyncStatus.OutOfSync:
-        return 'proposal.outOfSync'
+        return 'registeringForm.outOfSync'
       case SyncStatus.SyncFailed:
-        return 'proposal.syncFailed'
+        return 'registeringForm.syncFailed'
       case SyncStatus.Syncing:
-        return 'proposal.syncing'
+        return 'registeringForm.syncing'
       case SyncStatus.NotSynced:
-        return 'proposal.notSynced'
+        return 'registeringForm.notSynced'
       default:
         return ''
     }
@@ -130,25 +130,25 @@ export function useProposalSync() {
 
   const lastSyncInfo = computed(() => {
     if (!lastSyncedAt.value) return ''
-    return `Last synced: ${formatDate(lastSyncedAt.value)}`
+    return t('registeringForm.lastSynced', { date: formatDate(lastSyncedAt.value) })
   })
 
   const syncProposal = async (proposalId: string): Promise<void> => {
     if (!canSync.value || isSyncing.value) return
 
     const confirmMessage = isRetry.value
-      ? `Are you sure you want to retry syncing this project? (Attempt ${retryCount.value + 1})`
+      ? t('registeringForm.confirmRetrySync', { attempt: retryCount.value + 1 })
       : syncStatus.value === SyncStatus.OutOfSync
-        ? 'This project has been modified. Do you want to sync the changes to the external website?'
-        : 'Do you want to publish this project to the external website?'
+        ? t('registeringForm.confirmResync')
+        : t('registeringForm.confirmPublish')
 
     messageBoxStore.setMessageBoxInfo({
       cancelButtonText: 'general.cancel',
       cancelButtonClass: 'el-button--text',
       showCancelButton: true,
-      title: 'proposal.confirmSync' as any,
+      title: 'registeringForm.confirmSync' as any,
       message: confirmMessage as any,
-      confirmButtonText: 'proposal.sync' as any,
+      confirmButtonText: 'registeringForm.sync' as any,
       callback: async (decision: DecisionType) => {
         if (decision !== 'confirm') return
 
@@ -164,12 +164,16 @@ export function useProposalSync() {
           }
 
           if (result.success) {
-            showSuccessMessage('Project successfully synced to external website!')
+            showSuccessMessage(t('registeringForm.syncSuccess'))
           } else {
-            showErrorMessage(`Sync failed: ${result.error || 'Unknown error'}`)
+            showErrorMessage(
+              t('registeringForm.syncFailed', { error: result.error || t('registeringForm.unknownError') }),
+            )
           }
         } catch (error: any) {
-          showErrorMessage(`Sync failed: ${error.message || 'Unknown error'}`)
+          showErrorMessage(
+            t('registeringForm.syncFailed', { error: error.message || t('registeringForm.unknownError') }),
+          )
         } finally {
           isSyncing.value = false
         }
@@ -182,9 +186,9 @@ export function useProposalSync() {
       cancelButtonText: 'general.cancel',
       cancelButtonClass: 'el-button--text',
       showCancelButton: true,
-      title: 'proposal.confirmBulkSync' as any,
-      message: 'Do you want to sync all eligible projects to the external website? This may take a while.' as any,
-      confirmButtonText: 'proposal.syncAll' as any,
+      title: 'registeringForm.confirmBulkSync' as any,
+      message: t('registeringForm.confirmBulkSyncMessage') as any,
+      confirmButtonText: 'registeringForm.syncAll' as any,
       callback: async (decision: DecisionType) => {
         if (decision !== 'confirm') return
 
@@ -194,7 +198,7 @@ export function useProposalSync() {
           const result = await proposalStore.syncAllProposals()
 
           if (result.synced === result.total) {
-            showSuccessMessage(`Successfully synced all ${result.total} projects!`)
+            showSuccessMessage(t('registeringForm.syncSuccessAll', { count: result.total }))
           } else {
             const errorList = result.errors.map((e) => `- ${e.projectAbbreviation}: ${e.error}`).join('\n')
 
@@ -202,14 +206,16 @@ export function useProposalSync() {
               cancelButtonText: 'general.ok' as any,
               cancelButtonClass: 'el-button--text',
               showCancelButton: false,
-              title: 'proposal.bulkSyncResults' as any,
+              title: 'registeringForm.bulkSyncResults' as any,
               message: `Synced ${result.synced} of ${result.total} projects.\n\nFailed:\n${errorList}` as any,
               confirmButtonText: 'general.ok' as any,
               callback: async () => {},
             })
           }
         } catch (error: any) {
-          showErrorMessage(`Bulk sync failed: ${error.message || 'Unknown error'}`)
+          showErrorMessage(
+            t('registeringForm.syncFailed', { error: error.message || t('registeringForm.unknownError') }),
+          )
         } finally {
           isSyncing.value = false
         }

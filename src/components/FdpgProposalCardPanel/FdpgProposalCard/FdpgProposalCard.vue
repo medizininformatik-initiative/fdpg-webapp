@@ -131,7 +131,6 @@ const emits = defineEmits(['delete', 'duplicate'])
 
 const submittedAgo = computed(() => Math.abs(getDateDiff(props.proposal.submittedAt, 0)))
 const editedAgo = computed(() => Math.abs(getDateDiff(props.proposal.updatedAt, 0)))
-const isRegisteringForm = computed(() => props.proposal.type === ProposalType.RegisteringForm)
 
 const authStore = useAuthStore()
 const showLocationVoting = computed(() => {
