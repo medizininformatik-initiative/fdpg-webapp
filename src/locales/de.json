@@ -1024,7 +1024,13 @@
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",
     "syncDisabledGeneric": "Synchronisierung derzeit nicht möglich",
+    "confirmRetrySync": "Sind Sie sicher, dass Sie die Synchronisierung dieses Projekts erneut versuchen möchten? {attempt}",
+    "confirmResync": "Dieses Projekt wurde geändert. Möchten Sie die Änderungen mit der externen Website synchronisieren?",
+    "confirmPublish": "Möchten Sie dieses Projekt auf der externen Website veröffentlichen?",
+    "syncSuccess": "Projekt erfolgreich mit externer Website synchronisiert!",
     "syncFailed": "Synchronisation fehlgeschlagen",
+    "unknownError": "unbekannter Fehler",
+    "confirmBulkSyncMessage": "Möchten Sie alle förderfähigen Projekte mit der externen Website synchronisieren? Dies kann eine Weile dauern.",
     "syncToWebsite": "Mit Website synchronisieren",
     "resync": "Erneut synchronisieren",
     "retrySync": "Synchronisation wiederholen",

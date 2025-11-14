@@ -526,7 +526,7 @@ const rules = ref<Record<string, any>>({
         {
           validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
             if (isRegisteringForm.value) {
-              callback() // Must call callback for register forms
+              callback()
               return
             }
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
