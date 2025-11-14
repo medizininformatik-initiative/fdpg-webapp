@@ -42,7 +42,7 @@ const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
 
   // Add published page to base menu if user has RegisteringMember role (but not for RegisteringMember themselves)
   if (authStore.singleKnownRole !== Role.FdpgMember && authStore.singleKnownRole !== Role.RegisteringMember) {
-    const hasRegisteringMemberRole = authStore.roles.includes(Role.RegisteringMember)
+    const hasRegisteringMemberRole = authStore.isRegisteringMember
     if (hasRegisteringMemberRole) {
       const publishedMenuItem: SidebarRouteMenu = {
         kind: MenuType.Route,

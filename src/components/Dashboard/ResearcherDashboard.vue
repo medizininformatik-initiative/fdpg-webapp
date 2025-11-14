@@ -8,7 +8,11 @@
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
       <div class="sort">
-        <router-link :to="{ name: RouteName.RegisterNewProject }" class="register-project-button">
+        <router-link
+          :to="{ name: RouteName.RegisterNewProject }"
+          class="register-project-button"
+          v-if="isRegisteringMember"
+        >
           <el-button type="primary">
             {{ t('dashboard.registerProject') }}
           </el-button>
@@ -19,6 +23,7 @@
           :sort-order="proposalStore.currentSortDirection"
           @sort-change="proposalStore.setSortField"
           @sort-order-change="proposalStore.toggleSortDirection()"
+          :class="{ 'sort-select-full-width': !isRegisteringMember }"
         />
       </div>
     </div>
@@ -46,6 +51,7 @@ import { sortOptions } from './constants'
 import { useI18n } from 'vue-i18n'
 import FdpgIAlertBox from '../FdpgIAlertBox.vue'
 import { useConfigStore } from '@/stores/config/config.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 const router = useRouter()
 const route = useRoute()
@@ -53,6 +59,7 @@ const { t } = useI18n()
 const configStore = useConfigStore()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 const alertConfig = computed(() => configStore.alertConfig)
+const authStore = useAuthStore()
 
 const dashboardActions: IDashboardAction[] = [
   {
@@ -84,6 +91,8 @@ const createProposal = () => {
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
 }
+
+const isRegisteringMember = computed(() => authStore.isRegisteringMember)
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +110,9 @@ const checkFeasibility = () => {
   width: 100%;
   .register-project-button {
     margin-top: 14px;
+  }
+  .sort-select-full-width {
+    margin-left: auto;
   }
 }
 </style>
