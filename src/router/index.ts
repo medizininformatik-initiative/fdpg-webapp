@@ -180,7 +180,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: '/register/:id',
-        name: RouteName.RegisterProject,
+        name: RouteName.EditRegisteredProject,
         component: () => import('@/pages/Proposals/NewPage.vue'),
         meta: {
           roles: [

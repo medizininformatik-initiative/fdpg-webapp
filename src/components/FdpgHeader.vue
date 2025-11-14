@@ -9,7 +9,7 @@
         route.name !== RouteName.CreateProposal &&
         route.name !== RouteName.EditProposal &&
         route.name !== RouteName.RegisterNewProject &&
-        route.name !== RouteName.RegisterProject
+        route.name !== RouteName.EditRegisteredProject
       "
       class="fdpg-header-breadcrumb"
       separator-class="el-icon-arrow-right"
@@ -41,7 +41,7 @@
         route.name === RouteName.CreateProposal ||
         route.name === RouteName.EditProposal ||
         route.name === RouteName.RegisterNewProject ||
-        route.name === RouteName.RegisterProject
+        route.name === RouteName.EditRegisteredProject
       "
     >
       <i class="bi bi-chevron-left"></i> {{ $t('header.toDashboard') }}

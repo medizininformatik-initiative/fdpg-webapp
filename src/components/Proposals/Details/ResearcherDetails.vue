@@ -125,7 +125,7 @@ const openProposal = (anchor?: string) => {
   const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
 
   if (isRegisteringForm) {
-    router.push({ name: RouteName.RegisterProject, params: { id: proposalId.value } })
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: proposalId.value } })
   } else if (anchor) {
     router.push({ name: RouteName.EditProposal, params: { id: proposalId.value }, query: { anchor } })
   } else {

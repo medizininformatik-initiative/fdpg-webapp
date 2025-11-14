@@ -480,7 +480,7 @@ const activeStep = computed(() => {
 const isRegisteringForm = computed(() => {
   if (
     router.currentRoute.value.name === RouteName.RegisterNewProject ||
-    router.currentRoute.value.name === RouteName.RegisterProject
+    router.currentRoute.value.name === RouteName.EditRegisteredProject
   ) {
     return true
   }

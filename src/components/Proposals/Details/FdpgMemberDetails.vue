@@ -195,7 +195,7 @@ const selectedDataSources = computed(() => proposalStore?.currentProposal?.selec
 
 const openReviewPage = () => {
   if (isRegisteringForm.value) {
-    router.push({ name: RouteName.RegisterProject, params: { id: params.id } })
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: params.id } })
   } else {
     router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
   }
@@ -349,7 +349,7 @@ const handleRegisterProjectClick = async () => {
 
           // Navigate to register/edit route with the new copy ID
           router.push({
-            name: RouteName.RegisterProject,
+            name: RouteName.EditRegisteredProject,
             params: { id: copyId },
           })
         } catch (error: any) {
