@@ -648,7 +648,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
         ProposalStatus.DataCorrupt,
         ProposalStatus.FinishedProject,
       ].includes(status.value) ||
-      proposalStore.currentProposal?.regisrterFormId !== undefined,
+      proposalStore.currentProposal?.registerFormId !== undefined,
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {

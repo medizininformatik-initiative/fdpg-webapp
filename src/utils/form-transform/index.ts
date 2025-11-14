@@ -160,6 +160,7 @@ export const transformForm = (
     dizDetails: form?.dizDetails ?? [],
     type: form?.type,
     registerInfo: transformRegisterInfo(form?.registerInfo),
+    registerFormId: form?.registerFormId,
     dataDelivery: form?.dataDelivery,
     projectAssignee: form?.projectAssignee,
   }
