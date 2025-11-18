@@ -289,7 +289,7 @@
           data-test-id="handleSubmit"
           @click="handleSubmit"
           v-else-if="!proposalStore.currentProposal || !isReviewMode"
-          >{{ t('proposal.submitApplication') }}</el-button
+          >{{ isRegisteringForm ? t('registeringForm.sendForm') : t('proposal.submitApplication') }}</el-button
         >
       </el-col>
     </el-row>
@@ -849,10 +849,16 @@ const handleExportProposalPdfClick = async () => {
 const handleTermsConfirm = async () => {
   isSubmissionDialogOpen.value = false
   try {
+    // For published registering forms, keep them published and just update the data
+    // (this will auto-set syncStatus to OUT_OF_SYNC on the backend)
+    const isPublishedRegisteringForm = 
+      isRegisteringForm.value && 
+      proposalStore.currentProposal?.status === ProposalStatus.Published
+
     if (proposalId.value) {
       await proposalStore.updateProposal(proposalId.value, {
         ...getFormValues(),
-        status: ProposalStatus.FdpgCheck,
+        status: isPublishedRegisteringForm ? ProposalStatus.Published : ProposalStatus.FdpgCheck,
       })
     } else {
       await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.FdpgCheck })

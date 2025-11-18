@@ -1044,6 +1044,7 @@
     "confirmBulkSync": "Confirm Bulk Sync",
     "bulkSyncResults": "Bulk Sync Results",
     "syncSuccessAll": "Successfully synced all {count} projects!",
-    "lastSynced": "Last synced: {date}"
+    "lastSynced": "Last synced: {date}",
+    "sendForm": "Send Registeration"
   }
 }

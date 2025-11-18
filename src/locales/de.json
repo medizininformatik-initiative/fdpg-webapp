@@ -1042,6 +1042,7 @@
     "sync": "Synchronisieren",
     "syncAll": "Alle synchronisieren",
     "confirmBulkSync": "Massensynchronisation bestätigen",
-    "bulkSyncResults": "Ergebnisse der Massensynchronisation"
+    "bulkSyncResults": "Ergebnisse der Massensynchronisation",
+    "sendForm": "Registrierung senden"
   }
 }
