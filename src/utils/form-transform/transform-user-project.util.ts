@@ -242,7 +242,9 @@ export const transformBiosamples = (
   return transformToApi ? undefined : [mapBiosample()]
 }
 
-const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>): ISelectionOfCases => {
+const transformSelectionOfCases = (
+  selectionOfCases?: DeepPartial<ISelectionOfCases>,
+): DeepPartial<ISelectionOfCases> => {
   return {
     difeSelectionOfCases: {
       selectedCases: selectionOfCases?.difeSelectionOfCases?.selectedCases ?? [],
@@ -253,7 +255,9 @@ const transformSelectionOfCases = (selectionOfCases?: Partial<ISelectionOfCases>
   }
 }
 
-const transformVariableSelection = (variableSelection?: IVariableSelectionData): IVariableSelectionData => {
+const transformVariableSelection = (
+  variableSelection?: DeepPartial<IVariableSelectionData>,
+): DeepPartial<IVariableSelectionData> => {
   return {
     [PlatformIdentifier.DIFE]: {
       typeOfUse: variableSelection?.DIFE?.typeOfUse,

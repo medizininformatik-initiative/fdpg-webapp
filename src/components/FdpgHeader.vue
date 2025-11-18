@@ -7,7 +7,9 @@
       v-if="
         layoutStore.breadcrumbs.length > 0 &&
         route.name !== RouteName.CreateProposal &&
-        route.name !== RouteName.EditProposal
+        route.name !== RouteName.EditProposal &&
+        route.name !== RouteName.RegisterNewProject &&
+        route.name !== RouteName.EditRegisteredProject
       "
       class="fdpg-header-breadcrumb"
       separator-class="el-icon-arrow-right"
@@ -35,7 +37,12 @@
     <router-link
       class="fdpg-menu__item"
       :to="{ name: RouteName.Dashboard }"
-      v-if="route.name === RouteName.CreateProposal || route.name === RouteName.EditProposal"
+      v-if="
+        route.name === RouteName.CreateProposal ||
+        route.name === RouteName.EditProposal ||
+        route.name === RouteName.RegisterNewProject ||
+        route.name === RouteName.EditRegisteredProject
+      "
     >
       <i class="bi bi-chevron-left"></i> {{ $t('header.toDashboard') }}
     </router-link>

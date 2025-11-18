@@ -20,7 +20,7 @@
         <div style="height: 590px; max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
-              v-for="step in layoutStore.createProposalSteps"
+              v-for="step in filteredSteps"
               :key="step.step"
               :status="getStepStatus(getStepKey(step.step))"
               @click="setActiveTab(step.step)"
@@ -56,6 +56,10 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
+
+const filteredSteps = computed(() => {
+  return layoutStore.filteredSteps
+})
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 

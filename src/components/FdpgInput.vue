@@ -4,7 +4,7 @@
     v-model="value"
     class="fdpg-input"
     :size="size"
-    :placeholder="$t(placeholder)"
+    :placeholder="t(placeholder as TranslationSchema)"
     @blur="handleBlur"
     @focus="handleFocus"
     :disabled="isDisabled"
@@ -16,6 +16,9 @@ import type { PropType } from 'vue'
 import { ref } from 'vue'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { FdpgInputSize } from '@/types/component.types'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps({
   placeholder: {
@@ -39,18 +42,14 @@ defineExpose({
 
 const value = ref('')
 
-const handleFocus = (e) => {
-  const classList = e.target?.parentElement?.previousSibling?.classList
-  if (classList) {
-    classList.add('focused')
-  }
+const handleFocus = (e: FocusEvent) => {
+  const classList = (e.target as HTMLInputElement)?.parentElement?.previousSibling?.classList as DOMTokenList
+  classList?.add('focused')
 }
 
-const handleBlur = (e) => {
-  const classList = e.target?.parentElement?.previousSibling?.classList
-  if (classList) {
-    classList.remove('focused')
-  }
+const handleBlur = (e: FocusEvent) => {
+  const classList = (e.target as HTMLInputElement)?.parentElement?.previousSibling?.classList as DOMTokenList
+  classList?.remove('focused')
 }
 </script>
 

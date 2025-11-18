@@ -1,5 +1,5 @@
 <template>
-  <ResearcherDetails v-if="singleKnownRole === Role.Researcher" />
+  <ResearcherDetails v-if="singleKnownRole === Role.Researcher || singleKnownRole === Role.RegisteringMember" />
   <FdpgMemberDetails v-if="singleKnownRole === Role.FdpgMember || singleKnownRole === Role.DataSourceMember" />
   <DizMemberDetails v-if="singleKnownRole === Role.DizMember" />
   <UacMemberDetails v-if="singleKnownRole === Role.UacMember" />

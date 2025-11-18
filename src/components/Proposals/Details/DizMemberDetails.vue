@@ -66,6 +66,7 @@ import { CommentType } from '@/types/comment.interface'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { LocationState, ProposalStatus, type IEditAdditionalLocationProposalInformation } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -128,7 +129,13 @@ const possibleLocations = computed(() =>
 )
 
 const openProposal = () => {
-  router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
+
+  if (isRegisteringForm) {
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: params.id } })
+  } else {
+    router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  }
 }
 
 const rejectConditionCheck = async (declineReason: string) => {

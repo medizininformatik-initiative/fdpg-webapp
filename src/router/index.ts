@@ -75,7 +75,31 @@ const routes: RouteRecordRaw[] = [
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember, Role.DataSourceMember, Role.Researcher, Role.DizMember, Role.UacMember],
+          roles: [
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.Researcher,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
+      },
+      {
+        path: '/published',
+        name: RouteName.Published,
+        component: () => import('@/pages/PublishedPage.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.RegisteringMember,
+            Role.Researcher,
+            Role.DizMember,
+            Role.UacMember,
+          ],
         },
       },
 
@@ -91,6 +115,7 @@ const routes: RouteRecordRaw[] = [
             Role.DataSourceMember,
             Role.DizMember,
             Role.UacMember,
+            Role.RegisteringMember,
             Role.DataManagementOffice,
           ],
         },
@@ -100,6 +125,16 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.ReviewProposal,
         component: () => import('@/pages/Proposals/ReviewProposal.vue'),
         props: true,
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
       },
     ],
   },
@@ -126,6 +161,36 @@ const routes: RouteRecordRaw[] = [
         props: true,
         meta: {
           roles: [Role.Researcher],
+        },
+      },
+      {
+        path: '/register/create',
+        name: RouteName.RegisterNewProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
+      },
+      {
+        path: '/register/:id',
+        name: RouteName.EditRegisteredProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
         },
       },
     ],

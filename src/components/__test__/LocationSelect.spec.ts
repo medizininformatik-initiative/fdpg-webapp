@@ -9,6 +9,21 @@ import { mockLocations, useMockLocationStore } from '@/stores/locations/__mocks_
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockImplementation((key: string) => key),
+    locale: {
+      value: 'de-DE',
+    },
+  })),
+}))
+
+vi.mock('@/plugins/i18n', () => ({
+  i18n: {
+    global: {
+      t: vi.fn().mockImplementation((entry) => entry),
+    },
+  },
+  createI18n: vi.fn(),
+  useI18n: vi.fn().mockImplementation(() => ({
     t: vi.fn().mockImplementation((key: string) => key), // Returns the key itself
   })),
 }))

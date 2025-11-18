@@ -9,13 +9,20 @@
           {{ t(header.sub, { x: proposalCount.total }) }}
         </p>
       </div>
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <router-link :to="{ name: RouteName.RegisterNewProject }" class="register-project-button">
+          <el-button type="primary">
+            {{ t('dashboard.registerProject') }}
+          </el-button>
+        </router-link>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+        />
+      </div>
     </div>
     <template v-for="(panel, index) in panels" :key="'panel' + index">
       <FdpgTable
@@ -117,6 +124,16 @@ const { panels, proposalCount } = usePanels(routeName)
         font-weight: 600;
         margin: 0;
       }
+    }
+  }
+  .sort {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    align-items: center;
+    width: 100%;
+    .register-project-button {
+      margin-top: 14px;
     }
   }
 }

@@ -58,6 +58,7 @@ import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -121,7 +122,11 @@ const status = computed(() => proposalStore.currentProposal?.status as ProposalS
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const openProposal = (anchor?: string) => {
-  if (anchor) {
+  const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
+
+  if (isRegisteringForm) {
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: proposalId.value } })
+  } else if (anchor) {
     router.push({ name: RouteName.EditProposal, params: { id: proposalId.value }, query: { anchor } })
   } else {
     router.push({ name: RouteName.EditProposal, params: { id: proposalId.value } })

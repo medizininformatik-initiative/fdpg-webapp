@@ -3,6 +3,7 @@ export enum RouteName {
   Dashboard = 'Dashboard',
   Pending = 'Pending',
   Archive = 'Archive',
+  Published = 'Published',
   CreateProposal = 'CreateProposal',
   EditProposal = 'EditProposal',
   ProposalDetails = 'ProposalDetails',
@@ -10,7 +11,10 @@ export enum RouteName {
   Ongoing = 'Ongoing',
   Completed = 'Completed',
   UserProfile = 'UserProfile',
+  EditRegisteredProject = 'EditRegisteredProject',
+  RegisterNewProject = 'RegisterNewProject',
   Locations = 'Locations',
 }
 
 export type FdpgDashboardRoutes = RouteName.Dashboard | RouteName.Pending | RouteName.Ongoing | RouteName.Completed
+// | RouteName.Published

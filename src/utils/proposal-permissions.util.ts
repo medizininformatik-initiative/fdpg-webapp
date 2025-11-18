@@ -1,6 +1,8 @@
 import type { IProposal } from '@/types/proposal.types'
 import { ParticipantRole, ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
+import { Role } from '@/types/oidc.types'
 
 export interface ProposalPermissions {
   isOwner: boolean
@@ -15,9 +17,17 @@ export interface ProposalPermissions {
 
 /**
  * Determines if a proposal is in an editable status
+ * For FDPG members with registering forms, allow editing regardless of status
  */
-export function isProposalEditable(proposal?: IProposal): boolean {
+export function isProposalEditable(proposal?: IProposal, singleKnownRole?: Role): boolean {
   const status = proposal?.status
+
+  // FDPG members can always edit registering forms
+  if (singleKnownRole === Role.FdpgMember && proposal?.type === ProposalType.RegisteringForm) {
+    return true
+  }
+
+  // Standard editable statuses for other roles
   return status === undefined || status === ProposalStatus.Draft || status === ProposalStatus.Rework
 }
 
@@ -110,9 +120,18 @@ export function isParticipantApplicant(proposal: IProposal, participantEmail: st
 /**
  * Determines if the current user has editing permissions (responsible scientist or editor or owner)
  */
-export function hasEditingPermissions(proposal: IProposal, userProfile?: IFdpgOidcProfile): boolean {
+export function hasEditingPermissions(
+  proposal: IProposal,
+  userProfile?: IFdpgOidcProfile,
+  singleKnownRole?: Role,
+): boolean {
   // For new proposals (no ID), allow editing if user has sub
   if (!proposal._id && userProfile?.sub) {
+    return true
+  }
+
+  // FDPG members can always edit registering forms
+  if (singleKnownRole === Role.FdpgMember && proposal?.type === ProposalType.RegisteringForm) {
     return true
   }
 
@@ -130,14 +149,15 @@ export function getProposalPermissions(
   proposal: IProposal,
   userProfile?: IFdpgOidcProfile,
   isParticipatingFromApi?: boolean,
+  singleKnownRole?: Role,
 ): ProposalPermissions {
   const owner = isProposalOwner(proposal, userProfile)
   const participating = isParticipatingFromApi ?? isParticipatingScientist(proposal, userProfile)
   const responsible = isResponsibleScientist(proposal, userProfile)
   const editor = isEditor(proposal, userProfile)
+  const editingRights = hasEditingPermissions(proposal, userProfile, singleKnownRole)
+  const editable = isProposalEditable(proposal, singleKnownRole)
   const applicant = isApplicant(proposal, userProfile)
-  const editingRights = hasEditingPermissions(proposal, userProfile)
-  const editable = isProposalEditable(proposal)
   const canEdit = editable && editingRights
 
   // Review mode: proposal not editable OR user doesn't have editing rights

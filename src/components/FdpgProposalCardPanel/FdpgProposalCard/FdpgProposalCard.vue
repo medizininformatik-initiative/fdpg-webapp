@@ -57,7 +57,7 @@
       <PanelLockedStatus v-if="showLockedStatus" />
       <template v-else>
         <PanelLocationVote v-if="showLocationVoting && proposal" :proposal="proposal" />
-        <PanelLocationStatus v-if="proposal?.locationState" :proposal="proposal" />
+        <PanelLocationStatus v-if="proposal?.locationState && !isRegisteringForm" :proposal="proposal" />
         <PanelResearcherStatus v-if="showResearcherStatus" :proposal="proposal" />
       </template>
 
@@ -95,11 +95,12 @@ import { CardType } from '@/types/component.types'
 import { Role } from '@/types/oidc.types'
 import type { IProposalDetail } from '@/types/proposal.types'
 import { FdpgTaskType, ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { getDateDiff } from '@/utils/date.util'
 import type { PropType } from 'vue'
 import { computed, defineAsyncComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const messageBoxStore = useMessageBoxStore()
 
@@ -109,6 +110,7 @@ const PanelResearcherStatus = defineAsyncComponent(() => import('../PanelTodoSta
 const PanelLockedStatus = defineAsyncComponent(() => import('../PanelTodoStatus/PanelLockedStatus.vue'))
 
 const router = useRouter()
+const route = useRoute()
 
 const props = defineProps({
   proposal: {
@@ -118,6 +120,10 @@ const props = defineProps({
   type: {
     type: String as PropType<CardType>,
     required: true,
+  },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
   },
 })
 
@@ -131,8 +137,14 @@ const showLocationVoting = computed(() => {
   return props.proposal.status === ProposalStatus.LocationCheck && authStore.hasFdpgLevelPermissions()
 })
 const showResearcherStatus = computed(() => {
-  return authStore.singleKnownRole === Role.Researcher
+  const isResearcherRole = authStore.singleKnownRole === Role.Researcher
+  const isUacOrDizRole = authStore.singleKnownRole === Role.UacMember || authStore.singleKnownRole === Role.DizMember
+  const isPublishedPage = route.name === RouteName.Published
+
+  // Researchers always see researcher status, UAC/DIZ only on published page (registering proposals)
+  return isResearcherRole || (isUacOrDizRole && isPublishedPage)
 })
+
 const showLockedStatus = computed(() => {
   return props.proposal.isLocked
 })

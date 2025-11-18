@@ -86,5 +86,6 @@ export const useAuthStore = defineStore('auth', {
     token(state): string {
       return this.isLoggedIn ? (state.$oidc?.accessToken ?? '') : ''
     },
+    isRegisteringMember: (state) => state.roles.includes(RoleEnum.RegisteringMember),
   },
 })

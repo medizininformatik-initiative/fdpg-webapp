@@ -5,6 +5,7 @@ import {
   type IFdpgChecklist,
   type IOwner,
   type IProposal,
+  type IRegisterInfo,
   type IRequestedData,
 } from '@/types/proposal.types'
 import type { IVersion } from '@/types/version.interface'
@@ -44,6 +45,25 @@ const transformOwner = (owner?: DeepPartial<IOwner>): DeepPartial<IOwner> => {
     username: owner?.username,
     miiLocation: owner?.miiLocation,
     role: owner?.role,
+  }
+}
+
+const transformRegisterInfo = (registerInfo?: DeepPartial<IRegisterInfo>): DeepPartial<IRegisterInfo> => {
+  return {
+    _id: registerInfo?._id,
+    isDone: registerInfo?.isDone ?? false,
+    isInternalRegistration: registerInfo?.isInternalRegistration ?? false,
+    originalProposalId: transformEmptyStringToUndefined(registerInfo?.originalProposalId),
+    projectUrl: transformEmptyStringToUndefined(registerInfo?.projectUrl),
+    legalBasis: registerInfo?.legalBasis ?? false,
+    projectCategory: transformEmptyStringToUndefined(registerInfo?.projectCategory),
+    diagnoses: registerInfo?.diagnoses?.map(transformEmptyStringToUndefined) ?? [],
+    procedures: registerInfo?.procedures?.map(transformEmptyStringToUndefined) ?? [],
+    syncStatus: registerInfo?.syncStatus,
+    lastSyncedAt: registerInfo?.lastSyncedAt,
+    lastSyncError: registerInfo?.lastSyncError,
+    syncRetryCount: registerInfo?.syncRetryCount,
+    acptPluginId: registerInfo?.acptPluginId,
   }
 }
 
@@ -138,6 +158,9 @@ export const transformForm = (
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
+    type: form?.type,
+    registerInfo: transformRegisterInfo(form?.registerInfo),
+    registerFormId: form?.registerFormId,
     dataDelivery: form?.dataDelivery,
     projectAssignee: form?.projectAssignee,
   }

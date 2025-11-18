@@ -2,16 +2,27 @@
   <div class="form-group-wrapper">
     <GeneralProjectInformation
       v-model="userProjectForm.generalProjectInformation"
+      v-model:register-info="registerInfoForm"
       :review-mode="reviewMode"
       :form-ref="formRef"
+      :is-registering-form="isRegisteringForm"
+      :proposal-id="proposalId"
     />
-    <ProjectResources v-model="userProjectForm.resourceAndRecontact" :review-mode="reviewMode" v-if="isMIISelected" />
-    <PropertyRights v-model="userProjectForm.propertyRights" :review-mode="reviewMode" v-if="isMIISelected" />
+    <ProjectResources
+      v-model="userProjectForm.resourceAndRecontact"
+      :review-mode="reviewMode"
+      v-if="isMIISelected && !isRegisteringForm"
+    />
+    <PropertyRights
+      v-model="userProjectForm.propertyRights"
+      :review-mode="reviewMode"
+      v-if="isMIISelected && !isRegisteringForm"
+    />
     <PlannedPublications
       v-model="userProjectForm.plannedPublication"
       :review-mode="reviewMode"
       :form-ref="formRef"
-      v-if="isMIISelected"
+      v-if="isMIISelected && !isRegisteringForm"
     />
   </div>
 </template>
@@ -19,7 +30,7 @@
 <script setup lang="ts">
 import type { IAttachmentsInterface } from '@/types/component.interface'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IUserProject } from '@/types/proposal.types'
+import type { IUserProject, IProposal } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import { computed, type PropType } from 'vue'
@@ -32,6 +43,11 @@ const props = defineProps({
   modelValue: {
     type: Object as PropType<IUserProject>,
     required: true,
+  },
+  registerInfo: {
+    type: Object as PropType<IProposal['registerInfo']>,
+    required: false,
+    default: () => ({}),
   },
   formRef: {
     type: Object as PropType<FormInstance>,
@@ -53,11 +69,21 @@ const props = defineProps({
     type: Array as PropType<PlatformIdentifier[]>,
     required: true,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
+  proposalId: {
+    type: String as PropType<string | undefined>,
+    required: false,
+    default: undefined,
+  },
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:registerInfo'])
 
 const userProjectForm = useVModel(props, 'modelValue', emit)
+const registerInfoForm = useVModel(props, 'registerInfo', emit, { eventName: 'update:registerInfo' })
 
 const isMIISelected = computed(() => {
   return props.platform.includes(PlatformIdentifier.Mii)

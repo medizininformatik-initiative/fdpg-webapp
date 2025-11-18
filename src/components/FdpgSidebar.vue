@@ -26,7 +26,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'
 import { RouteName } from '@/types/route-name.enum'
-import type { SidebarMenu } from '@/types/sidebar-menu.types'
+import type { SidebarMenu, SidebarRouteMenu } from '@/types/sidebar-menu.types'
 import { MenuType } from '@/types/sidebar-menu.types'
 import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
@@ -36,14 +36,33 @@ const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 
 const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
-  return authStore.singleKnownRole ? mainMenuMap[authStore.singleKnownRole] : []
+  if (!authStore.singleKnownRole) return []
+
+  const baseMenu = [...(mainMenuMap[authStore.singleKnownRole] || [])]
+
+  // Add published page to base menu if user has RegisteringMember role (but not for RegisteringMember themselves)
+  if (authStore.singleKnownRole !== Role.FdpgMember && authStore.singleKnownRole !== Role.RegisteringMember) {
+    const hasRegisteringMemberRole = authStore.isRegisteringMember
+    if (hasRegisteringMemberRole) {
+      const publishedMenuItem: SidebarRouteMenu = {
+        kind: MenuType.Route,
+        to: RouteName.Published,
+        title: 'sidebar.published',
+        icon: 'bi bi-journal-check',
+      }
+
+      baseMenu.push(publishedMenuItem)
+    }
+  }
+
+  return baseMenu
 })
 
 interface Menu {
   [key: string]: SidebarMenu[]
 }
 
-const fdpgRoleSidebar = [
+const fdpgRoleSidebar: SidebarMenu[] = [
   {
     kind: MenuType.Route,
     to: RouteName.Dashboard,
@@ -63,6 +82,11 @@ const fdpgRoleSidebar = [
     kind: MenuType.Route,
     to: RouteName.Completed,
     title: 'general.completed',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Published,
+    title: 'sidebar.published',
   },
   {
     kind: MenuType.Route,
@@ -127,6 +151,20 @@ const mainMenuMap: Menu = {
       to: RouteName.Dashboard,
       title: 'sidebar.dashboard',
       icon: 'bi bi-folder-fill',
+    },
+    {
+      kind: MenuType.Route,
+      to: RouteName.Archive,
+      title: 'general.archive',
+      icon: 'bi bi-archive-fill',
+    },
+  ],
+  [Role.RegisteringMember]: [
+    {
+      kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
     },
     {
       kind: MenuType.Route,

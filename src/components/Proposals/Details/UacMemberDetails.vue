@@ -55,6 +55,7 @@ import type { IButtonConfig } from '@/types/button-config.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { LocationState, ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
@@ -114,7 +115,13 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 
 const openProposal = () => {
-  router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
+
+  if (isRegisteringForm) {
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: params.id } })
+  } else {
+    router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  }
 }
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()

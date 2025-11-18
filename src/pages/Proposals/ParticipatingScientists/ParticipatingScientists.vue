@@ -8,6 +8,7 @@
       :review-mode="reviewMode"
       @edit="handleEditParticipant"
       @remove="handleRemoveParticipant"
+      :is-registering-form="isRegisteringForm"
     />
     <!-- v-show instead of v-for is needed for the validation props -->
     <div v-show="index === activePanelKey" class="form-group-wrapper">
@@ -27,6 +28,7 @@
         :review-mode="reviewMode"
         :form-ref="formRef"
         :identifier="`participants.${index}`"
+        v-if="!isRegisteringForm"
       ></ProjectResearcher>
       <TaskViewer :object-id="participant.researcher._id" />
 
@@ -40,6 +42,7 @@
       <TaskViewer :object-id="participant.institute._id" />
 
       <ProjectParticipantCategory
+        v-if="!isRegisteringForm"
         v-model="participant.participantCategory"
         :review-mode="reviewMode"
         :form-ref="formRef"
@@ -102,7 +105,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
   locations: {
     type: Array as PropType<ILocation[]>,
     required: true,

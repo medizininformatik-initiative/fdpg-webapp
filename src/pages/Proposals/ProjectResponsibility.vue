@@ -1,6 +1,6 @@
 <template>
   <div class="form-group-wrapper">
-    <el-card class="form-group">
+    <el-card class="form-group" v-if="!isRegisteringForm">
       <el-row :gutter="20">
         <el-col :sm="24" :md="12">
           <FdpgFormItem prop="projectResponsible.projectResponsibility.applicantIsProjectResponsible">
@@ -47,6 +47,7 @@
         :form-ref="formRef"
         required
         identifier="projectResponsible"
+        v-if="!isRegisteringForm"
       ></ProjectParticipantCategory>
 
       <TaskViewer :object-id="projectResponsible.participantCategory._id" />
@@ -84,7 +85,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
   locations: {
     type: Array as PropType<ILocation[]>,
     required: true,

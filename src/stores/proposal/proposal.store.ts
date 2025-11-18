@@ -277,6 +277,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     }, 500),
 
@@ -330,6 +331,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     },
 
@@ -523,6 +525,55 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async downloadLocationCsv(proposalId: string): Promise<void> {
       await this.apiService.downloadLocationCsv(proposalId)
+    },
+    async copyAsInternalRegistration(proposalId: string): Promise<string> {
+      return await this.apiService.copyAsInternalRegistration(proposalId)
+    },
+
+    async syncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.syncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async retrySyncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.retrySyncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async syncAllProposals(): Promise<{
+      total: number
+      synced: number
+      failed: number
+      errors: Array<{ projectAbbreviation: string; error: string }>
+    }> {
+      const result = await this.apiService.syncAllProposals()
+
+      const fdpgPublishedPanels: PanelQuery[] = [
+        'FDPG_PUBLISHED_READY' as PanelQuery,
+        'FDPG_PUBLISHED_PUBLISHED' as PanelQuery,
+      ]
+
+      await Promise.all(
+        fdpgPublishedPanels.map((panelQuery) =>
+          this.fetch({
+            panelQuery,
+            order: this.currentSortDirection,
+            sortBy: this.currentSortField,
+          }),
+        ),
+      )
+
+      return result
     },
 
     async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {

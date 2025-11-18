@@ -44,6 +44,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['edit', 'remove'])
@@ -64,6 +68,12 @@ const title = computed(() => {
   const fullName = (firstName + lastName).trim()
   if (fullName.length > 0) {
     return `${firstName} ${lastName}`
+  } else if (props.isRegisteringForm) {
+    return (
+      props.participantForm.institute.miiLocation ||
+      props.participantForm.institute.name ||
+      t('proposal.researcherInstituteUnknown')
+    )
   } else {
     return t('proposal.researcherNameUnknown')
   }

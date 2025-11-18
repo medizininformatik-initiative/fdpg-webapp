@@ -12,6 +12,7 @@
         allOptionLabel="proposal.virtualAllLocations"
         style="width: 100%"
         :closable="false"
+        :is-registering-form="isRegisteringForm"
         :all-locations="allLocations"
       />
     </FdpgFormItem>
@@ -26,8 +27,10 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import type { ILocation } from '@/types/location.types'
 import type { IAddressees } from '@/types/proposal.types'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
+import { watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -39,10 +42,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
   allLocations: {
     type: Array as PropType<ILocation[]>,
     required: true,
+  },
+  selectedDataSources: {
+    type: Array as PropType<PlatformIdentifier[]>,
+    default: () => [],
   },
 })
 
@@ -51,4 +61,21 @@ const minimumSelection: string[] = [] // [MiiLocation.VirtualAll]
 const emit = defineEmits(['update:modelValue'])
 
 const addresseesForm = useVModel(props, 'modelValue', emit)
+
+watch(
+  () => props.selectedDataSources,
+  (newDataSources) => {
+    if (newDataSources?.includes(PlatformIdentifier.DIFE) && props.isRegisteringForm) {
+      const difeLocation = props.allLocations.find((loc) => loc._id === 'DIFE')
+
+      if (difeLocation && !addresseesForm.value.desiredLocations?.includes('DIFE')) {
+        if (!addresseesForm.value.desiredLocations) {
+          addresseesForm.value.desiredLocations = []
+        }
+        addresseesForm.value.desiredLocations.push('DIFE')
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
 </script>

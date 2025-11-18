@@ -106,6 +106,7 @@ import ProjectReports from '@/components/ProjectReports.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import useDraftDownload from '@/composables/use-draft-download'
+import { useProposalSync } from '@/composables/use-proposal-sync'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
@@ -120,6 +121,7 @@ import type {
   ISelectedCohort,
 } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
@@ -176,6 +178,7 @@ const proposalStore = useProposalStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 const isSubmitting = ref(false)
+const isRegisteringForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
 
 const locationStore = useLocationStore()
 
@@ -191,7 +194,11 @@ const currentProjectAssignee = computed(() => proposalStore?.currentProposal?.pr
 const selectedDataSources = computed(() => proposalStore?.currentProposal?.selectedDataSources ?? [])
 
 const openReviewPage = () => {
-  router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  if (isRegisteringForm.value) {
+    router.push({ name: RouteName.EditRegisteredProject, params: { id: params.id } })
+  } else {
+    router.push({ name: RouteName.ReviewProposal, params: { id: params.id } })
+  }
 }
 
 const openLockModal = () => {
@@ -313,6 +320,47 @@ const handleRejectApplicationClick = () => {
   })
 }
 
+const handleAcceptProposalClick = () => {
+  messageBoxStore.setMessageBoxInfo({
+    ...messageBoxDefaults,
+    title: 'proposal.acceptProposalModalTitle',
+    message: 'proposal.acceptProposalModalDescription',
+    confirmButtonText: 'proposal.acceptProposal',
+    cancelButtonText: 'general.cancel',
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Published) : undefined,
+  })
+}
+const handleRegisterProjectClick = async () => {
+  messageBoxStore.setMessageBoxInfo({
+    ...messageBoxDefaults,
+    title: 'proposal.registerProjectModalTitle',
+    message: 'proposal.registerProjectModalDescription',
+    confirmButtonText: 'proposal.registerProject',
+    cancelButtonText: 'general.cancel',
+    callback: async (decision: DecisionType) => {
+      if (decision === 'confirm') {
+        try {
+          isSubmitting.value = true
+
+          const copyId = await proposalStore.copyAsInternalRegistration(proposalId.value)
+
+          showSuccessMessage('proposal.projectCopiedForRegistration')
+
+          // Navigate to register/edit route with the new copy ID
+          router.push({
+            name: RouteName.EditRegisteredProject,
+            params: { id: copyId },
+          })
+        } catch (error: any) {
+          showErrorMessage(error?.message || error?.toString() || 'general.genericError')
+        } finally {
+          isSubmitting.value = false
+        }
+      }
+    },
+  })
+}
 const handleToLocationCheckClick = () => {
   const messageComponent = markRaw(
     defineComponent({
@@ -414,6 +462,26 @@ const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErr
 const handleExportProposalPdfClick = async () => {
   if (proposalId.value && !isDownloadLoading.value) {
     await downloadFile()
+  }
+}
+
+const {
+  isSyncing,
+  canSync,
+  shouldShowSyncButton,
+  syncDisabledReason,
+  buttonLabel: syncButtonLabel,
+  syncProposal: performSync,
+} = useProposalSync()
+
+const handleSyncProposalClick = async () => {
+  if (!canSync.value) {
+    showErrorMessage(syncDisabledReason.value)
+    return
+  }
+
+  if (proposalId.value) {
+    await performSync(proposalId.value)
   }
 }
 
@@ -563,11 +631,38 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
   },
   {
     type: 'primary',
+    label: 'proposal.acceptProposalToPublish',
+    action: handleAcceptProposalClick,
+    testId: 'button__acceptProposal',
+    position: 'right',
+    isHidden: !(status.value === ProposalStatus.FdpgCheck && isRegisteringForm.value),
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: 'proposal.registerProject',
+    action: handleRegisterProjectClick,
+    testId: 'button__registerProject',
+    position: 'right',
+    isHidden:
+      isRegisteringForm.value ||
+      ![
+        ProposalStatus.Contracting,
+        ProposalStatus.ExpectDataDelivery,
+        ProposalStatus.DataResearch,
+        ProposalStatus.DataCorrupt,
+        ProposalStatus.FinishedProject,
+      ].includes(status.value) ||
+      proposalStore.currentProposal?.registerFormId !== undefined,
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
     label: 'proposal.toLocationCheck',
     action: handleToLocationCheckClick,
     testId: 'button__toLocationCheck',
     position: 'right',
-    isHidden: status.value !== ProposalStatus.FdpgCheck,
+    isHidden: status.value !== ProposalStatus.FdpgCheck || isRegisteringForm.value,
     isDisabled: proposalStore.currentProposal?.isLocked || !isChecklistDone.value,
   },
   {
@@ -575,6 +670,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__downloadLocationCsv',
     action: handleDownloadLocationCsvClick,
     position: 'right',
+    isHidden: isRegisteringForm.value,
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
@@ -583,8 +679,19 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__initiateContract',
     action: handleToContractingClick,
     position: 'right',
-    isHidden: status.value !== ProposalStatus.LocationCheck,
+    isHidden: status.value !== ProposalStatus.LocationCheck || isRegisteringForm.value,
     isDisabled: uacFullyApproved.value.length <= 0 || proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: syncButtonLabel.value as any,
+    testId: 'button__syncToWebsite',
+    action: handleSyncProposalClick,
+    position: 'right',
+    isHidden: !isRegisteringForm.value || !shouldShowSyncButton.value,
+    isDisabled: isSyncing.value || proposalStore.currentProposal?.isLocked,
+    isLoading: isSyncing.value,
+    tooltip: syncDisabledReason.value || undefined,
   },
   {
     type: 'primary',
@@ -592,7 +699,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__toExpectDataDelivery',
     action: handleToExpectDataDeliveryClick,
     position: 'right',
-    isHidden: status.value !== ProposalStatus.Contracting,
+    isHidden: status.value !== ProposalStatus.Contracting || isRegisteringForm.value,
     isDisabled:
       (proposalStore.currentProposal ? proposalStore.currentProposal?.signedContracts?.length <= 0 : true) ||
       proposalStore.currentProposal?.isLocked,
@@ -604,7 +711,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleFinishProjectClick,
     position: 'right',
     isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.DataResearch,
+    isHidden: status.value !== ProposalStatus.DataResearch || isRegisteringForm.value,
   },
   {
     label: 'proposal.finishProjectDecline',
@@ -612,7 +719,7 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     action: handleFinishProjectDeclineClick,
     position: 'left',
     isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.FinishedProject,
+    isHidden: status.value !== ProposalStatus.FinishedProject || isRegisteringForm.value,
   },
 ])
 

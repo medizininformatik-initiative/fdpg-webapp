@@ -53,23 +53,36 @@
             :platform="platform"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            v-if="isDifeSelected"
+            v-if="isDifeSelected && !isRegisteringForm"
           />
           <FdpgLabel html-for="proposal.MII" v-if="isMIISelected" size="large"></FdpgLabel>
 
-          <RequestedData v-model="proposalForm.requestedData" :review-mode="isReviewMode" v-if="isMIISelected" />
-          <MiiVariableSelection v-if="isMIISelected" />
+          <RequestedData
+            v-model="proposalForm.requestedData"
+            :review-mode="isReviewMode"
+            v-if="isMIISelected && !isRegisteringForm"
+          />
+
+          <RegisterVariableSelection
+            v-model="proposalForm.registerInfo!"
+            :review-mode="isReviewMode"
+            v-if="isRegisteringForm"
+          />
+
+          <MiiVariableSelection v-if="isMIISelected && !isRegisteringForm" />
 
           <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
 
           <ProjectAddresses
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
+            v-if="isMIISelected || isRegisteringForm"
+            :isRegisteringForm="isRegisteringForm"
             :all-locations="allLocations"
-            v-if="isMIISelected"
+            :selected-data-sources="proposalForm.selectedDataSources"
           />
 
-          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected">
+          <FdpgFormItem class="form-label-mb-3" v-if="isMIISelected || isRegisteringForm">
             <FdpgLabel html-for="proposal.typeOfUse" size="medium" />
 
             <el-checkbox-group
@@ -90,10 +103,11 @@
             v-model="proposalForm.userProject.informationOnRequestedBioSamples"
             :review-mode="isReviewMode"
             :form-ref="formRef"
+            :is-registering-form="isRegisteringForm"
           />
         </div>
 
-        <div v-show="activeStep === CreatPrposalSteps.Casesohort">
+        <div v-show="activeStep === CreatPrposalSteps.Casesohort" v-if="!isRegisteringForm">
           <DifeSelectionOfCases
             v-if="isDifeSelected"
             v-model="proposalForm.userProject.selectionOfCases.difeSelectionOfCases"
@@ -124,15 +138,16 @@
             :review-mode="isReviewMode"
             :form-ref="formRef"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
           />
           <ProjectRecontact
             v-model="proposalForm.userProject.resourceAndRecontact"
             :review-mode="isReviewMode"
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
           />
 
           <TargetFormat
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
             :platform="platform"
             v-model="proposalForm.userProject.typeOfUse"
             :review-mode="isReviewMode"
@@ -144,16 +159,24 @@
           <FdpgLabel html-for="proposal.informationAboutTheUserProject" size="large" />
           <UserProjectInformation
             v-model="proposalForm.userProject"
+            v-model:register-info="proposalForm.registerInfo"
             :form-ref="formRef"
             :file-list="fileList"
             :review-mode="isReviewMode"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
+            :proposal-id="proposalId"
           />
         </div>
 
         <div v-show="activeStep === CreatPrposalSteps.ProjectParticipants">
-          <FdpgLabel size="large" html-for="proposal.applicant" />
-          <ProjectApplicant v-model="proposalForm.applicant" :form-ref="formRef" :review-mode="isReviewMode" />
+          <FdpgLabel size="large" html-for="proposal.applicant" v-if="!isRegisteringForm" />
+          <ProjectApplicant
+            v-model="proposalForm.applicant"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+            v-if="!isRegisteringForm"
+          />
 
           <FdpgLabel
             required
@@ -165,9 +188,15 @@
             v-model="proposalForm.projectResponsible"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :is-registering-form="isRegisteringForm"
             :locations="allLocations"
           />
-          <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
+          <ProjectUser
+            v-model="proposalForm.projectUser"
+            :form-ref="formRef"
+            :review-mode="isReviewMode"
+            v-if="!isRegisteringForm"
+          />
 
           <FdpgLabel
             info="proposal.participatingScientistsInfo"
@@ -178,6 +207,7 @@
             v-model="proposalForm.participants"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :is-registering-form="isRegisteringForm"
             :locations="allLocations"
           />
         </div>
@@ -190,47 +220,50 @@
             :form-ref="formRef"
             :proposalId="proposalId"
             :platform="platform"
+            :is-registering-form="isRegisteringForm"
           />
           <EthicVote
             v-model="proposalForm.userProject.ethicVote"
             :review-mode="isReviewMode"
             :form-ref="formRef"
-            v-if="isMIISelected"
+            v-if="isMIISelected && !isRegisteringForm"
           />
-          <FdpgLabel html-for="" size="large">{{
-            t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
-          }}</FdpgLabel>
-          <p class="desc">
-            {{
-              proposalId
-                ? t('proposal.pleaseUploadAdditionalAttachmentsHere')
-                : t('proposal.attachmentsOnlyAfterSavingHint')
-            }}
-          </p>
+          <template v-if="!isRegisteringForm">
+            <FdpgLabel html-for="" size="large">{{
+              t('proposal.attachmentsOptional') + (uploadsForType.length ? `(${uploadsForType.length})` : '')
+            }}</FdpgLabel>
+            <p class="desc">
+              {{
+                proposalId
+                  ? t('proposal.pleaseUploadAdditionalAttachmentsHere')
+                  : t('proposal.attachmentsOnlyAfterSavingHint')
+              }}
+            </p>
 
-          <FdpgUpload
-            v-if="proposalId"
-            data-test-id="general-appendix__upload"
-            :accept="SupportedMimetype"
-            :file-list="uploadsForType"
-            :is-loading="isAppendixLoading"
-            :is-disabled="isReviewMode"
-            :proposal-id="proposalId"
-            @change="handleUploadFile"
-            @remove="handleRemoveFile"
-          >
-            <el-button
-              class="upload-button"
-              link
-              :disabled="isAppendixLoading || isReviewMode"
-              data-test-id="general-appendix__upload__button"
+            <FdpgUpload
+              v-if="proposalId"
+              data-test-id="general-appendix__upload"
+              :accept="SupportedMimetype"
+              :file-list="uploadsForType"
+              :is-loading="isAppendixLoading"
+              :is-disabled="isReviewMode"
+              :proposal-id="proposalId"
+              @change="handleUploadFile"
+              @remove="handleRemoveFile"
             >
-              {{ t('proposal.chooseAFile') }}
-              <template #icon>
-                <el-icon class="bi-paperclip"></el-icon>
-              </template>
-            </el-button>
-          </FdpgUpload>
+              <el-button
+                class="upload-button"
+                link
+                :disabled="isAppendixLoading || isReviewMode"
+                data-test-id="general-appendix__upload__button"
+              >
+                {{ t('proposal.chooseAFile') }}
+                <template #icon>
+                  <el-icon class="bi-paperclip"></el-icon>
+                </template>
+              </el-button>
+            </FdpgUpload>
+          </template>
         </div>
         <ShoppingList v-model="proposalForm.selectedDataSources" />
       </el-form>
@@ -256,7 +289,7 @@
           data-test-id="handleSubmit"
           @click="handleSubmit"
           v-else-if="!proposalStore.currentProposal || !isReviewMode"
-          >{{ t('proposal.submitApplication') }}</el-button
+          >{{ isRegisteringForm ? t('registeringForm.sendForm') : t('proposal.submitApplication') }}</el-button
         >
       </el-col>
     </el-row>
@@ -290,6 +323,7 @@ import { Role } from '@/types/oidc.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload } from '@/types/upload.types'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
@@ -331,6 +365,7 @@ import useDraftDownload from '@/composables/use-draft-download'
 import MiiCohortSelection from './Casesohort/MiiCohortSelection.vue'
 import DifeSelectionOfCases from './Casesohort/DifeSelectionOfCases.vue'
 import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
+import RegisterVariableSelection from './Variables/RegisterVariableSelection.vue'
 import { debounce } from 'lodash-es'
 
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
@@ -345,6 +380,8 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.variableSelection.DIFE.typeOfUseExplanation',
     'userProject.informationOnRequestedBioSamples.laboratoryResources',
     'userProject.informationOnRequestedBioSamples.biosamples',
+    'registerInfo.diagnoses',
+    'registerInfo.procedures',
   ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
@@ -368,6 +405,9 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.generalProjectInformation.projectFunding',
     'userProject.generalProjectInformation.fundingReferenceNumber',
     'userProject.plannedPublication.publications',
+    'registerInfo.projectUrl',
+    'registerInfo.projectCategory',
+    'registerInfo.legalBasis',
   ],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
 
@@ -437,6 +477,26 @@ const allLocations: Ref<ILocation[]> = ref([])
 const activeStep = computed(() => {
   return layoutStore.activeStep
 })
+const isRegisteringForm = computed(() => {
+  if (
+    router.currentRoute.value.name === RouteName.RegisterNewProject ||
+    router.currentRoute.value.name === RouteName.EditRegisteredProject
+  ) {
+    return true
+  }
+  return proposalForm.value?.type === ProposalType.RegisteringForm
+})
+
+// Sync registration form state with layout store
+watch(
+  isRegisteringForm,
+  (newValue) => {
+    nextTick(() => {
+      layoutStore.setIsRegisteringForm(newValue)
+    })
+  },
+  { immediate: true },
+)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
@@ -465,6 +525,10 @@ const rules = ref<Record<string, any>>({
       desiredStartTime: [
         {
           validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+            if (isRegisteringForm.value) {
+              callback()
+              return
+            }
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
             if (isLater) {
               if (!value) {
@@ -502,6 +566,7 @@ const rules = ref<Record<string, any>>({
       hypothesisAndQuestionProjectGoals: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       materialAndMethods: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       executiveSummaryUac: [requiredValidationFunc('string'), maxLengthValidationFunc(3000)],
+      literature: isRegisteringForm.value ? [maxLengthValidationFunc(10000)] : [],
     },
     ethicVote: {
       ethicsCommittee: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
@@ -555,12 +620,90 @@ const rules = ref<Record<string, any>>({
     desiredDataAmount: requiredValidationFunc('number'),
     desiredControlDataAmount: [requiredValidationFunc('number')],
   },
+  registerInfo: {
+    // Required fields for ALL registering forms
+    projectCategory: [
+      {
+        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.trim().length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else if (value.length > 200) {
+            callback(new Error(t('general.maxLengthExceeded', { max: 200 })))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    projectUrl: [
+      {
+        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.trim().length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else if (value.length > 500) {
+            callback(new Error(t('general.maxLengthExceeded', { max: 500 })))
+          } else {
+            // Validate URL format
+            try {
+              new URL(value)
+              callback()
+            } catch {
+              callback(new Error(t('general.invalidUrl')))
+            }
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    diagnoses: [
+      {
+        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    procedures: [
+      {
+        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
+          if (!isRegisteringForm.value) {
+            callback()
+            return
+          }
+          if (!value || value.length === 0) {
+            callback(new Error(t('general.requiredField')))
+          } else {
+            callback()
+          }
+        },
+        trigger: ['blur', 'change'],
+      },
+    ],
+    legalBasis: null,
+  },
   status: null,
 })
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
-  return ProposalPermissions.isProposalEditable(proposalForm.value)
+  return ProposalPermissions.isProposalEditable(proposalForm.value, authStore.singleKnownRole)
 }
 
 // Comprehensive permission checks using utility functions
@@ -582,6 +725,7 @@ const proposalPermissions = computed(() => {
     proposalForm.value,
     authStore.profile,
     proposalStore.currentProposal?.isParticipatingScientist,
+    authStore.singleKnownRole,
   )
 })
 
@@ -643,8 +787,15 @@ watch(hasBiosamples, async (enabled) => {
 const getFormValues = () => {
   const formData = transformForm(proposalForm.value, true)
 
+  // Set type for registering forms
+  if (isRegisteringForm.value) {
+    formData.type = ProposalType.RegisteringForm
+  } else {
+    formData.type = ProposalType.ApplicationForm
+  }
+
   // If MII is not selected, remove MII-specific fields
-  if (!isMIISelected.value) {
+  if (!isMIISelected.value && !isRegisteringForm.value) {
     // Remove MII-specific fields
     delete formData.requestedData
     delete formData.userProject?.addressees
@@ -698,10 +849,16 @@ const handleExportProposalPdfClick = async () => {
 const handleTermsConfirm = async () => {
   isSubmissionDialogOpen.value = false
   try {
+    // For published registering forms, keep them published and just update the data
+    // (this will auto-set syncStatus to OUT_OF_SYNC on the backend)
+    const isPublishedRegisteringForm = 
+      isRegisteringForm.value && 
+      proposalStore.currentProposal?.status === ProposalStatus.Published
+
     if (proposalId.value) {
       await proposalStore.updateProposal(proposalId.value, {
         ...getFormValues(),
-        status: ProposalStatus.FdpgCheck,
+        status: isPublishedRegisteringForm ? ProposalStatus.Published : ProposalStatus.FdpgCheck,
       })
     } else {
       await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.FdpgCheck })
@@ -1428,6 +1585,29 @@ watch(
   () => proposalForm.value?.selectedDataSources,
   (newSelectedDataSources) => {
     layoutStore.setDatasourceSelected(!!newSelectedDataSources?.length)
+  },
+  { immediate: true, deep: true },
+)
+
+watch(
+  () => proposalForm.value?.selectedDataSources,
+  (newSelectedDataSources) => {
+    if (newSelectedDataSources?.includes(PlatformIdentifier.DIFE) && isRegisteringForm.value) {
+      const hasDifeLocation = allLocations.value.some((loc) => loc._id === 'DIFE')
+
+      if (!hasDifeLocation) {
+        const difeLocation: ILocation = {
+          _id: 'DIFE',
+          externalCode: 'DIFE',
+          display: 'DIFE',
+          consortium: 'DIFE',
+          dataIntegrationCenter: false,
+          dataManagementCenter: false,
+          deprecated: false,
+        }
+        allLocations.value.push(difeLocation)
+      }
+    }
   },
   { immediate: true, deep: true },
 )

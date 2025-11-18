@@ -12,9 +12,9 @@ export class ApiClient {
     this.baseUrl = import.meta.env.VITE_API_SERVER || ''
 
     try {
-      this.timeout = parseInt(import.meta.env.VITE_API_TIMEOUT_SECONDS ?? '30000')
+      this.timeout = parseInt(import.meta.env.VITE_API_TIMEOUT_SECONDS ?? '300000')
     } catch {
-      this.timeout = 30_000
+      this.timeout = 300_000 // 5 minutes for long-running operations like sync
     }
 
     this.client = axios.create({

@@ -23,7 +23,7 @@
           </el-checkbox-group>
         </FdpgFormItem>
 
-        <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
+        <div v-if="shouldDisplayDataPrivacyTextField && !isRegisteringForm" class="data-privacy-wrapper">
           <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
           <dl>
             <TypeOfUseDataPrivacyItem
@@ -87,6 +87,10 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const isInitialized = ref(false)
@@ -134,7 +138,18 @@ watch(
   },
   { immediate: true },
 )
-
+watch(
+  () => props.isRegisteringForm,
+  (newValue) => {
+    if (newValue) {
+      options.push({
+        value: 'NONE' as ProposalTypeOfUse,
+        info: 'proposal.typeOfUse_NONE_Info' as TranslationSchema,
+      })
+    }
+  },
+  { immediate: true },
+)
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {

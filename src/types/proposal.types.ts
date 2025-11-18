@@ -10,6 +10,7 @@ import type { Deadlines } from './due-date.enum'
 import type { DifeTypeOfUse } from './dife-type-of-use.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { PseudonymizationInfoOptions } from './PseudonymizationInfo.enum'
+import { ProposalType } from './proposal-type.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -34,6 +35,8 @@ export enum ProposalStatus {
   DataCorrupt = 'DATA_CORRUPT',
   FinishedProject = 'FINISHED_PROJECT',
   ReadyToArchive = 'READY_TO_ARCHIVE',
+  ReadyToPublish = 'READY_TO_PUBLISH',
+  Published = 'PUBLISHED',
 }
 
 export enum ParticipantType {
@@ -365,7 +368,7 @@ export interface PanelType {
   query: PanelQuery
   header: string
   isTable?: boolean
-  hasClickAction: boolean
+  hasClickAction?: boolean
 }
 
 export interface IProposalHistory {
@@ -553,7 +556,8 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
-
+  registerInfo?: IRegisterInfo
+  registerFormId?: string
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
@@ -585,6 +589,7 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+  type: ProposalType
   dataDelivery?: IDataDelivery | null
   projectAssignee?: IProjectAssignee
 }
@@ -651,6 +656,11 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
+  type: ProposalType
+  registerInfo?: {
+    isInternalRegistration?: boolean
+    originalProposalId?: string
+  }
 }
 
 export interface IDeclineReason {
@@ -701,6 +711,21 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+export interface IRegisterInfo extends WithIdAndIsDone {
+  isInternalRegistration: boolean
+  originalProposalId: string
+  // Register-specific fields
+  projectUrl: string
+  legalBasis: boolean
+  projectCategory: string
+  diagnoses: string[]
+  procedures: string[]
+  syncStatus?: string
+  lastSyncedAt?: string
+  lastSyncError?: string
+  syncRetryCount?: number
+  acptPluginId?: string
 }
 
 export interface IDataDelivery {

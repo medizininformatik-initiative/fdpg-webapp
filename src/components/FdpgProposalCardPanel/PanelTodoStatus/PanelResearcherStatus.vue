@@ -114,6 +114,18 @@ const status = computed<IResearcherState>(() => {
         icon: 'fa-solid fa-box-archive',
         styleClass: 'active',
       }
+    case ProposalStatus.ReadyToPublish:
+      return {
+        message: 'researcherStatus.READY_TO_PUBLISH',
+        icon: 'fa-solid fa-circle-check',
+        styleClass: 'active',
+      }
+    case ProposalStatus.Published:
+      return {
+        message: 'researcherStatus.PUBLISHED',
+        icon: 'fa-solid fa-circle-check',
+        styleClass: 'active',
+      }
   }
 })
 </script>
