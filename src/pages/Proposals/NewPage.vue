@@ -99,7 +99,7 @@
           </FdpgFormItem>
 
           <InformationOnBioSample
-            v-if="hasBiosamples && isMIISelected"
+            v-if="hasBiosamples && (isMIISelected || isRegisteringForm)"
             v-model="proposalForm.userProject.informationOnRequestedBioSamples"
             :review-mode="isReviewMode"
             :form-ref="formRef"
@@ -851,9 +851,8 @@ const handleTermsConfirm = async () => {
   try {
     // For published registering forms, keep them published and just update the data
     // (this will auto-set syncStatus to OUT_OF_SYNC on the backend)
-    const isPublishedRegisteringForm = 
-      isRegisteringForm.value && 
-      proposalStore.currentProposal?.status === ProposalStatus.Published
+    const isPublishedRegisteringForm =
+      isRegisteringForm.value && proposalStore.currentProposal?.status === ProposalStatus.Published
 
     if (proposalId.value) {
       await proposalStore.updateProposal(proposalId.value, {
