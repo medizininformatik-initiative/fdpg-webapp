@@ -155,6 +155,7 @@ const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 const router = useRouter()
 const showPublicationsAndReports = ref(false)
+const isLoading = ref(false)
 const showPublicationsProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
@@ -271,11 +272,14 @@ const changeLockingState = async (newLockingState: boolean) => {
 
 const changeStatus = async (proposalStatus: ProposalStatus) => {
   try {
+    isLoading.value = true
     await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: layoutStore.lastDashboard })
   } catch (error: any) {
     showErrorMessage(t('general.failedSubmit'))
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -631,12 +635,12 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
   },
   {
     type: 'primary',
-    label: 'proposal.acceptProposalToPublish',
+    label: isLoading.value ? 'registeringForm.syncing' : 'proposal.acceptProposalToPublish',
     action: handleAcceptProposalClick,
     testId: 'button__acceptProposal',
     position: 'right',
     isHidden: !(status.value === ProposalStatus.FdpgCheck && isRegisteringForm.value),
-    isDisabled: proposalStore.currentProposal?.isLocked,
+    isDisabled: proposalStore.currentProposal?.isLocked || isLoading.value,
   },
   {
     type: 'primary',

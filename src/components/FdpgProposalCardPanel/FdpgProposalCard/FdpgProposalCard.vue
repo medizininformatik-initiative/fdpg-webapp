@@ -38,7 +38,7 @@
           <span class="fa fa-trash" aria-hidden="true" />
         </span>
       </span>
-      <span v-else class="due-date">
+      <span v-else-if="!isRegisteringForm" class="due-date">
         <template v-if="proposal.computedDueDate !== undefined && proposal.computedDueDate >= 0">{{
           $t('dashboard.xDaysLeft', { x: proposal.computedDueDate })
         }}</template>
