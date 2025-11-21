@@ -809,7 +809,8 @@
     "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
     "registerProject": "Projekt registrieren",
     "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
-    "projectAssignee": "Abtretungsempfänger:in"
+    "projectAssignee": "Abtretungsempfänger:in",
+    "redirectToFeasibilityPortal": "Datenportal"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

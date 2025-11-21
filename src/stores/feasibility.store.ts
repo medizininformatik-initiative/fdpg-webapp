@@ -17,5 +17,9 @@ export const useFeasibilityStore = defineStore('Feasibility', {
     async getAll(): Promise<void> {
       this.feasibilityQueries = await this.apiService.getAll()
     },
+
+    async getRedirectUrl(queryId): Promise<string> {
+      return await this.apiService.getRedirectUrl(queryId)
+    },
   },
 })
