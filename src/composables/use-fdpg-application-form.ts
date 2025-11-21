@@ -76,7 +76,7 @@ export function useFdpgApplicationForm(
       verification.every((item: IChecklistItem) => item.isAnswered) &&
       checklist.isRegistrationLinkSent &&
       checklist.initialViewing &&
-      checklist.ethicsCheck &&
+      checklist.depthCheck &&
       checklist.ethicsCheck &&
       projectProperties.every((item: IChecklistItem) => item.isAnswered)
     )
