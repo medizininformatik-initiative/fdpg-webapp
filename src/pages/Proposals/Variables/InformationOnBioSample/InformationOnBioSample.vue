@@ -164,6 +164,7 @@
                     >
                     </Fdpgcheckbox>
                     <FdpgFormItem
+                      v-if="!isRegisteringForm"
                       :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}][${option.value}]`"
                     >
                       <FdpgInput
