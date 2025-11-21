@@ -100,10 +100,10 @@
       <el-col :sm="24">
         <FdpgFormItem prop="requestedData.patientInfo">
           <FdpgLabel html-for="proposal.patientInfo" required />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="requestedDataForm.patientInfo"
             data-testId="requestedData.patientInfo"
-            placeholder="proposal.pleaseEnterYourDetailsForPatientSelectionHere"
+            :placeholder="t('proposal.pleaseEnterYourDetailsForPatientSelectionHere')"
             :disabled="reviewMode || requestedDataForm.isDone"
           />
         </FdpgFormItem>
@@ -126,6 +126,7 @@ import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { UseCaseUpload } from '@/types/upload.types'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
