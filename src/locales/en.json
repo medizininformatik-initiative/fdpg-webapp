@@ -141,7 +141,8 @@
     "PARTICIPANT_ADDED": "Participant {participantName} was added to the project",
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
     "PARTICIPANT_UPDATED": "Participants were updated",
-    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}"
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}",
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n"
   },
   "header": {
     "login": "Login",
@@ -809,7 +810,8 @@
     "registerProjectModalDescription": "This will create a copy of this project as a registration form. You can then fill in publication details and publish it to the FDPG register. The original project will remain unchanged.",
     "registerProject": "Register Project",
     "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
-    "projectAssignee": "Project assignee"
+    "projectAssignee": "Project assignee",
+    "redirectToFeasibilityPortal": "Feasibility Portal"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

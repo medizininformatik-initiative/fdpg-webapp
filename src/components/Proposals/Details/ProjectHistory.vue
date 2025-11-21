@@ -49,6 +49,11 @@ const historyList = computed(() => {
           translationParameter['newAssigneeMail'] = item.data.newAssigneeMail as string
         }
         break
+      case ProjectHistoryType.ProposalCopyAsInternalRegistration:
+        if (item.data?.originalProposalAbbreviation) {
+          translationParameter['originalProposalAbbreviation'] = item.data.originalProposalAbbreviation as string
+        }
+        break
     }
 
     const formattedDate = item.createdAt
