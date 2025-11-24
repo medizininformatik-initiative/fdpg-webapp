@@ -152,7 +152,7 @@ const downloadCsv = async (id?: number, label?: string) => {
 }
 
 const handleDelete = async (cohort: ISelectedCohort) => {
-  if (cohort._id && cohort.uploadId) {
+  if (cohort._id && (cohort.uploadId || cohort.label?.startsWith('Machbarkeits-Anfrage'))) {
     emit('removeCohort', cohort)
   }
 
