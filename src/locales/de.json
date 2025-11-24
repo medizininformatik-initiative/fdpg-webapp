@@ -141,7 +141,8 @@
     "PARTICIPANT_ADDED": "Teilnehmer {participantName} wurde zum Projekt hinzugefügt",
     "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
     "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert",
-    "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}"
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}",
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Kopiert aus dem Vorschlag {originalProposalAbbreviation} für die interne Registrierung durch FDPG"
   },
   "header": {
     "login": "Anmelden",

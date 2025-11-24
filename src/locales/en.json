@@ -141,7 +141,8 @@
     "PARTICIPANT_ADDED": "Participant {participantName} was added to the project",
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
     "PARTICIPANT_UPDATED": "Participants were updated",
-    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}"
+    "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}",
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n"
   },
   "header": {
     "login": "Login",

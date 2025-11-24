@@ -315,6 +315,7 @@ export enum ProjectHistoryType {
   ProposalFinished = 'PROPOSAL_FINISHED',
   ProposalReadyToArchive = 'PROPOSAL_READY_TO_ARCHIVE',
   ProposalArchived = 'PROPOSAL_ARCHIVED',
+  ProposalCopyAsInternalRegistration = 'PROPOSAL_COPY_AS_INTERNAL_REGISTRATION',
 
   DizVoteAccept = 'DIZ_VOTE_ACCEPT',
   DizVoteDecline = 'DIZ_VOTE_DECLINE',
