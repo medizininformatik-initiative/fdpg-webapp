@@ -289,7 +289,13 @@ const typeOfUseCard = (dataSources: PlatformIdentifier[] = []) => ({
       label: 'proposal.targetFormat', // MII
       size: 24,
       shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
-      definitions: [[{ key: 'targetFormat', subKeys: ['targetFormatOther'] }]],
+      definitions: [[{ key: 'targetFormat' }]],
+    },
+    {
+      label: 'proposal.targetFormatOther', // MII
+      size: 24,
+      shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
+      definitions: [[{ key: 'targetFormatOther' }]],
     },
     {
       label: 'proposal.DIFEtypeOfUse', // DIFE
