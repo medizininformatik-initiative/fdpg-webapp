@@ -9,4 +9,9 @@ export class FeasibilityService {
     const response = await this.apiClient.get(this.basePath)
     return response.data
   }
+
+  async getRedirectUrl(queryId: number): Promise<string> {
+    const response = await this.apiClient.get(`${this.basePath}/redirect/${queryId}`)
+    return response.data.redirectUrl
+  }
 }

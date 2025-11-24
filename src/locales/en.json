@@ -809,7 +809,8 @@
     "registerProjectModalDescription": "This will create a copy of this project as a registration form. You can then fill in publication details and publish it to the FDPG register. The original project will remain unchanged.",
     "registerProject": "Register Project",
     "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
-    "projectAssignee": "Project assignee"
+    "projectAssignee": "Project assignee",
+    "redirectToFeasibilityPortal": "Feasibility Portal"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

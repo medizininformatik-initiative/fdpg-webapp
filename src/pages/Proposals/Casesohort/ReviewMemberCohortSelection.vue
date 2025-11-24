@@ -25,6 +25,20 @@
               </template>
             </el-table-column>
 
+            <el-table-column v-if="canRedirectToFeasibilityPortal" :label="t('proposal.redirectToFeasibilityPortal')">
+              <template #default="scope">
+                <el-button
+                  v-if="scope.row.feasibilityQueryId"
+                  type="primary"
+                  link
+                  @click="redirectToFeasibilityPortal(scope.row.feasibilityQueryId)"
+                  data-test-id="redirectToFeasibilityPortal"
+                >
+                  {{ t('proposal.redirectToFeasibilityPortal') }}
+                </el-button>
+              </template>
+            </el-table-column>
+
             <el-table-column :label="t('proposal.viewQuery')">
               <template #default="scope">
                 <el-button
@@ -79,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { FormInstance, UploadFile } from 'element-plus'
 import type { ISelectedCohort } from '@/types/proposal.types'
@@ -87,6 +101,9 @@ import { useVModel } from '@vueuse/core'
 import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import { useFeasibilityStore } from '@/stores/feasibility.store'
+import { Role } from '@/types/oidc.types'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -103,6 +120,42 @@ const props = defineProps({
     default: false,
   },
 })
+
+const authStore = useAuthStore()
+const feasibilityStore = useFeasibilityStore()
+
+const canRedirectToFeasibilityPortal = computed(() =>
+  new Set([Role.FdpgMember, Role.DizMember]).has(authStore.singleKnownRole ?? Role.Admin),
+)
+
+const redirectToFeasibilityPortal = async (queryId: number): Promise<void> => {
+  try {
+    const url = await feasibilityStore.getRedirectUrl(queryId)
+
+    if (!isValidHttpUrl(url)) {
+      throw new Error(`Invalid redirect URL received: "${url}"`)
+    }
+
+    window.open(url, '_blank')
+  } catch (error) {
+    console.error('Redirect to Feasibility Portal failed:', error)
+    showErrorMessage()
+  }
+}
+
+const isValidHttpUrl = (urlString: string): boolean => {
+  if (!urlString) {
+    return false
+  }
+
+  try {
+    const url = new URL(urlString)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch (e) {
+    console.error(`invalid or empty URL: "${urlString}"`)
+    return false
+  }
+}
 
 const emit = defineEmits(['update:modelValue', 'update:uploads', 'addCohort', 'removeCohort'])
 
