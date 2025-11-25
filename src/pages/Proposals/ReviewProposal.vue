@@ -31,6 +31,7 @@
                 :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
                 hide-review-checkbox
                 :number="`${sIdx + 1}.${sectionItemIdx + 1}.${cardIdx + 1}`"
+                :possible-locations="possibleLocations"
               ></ReviewCard>
             </template>
           </section>
@@ -45,6 +46,7 @@
           :headline-overwrite="section.sectionLabel"
           :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
           :number="`${sIdx + 1}`"
+          :possible-locations="possibleLocations"
         ></ReviewCard>
       </section>
 
@@ -71,6 +73,7 @@
             :is-draft="proposalStore.currentProposal?.status === ProposalStatus.Draft"
             :hide-review-checkbox="isSinglePersonEntry(section)"
             :number="`${sIdx + 1}.${cardIdx + 1}`"
+            :possible-locations="possibleLocations"
           ></ReviewCard>
         </section>
       </template>
@@ -120,7 +123,7 @@ import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
 import { ElButton } from 'element-plus'
-import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
@@ -131,17 +134,19 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
 
 const authStore = useAuthStore()
 
 const sections = computed(
   () =>
     [
-      applicantSection,
-      projectResponsibilitySection,
+      applicantSection(locationMapRef.value),
+      projectResponsibilitySection(locationMapRef.value),
       projectUserSection,
-      participantSection,
-      userProjectSection(authStore.assignedDataSources),
+      participantSection(locationMapRef.value),
+      userProjectSection(authStore.assignedDataSources, locationMapRef.value),
       requestedDataSection,
       biosampleSection(authStore.assignedDataSources),
     ] as DefinitionSection<IProposal, keyof IProposal>[],
@@ -155,6 +160,16 @@ const { params, query } = useRoute()
 const proposalId = computed(() => params.id as string)
 const proposalStore = useProposalStore()
 const commentStore = useCommentStore()
+
+const locationStore = useLocationStore()
+
+const locationMapRef: Ref<Record<string, ILocationKeyLabel>> = ref({})
+
+const possibleLocations = computed(() =>
+  (proposalStore?.currentProposal?.userProject?.addressees?.desiredLocations ?? [])
+    .map((locId) => locationMapRef.value?.[locId])
+    .filter((loc) => loc),
+)
 
 const { uploadsForType } = useUpload(proposalId, [
   DirectUpload.GeneralAppendix,
@@ -312,6 +327,9 @@ onMounted(async () => {
   await fetchProposal()
   await fetchComments()
   await scrollToAnchor()
+
+  const lm = await locationStore.getLocationLookupMap()
+  locationMapRef.value = lm
 })
 </script>
 

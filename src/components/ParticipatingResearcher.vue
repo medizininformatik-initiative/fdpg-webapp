@@ -98,7 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgDropdown from './FdpgDropdown.vue'
 import type { DropdownItem } from '@/types/dropdown.types'
@@ -107,21 +107,26 @@ import useNotifications from '@/composables/use-notifications'
 import type { TranslationSchema } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useUserStore } from '@/stores/user.store'
-import type { IResearcherIdentity } from '@/types/proposal.types'
-import { ParticipantType, ParticipantRole, ProposalStatus } from '@/types/proposal.types'
+import type { IParticipant, IResearcherIdentity } from '@/types/proposal.types'
+import { ParticipantRole, ParticipantType, ProposalStatus } from '@/types/proposal.types'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import type { IParticipant } from '@/types/proposal.types'
 import AddParticipantDialog from './AddParticipantDialog.vue'
 import { mapParticipant } from '@/utils/form-transform/participant-applicant-transform.util'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import { isParticipatingScientist, isParticipantApplicant } from '@/utils/proposal-permissions.util'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
+import { isParticipantApplicant, isParticipatingScientist } from '@/utils/proposal-permissions.util'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
+
 const { params } = useRoute()
 const proposalId = params.id as string
 
 const proposalStore = useProposalStore()
 const userStore = useUserStore()
 const { showErrorMessage, showSuccessMessage } = useNotifications()
+const locationStore = useLocationStore()
+const activeLocationsRef = ref<ILocation[]>([])
+
 const { t } = useI18n()
 
 interface ParticipantAction {
@@ -505,6 +510,11 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
     showErrorMessage()
   }
 }
+
+onMounted(async () => {
+  const allActive = await locationStore.getAllActive()
+  activeLocationsRef.value = allActive
+})
 </script>
 
 <style lang="scss">
@@ -512,7 +522,7 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
 
 .participants {
   border-radius: 4px;
-  border: 1px solid $gray-700;
+  border: 1px solid $gray-900;
 
   .participant-item {
     border-bottom: 1px solid $gray-700;

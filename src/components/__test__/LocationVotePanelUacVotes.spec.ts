@@ -12,6 +12,7 @@ import { ref } from 'vue'
 import { nextTick } from 'vue'
 import useNotifications from '@/composables/use-notifications'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -48,6 +49,10 @@ vi.mock('@/composables/use-download', async () => {
     }),
   }
 })
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
 
 describe('LocationVotePanelUacVotes.vue', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>

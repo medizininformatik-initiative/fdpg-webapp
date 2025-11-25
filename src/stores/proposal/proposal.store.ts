@@ -27,7 +27,6 @@ import { getDateDiff } from '@/utils/date.util'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
-import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
 import type { IDizDetails } from '@/types/proposal.types'
@@ -142,7 +141,7 @@ export const useProposalStore = defineStore('Proposal', {
       await this.apiService.signContract(id, decision)
     },
 
-    async initContracting(id: string, file: File, selectedLocations: MiiLocation[]): Promise<void> {
+    async initContracting(id: string, file: File, selectedLocations: string[]): Promise<void> {
       await this.apiService.initContracting(id, file, selectedLocations)
     },
 
@@ -396,7 +395,7 @@ export const useProposalStore = defineStore('Proposal', {
       return await this.apiService.getProposalPdfFile(id)
     },
 
-    async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
+    async revertLocationVote(id: string, location: string): Promise<void> {
       await this.apiService.revertLocationVote(id, location)
       await this.setCurrentProposal(id)
     },

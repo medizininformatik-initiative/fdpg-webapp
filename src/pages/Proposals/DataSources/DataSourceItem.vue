@@ -12,7 +12,12 @@
         >
 
         <div class="data-source-footer">
-          <el-button type="primary" class="action-button" @click="addSelection(platformIdentifier)">
+          <el-button
+            type="primary"
+            class="action-button"
+            @click="addSelection(platformIdentifier)"
+            :disabled="isSelected"
+          >
             <i class="fa-solid fa-plus"></i> {{ $t('proposal.addDataSource') }}
           </el-button>
         </div>

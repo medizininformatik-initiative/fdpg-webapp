@@ -1,25 +1,26 @@
 <template>
   <section class="answer-creator">
-    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="$t('proposal.leaveAComment')" />
+    <FdpgTextEditor ref="inputRef" v-model="answerContent" :placeholder="t('proposal.leaveAComment')" />
 
     <section role="region" class="action-row">
       <div class="comment-field-actions">
         <el-button type="primary" :disabled="!answerContent || answerContent.trim().length < 5" @click="handleSubmit">
           <template v-if="edit">
-            {{ $t('general.save') }}
+            {{ t('general.save') }}
           </template>
           <template v-else>
-            {{ $t('general.create') }}
+            {{ t('general.create') }}
           </template>
         </el-button>
-        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ $t('general.cancel') }}</el-button>
+        <el-button type="primary" plain @click="toggleAnswerMode(false)">{{ t('general.cancel') }}</el-button>
       </div>
 
       <LocationSelect
         v-if="isAnswerToLocation"
         v-model="locationSelection"
-        :placeholder="visibility || ''"
+        :placeholder="visibility?.value || ''"
         :minimum-selection="minimumSelection"
+        :all-locations="possibleLocations"
       />
     </section>
   </section>
@@ -31,11 +32,12 @@ import type { IVisibilityMessage } from '@/composables/use-location-visibility'
 import useLocationVisibility from '@/composables/use-location-visibility'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import type { CommentType, ICommentDetail, ICreateAnswer } from '@/types/comment.interface'
-import { MiiLocation } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref } from 'vue'
 import LocationSelect from './LocationSelect.vue'
+import { useI18n } from 'vue-i18n'
+import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   message: {
@@ -50,10 +52,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
+  },
 })
 
+const { t } = useI18n()
+
 const authStore = useAuthStore()
-const locationSelection = ref<MiiLocation[]>([])
+const locationSelection = ref<string[]>([])
 const answerContent = ref<string>()
 const inputRef = ref()
 const emit = defineEmits(['toggleAnswerMode', 'createAnswer'])
@@ -81,7 +90,7 @@ const isAnswerToLocation = computed(() => {
 
 const minimumSelection = computed(() => {
   if (isAnswerToLocation.value === true) {
-    return props.message.owner.miiLocation ? [props.message.owner.miiLocation] : [MiiLocation.VirtualAll]
+    return props.message.owner.miiLocation ? [props.message.owner.miiLocation] : [...props.message.locations]
   } else {
     return []
   }
@@ -94,7 +103,9 @@ const visibilityMessage = computed<IVisibilityMessage>(() => {
   }
 })
 
-const { visibility } = useLocationVisibility(visibilityMessage, props.type, false)
+const visibility = computed(
+  () => useLocationVisibility(visibilityMessage, props.type, false, props.possibleLocations)?.visibility,
+)
 
 onMounted(() => {
   if (inputRef.value?.inputRef?.input) {
@@ -104,7 +115,7 @@ onMounted(() => {
   if (isAnswerToLocation.value === true) {
     locationSelection.value = props.message.owner.miiLocation
       ? [props.message.owner.miiLocation]
-      : [MiiLocation.VirtualAll]
+      : [...props.possibleLocations.map((loc) => loc._id)]
   }
 })
 </script>

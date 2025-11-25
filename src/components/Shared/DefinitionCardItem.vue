@@ -17,7 +17,11 @@
     </template>
 
     <template v-else-if="definition.kind === 'lookup'">
-      <div class="card-item-value">{{ definition.lookupMap[value as string][definition.lookupKey] }}</div>
+      <div class="card-item-value">
+        {{
+          definition.lookupMap[value as string]?.[definition.lookupKey] ?? `error on ${value}.${definition?.lookupKey}`
+        }}
+      </div>
     </template>
 
     <template v-else-if="definition.kind === 'table' && Array.isArray(value)">

@@ -3,15 +3,15 @@
     v-model="dialogOpen"
     class="initiate-contract-dialog"
     width="50%"
-    :title="$t('proposal.toContractingModalTitle')"
+    :title="t('proposal.toContractingModalTitle')"
     :before-close="closeDialog"
     :show-close="false"
   >
     <div>
-      <p>{{ $t('proposal.toContractingModalDescription') }}</p>
+      <p>{{ t('proposal.toContractingModalDescription') }}</p>
       <div v-if="contractDraft" class="fdpg-upload-list-item">
         <p class="fdpg-upload-file__name">{{ contractDraft.name }}</p>
-        <span>({{ (contractDraft.size / 1024).toFixed(1) }}KB)</span>
+        <span>({{ ((contractDraft?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
         <el-icon
           class="el-icon-close"
           data-testId="icon__removeInitiateContractFile"
@@ -29,7 +29,7 @@
         @change="handleUploadFile"
       >
         <el-button v-if="!contractDraft" class="upload-button" link>
-          {{ $t('proposal.chooseAFile') }}
+          {{ t('proposal.chooseAFile') }}
           <template #icon>
             <el-icon class="bi-paperclip"></el-icon>
           </template>
@@ -38,29 +38,25 @@
     </div>
     <div>
       <FdpgLabel html-for="general.locations" />
-      <FdpgSelect
+      <LocationSelect
         v-model="selectedLocations"
-        multiple
-        filterable
-        data-testId="checkboxgroup__initiateContract.selecteLocations"
-        test-id-extension="__checkboxgroup__initiateContract.selecteLocations"
         placeholder="proposal.pleaseSelectYourLocations"
-        :options="locationOptions"
-        shouldDisplayCheckAll
+        :minimum-selection="[]"
+        :all-locations="possibleLocations"
       />
     </div>
     <template #footer>
       <span>
         <el-button link data-testId="button__closeInitiateContractDialog" @click="closeDialog">
-          {{ $t('general.cancel') }}
+          {{ t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
-          :disabled="!contractDraft || !selectedLocations?.length || isSubmitting"
+          :disabled="initiateContractButtonDisabled"
           data-testid="button__initiateContract"
           @click="initiateContract"
         >
-          {{ $t('proposal.initiateContract') }}
+          {{ t('proposal.initiateContract') }}
         </el-button>
       </span>
     </template>
@@ -69,17 +65,18 @@
 
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
-import { computed, ref, watchEffect, type PropType } from 'vue'
+import { computed, onMounted, ref, watch, watchEffect, type ComputedRef, type PropType, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import FdpgDialog from '@/components/FdpgDialog.vue'
-import FdpgSelect from '@/components/FdpgSelect.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { UseCaseUpload } from '@/types/upload.types'
 import { useVModel } from '@vueuse/core'
-import type { MiiLocation } from '@/types/location.enum'
-import { MII_LOCATIONS } from '@/constants'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
+import { useI18n } from 'vue-i18n'
+import LocationSelect from './LocationSelect.vue'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContract'])
 
@@ -89,7 +86,7 @@ const props = defineProps({
     required: true,
   },
   locations: {
-    type: Array as PropType<MiiLocation[]>,
+    type: Array as PropType<string[]>,
     required: true,
   },
   isSubmitting: {
@@ -117,12 +114,36 @@ const handleRemoveFile = () => {
   contractDraft.value = null
 }
 
+const initiateContractButtonDisabled = computed(
+  () => !contractDraft.value || (selectedLocations.value?.length ?? 0) <= 0 || props.isSubmitting,
+)
+
+const { t } = useI18n()
+
+const locationStore = useLocationStore()
+
+const locationsMap: Ref<Record<string, ILocation>> = ref({})
+
+watch(
+  () => [props.locations, locationsMap],
+  () => {
+    possibleLocations.value = [...props.locations.map((locId) => locationsMap.value[locId])]
+  },
+)
+
+const possibleLocations: Ref<ILocation[]> = ref([])
+
+const selectedLocations = ref<string[]>([])
+
+onMounted(async () => {
+  const locMap = await locationStore.getLocationLookupMap()
+  locationsMap.value = locMap
+
+  selectedLocations.value = [...props.locations]
+})
+
 const { showErrorMessage } = useNotifications()
 const { uploadsForType } = useUpload(proposalId, [UseCaseUpload.ContractDraft], showErrorMessage)
-
-const locationOptions = computed(() => props.locations.map((value) => ({ label: MII_LOCATIONS[value].display, value })))
-
-const selectedLocations = ref<MiiLocation[]>()
 
 const initiateContract = () => {
   if (contractDraft.value) {
@@ -130,5 +151,6 @@ const initiateContract = () => {
   }
 }
 
-watchEffect(() => (selectedLocations.value = props.locations))
+// for testing
+defineExpose({ contractDraft, initiateContractButtonDisabled, selectedLocations, isSubmitting: props.isSubmitting })
 </script>

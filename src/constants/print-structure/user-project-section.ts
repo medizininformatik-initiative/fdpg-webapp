@@ -3,9 +3,9 @@ import type {
   IDefinitionCardArray,
   DefinitionSection,
 } from '@/components/Shared/definition-card.types'
-import { MII_LOCATIONS } from '@/constants'
+import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IUserProject, IProposal, ICohort } from '@/types/proposal.types'
+import type { IUserProject, IProposal } from '@/types/proposal.types'
 import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
 const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProjectInformation'> = {
@@ -218,7 +218,7 @@ const plannedPublicationCard: IDefinitionCardArray<IUserProject, 'plannedPublica
     },
   ],
 }
-const addresseesCard = (dataSources: PlatformIdentifier[] = []) => ({
+const addresseesCard = (dataSources: PlatformIdentifier[] = [], locationMap: Record<string, ILocationKeyLabel>) => ({
   key: 'addressees',
   cardLabel: 'proposal.addressees',
   shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
@@ -228,7 +228,7 @@ const addresseesCard = (dataSources: PlatformIdentifier[] = []) => ({
       label: 'proposal.desiredLocations',
       size: 24,
       definitions: [
-        [{ key: 'desiredLocations', isList: true, kind: 'lookup', lookupMap: MII_LOCATIONS, lookupKey: 'display' }],
+        [{ key: 'desiredLocations', isList: true, kind: 'lookup', lookupMap: locationMap, lookupKey: 'display' }],
       ],
     },
   ],
@@ -366,7 +366,7 @@ const selectionOfCasesCard = (dataSources: PlatformIdentifier[] = []) => ({
   ],
 })
 
-const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
+const userProjectCards = (dataSources: PlatformIdentifier[] = [], locationMap: Record<string, ILocationKeyLabel>) =>
   [
     generalProjectInformationCard,
     projectDetailsCard(dataSources),
@@ -375,7 +375,7 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
     propertyRightsCard(dataSources),
     plannedPublicationCardEmpty,
     plannedPublicationCard,
-    addresseesCard(dataSources),
+    addresseesCard(dataSources, locationMap),
     typeOfUseCard(dataSources),
     cohortsCard(dataSources),
     variableSelectionCard(dataSources),
@@ -384,11 +384,12 @@ const userProjectCards = (dataSources: PlatformIdentifier[] = []) =>
 
 export const userProjectSection = (
   dataSources: PlatformIdentifier[] = [],
+  locationMap: Record<string, ILocationKeyLabel>,
 ): DefinitionSection<IProposal, 'userProject'> => {
   return {
     sectionLabel: 'proposal.informationAboutTheUserProject',
     kind: 'object',
     key: 'userProject',
-    mapping: userProjectCards(dataSources),
+    mapping: userProjectCards(dataSources, locationMap),
   }
 }

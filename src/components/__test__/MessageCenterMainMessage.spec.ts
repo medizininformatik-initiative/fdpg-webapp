@@ -6,8 +6,8 @@ import { Role } from '@/types/oidc.types'
 import type { MockedObject } from 'vitest'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import MessageCenterItem from '../MessageCenterItem.vue'
-import { MiiLocation } from '@/types/location.enum'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -25,6 +25,11 @@ vi.mock('@/plugins/i18n', () => ({
     },
   },
 }))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
 describe('MessageCenterMainMessage.vue', () => {
   let commentStore: MockedObject<ReturnType<typeof useCommentStore>>
 
@@ -34,11 +39,11 @@ describe('MessageCenterMainMessage.vue', () => {
       props: {
         showDoneComments: true,
         message: {
-          owner: { role: Role.DizMember, miiLocation: MiiLocation.KC },
+          owner: { role: Role.DizMember, miiLocation: 'KC' },
           answers: [
             {
               isDone: false,
-              owner: { role: Role.DizMember, miiLocation: MiiLocation.KC },
+              owner: { role: Role.DizMember, miiLocation: 'KC' },
             },
           ],
         } as ICommentDetail,

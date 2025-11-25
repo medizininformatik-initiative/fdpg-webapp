@@ -65,6 +65,7 @@
           <ProjectAddresses
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
+            :all-locations="allLocations"
             v-if="isMIISelected"
           />
 
@@ -164,6 +165,7 @@
             v-model="proposalForm.projectResponsible"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :locations="allLocations"
           />
           <ProjectUser v-model="proposalForm.projectUser" :form-ref="formRef" :review-mode="isReviewMode" />
 
@@ -176,6 +178,7 @@
             v-model="proposalForm.participants"
             :form-ref="formRef"
             :review-mode="isReviewMode"
+            :locations="allLocations"
           />
         </div>
 
@@ -296,14 +299,12 @@ import {
   maxLengthValidationFunc,
   numberValidationFunc,
   projectAbbreviationValidationFunc,
-  requiredIfEmptyValidationFunc,
-  requiredUploadFunc,
   requiredValidationFunc,
   specialCharactersValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
 import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
-import type { PropType } from 'vue'
+import type { PropType, Ref } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -333,6 +334,8 @@ import MiiVariableSelection from './Variables/MiiVariableSelection.vue'
 import { debounce } from 'lodash-es'
 
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
+import type { ILocation } from '@/types/location.types'
+import { useLocationStore } from '@/stores/locations/location.store'
 // Map each step to its corresponding form fields
 const stepFieldsMap: Record<number, string[]> = {
   [CreatPrposalSteps.DataSources]: ['projectAbbreviation'],
@@ -395,6 +398,8 @@ defineProps({
 
 const { t } = useI18n()
 
+const locationStore = useLocationStore()
+
 const layoutStore = useLayoutStore()
 const commentStore = useCommentStore()
 const router = useRouter()
@@ -426,6 +431,8 @@ const isBiosampleToggleInProgress = ref(false)
 const isValidToSubmit = ref<boolean>(false)
 const allFieldsValid = ref<boolean>(false)
 const isSubmissionDialogOpen = ref(false)
+
+const allLocations: Ref<ILocation[]> = ref([])
 
 const activeStep = computed(() => {
   return layoutStore.activeStep
@@ -1451,6 +1458,9 @@ onMounted(async () => {
   // MOVE resetSteps() HERE - before any validation
   layoutStore.resetSteps()
 
+  const locations = await locationStore.getAllActive()
+  allLocations.value = locations.filter((location) => location.dataIntegrationCenter)
+
   try {
     await proposalStore.setCurrentProposal(params.id as string)
     await setUpPage()
@@ -1571,7 +1581,7 @@ onMounted(async () => {
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red-100;
+          color: $red;
         }
 
         margin: 0;

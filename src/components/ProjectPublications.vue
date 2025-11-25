@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import useNotifications from '@/composables/use-notifications'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
+import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IPublicationGet } from '@/types/proposal.types'
 import { getLocaleDateString } from '@/utils/date.util'
@@ -185,11 +185,11 @@ const resetForm = () => {
       color: $blue;
     }
     .disable-icon {
-      color: $gray-700;
+      color: $gray-900;
       cursor: not-allowed;
     }
     .disable-icon:hover {
-      color: $gray-700;
+      color: $gray-900;
     }
   }
 }

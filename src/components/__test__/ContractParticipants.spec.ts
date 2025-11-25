@@ -6,6 +6,7 @@ import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { mount } from '@vue/test-utils'
 import type { IConditionalApproval, IUacApproval } from '@/types/proposal.types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -23,6 +24,10 @@ vi.mock('vue-router', () => ({
   useRouter: vi.fn(() => ({
     push: vi.fn(),
   })),
+}))
+
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
 }))
 
 let authStore: ReturnType<typeof useAuthStore>

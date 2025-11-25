@@ -1,4 +1,3 @@
-import type { MiiLocation } from './location.enum'
 import type { Role } from './oidc.types'
 import type { Salutation } from './salutation.enum'
 
@@ -8,7 +7,7 @@ export interface ICreateUser {
   firstName: string
   lastName: string
   role?: Role
-  location?: MiiLocation
+  location?: string
   clientId: string
   redirectUri?: string
   receiveProposalEmails: boolean

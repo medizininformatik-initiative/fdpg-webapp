@@ -80,7 +80,7 @@ defineEmits(['sort-change', 'sort-order-change'])
     font-weight: 700;
     height: 42px;
     line-height: 42px;
-    color: $gray-700;
+    color: $gray-900;
     white-space: nowrap;
   }
 

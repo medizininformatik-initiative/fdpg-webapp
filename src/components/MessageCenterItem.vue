@@ -41,12 +41,12 @@
 
 <script setup lang="ts">
 import useLocationVisibility from '@/composables/use-location-visibility'
-import { MII_LOCATIONS } from '@/constants'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useLocationStore } from '@/stores/locations/location.store'
 import type { CommentType, IAnswerDetail, ICommentDetail } from '@/types/comment.interface'
-import { Role } from '@/types/oidc.types'
-import type { PropType } from 'vue'
-import { computed } from 'vue'
+import type { ILocation } from '@/types/location.types'
+import type { PropType, Ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -66,6 +66,11 @@ const props = defineProps({
     type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
     required: true,
   },
+  possibleLocations: {
+    type: Array as PropType<ILocation[]>,
+    required: true,
+    default: [],
+  },
 })
 
 const hasFdpgLevelPermissions = computed(() => authStore.hasFdpgLevelPermissions())
@@ -80,11 +85,14 @@ const markAsDone = () => {
   emit('markAsDone')
 }
 
+const locationStore = useLocationStore()
+const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
+
 const { t } = useI18n()
 const ownerText = computed(() => {
   if (props.message.owner.miiLocation) {
     const role = t(`roles.${props.message.owner.role}`)
-    const location = MII_LOCATIONS[props.message.owner.miiLocation].display
+    const location = locationLookUpMapRef.value[props.message.owner.miiLocation]?.display
     return `${role}, ${location}`
   } else {
     return t(`roles.${props.message.owner.role}`)
@@ -92,9 +100,11 @@ const ownerText = computed(() => {
 })
 
 const computedMessage = computed(() => props.message)
-const { visibility } = useLocationVisibility(computedMessage, props.type, true)
+const visibility = computed(
+  () => useLocationVisibility(computedMessage, props.type, true, props.possibleLocations)?.visibility,
+)
 const locations = computed(() => {
-  return computedMessage.value.locations?.map((location) => MII_LOCATIONS[location].display) ?? []
+  return computedMessage.value.locations?.map((location) => locationLookUpMapRef.value[location]?.display) ?? []
 })
 
 const authStore = useAuthStore()
@@ -105,6 +115,11 @@ const couldAnswer = computed(() => {
     authStore.profile?.MII_LOCATION &&
     props.message.owner.miiLocation === authStore.profile?.MII_LOCATION
   return !props.isAnswer && !isSameRole && !isSameLocation
+})
+
+onMounted(async () => {
+  const lm = await locationStore.getLocationLookupMap()
+  locationLookUpMapRef.value = lm
 })
 </script>
 
@@ -139,13 +154,13 @@ const couldAnswer = computed(() => {
 
   &.is-done {
     .message-content {
-      color: $gray-700;
+      color: $gray-900;
     }
     .message-header {
       color: $gray-700;
 
       .message-owner {
-        color: $gray-700;
+        color: $gray-900;
       }
     }
   }

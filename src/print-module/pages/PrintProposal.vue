@@ -78,7 +78,9 @@ import { projectUserSection } from '@/constants/print-structure/project-user-sec
 import { requestedDataSection } from '@/constants/print-structure/requested-data-section'
 import { userProjectSection } from '@/constants/print-structure/user-project-section'
 import PrintCard from '@/print-module/components/PrintCard.vue'
+import { useLocationStore } from '@/stores/locations/location.store'
 import type { DataPrivacyTextsContentKeys } from '@/types/data-privacy.types'
+import type { ILocationKeyLabel } from '@/types/location.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { ProposalTypeOfUse } from '@/types/proposal.types'
 import type { IProposal } from '@/types/proposal.types'
@@ -93,23 +95,30 @@ class FailedStateError extends Error {
   }
 }
 
-type extendedWindow = typeof window & { data: IProposal; dataPrivacyTexts: any; dataSources: PlatformIdentifier[] }
+type extendedWindow = typeof window & {
+  data: IProposal
+  dataPrivacyTexts: any
+  dataSources: PlatformIdentifier[]
+  locationLookupMap: Record<string, ILocationKeyLabel>
+}
 
 const proposalData = ref<IProposal>()
 const dataPrivacyTexts = ref<DataPrivacyTextsContentKeys[]>()
 const assignedDataSources = ref<PlatformIdentifier[]>()
+const locationLookupMap = ref<Record<string, ILocationKeyLabel>>({})
 
 const sections = computed<DefinitionSection<IProposal, keyof IProposal>[]>(() => [
-  applicantSection,
-  projectResponsibilitySection,
+  applicantSection(locationLookupMap.value),
+  projectResponsibilitySection(locationLookupMap.value),
   projectUserSection,
-  participantSection,
-  userProjectSection(assignedDataSources.value),
+  participantSection(locationLookupMap.value),
+  userProjectSection(assignedDataSources.value, locationLookupMap.value),
   requestedDataSection,
   biosampleSection(assignedDataSources.value),
 ])
 
 const { t } = useI18n()
+
 const overview = computed(() => {
   return {
     content: {
@@ -140,6 +149,7 @@ const setUp = async () => {
   const data = (window as extendedWindow).data
   dataPrivacyTexts.value = (window as extendedWindow).dataPrivacyTexts
   assignedDataSources.value = (window as extendedWindow).dataSources
+  locationLookupMap.value = (window as extendedWindow).locationLookupMap
 
   if (!data) {
     throw new FailedStateError('No Data')
@@ -206,5 +216,5 @@ const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
   return true
 }
 
-onMounted(() => setUp())
+onMounted(async () => await setUp())
 </script>

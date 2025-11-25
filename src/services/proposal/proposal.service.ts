@@ -25,7 +25,6 @@ import type { DirectUpload } from '@/types/upload.types'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
-import type { MiiLocation } from '@/types/location.enum'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
 
@@ -122,7 +121,7 @@ export class ProposalService {
     return response.data
   }
 
-  async initContracting(id: string, file: File, locations: MiiLocation[]): Promise<void> {
+  async initContracting(id: string, file: File, locations: string[]): Promise<void> {
     const formData = new FormData()
     formData.append('file', file as Blob)
     formData.append('locations', JSON.stringify(locations))
@@ -279,7 +278,7 @@ export class ProposalService {
     return response.data
   }
 
-  async revertLocationVote(id: string, location: MiiLocation): Promise<void> {
+  async revertLocationVote(id: string, location: string): Promise<void> {
     await this.apiClient.post(`${this.basePath}/${id}/revertLocationVote`, { location })
   }
 

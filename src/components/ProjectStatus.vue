@@ -148,13 +148,13 @@ onBeforeUnmount(() => {
   }
 
   &.warning {
-    color: $red-100;
-    background-color: color.adjust($red-100, $lightness: 47%);
+    color: $red;
+    background-color: color.adjust($red, $lightness: 49%);
 
     .steps {
       .step {
         &.active {
-          background-color: $red-100;
+          background-color: $red;
         }
       }
     }

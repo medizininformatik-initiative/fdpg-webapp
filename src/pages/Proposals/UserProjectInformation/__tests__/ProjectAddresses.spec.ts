@@ -3,6 +3,7 @@ import type { IAddressees } from '@/types/proposal.types'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import ProjectAddresses from '../../Variables/ProjectAddresses.vue'
+import { mockLocations, useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -21,6 +22,10 @@ vi.mock('@/plugins/i18n', () => ({
   },
 }))
 
+vi.mock('@/stores/locations/location.store', () => ({
+  useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
 const mountComponent = () => {
   const modelValue: IAddressees = JSON.parse(JSON.stringify(mockProposal.userProject.addressees))
   return mount(ProjectAddresses, {
@@ -31,6 +36,7 @@ const mountComponent = () => {
     props: {
       reviewMode: false,
       modelValue,
+      allLocations: [...mockLocations],
     },
   })
 }

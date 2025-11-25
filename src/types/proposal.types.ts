@@ -1,5 +1,5 @@
 import type { CardType } from '@/types/component.types'
-import type { Countries, MiiLocation } from '@/types/location.enum'
+import type { Countries } from '@/types/location.enum'
 import type { Department } from './department.enum'
 import type { Role } from './oidc.types'
 import type { PanelQuery } from './sort-filter.types'
@@ -82,7 +82,7 @@ export interface IInstitute extends WithIdAndIsDone {
   city?: string
   country?: Countries
   email?: string
-  miiLocation?: MiiLocation
+  miiLocation?: string
 }
 
 export interface IParticipantCategory extends WithIdAndIsDone {
@@ -248,7 +248,7 @@ export interface IPlannedPublication extends WithIdAndIsDone {
 }
 
 export interface IAddressees extends WithIdAndIsDone {
-  desiredLocations: MiiLocation[]
+  desiredLocations: string[]
 }
 
 export interface ITypeOfUse extends WithIdAndIsDone {
@@ -368,7 +368,7 @@ export interface IProposalHistory {
   createdAt: string
   type: ProjectHistoryType
   proposalVersion: { minor: number; major: number }
-  location?: MiiLocation
+  location?: string
   data?: Record<string, string | number>
 }
 interface IPublicationBase {
@@ -442,7 +442,7 @@ export interface IIsDoneOverview {
 }
 
 export interface IConditionalApproval {
-  location: MiiLocation
+  location: string
   isAccepted: boolean
   isContractSigned?: boolean
   dataAmount: number
@@ -456,7 +456,7 @@ export interface IConditionalApproval {
 }
 
 export interface IUacApproval {
-  location: MiiLocation
+  location: string
   dataAmount: number
   isContractSigned?: boolean
   _id: string
@@ -465,7 +465,7 @@ export interface IUacApproval {
   isLate?: boolean
 }
 export interface IAdditionalLocationProposalInformation {
-  location: MiiLocation
+  location: string
   legalBasis: boolean
   locationPublicationName?: string
 }
@@ -474,7 +474,7 @@ export type IEditAdditionalLocationProposalInformation = Omit<IAdditionalLocatio
 
 export interface IDizDetails {
   _id?: string
-  location: MiiLocation
+  location: string
   localProjectIdentifier?: string
   documentationLinks: string
 }
@@ -500,7 +500,7 @@ export interface IOwner {
   lastName: string
   email: string
   username?: string
-  miiLocation?: MiiLocation
+  miiLocation?: string
   role?: Role
 }
 
@@ -548,15 +548,15 @@ export interface IProposal {
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
-  openDizChecks: MiiLocation[]
-  dizApprovedLocations: MiiLocation[]
-  openDizConditionChecks: MiiLocation[]
-  uacApprovedLocations: MiiLocation[]
+  openDizChecks: string[]
+  dizApprovedLocations: string[]
+  openDizConditionChecks: string[]
+  uacApprovedLocations: string[]
   uacApprovedLocationsCount: number
-  dizConditionApprovedLocations: MiiLocation[]
-  requestedButExcludedLocations: MiiLocation[]
+  dizConditionApprovedLocations: string[]
+  requestedButExcludedLocations: string[]
   requestedButExcludedLocationsCount: number
-  signedContracts: MiiLocation[]
+  signedContracts: string[]
   signedContractsCount: number
   signedContractsPendingCount: number
 
@@ -645,7 +645,7 @@ export interface IProposalDetail {
 export interface IDeclineReason {
   type: DeclineType
   reason?: string
-  location: MiiLocation
+  location: string
   createdAt: Date
   isLate?: boolean
 }
