@@ -730,6 +730,7 @@ export interface IRegisterInfo extends WithIdAndIsDone {
 }
 
 export interface IDataDelivery {
+  _id?: string
   dataManagementSite: string
   acceptance: DeliveryAcceptance
   deliveryInfos: IDeliveryInfo[]
@@ -738,6 +739,7 @@ export interface IDataDelivery {
 }
 
 export interface IDeliveryInfo {
+  _id?: string
   name: string
   deliveryDate: Date
   status: DeliveryInfoStatus
@@ -748,6 +750,7 @@ export interface IDeliveryInfo {
 }
 
 export interface ISubDelivery {
+  _id?: string
   location: string
   status: SubDeliveryStatus
   createdAt?: Date

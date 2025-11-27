@@ -607,6 +607,16 @@ export const useProposalStore = defineStore('Proposal', {
       return dataDelivery
     },
 
+    async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.syncDeliveryInfo(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
     async updateDmsAcceptanceForDataDelivery(
       proposalId: string,
       dmsId: string,

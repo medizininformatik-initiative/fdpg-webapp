@@ -43,6 +43,7 @@
       </el-card>
     </template>
     <template v-else>
+      <!-- Pending Delivery Overview start  -->
       <el-collapse>
         <el-collapse-item v-for="deliveryInfo in dataDelivery?.deliveryInfos ?? []">
           <template #title>
@@ -51,22 +52,44 @@
                 {{ t('dataDelivery.deliveryName', { deliveryName: deliveryInfo.name }) }}
               </div>
               <div class="delivery-info__interaction">
-                <el-button type="primary" plain class="delivery-info__collapse-buttons">{{
-                  t('dataDelivery.cancelDelivery')
-                }}</el-button>
+                <el-button
+                  type="primary"
+                  plain
+                  class="delivery-info__collapse-buttons"
+                  @click="() => onCancelDeliveryInfo(deliveryInfo)"
+                  >{{ t('dataDelivery.cancelDelivery') }}</el-button
+                >
                 <el-button
                   type="primary"
                   :disabled="isForwardButtonDisabled(deliveryInfo)"
                   class="delivery-info__collapse-buttons"
+                  @click="() => onForwardDeliveryInfo(deliveryInfo)"
                   >{{ t('dataDelivery.forwardDelivery') }}</el-button
                 >
               </div>
             </div>
           </template>
           <div class="delivery-info__collapse-body">
-            <span>{{
-              t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) })
-            }}</span>
+            <div class="delivery-info__information">
+              <span>{{
+                t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) })
+              }}</span>
+
+              <span>
+                {{
+                  t('dataDelivery.lastSynced', {
+                    lastSynced: getLocaleDateTimeString(deliveryInfo.lastSynced),
+                  })
+                }}
+                <el-button
+                  type="primary"
+                  plain
+                  :icon="RefreshRight"
+                  @click="async () => await syncDeliveryInfoWithDmst(deliveryInfo)"
+                  v-bind:loading="loadingIds.has(deliveryInfo._id)"
+                />
+              </span>
+            </div>
             <el-table :data="deliveryInfo.subDeliveries" style="width: 100%">
               <el-table-column :label="t('dataDelivery.deliveryInfoLocation')" style="width: 100%">
                 <template #default="tableProps">
@@ -103,10 +126,26 @@
       </el-collapse>
 
       <!-- lower action buttons -->
-      <el-button type="primary" plain>{{ t('dataDelivery.manualEntry') }}</el-button>
-      <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
-        t('dataDelivery.createFurtherDataDelivery')
-      }}</el-button>
+      <div class="delivery-info__buttons">
+        <el-button
+          type="default"
+          plain
+          :disabled="isNewDmsSelectionAfterDeliveryDisabled"
+          data-testid="request-new"
+          class="dms__reset"
+          link
+          @click="() => setNewDmsDialogOpenState(true)"
+        >
+          {{ t('dataDelivery.newDmsRequestAfterDelivery') }}
+        </el-button>
+        <el-button type="primary" plain @click="() => setManualDeliveryInfoEntryDialogOpen(true)">{{
+          t('dataDelivery.manualEntry')
+        }}</el-button>
+        <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
+          t('dataDelivery.createFurtherDataDelivery')
+        }}</el-button>
+      </div>
+      <!-- Pending Delivery Overview end  -->
     </template>
   </section>
 
@@ -123,6 +162,8 @@
     @dialog-open-state="setInitiateDeliveryDialogOpenState"
     @submit="initiateNewDeliveryInfo"
   />
+
+  <!-- Manual Delivery Info Dialog -->
 </template>
 
 <script setup lang="ts">
@@ -131,13 +172,13 @@ import { computed, onMounted, ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import MissingDataDeliverySetup from '@/components/DataDelivery/MissingDataDeliverySetup.vue'
 import DmsRequestOverview from '@/components/DataDelivery/DmsRequestOverview.vue'
-import { DeliveryAcceptance, type IDeliveryInfo } from '@/types/proposal.types'
+import { DeliveryAcceptance, DeliveryInfoStatus, SubDeliveryStatus, type IDeliveryInfo } from '@/types/proposal.types'
 import RequestNewDmsDialog from './RequestNewDmsDialog.vue'
-import InitiateDeliveryInfoDialog from './InitiateDeliveryInfoDialog.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 import useNotifications from '@/composables/use-notifications'
-import { getLocaleDateString } from '@/utils/date.util'
+import { getLocaleDateString, getLocaleDateTimeString } from '@/utils/date.util'
+import { RefreshRight } from '@element-plus/icons-vue'
 
 const { t } = useI18n()
 const proposalStore = useProposalStore()
@@ -154,9 +195,14 @@ const selectableLocations = computed(
     ) ?? [],
 )
 
+const loadingIds = ref(new Set())
+
 const isDmsOverrideDialogOpen = ref(false)
 const isInitiateDeliveryDialogOpen = ref(false)
-
+const isManualDeliveryInfoEntryDialogOpen = ref(false)
+const isNewDmsSelectionAfterDeliveryDisabled = computed(() =>
+  (dataDelivery.value?.deliveryInfos || []).some((deliveryInfo) => deliveryInfo.status === DeliveryInfoStatus.PENDING),
+)
 const isLocationInquiryStep = computed(
   () =>
     !dataDelivery.value ||
@@ -201,7 +247,36 @@ const onSelectDms = async (locationId: string) => {
 }
 
 const isForwardButtonDisabled = (deliveryInfo: IDeliveryInfo): boolean => {
-  return false
+  return deliveryInfo.subDeliveries.every((subDel) => subDel.status === SubDeliveryStatus.PENDING)
+}
+
+const setManualDeliveryInfoEntryDialogOpen = (open: boolean) => {
+  isManualDeliveryInfoEntryDialogOpen.value = open
+}
+
+const syncDeliveryInfoWithDmst = async (deliveryInfo: IDeliveryInfo) => {
+  const id = deliveryInfo._id
+  loadingIds.value.add(id)
+
+  try {
+    // await new Promise((res) => setTimeout(() => res(true), 6000))
+    if (proposalStore.currentProposal?._id) {
+      await proposalStore.syncDeliveryInfo(proposalStore.currentProposal?._id, deliveryInfo)
+    }
+  } catch (error) {
+    console.error('Sync failed:', error)
+    showErrorMessage()
+  } finally {
+    loadingIds.value.delete(id)
+  }
+}
+
+const onCancelDeliveryInfo = async (deliveryInfo: IDeliveryInfo): Promise<void> => {
+  console.log('TODO')
+}
+
+const onForwardDeliveryInfo = async (deliveryInfo: IDeliveryInfo): Promise<void> => {
+  console.log('TODO')
 }
 
 onMounted(async () => {
@@ -272,6 +347,23 @@ onMounted(async () => {
 .delivery-info__collapse-buttons {
   font-size: 1.25em !important;
   padding: 0.5em !important;
+}
+
+.delivery-info__information {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.delivery-info__buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: 1em;
 }
 
 .delivery-info__status {

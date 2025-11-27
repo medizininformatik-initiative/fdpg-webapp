@@ -1041,7 +1041,9 @@
     "date": "Delivery date",
     "locations": "Locations",
     "initiateDeliveryAction": "Initiate delivery",
-    "namePlaceholder": "Name of delivery"
+    "namePlaceholder": "Name of delivery",
+    "newDmsRequestAfterDelivery": "Request new DMS",
+    "lastSynced": "Last Sync with DSF: {lastSynced}"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

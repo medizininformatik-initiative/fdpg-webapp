@@ -73,7 +73,6 @@
 import { ref, computed, reactive, type PropType, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { Document } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import useNotifications from '@/composables/use-notifications'
@@ -81,10 +80,9 @@ import type { IDizDetails } from '@/types/proposal.types'
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from './FdpgInput.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import ProjectTodoLargeItem from '@/components/ProjectTodoLargeItem.vue'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { MiiLocation } from '@/types/location.enum'
 
 const props = defineProps({
   editable: { type: Boolean, default: false },

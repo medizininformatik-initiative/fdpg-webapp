@@ -1041,7 +1041,9 @@
     "date": "Lieferdatum",
     "locations": "Standorte",
     "initiateDeliveryAction": "Datenlieferung anstoßen",
-    "namePlaceholder": "Name der Lieferung"
+    "namePlaceholder": "Name der Lieferung",
+    "newDmsRequestAfterDelivery": "Neue DMST anfragen",
+    "lastSynced": "Letzter Sync mit DSF: {lastSynced}"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",

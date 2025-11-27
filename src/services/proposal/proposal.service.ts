@@ -532,6 +532,20 @@ export class ProposalService {
     }
   }
 
+  async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/sync`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
   async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
     await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
   }
