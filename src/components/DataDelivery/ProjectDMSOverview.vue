@@ -190,7 +190,7 @@ const locationLookupMap = ref<Record<string, ILocation>>({})
 const dataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 const selectableLocations = computed(
   () =>
-    proposalStore.currentProposal?.userProject.addressees.desiredLocations?.map(
+    proposalStore.currentProposal?.userProject?.addressees?.desiredLocations?.map(
       (loc) => locationLookupMap.value[loc],
     ) ?? [],
 )
