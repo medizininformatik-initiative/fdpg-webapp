@@ -12,6 +12,13 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
+    <section v-if="proposalDataDelivery && proposalDataDelivery.deliveryInfos?.length > 0">
+      <h2>
+        {{ t('dataDelivery.dataDelivery') }}
+      </h2>
+      <DmsDeliveryInfoOverview :data-delivery="proposalDataDelivery" :show-actions="false" :can-rate-delivery="false" />
+    </section>
+
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
@@ -118,6 +125,8 @@ const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
+
+const proposalDataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 

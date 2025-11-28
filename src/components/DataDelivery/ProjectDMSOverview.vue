@@ -1,13 +1,7 @@
 <template>
-  <section>
+  <section v-if="isLocationInquiryStep || !isDeliveryInitiated">
     <h2>
-      {{
-        t(
-          isLocationInquiryStep || !isDeliveryInitiated
-            ? 'dataDelivery.dataManagementSiteAbbreviation'
-            : 'dataDelivery.dataDelivery',
-        )
-      }}
+      {{ t('dataDelivery.dataManagementSiteAbbreviation') }}
     </h2>
 
     <template v-if="isLocationInquiryStep">
@@ -42,15 +36,19 @@
         </div>
       </el-card>
     </template>
-    <template v-else>
-      <DmsDeliveryInfoOverview
-        v-if="dataDelivery"
-        :data-delivery="dataDelivery"
-        @open-dialog:new-dms="setNewDmsDialogOpenState"
-        @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
-        @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
-      />
-    </template>
+  </section>
+  <section v-else>
+    <h2>
+      {{ t('dataDelivery.dataDelivery') }}
+    </h2>
+    <DmsDeliveryInfoOverview
+      v-if="dataDelivery"
+      :data-delivery="dataDelivery"
+      @open-dialog:new-dms="setNewDmsDialogOpenState"
+      @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
+      @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
+    />
+    <div v-else>Data delivery not set</div>
   </section>
 
   <RequestNewDmsDialog

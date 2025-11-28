@@ -1032,7 +1032,8 @@
     "deliveryInfoUpdatedAt": "Letzte Aktualisierung",
     "subdeliveryStatus__PENDING": "Ausstehend",
     "subdeliveryStatus__CANCELED": "Abgebrochen",
-    "subdeliveryStatus__FINISHED": "Geliefert",
+    "subdeliveryStatus__DELIVERED": "Geliefert",
+    "subdeliveryStatus__ACCEPTED": "Bestätigt",
     "manualEntry": "Datenlieferung manuell eintragen",
     "createFurtherDataDelivery": "Weitere Datenlieferung anstoßen",
     "initiateDataDeliveryTitle": "Neue Datenlieferung anstoßen?",
@@ -1043,7 +1044,8 @@
     "initiateDeliveryAction": "Datenlieferung anstoßen",
     "namePlaceholder": "Name der Lieferung",
     "newDmsRequestAfterDelivery": "Neue DMST anfragen",
-    "lastSynced": "Letzter Sync mit DSF: {lastSynced}"
+    "lastSynced": "Letzter Sync mit DSF: {lastSynced}",
+    "rateDelivery": "Lieferung bewerten"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",

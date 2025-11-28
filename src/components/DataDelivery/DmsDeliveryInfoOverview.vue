@@ -7,7 +7,7 @@
           <div class="delivery-info__el-collapse-item-title">
             {{ t('dataDelivery.deliveryName', { deliveryName: deliveryInfo.name }) }}
           </div>
-          <div class="delivery-info__interaction">
+          <div v-if="showActions" class="delivery-info__interaction">
             <el-button
               type="primary"
               plain
@@ -38,6 +38,7 @@
               })
             }}
             <el-button
+              v-if="showActions"
               type="primary"
               plain
               :icon="RefreshRight"
@@ -61,8 +62,8 @@
 
           <el-table-column :label="t('dataDelivery.deliveryInfoStatus')">
             <template #default="tableProps">
-              <span class="delivery-info__status">
-                {{ t(`dataDelivery.subdeliveryStatus__${(tableProps.row as IDeliveryInfo).status}`) }}
+              <span class="delivery-info__sub-status" :data-variant="(tableProps.row as ISubDelivery).status">
+                {{ t(`dataDelivery.subdeliveryStatus__${(tableProps.row as ISubDelivery).status}`) }}
               </span>
             </template>
           </el-table-column>
@@ -70,8 +71,25 @@
           <el-table-column :label="t('dataDelivery.deliveryInfoUpdatedAt')">
             <template #default="tableProps">
               <p>
-                {{ (tableProps.row as IDeliveryInfo).updatedAt ? getLocaleDateString(tableProps.row.updatedAt) : '-' }}
+                {{ (tableProps.row as ISubDelivery).updatedAt ? getLocaleDateString(tableProps.row.updatedAt) : '-' }}
               </p>
+            </template>
+          </el-table-column>
+
+          <el-table-column>
+            <template #default="tableProps">
+              <el-button
+                v-if="canRateDelivery"
+                type="default"
+                plain
+                :disabled="!isRateDeliveryEnabled(tableProps.row as ISubDelivery)"
+                data-testid="request-new"
+                class="dms__reset"
+                link
+                @click="openRateDeliveryDialog"
+              >
+                {{ t('dataDelivery.rateDelivery') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -80,7 +98,7 @@
   </el-collapse>
 
   <!-- lower action buttons -->
-  <div class="delivery-info__buttons">
+  <div class="delivery-info__buttons" v-if="showActions">
     <el-button
       type="default"
       plain
@@ -88,14 +106,12 @@
       data-testid="request-new"
       class="dms__reset"
       link
-      @click="setNewDmsDialogOpenState"
+      @click="openNewDmsDialog"
     >
       {{ t('dataDelivery.newDmsRequestAfterDelivery') }}
     </el-button>
-    <el-button type="primary" plain @click="setManualDeliveryInfoEntryDialogOpen">{{
-      t('dataDelivery.manualEntry')
-    }}</el-button>
-    <el-button type="primary" @click="setInitiateDeliveryDialogOpenState">{{
+    <el-button type="primary" plain @click="openManualDeliveryDialog">{{ t('dataDelivery.manualEntry') }}</el-button>
+    <el-button type="primary" @click="openInitiateDeliveryDialog">{{
       t('dataDelivery.createFurtherDataDelivery')
     }}</el-button>
   </div>
@@ -107,15 +123,30 @@ import useNotifications from '@/composables/use-notifications'
 import { useLocationStore } from '@/stores/locations/location.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { ILocation } from '@/types/location.types'
-import { DeliveryInfoStatus, SubDeliveryStatus, type IDataDelivery, type IDeliveryInfo } from '@/types/proposal.types'
+import {
+  DeliveryInfoStatus,
+  SubDeliveryStatus,
+  type IDataDelivery,
+  type IDeliveryInfo,
+  type ISubDelivery,
+} from '@/types/proposal.types'
 import { getLocaleDateString, getLocaleDateTimeString } from '@/utils/date.util'
 import { computed, onMounted, ref, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RefreshRight } from '@element-plus/icons-vue'
 
-const props = defineProps({ dataDelivery: { type: Object as PropType<IDataDelivery>, required: true } })
+const props = defineProps({
+  dataDelivery: { type: Object as PropType<IDataDelivery>, required: true },
+  showActions: { type: Boolean, default: true },
+  canRateDelivery: { type: Boolean, default: false },
+})
 
-const emit = defineEmits(['openDialog:manualDelivery', 'openDialog:initiateDelivery', 'openDialog:newDms'])
+const emit = defineEmits([
+  'openDialog:manualDelivery',
+  'openDialog:initiateDelivery',
+  'openDialog:newDms',
+  'openDialog:rateDelivery',
+])
 
 const proposalStore = useProposalStore()
 const locationStore = useLocationStore()
@@ -153,12 +184,17 @@ const onForwardDeliveryInfo = async (deliveryInfo: IDeliveryInfo): Promise<void>
   console.log('TODO')
 }
 
-const setNewDmsDialogOpenState = () => emit('openDialog:newDms', true)
-const setManualDeliveryInfoEntryDialogOpen = () => emit('openDialog:manualDelivery', true)
-const setInitiateDeliveryDialogOpenState = () => emit('openDialog:initiateDelivery', true)
+const openNewDmsDialog = () => emit('openDialog:newDms', true)
+const openManualDeliveryDialog = () => emit('openDialog:manualDelivery', true)
+const openInitiateDeliveryDialog = () => emit('openDialog:initiateDelivery', true)
+const openRateDeliveryDialog = () => emit('openDialog:rateDelivery', true)
 
 const isForwardButtonDisabled = (deliveryInfo: IDeliveryInfo): boolean => {
   return deliveryInfo.subDeliveries.every((subDel) => subDel.status === SubDeliveryStatus.PENDING)
+}
+
+const isRateDeliveryEnabled = (subDelivery: ISubDelivery): boolean => {
+  return subDelivery.status === SubDeliveryStatus.DELIVERED
 }
 
 onMounted(async () => {
@@ -215,7 +251,7 @@ onMounted(async () => {
   padding-top: 1em;
 }
 
-.delivery-info__status {
+.delivery-info__sub-status {
   display: inline-block;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
@@ -224,7 +260,18 @@ onMounted(async () => {
   color: $black;
   line-height: 1.25rem;
 
-  &[data-variant='FINISHED'] {
+  &[data-variant='PENDING'] {
+    background: $gray-100;
+    border-color: $gray-700;
+  }
+
+  &[data-variant='DELIVERED'] {
+    color: $white;
+    border-color: $blue;
+    background: $blue-100;
+  }
+
+  &[data-variant='ACCEPTED'] {
     background: $green;
     border-color: $green-100;
   }
@@ -233,11 +280,6 @@ onMounted(async () => {
     background: $red;
     border-color: $red-100;
     color: $white;
-  }
-
-  &[data-variant='PENDING'] {
-    background: $gray-100;
-    border-color: $gray-700;
   }
 }
 </style>

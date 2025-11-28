@@ -1032,7 +1032,8 @@
     "deliveryInfoUpdatedAt": "Last update",
     "subdeliveryStatus__PENDING": "Pending",
     "subdeliveryStatus__CANCELED": "Canceled",
-    "subdeliveryStatus__FINISHED": "Delivered",
+    "subdeliveryStatus__DELIVERED": "Delivered",
+    "subdeliveryStatus__ACCEPTED": "Accepted",
     "manualEntry": "Enter data delivery manually",
     "createFurtherDataDelivery": "Create another data delivery",
     "initiateDataDeliveryTitle": "Create new delivery?",
@@ -1043,7 +1044,8 @@
     "initiateDeliveryAction": "Initiate delivery",
     "namePlaceholder": "Name of delivery",
     "newDmsRequestAfterDelivery": "Request new DMS",
-    "lastSynced": "Last Sync with DSF: {lastSynced}"
+    "lastSynced": "Last Sync with DSF: {lastSynced}",
+    "rateDelivery": "Rate Delivery"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

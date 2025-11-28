@@ -759,8 +759,9 @@ export interface ISubDelivery {
 
 export enum SubDeliveryStatus {
   PENDING = 'PENDING',
+  DELIVERED = 'DELIVERED',
   ACCEPTED = 'ACCEPTED',
-  DENIED = 'DENIED',
+  CANCELED = 'CANCELED',
 }
 
 export enum DeliveryAcceptance {
