@@ -21,7 +21,7 @@
         <LocationSelect
           style="width: 580px"
           v-model="locationSelectionRef"
-          :placeholder="'selectLocation'"
+          :placeholder="t('proposal.pleaseSelectYourLocations')"
           :minimum-selection="[]"
           :all-locations="selectableLocations"
         />
