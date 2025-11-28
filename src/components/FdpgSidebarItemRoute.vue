@@ -7,7 +7,7 @@
   >
     <div class="fdpg-menu__wrapper">
       <i v-if="menu.icon" :class="menu.icon" aria-hidden="true" />
-      {{ t(menu.title) }}
+      {{ $t(menu.title) }}
     </div>
     <div class="fdpg-menu__icons">
       <span v-if="proposalCount.critical > 0" class="fdpg-menu__icon fdpg-menu__icon--critical">{{
@@ -24,9 +24,6 @@ import usePanels from '@/composables/use-panels'
 import type { SidebarRouteMenu } from '@/types/sidebar-menu.types'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-
-const { t } = useI18n()
 
 const props = defineProps({
   menu: {
