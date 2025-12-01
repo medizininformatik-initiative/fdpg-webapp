@@ -129,6 +129,7 @@ onMounted(async () => {
 
 .message {
   border: 1px solid $gray-700;
+  color: $gray-900;
   border-radius: 5px;
   padding: 1rem 2rem 0 2rem;
 
@@ -153,9 +154,8 @@ onMounted(async () => {
   }
 
   &.is-done {
-    .message-content {
-      color: $gray-900;
-    }
+    background-color: $gray-100;
+
     .message-header {
       color: $gray-700;
 
