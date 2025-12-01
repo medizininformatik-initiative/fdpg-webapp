@@ -421,7 +421,10 @@ const uacFullyApproved = computed(() => {
     proposalStore.currentProposal?.uacApprovals.filter(
       (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
     ) ?? []
-  return [...uacApprovals, ...conditionAccepted]
+
+  // locations with conditions appear in both arrays
+  const allItems = [...uacApprovals, ...conditionAccepted]
+  return [...new Map(allItems.map((item) => [item.location, item])).values()]
 })
 
 const uacLocations = computed(() => uacFullyApproved.value.map((a) => a.location))
