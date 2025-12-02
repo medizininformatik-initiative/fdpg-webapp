@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type PropType, ref } from 'vue'
+import { type PropType, watch } from 'vue'
 import { useVModel } from '@vueuse/core'
 import type { FormInstance } from 'element-plus'
 import { useI18n } from 'vue-i18n'
@@ -71,7 +71,7 @@ const optionTexts = useVModel(props, 'pseudonymizationInfoTexts', emit, {
   },
 })
 
-const options = Object.keys(PseudonymizationInfoOptions).map(function (option) {
+const options = Object.keys(PseudonymizationInfoOptions).map((option) => {
   return {
     value: PseudonymizationInfoOptions[option as keyof typeof PseudonymizationInfoOptions],
     info: ('proposal.pseudonymizationInfo_' +
@@ -79,6 +79,20 @@ const options = Object.keys(PseudonymizationInfoOptions).map(function (option) {
       '_Info') as TranslationSchema,
   }
 })
+
+watch(
+  () => props.modelValue,
+  (updatedValue) => {
+    // clear the text field if the corresponding checkbox was de-selected
+    Object.keys(PseudonymizationInfoOptions).map((option) => {
+      const opt = option as PseudonymizationInfoOptions
+      if (!(updatedValue || []).includes(opt)) {
+        optionTexts.value[opt] = ''
+      }
+    })
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped>
