@@ -117,7 +117,9 @@ const uacFullyApproved = computed(() => {
       (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
     ) ?? []
 
-  const approvals = [...uacApprovals, ...conditionAccepted]
+  // locations with conditions appear in both arrays
+  const allItems = [...uacApprovals, ...conditionAccepted]
+  const approvals = [...new Map(allItems.map((item) => [item.location, item])).values()]
 
   return approvals.map((approval) => {
     const isDecided = approval.signedAt !== undefined
