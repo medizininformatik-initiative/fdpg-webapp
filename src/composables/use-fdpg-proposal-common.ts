@@ -54,6 +54,7 @@ export function useFdpgProposalCommon() {
     ProposalStatus.DataCorrupt,
     ProposalStatus.FinishedProject,
     ProposalStatus.ReadyToArchive,
+    ProposalStatus.Published,
   ]
 
   const showDmsCommentStatus = [
