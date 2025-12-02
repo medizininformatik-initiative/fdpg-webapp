@@ -32,7 +32,14 @@
       <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
         {{ t('proposal.answerComment') }}
       </el-button>
-      <el-button v-if="hasFdpgLevelPermissions" link :disabled="isAnswerMode" @click="markAsDone">
+      <el-button
+        v-if="hasFdpgLevelPermissions"
+        class="button__mark-as-done"
+        :class="[{ 'is-done': message.isDone }]"
+        link
+        :disabled="isAnswerMode"
+        @click="markAsDone"
+      >
         {{ message.isDone ? t('proposal.markAsOpen') : t('proposal.markAsDone') }}
       </el-button>
     </section>
@@ -132,12 +139,18 @@ onMounted(async () => {
 @use 'sass:color';
 
 .message {
-  border: 1px solid $gray-700;
+  border: 1px solid $blue;
+  background-color: $blue;
+  color: $white;
   border-radius: 5px;
   padding: 1rem 2rem 0 2rem;
 
   box-sizing: border-box;
   width: 100%;
+
+  .button__mark-as-done {
+    color: white;
+  }
 
   &.answer-mode {
     background: color.adjust($blue, $lightness: 40%);
@@ -157,15 +170,20 @@ onMounted(async () => {
   }
 
   &.is-done {
-    .message-content {
-      color: $gray-900;
-    }
+    border: 1px solid $gray-800;
+    background-color: $white;
+    color: $gray-900;
+
     .message-header {
-      color: $gray-700;
+      color: $gray-800;
 
       .message-owner {
         color: $gray-900;
       }
+    }
+
+    .button__mark-as-done {
+      color: $gray-900;
     }
   }
 
@@ -173,11 +191,11 @@ onMounted(async () => {
     display: flex;
     gap: 0.8rem;
     margin-bottom: 0.5rem;
-    color: $gray-800;
+    color: $white;
 
     .message-owner {
       font-weight: 600;
-      color: $gray-900;
+      color: $white;
     }
   }
 }
