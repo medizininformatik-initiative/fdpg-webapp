@@ -166,12 +166,12 @@ onMounted(async () => {
   }
 
   &.is-done {
-    border: 1px solid $gray-700;
+    border: 1px solid $gray-800;
     background-color: $white;
     color: $gray-900;
 
     .message-header {
-      color: $gray-700;
+      color: $gray-800;
 
       .message-owner {
         color: $gray-900;
