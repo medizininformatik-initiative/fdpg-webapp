@@ -45,6 +45,7 @@
             mode="picture"
             @change="handleChangeFileList"
             @remove="handleRemoveFileList"
+            :max-file-size="5 * 1024 * 1024"
           >
             <el-button
               class="upload-button"
