@@ -6,7 +6,7 @@
     <div :class="`project-status ${projectStatus.type}`">
       <div class="steps">
         <div
-          v-for="step of 6"
+          v-for="step of totalSteps"
           :key="`step-${step}`"
           class="step"
           :class="{ active: step <= stepMap[proposalStatus ?? 'default'] }"
@@ -34,6 +34,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import type { IProjectStatus } from '@/types/project-status'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IProposal } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { PropType } from 'vue'
@@ -67,6 +68,9 @@ const authStore = useAuthStore()
 const projectStatus = ref<IProjectStatus>()
 let handler: { getProjectStatus: (proposal: IProposal) => IProjectStatus }
 
+const proposalType = computed(() => proposalStore.currentProposal?.type)
+
+const totalSteps = proposalType.value === ProposalType.RegisteringForm ? 3 : 6
 const setStatusForRole = async () => {
   switch (authStore.singleKnownRole) {
     case Role.Researcher:

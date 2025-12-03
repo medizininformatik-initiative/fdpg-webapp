@@ -1,5 +1,5 @@
 import { createTestingPinia } from '@pinia/testing'
-import UacMemberDetails from '../Proposals/Details/UacMemberDetails.vue'
+import UacMemberDetailsApplicationForm from '../Proposals/Details/UacMemberDetailsApplicationForm.vue'
 import { shallowMount } from '@vue/test-utils'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { MockedObject } from 'vitest'
@@ -46,7 +46,7 @@ vi.mock('@/validations', () => ({
 
 const mountComponent = (withPinia = true) => {
   const plugins: any[] = withPinia ? [createTestingPinia()] : []
-  return shallowMount(UacMemberDetails, {
+  return shallowMount(UacMemberDetailsApplicationForm, {
     global: {
       plugins,
       stubs: {
@@ -57,7 +57,7 @@ const mountComponent = (withPinia = true) => {
   })
 }
 
-describe('UacMemberDetails', () => {
+describe('UacMemberDetailsApplicationForm', () => {
   let wrapper: ReturnType<typeof mountComponent>
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   let proposal: IProposal
