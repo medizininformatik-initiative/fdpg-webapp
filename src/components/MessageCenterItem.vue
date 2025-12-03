@@ -29,7 +29,14 @@
     <div class="message-content ql-editor" v-html="message.content"></div>
 
     <section v-if="couldAnswer || hasFdpgLevelPermissions" role="region">
-      <el-button v-if="couldAnswer" link :disabled="isAnswerMode" @click="toggleAnswerMode(true)">
+      <el-button
+        v-if="couldAnswer"
+        class="button__mark-as-done"
+        :class="[{ 'is-done': message.isDone }]"
+        link
+        :disabled="isAnswerMode"
+        @click="toggleAnswerMode(true)"
+      >
         {{ t('proposal.answerComment') }}
       </el-button>
       <el-button
