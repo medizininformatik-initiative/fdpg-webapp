@@ -159,6 +159,7 @@
             :proposal-id="proposalId"
             @change="handleUploadFile"
             @remove="handleRemoveFile"
+            :max-file-size="5 * 1024 * 1024"
           >
             <el-button
               class="upload-button"

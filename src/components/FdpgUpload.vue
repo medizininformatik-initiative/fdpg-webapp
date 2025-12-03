@@ -44,6 +44,8 @@ import type { UploadFile, UploadRawFile } from 'element-plus'
 import type { PropType } from 'vue'
 import DocumentList from './Proposals/Details/DocumentList.vue'
 import ImageList from './Proposals/Details/ImageList.vue'
+import useNotifications from '@/composables/use-notifications'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   fileList: {
@@ -101,12 +103,38 @@ const props = defineProps({
     default: false,
     required: false,
   },
+  maxFileSize: {
+    type: Number,
+    default: 10 * 1024 * 1024, // 10MB default
+    required: false,
+  },
+  maxFileSizeErrorMessage: {
+    type: String,
+    default: 'general.fileSizeExceedsLimit',
+    required: false,
+  },
 })
 
 const emit = defineEmits(['change', 'remove'])
+const { showErrorMessage } = useNotifications()
+const { t } = useI18n()
+const formatFileSize = (bytes: number): string => {
+  if (bytes === 0) return '0 Bytes'
+  const k = 1024
+  const sizes = ['Bytes', 'KB', 'MB', 'GB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
 
 const handleOnChange = (file: UploadFile) => {
   if (!props.isLoading || !props.isDisabled) {
+    if (file.raw && file.raw.size > props.maxFileSize) {
+      showErrorMessage(
+        `${t(props.maxFileSizeErrorMessage)}. Maximum allowed: ${formatFileSize(props.maxFileSize)}, File size: ${formatFileSize(file.raw.size)}`,
+      )
+      return
+    }
+
     emit('change', file)
   }
 }
