@@ -250,7 +250,7 @@ export function useFdpgProposalCommon() {
       layoutStore.setBreadcrumbs([
         {
           name: lastDashboard,
-          displayName: getLastDashboardTitle(lastDashboard),
+          displayName: getLastDashboardTitle(lastDashboard.toLocaleLowerCase()),
         },
         {
           name: RouteName.ReviewProposal,

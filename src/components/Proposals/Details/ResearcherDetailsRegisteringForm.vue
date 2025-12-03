@@ -5,8 +5,6 @@
     <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
 
-    <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
-
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
@@ -49,6 +47,7 @@ import { useRoute, useRouter } from 'vue-router'
 import useDraftDownload from '@/composables/use-draft-download'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 
 const { t } = useI18n()
 const { params } = useRoute()
@@ -60,6 +59,7 @@ const currentProposalStatus = [ProposalStatus.ReadyToArchive, ProposalStatus.Pub
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const locationStore = useLocationStore()
+const messageBoxStore = useMessageBoxStore()
 
 const locationMapRef: Ref<Record<string, ILocation>> = ref({})
 
@@ -71,7 +71,7 @@ const possibleLocations = computed(() =>
 
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
-const { showErrorMessage } = useNotifications()
+const { showErrorMessage, showSuccessMessage } = useNotifications()
 
 const openReviewPage = () => {
   router.push({ name: RouteName.EditRegisteredProject, params: { id: proposalId.value } })
@@ -148,6 +148,14 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     testId: 'button__toProposal',
     action: openReviewPage,
   },
+  {
+    type: 'primary',
+    label: 'proposal.archiveProject',
+    testId: 'button__archiveProposal',
+    action: handleArchiveProjectClick,
+    isHidden: !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
 ])
 
 const getSyncStatusType = (syncStatus?: string) => {
@@ -186,6 +194,27 @@ const fetchProposal = async () => {
     showErrorMessage()
     await router.push({ name: RouteName.Dashboard })
     console.log(error)
+  }
+}
+const handleArchiveProjectClick = () => {
+  messageBoxStore.setMessageBoxInfo({
+    cancelButtonText: 'general.cancel',
+    cancelButtonClass: 'el-button--text',
+    showCancelButton: true,
+    title: 'proposal.archiveProjectModalTitle',
+    message: 'proposal.archiveProjectModalDescription',
+    confirmButtonText: 'proposal.archiveProject',
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.Archived) : undefined,
+  })
+}
+const changeStatus = async (proposalStatus: ProposalStatus) => {
+  try {
+    await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error: any) {
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 
