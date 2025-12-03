@@ -220,7 +220,7 @@ const setContractSign = async (decision: ContractDecision) => {
 }
 
 const handleContractSignConfirm = async (file: UploadFile) => {
-  await setContractSign({ value: true, file: file?.raw })
+  await setContractSign({ value: true, file: file?.raw as File })
 }
 
 const handleContractDeclineConfirm = async (declineReason: string) => {
