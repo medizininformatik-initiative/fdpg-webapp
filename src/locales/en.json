@@ -78,7 +78,8 @@
     "value": "Value",
     "published": "Published",
     "readyForPublication": "Ready for publication ",
-    "invalidUrl": "Invalid URL"
+    "invalidUrl": "Invalid URL",
+    "fileSizeExceedsLimit": "File size exceeds the maximum allowed size"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -260,7 +261,7 @@
     "assessmentOfFeasibilityDetails": "Mandatory attributes of the characteristic selection that could not be recorded in the cohort selection",
     "pleaseEnterAssessmentOfFeasibilityDetails": "Please enter the mandatory attributes and any additional comments about the cohort.",
     "projectDetails": "Project details",
-    "simpleProjectDescription": "Simple project description",
+    "simpleProjectDescription": "Simple project description (easy to understand and read)",
     "describeTheProject": "Please describe the project in short sentences that are easy for laypeople to understand.",
     "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
     "scientificBackground": "Scientific background",

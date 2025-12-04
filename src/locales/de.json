@@ -78,7 +78,8 @@
     "value": "Wert",
     "published": "publiziert",
     "readyForPublication": "publikationsreif",
-    "invalidUrl": "ungültige URL"
+    "invalidUrl": "ungültige URL",
+    "fileSizeExceedsLimit": "Die Dateigröße überschreitet die maximal zulässige Größe"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -260,7 +261,7 @@
     "assessmentOfFeasibilityDetails": "Pflichtattribute der Merkmalsselektion, die in der Kohortenauswahl nicht erfasst werden konnten",
     "pleaseEnterAssessmentOfFeasibilityDetails": "Bitte geben Sie die Pflichtattribute sowie ggf. weitere Anmerkungen zur Kohorte an.",
     "projectDetails": "Projektdetails",
-    "simpleProjectDescription": "Einfache Projektbeschreibung",
+    "simpleProjectDescription": "Einfache Projektbeschreibung (im Sinne von leicht verständlich)",
     "describeTheProject": "Bitte beschreiben Sie das Projekt in kurzen, laienverständlichen Sätzen.",
     "info": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt",
     "scientificBackground": "Wissenschaftlicher Hintergrund",
@@ -538,7 +539,7 @@
     "participantCategory_DATA_RECEIVER": "Empfang von Daten",
     "participantCategory_BIOSAMPLE_RECEIVER": "Empfang von Bioproben",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Empfang von Daten und Bioproben",
-    "participantCategory_PROJECT_LEADER": "Projektleiteung",
+    "participantCategory_PROJECT_LEADER": "Projektleitung",
     "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterere Beteiligte",
     "termsDialogTitle": "Nutzungsordnung zustimmen",
     "lockProposal": "Antrag sperren",

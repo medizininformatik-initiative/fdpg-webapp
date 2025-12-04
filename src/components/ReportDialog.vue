@@ -34,7 +34,7 @@
       <el-row>
         <el-col>
           <FdpgUpload
-            accept=".jpg, .png, .bmp, .gif, .tiff, .svg"
+            :accept="acceptedFileTypes.join(', ')"
             empty-alert-text="proposal.reportUploadPlaceholder"
             :hide-file-list="false"
             :file-list="uploadedFiles"
@@ -45,6 +45,7 @@
             mode="picture"
             @change="handleChangeFileList"
             @remove="handleRemoveFileList"
+            :max-file-size="5 * 1024 * 1024"
           >
             <el-button
               class="upload-button"
@@ -109,7 +110,7 @@ const dialogOpen = useVModel(props, 'modelValue', emit)
 const filesToBeUploaded = ref<UploadRawFile[]>([])
 const uploadedFiles = ref<IReportFile[]>([])
 const keepUploads = ref<string[]>([])
-
+const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff', 'image/svg+xml']
 watch(dialogOpen, async (newModelValue) => {
   if (newModelValue) {
     if (props.report._id) {
