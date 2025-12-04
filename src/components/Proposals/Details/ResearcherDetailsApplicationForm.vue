@@ -12,6 +12,13 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
+    <section v-if="proposalDataDelivery && proposalDataDelivery.deliveryInfos?.length > 0">
+      <h2>
+        {{ t('dataDelivery.dataDelivery') }}
+      </h2>
+      <DmsDeliveryInfoOverview :data-delivery="proposalDataDelivery" :show-actions="false" :can-rate-delivery="false" />
+    </section>
+
     <ProjectPublications
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
@@ -74,6 +81,8 @@ import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import ParticipatingResearcher from '@/components/ParticipatingResearcher.vue'
+import DmsDeliveryInfoOverview from '@/components/DataDelivery/DmsDeliveryInfoOverview.vue'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
@@ -117,6 +126,8 @@ const possibleLocations = computed(() =>
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
+
+const proposalDataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
