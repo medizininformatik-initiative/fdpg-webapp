@@ -169,8 +169,7 @@ const syncDeliveryInfoWithDmst = async (deliveryInfo: IDeliveryInfo) => {
       await proposalStore.syncDeliveryInfo(proposalStore.currentProposal?._id, deliveryInfo)
     }
   } catch (error) {
-    console.error('Sync failed:', error)
-    showErrorMessage()
+    showErrorMessage('dataDelivery.syncFailed')
   } finally {
     loadingIds.value.delete(id)
   }
