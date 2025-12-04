@@ -129,10 +129,9 @@ const initiateNewDeliveryInfo = async (newDeliveryInfo: IDeliveryInfo) => {
   }
 
   try {
-    proposalStore.initiateDeliveryInfo(proposalStore.currentProposal?._id, newDeliveryInfo)
+    await proposalStore.initiateDeliveryInfo(proposalStore.currentProposal?._id, newDeliveryInfo)
   } catch (e) {
-    console.error(e)
-    showErrorMessage()
+    showErrorMessage('dataDelivery.errorInitiateDeliveryInfo')
   }
 }
 
@@ -143,7 +142,7 @@ const onSelectDms = async (locationId: string) => {
     try {
       await proposalStore.updateDmsForDataDelivery(proposalId, locationId)
     } catch {
-      showErrorMessage()
+      showErrorMessage('dataDelivery.errorSelectDms')
     }
   }
 }

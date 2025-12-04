@@ -1,7 +1,7 @@
 <template>
   <!-- Pending Delivery Overview start  -->
   <el-collapse>
-    <el-collapse-item v-for="deliveryInfo in dataDelivery?.deliveryInfos ?? []">
+    <el-collapse-item :key="deliveryInfo._id" v-for="deliveryInfo in dataDelivery?.deliveryInfos ?? []">
       <template #title>
         <div class="delivery-info__el-collapse-item-row">
           <div class="delivery-info__el-collapse-item-title">
