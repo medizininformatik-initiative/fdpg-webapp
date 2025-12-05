@@ -5,6 +5,7 @@ import {
   DeliveryAcceptance,
   type IApplicant,
   type IDataDelivery,
+  type IDeliveryInfo,
   type IDizDetails,
   type IEditAdditionalLocationProposalInformation,
   type IFdpgChecklist,
@@ -588,6 +589,26 @@ export const useProposalStore = defineStore('Proposal', {
 
     async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
       const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, dmsId)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async initiateDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.initiateDeliveryInfo(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.syncDeliveryInfo(proposalId, deliveryInfo)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }

@@ -1046,7 +1046,10 @@
     "namePlaceholder": "Name of delivery",
     "newDmsRequestAfterDelivery": "Request new DMS",
     "lastSynced": "Last Sync with DSF: {lastSynced}",
-    "rateDelivery": "Rate Delivery"
+    "rateDelivery": "Rate Delivery",
+    "errorInitiateDeliveryInfo": "Error on initiate delivery",
+    "errorSelectDms": "Error on DMS selection",
+    "syncFailed": "Error on sync with DSF"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

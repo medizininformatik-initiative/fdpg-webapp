@@ -1046,7 +1046,10 @@
     "namePlaceholder": "Name der Lieferung",
     "newDmsRequestAfterDelivery": "Neue DMST anfragen",
     "lastSynced": "Letzter Sync mit DSF: {lastSynced}",
-    "rateDelivery": "Lieferung bewerten"
+    "rateDelivery": "Lieferung bewerten",
+    "errorInitiateDeliveryInfo": "Fehler beim initiieren der Lieferung",
+    "errorSelectDms": "Fehler bei DMST Auswahl",
+    "syncFailed": "Fehler bei der synchronization mit DSF"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",

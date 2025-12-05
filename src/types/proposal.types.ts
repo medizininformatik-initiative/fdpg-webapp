@@ -591,7 +591,7 @@ export interface IProposal {
   isParticipatingScientist?: boolean
   deadlines: Deadlines
   type: ProposalType
-  dataDelivery?: IDataDelivery | null
+  dataDelivery?: IDataDelivery
   projectAssignee?: IProjectAssignee
 }
 
@@ -730,36 +730,50 @@ export interface IRegisterInfo extends WithIdAndIsDone {
 }
 
 export interface IDataDelivery {
+  _id?: string
   dataManagementSite: string
   acceptance: DeliveryAcceptance
-  delivery?: IDeliveryInfo[]
+  deliveryInfos: IDeliveryInfo[]
   createdAt: string
   updatedAt: string
 }
 
 export interface IDeliveryInfo {
+  _id?: string
   name: string
-  date: string
+  deliveryDate: Date
+  status: DeliveryInfoStatus
   subDeliveries: ISubDelivery[]
+  lastSynced?: Date
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export interface ISubDelivery {
+  _id?: string
   location: string
   status: SubDeliveryStatus
-  createdAt: string
-  updatedAt: string
+  createdAt?: Date
+  updatedAt?: Date
 }
 
 export enum SubDeliveryStatus {
   PENDING = 'PENDING',
+  DELIVERED = 'DELIVERED',
   ACCEPTED = 'ACCEPTED',
-  DENIED = 'DENIED',
+  CANCELED = 'CANCELED',
 }
 
 export enum DeliveryAcceptance {
   PENDING = 'PENDING',
   ACCEPTED = 'ACCEPTED',
   DENIED = 'DENIED',
+}
+
+export enum DeliveryInfoStatus {
+  PENDING = 'PENDING',
+  FINISHED = 'FINISHED',
+  CANCELED = 'CANCELED',
 }
 
 export interface IProjectAssignee {

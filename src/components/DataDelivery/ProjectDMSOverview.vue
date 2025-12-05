@@ -1,12 +1,14 @@
 <template>
-  <section>
-    <h2>{{ t('dataDelivery.dataManagementSiteAbbreviation') }}</h2>
+  <section v-if="isLocationInquiryStep || !isDeliveryInitiated">
+    <h2>
+      {{ t('dataDelivery.dataManagementSiteAbbreviation') }}
+    </h2>
 
     <template v-if="isLocationInquiryStep">
       <MissingDataDeliverySetup v-if="!dataDelivery" data-testid="missing-dms" />
       <div v-else>
         <DmsRequestOverview data-testid="overview" :data-delivery="dataDelivery" />
-        <el-button data-testid="request-new" class="dms__reset" link @click="() => setDialogOpenState(true)">
+        <el-button data-testid="request-new" class="dms__reset" link @click="() => setNewDmsDialogOpenState(true)">
           {{ t('dataDelivery.newRequest') }}
         </el-button>
       </div>
@@ -25,22 +27,45 @@
         </div>
 
         <div class="dms__card__button_row">
-          <el-button @click="() => setDialogOpenState(true)">{{ t('dataDelivery.openSelectDmsDialog') }}</el-button>
-          <el-button type="primary" @click="() => initiateNewDelivery()">{{
+          <el-button @click="() => setNewDmsDialogOpenState(true)">{{
+            t('dataDelivery.openSelectDmsDialog')
+          }}</el-button>
+          <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
             t('dataDelivery.createDataDelivery')
           }}</el-button>
         </div>
       </el-card>
     </template>
-    <template v-else> Delivery view </template>
+  </section>
+  <section v-else>
+    <h2>
+      {{ t('dataDelivery.dataDelivery') }}
+    </h2>
+    <DmsDeliveryInfoOverview
+      v-if="dataDelivery"
+      :data-delivery="dataDelivery"
+      @open-dialog:new-dms="setNewDmsDialogOpenState"
+      @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
+      @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
+    />
+    <div v-else>Data delivery not set</div>
   </section>
 
   <RequestNewDmsDialog
     v-model="isDmsOverrideDialogOpen"
     :data-management-site="dataDelivery?.dataManagementSite ?? null"
-    @dialog-open-state="setDialogOpenState"
+    @dialog-open-state="setNewDmsDialogOpenState"
     @submit="onSelectDms"
   />
+
+  <InitiateDeliveryInfoDialog
+    v-model="isInitiateDeliveryDialogOpen"
+    :selectable-locations="selectableLocations"
+    @dialog-open-state="setInitiateDeliveryDialogOpenState"
+    @submit="initiateNewDeliveryInfo"
+  />
+
+  <!-- Manual Delivery Info Dialog -->
 </template>
 
 <script setup lang="ts">
@@ -49,11 +74,13 @@ import { computed, onMounted, ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import MissingDataDeliverySetup from '@/components/DataDelivery/MissingDataDeliverySetup.vue'
 import DmsRequestOverview from '@/components/DataDelivery/DmsRequestOverview.vue'
-import { DeliveryAcceptance } from '@/types/proposal.types'
+import { DeliveryAcceptance, type IDeliveryInfo } from '@/types/proposal.types'
 import RequestNewDmsDialog from './RequestNewDmsDialog.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
 import useNotifications from '@/composables/use-notifications'
+import InitiateDeliveryInfoDialog from './InitiateDeliveryInfoDialog.vue'
+import DmsDeliveryInfoOverview from './DmsDeliveryInfoOverview.vue'
 
 const { t } = useI18n()
 const proposalStore = useProposalStore()
@@ -63,8 +90,16 @@ const { showErrorMessage } = useNotifications()
 const locationLookupMap = ref<Record<string, ILocation>>({})
 
 const dataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
+const selectableLocations = computed(
+  () =>
+    proposalStore.currentProposal?.userProject?.addressees?.desiredLocations?.map(
+      (loc) => locationLookupMap.value[loc],
+    ) ?? [],
+)
 
 const isDmsOverrideDialogOpen = ref(false)
+const isInitiateDeliveryDialogOpen = ref(false)
+const isManualDeliveryInfoEntryDialogOpen = ref(false)
 
 const isLocationInquiryStep = computed(
   () =>
@@ -72,14 +107,32 @@ const isLocationInquiryStep = computed(
     [DeliveryAcceptance.PENDING, DeliveryAcceptance.DENIED].includes(dataDelivery.value?.acceptance),
 )
 
-const isDeliveryInitiated = computed(() => !!dataDelivery.value?.delivery && dataDelivery.value.delivery.length > 0)
+const isDeliveryInitiated = computed(
+  () => !!dataDelivery.value?.deliveryInfos && dataDelivery.value.deliveryInfos.length > 0,
+)
 
-const setDialogOpenState = (openState: boolean) => {
+const setNewDmsDialogOpenState = (openState: boolean) => {
   isDmsOverrideDialogOpen.value = openState
 }
 
-const initiateNewDelivery = () => {
-  console.log('TODO: intiate new delivery')
+const setInitiateDeliveryDialogOpenState = (openState: boolean) => {
+  isInitiateDeliveryDialogOpen.value = openState
+}
+
+const setManualDeliveryInfoEntryDialogOpen = (openState: boolean) => {
+  isManualDeliveryInfoEntryDialogOpen.value = openState
+}
+
+const initiateNewDeliveryInfo = async (newDeliveryInfo: IDeliveryInfo) => {
+  if (!proposalStore.currentProposal?._id) {
+    return
+  }
+
+  try {
+    await proposalStore.initiateDeliveryInfo(proposalStore.currentProposal?._id, newDeliveryInfo)
+  } catch (e) {
+    showErrorMessage('dataDelivery.errorInitiateDeliveryInfo')
+  }
 }
 
 const onSelectDms = async (locationId: string) => {
@@ -89,7 +142,7 @@ const onSelectDms = async (locationId: string) => {
     try {
       await proposalStore.updateDmsForDataDelivery(proposalId, locationId)
     } catch {
-      showErrorMessage()
+      showErrorMessage('dataDelivery.errorSelectDms')
     }
   }
 }

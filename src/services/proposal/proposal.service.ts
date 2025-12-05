@@ -22,7 +22,7 @@ import {
   type ISelectedCohort,
   type IUpload,
   type ProposalStatus,
-  type IProjectAssignee,
+  type IDeliveryInfo,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -470,7 +470,7 @@ export class ProposalService {
         >(`${this.basePath}/${proposalId}/data-delivery`, {
           dataManagementSite: dmsId,
           acceptance: DeliveryAcceptance.PENDING,
-          delivery: null,
+          deliveryInfos: [],
         })
       ).data
     } catch (error: any) {
@@ -488,6 +488,7 @@ export class ProposalService {
         >(`${this.basePath}/${proposalId}/data-delivery`, {
           dataManagementSite: dmsId,
           acceptance: DeliveryAcceptance.PENDING,
+          deliveryInfos: [],
         })
       ).data
     } catch (error: any) {
@@ -509,7 +510,36 @@ export class ProposalService {
         >(`${this.basePath}/${proposalId}/data-delivery`, {
           dataManagementSite: dmsId,
           acceptance,
+          deliveryInfos: [],
         })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async initiateDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/init-delivery-info`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/sync`, deliveryInfo)
       ).data
     } catch (error: any) {
       throw new Error(error)
