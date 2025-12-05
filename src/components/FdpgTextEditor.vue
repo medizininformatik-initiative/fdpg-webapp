@@ -1,5 +1,5 @@
 <template>
-  <div :class="['w-full', disabled ? 'readonly-view' : '']">
+  <div :class="['w-full fdpg-text-editor', disabled ? 'readonly-view' : '']">
     <QuillEditor
       theme="snow"
       v-model:content="value"
@@ -114,6 +114,7 @@ onBeforeMount(() => {
 <style>
 .w-full {
   width: 100%;
+  min-height: 150px;
 }
 
 .readonly-view {
@@ -127,5 +128,29 @@ onBeforeMount(() => {
 
 .ql-editor.ql-blank::before {
   position: unset;
+}
+
+.el-card:has(.fdpg-text-editor) {
+  overflow: visible;
+}
+
+.el-card:has(.fdpg-text-editor) .el-card__body {
+  overflow: visible;
+}
+
+.el-table:has(.fdpg-text-editor) {
+  overflow: visible;
+}
+
+.el-table:has(.fdpg-text-editor) .el-table__inner-wrapper,
+.el-table:has(.fdpg-text-editor) .el-table__body-wrapper,
+.el-table:has(.fdpg-text-editor) .el-scrollbar,
+.el-table:has(.fdpg-text-editor) .el-scrollbar__wrap,
+.el-table:has(.fdpg-text-editor) .el-scrollbar__view,
+.el-table:has(.fdpg-text-editor) .el-table__body,
+.el-table:has(.fdpg-text-editor) .el-table__expanded-cell,
+.el-table .cell:has(.fdpg-text-editor),
+.el-collapse-item__wrap:has(.fdpg-text-editor) {
+  overflow: visible !important ;
 }
 </style>
