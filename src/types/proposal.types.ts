@@ -335,6 +335,16 @@ export enum ProjectHistoryType {
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
 
+  /** Data Delivery */
+  DmoRequest = 'DMO_REQUEST',
+  DmoDeny = 'DMO_DENY',
+  DmoAccept = 'DMO_ACCEPT',
+  DataDeliveryStarted = 'DATA_DELIVERY_STARTED',
+  DataDeliveryManualEntry = 'DATA_DELIVERY_MANUAL_ENTRY',
+  DataDeliveryForwarded = 'DATA_DELIVERY_FORWARDED',
+  DataDeliveryCanceled = 'DATA_DELIVERY_CANCELED',
+  DataDeliveryConcluded = 'DATA_DELIVERY_CONCLUDED',
+
   // Misc
   ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }

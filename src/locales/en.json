@@ -79,7 +79,8 @@
     "published": "Published",
     "readyForPublication": "Ready for publication ",
     "invalidUrl": "Invalid URL",
-    "fileSizeExceedsLimit": "File size exceeds the maximum allowed size"
+    "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
+    "overview": "Overview"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -99,7 +100,8 @@
     "process": "PENDING",
     "progress": "Progress:",
     "completed": "{progress}% filled out",
-    "published": "Published"
+    "published": "Published",
+    "overview": "Overview"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -143,7 +145,15 @@
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
     "PARTICIPANT_UPDATED": "Participants were updated",
     "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}",
-    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n"
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n",
+    "DMO_REQUEST": "{location} has been requested for role DMO. ",
+    "DMO_DENY": "{location} has rejected the role DMO. ",
+    "DMO_ACCEPT": "{location} has accepted the role DMO",
+    "DATA_DELIVERY_STARTED": "Data delivery {deliveryName} has been started.",
+    "DATA_DELIVERY_MANUAL_ENTRY": "Data delivery {deliveryName} has been documented.",
+    "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher.",
+    "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled. ",
+    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded."
   },
   "header": {
     "login": "Login",
@@ -189,7 +199,8 @@
     "xOngoingProjectContracts": "{x} ongoing project contracts",
     "xCompletedProjectContracts": "{x} completed project contracts",
     "registerProject": "Register a project",
-    "comingUp": "Coming up ({count})"
+    "comingUp": "Coming up ({count})",
+    "overview": "Overview"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
