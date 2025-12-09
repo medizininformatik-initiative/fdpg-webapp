@@ -4,13 +4,13 @@
       {{ t('dataDelivery.dataManagementSiteAbbreviation') }}
     </h2>
 
-    <MissingDataDeliverySetup v-if="!dataDelivery" data-testid="missing-dms" />
-    <div v-else>
+    <div v-if="dataDelivery">
       <DmsRequestOverview data-testid="overview" :data-delivery="dataDelivery" />
       <el-button data-testid="request-new" class="dms__reset" link @click="() => setNewDmsDialogOpenState(true)">
         {{ t('dataDelivery.newRequest') }}
       </el-button>
     </div>
+    <MissingDataDeliverySetup v-else data-testid="missing-dms" />
   </section>
 
   <section v-else-if="!isDeliveryInitiated && userRole === Role.FdpgMember">
@@ -38,7 +38,7 @@
     </el-card>
   </section>
 
-  <section v-if="isDeliveryInitiated">
+  <section v-else-if="isDeliveryInitiated">
     <h2>
       {{ t('dataDelivery.dataDelivery') }}
     </h2>

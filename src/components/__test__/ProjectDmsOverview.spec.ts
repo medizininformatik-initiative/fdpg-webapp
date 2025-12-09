@@ -7,9 +7,17 @@ import type { IProposal } from '@/types/proposal.types.ts'
 import { merge } from 'lodash-es'
 import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 import { useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import { Role } from '@/types/oidc.types'
 
 vi.mock('@/stores/locations/location.store', () => ({
   useLocationStore: vi.fn().mockImplementation(() => useMockLocationStore),
+}))
+
+vi.mock('@/stores/auth/auth.store', () => ({
+  useAuthStore: vi.fn().mockImplementation(() => ({
+    singleKnownRole: Role.FdpgMember,
+  })),
 }))
 
 vi.mock('vue-i18n', () => ({
