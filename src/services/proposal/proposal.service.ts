@@ -480,18 +480,14 @@ export class ProposalService {
     }
   }
 
-  async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+  async updateDmsForDataDelivery(proposalId: string, dataDelivery: IDataDelivery): Promise<IDataDelivery> {
     try {
       return (
         await this.apiClient.put<
           IDataDelivery,
           AxiosResponse<IDataDelivery>,
           Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
-        >(`${this.basePath}/${proposalId}/data-delivery`, {
-          dataManagementSite: dmsId,
-          acceptance: DeliveryAcceptance.PENDING,
-          deliveryInfos: [],
-        })
+        >(`${this.basePath}/${proposalId}/data-delivery`, dataDelivery)
       ).data
     } catch (error: any) {
       throw new Error(error)

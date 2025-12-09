@@ -183,7 +183,7 @@
             setForwardDeliveryDialogOpen,
           )
         "
-        >{{ t('general.forwardDeliveryDialogForwardButton') }}</el-button
+        >{{ t('dataDelivery.forwardDeliveryDialogForwardButton') }}</el-button
       >
     </template>
   </FdpgDialog>

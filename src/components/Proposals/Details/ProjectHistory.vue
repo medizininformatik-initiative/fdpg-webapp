@@ -39,7 +39,7 @@ const historyList = computed(() => {
     switch (item.type) {
       case ProjectHistoryType.FdpgLocationVoteReverted:
         if (item.location) {
-          translationParameter['location'] = '' + locationLookupMap.value[item.location]
+          translationParameter['location'] = '' + locationLookupMap.value[item.location]?.display
         }
         break
 
@@ -62,13 +62,13 @@ const historyList = computed(() => {
         break
       case ProjectHistoryType.DmoRequest:
         if (item.data?.requestedDms) {
-          translationParameter['requestedDms'] = '' + locationLookupMap.value[item.data.requestedDms]
+          translationParameter['requestedDms'] = '' + locationLookupMap.value[item.data.requestedDms]?.display
         }
         break
       case ProjectHistoryType.DmoAccept:
       case ProjectHistoryType.DmoDeny:
         if (item.location) {
-          translationParameter['location'] = '' + locationLookupMap.value[item.location]
+          translationParameter['location'] = '' + locationLookupMap.value[item.location]?.display
         }
         break
       case ProjectHistoryType.DataDeliveryStarted:

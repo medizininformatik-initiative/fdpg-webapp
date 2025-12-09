@@ -87,7 +87,7 @@ import { computed, onMounted, ref, type Ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import MissingDataDeliverySetup from '@/components/DataDelivery/MissingDataDeliverySetup.vue'
 import DmsRequestOverview from '@/components/DataDelivery/DmsRequestOverview.vue'
-import { DeliveryAcceptance, type IDeliveryInfo } from '@/types/proposal.types'
+import { DeliveryAcceptance, type IDataDelivery, type IDeliveryInfo } from '@/types/proposal.types'
 import RequestNewDmsDialog from './RequestNewDmsDialog.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
@@ -129,8 +129,7 @@ const isDeliveryInitiated = computed(
   () =>
     !!dataDelivery.value?.deliveryInfos &&
     dataDelivery.value.deliveryInfos.length > 0 &&
-    dataDelivery.value.dataManagementSite &&
-    dataDelivery.value.acceptance === DeliveryAcceptance.ACCEPTED,
+    dataDelivery.value.dataManagementSite,
 )
 
 const setNewDmsDialogOpenState = (openState: boolean) => {
@@ -162,7 +161,12 @@ const onSelectDms = async (locationId: string) => {
 
   if (proposalId !== undefined && proposalId !== '' && locationId !== undefined && locationId !== '') {
     try {
-      await proposalStore.updateDmsForDataDelivery(proposalId, locationId)
+      await proposalStore.updateDmsForDataDelivery(proposalId, {
+        ...(dataDelivery.value || {}),
+        deliveryInfos: [...(dataDelivery.value?.deliveryInfos ? dataDelivery.value.deliveryInfos : [])],
+        dataManagementSite: locationId,
+        acceptance: DeliveryAcceptance.PENDING,
+      } as IDataDelivery)
     } catch {
       showErrorMessage('dataDelivery.errorSelectDms')
     }
