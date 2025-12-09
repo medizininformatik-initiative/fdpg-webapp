@@ -23,6 +23,8 @@ import {
   type IUpload,
   type ProposalStatus,
   type IDeliveryInfo,
+  SubDeliveryStatus,
+  type ISubDelivery,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -540,6 +542,34 @@ export class ProposalService {
           AxiosResponse<IDataDelivery>,
           Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
         >(`${this.basePath}/${proposalId}/delivery-info/sync`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async rateSubDelivery(proposalId: string, deliveryInfoId: string, subDeliveryToUpdate: ISubDelivery) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<ISubDelivery, 'createdAt' | 'updatedAt'>
+        >(`${this.basePath}/${proposalId}/sub-delivery/rate`, subDeliveryToUpdate, { params: { deliveryInfoId } })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/set-status`, deliveryInfo)
       ).data
     } catch (error: any) {
       throw new Error(error)

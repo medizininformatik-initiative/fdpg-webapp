@@ -37,18 +37,17 @@
       </el-card>
     </template>
   </section>
-  <section v-else>
+
+  <section v-if="dataDelivery && dataDelivery.deliveryInfos?.length > 0">
     <h2>
       {{ t('dataDelivery.dataDelivery') }}
     </h2>
     <DmsDeliveryInfoOverview
-      v-if="dataDelivery"
       :data-delivery="dataDelivery"
       @open-dialog:new-dms="setNewDmsDialogOpenState"
       @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
       @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
     />
-    <div v-else>Data delivery not set</div>
   </section>
 
   <RequestNewDmsDialog
@@ -59,18 +58,28 @@
   />
 
   <InitiateDeliveryInfoDialog
+    v-if="dataDelivery"
     v-model="isInitiateDeliveryDialogOpen"
     :selectable-locations="selectableLocations"
+    :selected-dms="dataDelivery.dataManagementSite"
     @dialog-open-state="setInitiateDeliveryDialogOpenState"
     @submit="initiateNewDeliveryInfo"
   />
 
-  <!-- Manual Delivery Info Dialog -->
+  <InitiateDeliveryInfoDialog
+    v-if="dataDelivery"
+    v-model="isManualDeliveryInfoEntryDialogOpen"
+    :selectable-locations="selectableLocations"
+    :selected-dms="dataDelivery.dataManagementSite"
+    :manual-creation="true"
+    @dialog-open-state="setManualDeliveryInfoEntryDialogOpen"
+    @submit="initiateNewDeliveryInfo"
+  />
 </template>
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, type Ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import MissingDataDeliverySetup from '@/components/DataDelivery/MissingDataDeliverySetup.vue'
 import DmsRequestOverview from '@/components/DataDelivery/DmsRequestOverview.vue'

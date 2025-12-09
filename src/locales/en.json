@@ -238,7 +238,7 @@
     "belongingOptional": "Affiliation, e.g. institute",
     "pleaseEnterTheBelonging": "Please indicate the affiliation as it appears on your website, without abbreviations.",
     "emailAddress": "E-Mail Address",
-    "pleaseEnterTheEmailAddress": "Please enter the institution's email address (e.g. info{'@'}...).",
+    "pleaseEnterTheEmailAddress": "Please enter the oersons or institution's email address (institution e.g. info{'@'}...).",
     "informationAboutTheUserProject": "Information about the user project",
     "generalProjectInformation": "General project information",
     "projectTitle": "Project title",

@@ -3,6 +3,7 @@ import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
 import {
   DeliveryAcceptance,
+  SubDeliveryStatus,
   type IApplicant,
   type IDataDelivery,
   type IDeliveryInfo,
@@ -19,6 +20,7 @@ import {
   type IReportUpdate,
   type IResearcherIdentity,
   type ISelectedCohort,
+  type ISubDelivery,
   type IUpload,
   type ProposalStatus,
   type SortableFields,
@@ -623,6 +625,30 @@ export const useProposalStore = defineStore('Proposal', {
       acceptance: DeliveryAcceptance,
     ): Promise<IDataDelivery> {
       const dataDelivery = await this.apiService.updateDmsAcceptanceForDataDelivery(proposalId, dmsId, acceptance)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async rateSubDelivery(
+      proposalId: string,
+      deliveryInfoId: string,
+      subDelivery: ISubDelivery,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.rateSubDelivery(proposalId, deliveryInfoId, subDelivery)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.setDeliveryInfoStatus(proposalId, deliveryInfo)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }

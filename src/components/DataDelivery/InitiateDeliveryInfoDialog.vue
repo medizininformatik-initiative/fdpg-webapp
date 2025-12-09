@@ -59,6 +59,14 @@ const props = defineProps({
     type: Array as PropType<ILocation[]>,
     required: true,
   },
+  selectedDms: {
+    type: String,
+    required: true,
+  },
+  manualCreation: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emit = defineEmits(['dialogOpenState', 'submit'])
@@ -84,6 +92,8 @@ const handleSubmit = () => {
     deliveryDate: dataDeliveryRef.value.deliveryDate,
     status: DeliveryInfoStatus.PENDING,
     subDeliveries,
+    dms: props.selectedDms,
+    manualEntry: props.manualCreation,
   }
 
   emit('submit', newDelivery)

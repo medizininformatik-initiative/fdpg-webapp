@@ -747,6 +747,10 @@ export interface IDeliveryInfo {
   lastSynced?: Date
   createdAt?: Date
   updatedAt?: Date
+  manualEntry: boolean
+  resultUrl?: string
+  forwardedOnDate?: Date
+  dms: string
 }
 
 export interface ISubDelivery {
@@ -762,6 +766,7 @@ export enum SubDeliveryStatus {
   DELIVERED = 'DELIVERED',
   ACCEPTED = 'ACCEPTED',
   CANCELED = 'CANCELED',
+  REPEATED = 'REPEATED',
 }
 
 export enum DeliveryAcceptance {
@@ -774,6 +779,7 @@ export enum DeliveryInfoStatus {
   PENDING = 'PENDING',
   FINISHED = 'FINISHED',
   CANCELED = 'CANCELED',
+  WAITING_FOR_DATA_SET = 'WAITING_FOR_DATA_SET',
 }
 
 export interface IProjectAssignee {

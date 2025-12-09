@@ -11,12 +11,7 @@
       <h2>
         {{ t('dataDelivery.dataDelivery') }}
       </h2>
-      <DmsDeliveryInfoOverview
-        :data-delivery="proposalDataDelivery"
-        :show-actions="false"
-        :can-rate-delivery="true"
-        @open-dialog:rate-delivery="() => console.log('TODO')"
-      />
+      <DmsDeliveryInfoOverview :data-delivery="proposalDataDelivery" :show-actions="false" :can-rate-delivery="true" />
     </section>
 
     <ProjectHistory />

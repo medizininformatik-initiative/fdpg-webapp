@@ -7,7 +7,10 @@
           <div class="delivery-info__el-collapse-item-title">
             {{ t('dataDelivery.deliveryName', { deliveryName: deliveryInfo.name }) }}
           </div>
-          <div v-if="showActions" class="delivery-info__interaction">
+          <div
+            v-if="showActions && deliveryInfo.status === DeliveryInfoStatus.PENDING"
+            class="delivery-info__interaction"
+          >
             <el-button
               type="primary"
               plain
@@ -27,11 +30,30 @@
       </template>
       <div class="delivery-info__collapse-body">
         <div class="delivery-info__information">
-          <span>{{
-            t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) })
-          }}</span>
+          <p v-if="deliveryInfo.status === DeliveryInfoStatus.PENDING">
+            {{ t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) }) }}
+          </p>
+          <p v-if="deliveryInfo.status === DeliveryInfoStatus.CANCELED">
+            {{
+              t('dataDelivery.deliveryWasCanceled', { canceledDate: getLocaleDateString(deliveryInfo.forwardedOnDate) })
+            }}
+          </p>
+          <p v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
+            {{
+              t('dataDelivery.waitingForDataSet', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) })
+            }}
+          </p>
+          <p v-if="deliveryInfo.status === DeliveryInfoStatus.FINISHED">
+            {{ t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) }) }}
+            <a link target="_blank">{{ deliveryInfo.resultUrl }}</a>
+          </p>
 
-          <span>
+          <span
+            v-if="
+              !deliveryInfo.manualEntry &&
+              [DeliveryInfoStatus.PENDING, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(deliveryInfo.status)
+            "
+          >
             {{
               t('dataDelivery.lastSynced', {
                 lastSynced: getLocaleDateTimeString(deliveryInfo.lastSynced),
@@ -47,8 +69,8 @@
             />
           </span>
         </div>
-        <el-table :data="deliveryInfo.subDeliveries" style="width: 100%">
-          <el-table-column :label="t('dataDelivery.deliveryInfoLocation')" style="width: 100%">
+        <el-table :data="deliveryInfo.subDeliveries">
+          <el-table-column :label="t('dataDelivery.deliveryInfoLocation')">
             <template #default="tableProps">
               <p>
                 {{
@@ -84,9 +106,8 @@
                 plain
                 :disabled="!isRateDeliveryEnabled(tableProps.row as ISubDelivery)"
                 data-testid="request-new"
-                class="dms__reset"
                 link
-                @click="openRateDeliveryDialog"
+                @click="setRateDeliveryDialogOpen(true, deliveryInfo, tableProps.row as ISubDelivery)"
               >
                 {{ t('dataDelivery.rateDelivery') }}
               </el-button>
@@ -104,7 +125,6 @@
       plain
       :disabled="isNewDmsSelectionAfterDeliveryDisabled"
       data-testid="request-new"
-      class="dms__reset"
       link
       @click="openNewDmsDialog"
     >
@@ -116,6 +136,64 @@
     }}</el-button>
   </div>
   <!-- Pending Delivery Overview end  -->
+
+  <!-- Dialogs start -->
+
+  <FdpgDialog
+    v-if="selectedDeliveryInfo"
+    :model-value="isForwardDeliveryDialogOpen"
+    :title="
+      t('dataDelivery.forwardDeliveryTitle', {
+        deliveryName: selectedDeliveryInfo?.name,
+        dmsDisplay: locationLookupMap[selectedDeliveryInfo?.dms]?.display,
+      })
+    "
+    :message="t('dataDelivery.forwardDeliveryMessage')"
+  >
+    <template #footer>
+      <el-button plain link @click="setForwardDeliveryDialogOpen(false)">{{ t('general.cancel') }}</el-button>
+      <el-button
+        type="primary"
+        @click="
+          setDeliveryInfoStatus(
+            selectedDeliveryInfo,
+            DeliveryInfoStatus.WAITING_FOR_DATA_SET,
+            setForwardDeliveryDialogOpen,
+          )
+        "
+        >{{ t('general.forwardDeliveryDialogForwardButton') }}</el-button
+      >
+    </template>
+  </FdpgDialog>
+
+  <FdpgDialog
+    v-if="selectedDeliveryInfo"
+    :model-value="isCancelDeliveryDialogOpen"
+    :title="
+      t('dataDelivery.cancelDeliveryDialogTitle', {
+        deliveryName: selectedDeliveryInfo?.name,
+        dmsDisplay: locationLookupMap[selectedDeliveryInfo?.dms]?.display,
+      })
+    "
+    :message="t('dataDelivery.cancelDeliveryDialogMessage')"
+  >
+    <template #footer>
+      <el-button plain link @click="setCancelDeliveryDialogOpen(false)">{{ t('general.cancel') }}</el-button>
+      <el-button
+        type="primary"
+        @click="setDeliveryInfoStatus(selectedDeliveryInfo, DeliveryInfoStatus.CANCELED, setCancelDeliveryDialogOpen)"
+        >{{ t('general.cancelDeliveryDialogCancelButton') }}</el-button
+      >
+    </template>
+  </FdpgDialog>
+
+  <RateSubDeliveryDialog
+    v-if="selectedSubDelivery?.deliveryInfo && selectedSubDelivery.subDelivery && canRateDelivery"
+    :model-value="isRateDeliveryDialogOpen"
+    @close-dialog="setRateDeliveryDialogOpen(false)"
+    @submit="onRateSubDelivery"
+  />
+  <!-- Dialogs end -->
 </template>
 
 <script setup lang="ts">
@@ -131,9 +209,11 @@ import {
   type ISubDelivery,
 } from '@/types/proposal.types'
 import { getLocaleDateString, getLocaleDateTimeString } from '@/utils/date.util'
-import { computed, onMounted, ref, type PropType } from 'vue'
+import { computed, onMounted, ref, type PropType, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { RefreshRight } from '@element-plus/icons-vue'
+import RateSubDeliveryDialog from './RateSubDeliveryDialog.vue'
+import FdpgDialog from '../FdpgDialog.vue'
 
 const props = defineProps({
   dataDelivery: { type: Object as PropType<IDataDelivery>, required: true },
@@ -145,6 +225,8 @@ const emit = defineEmits([
   'openDialog:manualDelivery',
   'openDialog:initiateDelivery',
   'openDialog:newDms',
+  'openDialog:cancelDelivery',
+  'openDialog:forwardDelivery',
   'openDialog:rateDelivery',
 ])
 
@@ -156,8 +238,18 @@ const { t } = useI18n()
 const loadingIds = ref(new Set())
 const locationLookupMap = ref<Record<string, ILocation>>({})
 
-const isNewDmsSelectionAfterDeliveryDisabled = computed(() =>
-  (props.dataDelivery?.deliveryInfos || []).some((deliveryInfo) => deliveryInfo.status === DeliveryInfoStatus.PENDING),
+const isForwardDeliveryDialogOpen = ref(false)
+const isCancelDeliveryDialogOpen = ref(false)
+const isRateDeliveryDialogOpen = ref(false)
+
+const selectedDeliveryInfo: Ref<IDeliveryInfo | null> = ref(null)
+const selectedSubDelivery: Ref<{ deliveryInfo: IDeliveryInfo; subDelivery: ISubDelivery } | null> = ref(null)
+
+const isNewDmsSelectionAfterDeliveryDisabled = computed(
+  () =>
+    !(props.dataDelivery?.deliveryInfos || []).every(
+      (deliveryInfo) => deliveryInfo.status === DeliveryInfoStatus.CANCELED,
+    ),
 )
 
 const syncDeliveryInfoWithDmst = async (deliveryInfo: IDeliveryInfo) => {
@@ -175,25 +267,98 @@ const syncDeliveryInfoWithDmst = async (deliveryInfo: IDeliveryInfo) => {
   }
 }
 
-const onCancelDeliveryInfo = async (deliveryInfo: IDeliveryInfo): Promise<void> => {
-  console.log('TODO')
-}
-
-const onForwardDeliveryInfo = async (deliveryInfo: IDeliveryInfo): Promise<void> => {
-  console.log('TODO')
-}
+const onCancelDeliveryInfo = (deliveryInfo: IDeliveryInfo) => emit('openDialog:cancelDelivery', true, deliveryInfo)
+const onForwardDeliveryInfo = (deliveryInfo: IDeliveryInfo) => emit('openDialog:forwardDelivery', true, deliveryInfo)
 
 const openNewDmsDialog = () => emit('openDialog:newDms', true)
 const openManualDeliveryDialog = () => emit('openDialog:manualDelivery', true)
 const openInitiateDeliveryDialog = () => emit('openDialog:initiateDelivery', true)
-const openRateDeliveryDialog = () => emit('openDialog:rateDelivery', true)
 
 const isForwardButtonDisabled = (deliveryInfo: IDeliveryInfo): boolean => {
-  return deliveryInfo.subDeliveries.every((subDel) => subDel.status === SubDeliveryStatus.PENDING)
+  return !deliveryInfo.subDeliveries.some((subDel) => subDel.status === SubDeliveryStatus.ACCEPTED)
 }
 
 const isRateDeliveryEnabled = (subDelivery: ISubDelivery): boolean => {
-  return subDelivery.status === SubDeliveryStatus.DELIVERED
+  return [SubDeliveryStatus.DELIVERED, SubDeliveryStatus.REPEATED, SubDeliveryStatus.PENDING].includes(
+    subDelivery.status,
+  )
+}
+
+const setForwardDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
+  if (openState && !deliveryInfo) {
+    showErrorMessage()
+    return
+  }
+
+  selectedDeliveryInfo.value = deliveryInfo ?? null
+  isForwardDeliveryDialogOpen.value = openState
+}
+
+const setCancelDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
+  if (openState && !deliveryInfo) {
+    showErrorMessage()
+    return
+  }
+
+  selectedDeliveryInfo.value = deliveryInfo ?? null
+  isCancelDeliveryDialogOpen.value = openState
+}
+
+const setRateDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo, subDelivery?: ISubDelivery) => {
+  if (openState && (!deliveryInfo || !subDelivery)) {
+    showErrorMessage()
+    return
+  }
+
+  selectedSubDelivery.value = deliveryInfo && subDelivery ? { deliveryInfo: deliveryInfo, subDelivery } : null
+  isRateDeliveryDialogOpen.value = openState
+}
+
+const setDeliveryInfoStatus = async (
+  deliveryInfo: IDeliveryInfo | null,
+  newStatus: DeliveryInfoStatus,
+  closeDialogFn: (openState: boolean) => void,
+) => {
+  if (!deliveryInfo) {
+    showErrorMessage()
+    return
+  }
+
+  try {
+    if (proposalStore.currentProposal?._id) {
+      await proposalStore.setDeliveryInfoStatus(proposalStore.currentProposal?._id, {
+        ...deliveryInfo,
+        status: newStatus,
+      })
+    }
+  } catch (error) {
+    showErrorMessage(t('dataDelivery.setStatusFailed', { deliveryName: deliveryInfo.name }))
+  } finally {
+    closeDialogFn(false)
+  }
+}
+
+const onRateSubDelivery = async (rating: SubDeliveryStatus): Promise<void> => {
+  const { deliveryInfo, subDelivery } = selectedSubDelivery.value ?? {}
+  if (!deliveryInfo?._id || !subDelivery?._id || !rating) {
+    showErrorMessage()
+    return
+  }
+
+  if (!proposalStore.currentProposal?._id) {
+    return
+  }
+
+  try {
+    await proposalStore.rateSubDelivery(proposalStore.currentProposal._id, deliveryInfo._id, {
+      ...subDelivery,
+      status: rating,
+    })
+  } catch (e) {
+    showErrorMessage()
+  } finally {
+    setRateDeliveryDialogOpen(false)
+  }
 }
 
 onMounted(async () => {
@@ -260,6 +425,11 @@ onMounted(async () => {
   line-height: 1.25rem;
 
   &[data-variant='PENDING'] {
+    background: $gray-100;
+    border-color: $gray-700;
+  }
+
+  &[data-variant='REPEATED'] {
     background: $gray-100;
     border-color: $gray-700;
   }
