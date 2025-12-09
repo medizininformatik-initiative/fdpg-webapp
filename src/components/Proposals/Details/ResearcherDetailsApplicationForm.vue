@@ -12,12 +12,9 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
-    <section v-if="proposalDataDelivery && proposalDataDelivery.deliveryInfos?.length > 0">
-      <h2>
-        {{ t('dataDelivery.dataDelivery') }}
-      </h2>
-      <DmsDeliveryInfoOverview :data-delivery="proposalDataDelivery" :show-actions="false" :can-rate-delivery="false" />
-    </section>
+    <ProjectDMSOverview
+      v-if="currentProposalStatus.includes(proposalStore.currentProposal?.status ?? ProposalStatus.Draft)"
+    />
 
     <ProjectPublications
       v-if="showPublicationsAndReports"
@@ -83,6 +80,7 @@ import { isParticipatingScientist as isUserParticipatingScientist } from '@/util
 import { useAuthStore } from '@/stores/auth/auth.store'
 import ParticipatingResearcher from '@/components/ParticipatingResearcher.vue'
 import DmsDeliveryInfoOverview from '@/components/DataDelivery/DmsDeliveryInfoOverview.vue'
+import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()

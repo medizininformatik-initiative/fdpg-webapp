@@ -4,14 +4,16 @@
     :title="t('dataDelivery.rateDeliveryDialogTitle')"
     :message="t('dataDelivery.rateDeliveryDialogMessage')"
   >
-    <el-radio-group v-model="selectionRef" class="el-radio-group-mt-12 rate-dialog__radio-button-group">
-      <FdpgRadio v-for="option in radioOptions" :value="option.value"> {{ option.label }}</FdpgRadio>
-    </el-radio-group>
+    <div>
+      <el-radio-group v-model="selectionRef" class="el-radio-group-mt-12 rate-dialog__radio-button-group">
+        <FdpgRadio v-for="option in radioOptions" :value="option.value"> {{ option.label }}</FdpgRadio>
+      </el-radio-group>
+    </div>
 
     <template #footer>
       <el-button plain link @click="closeDialog">{{ t('general.cancel') }}</el-button>
       <el-button type="primary" :disabled="!selectionRef" @click="onRateSubDelivery">{{
-        t('general.rateDeliverySubmit')
+        t('dataDelivery.rateDeliverySubmit')
       }}</el-button>
     </template>
   </FdpgDialog>

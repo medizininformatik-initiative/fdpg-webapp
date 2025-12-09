@@ -1,49 +1,53 @@
 <template>
-  <section v-if="isLocationInquiryStep || !isDeliveryInitiated">
+  <section v-if="isLocationInquiryStep && userRole === Role.FdpgMember">
     <h2>
       {{ t('dataDelivery.dataManagementSiteAbbreviation') }}
     </h2>
 
-    <template v-if="isLocationInquiryStep">
-      <MissingDataDeliverySetup v-if="!dataDelivery" data-testid="missing-dms" />
-      <div v-else>
-        <DmsRequestOverview data-testid="overview" :data-delivery="dataDelivery" />
-        <el-button data-testid="request-new" class="dms__reset" link @click="() => setNewDmsDialogOpenState(true)">
-          {{ t('dataDelivery.newRequest') }}
-        </el-button>
-      </div>
-    </template>
-    <template v-else-if="!isDeliveryInitiated">
-      <el-card class="dms__card">
-        <div class="dms__card__text_row">
-          <p class="dms__card_row_header">{{ t('dataDelivery.noDataDeliveryInitiatedHeader') }}</p>
-          <p>
-            {{
-              t('dataDelivery.noDataDeliveryInitiatedBody', {
-                dms: locationLookupMap[dataDelivery?.dataManagementSite]?.display,
-              })
-            }}
-          </p>
-        </div>
-
-        <div class="dms__card__button_row">
-          <el-button @click="() => setNewDmsDialogOpenState(true)">{{
-            t('dataDelivery.openSelectDmsDialog')
-          }}</el-button>
-          <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
-            t('dataDelivery.createDataDelivery')
-          }}</el-button>
-        </div>
-      </el-card>
-    </template>
+    <MissingDataDeliverySetup v-if="!dataDelivery" data-testid="missing-dms" />
+    <div v-else>
+      <DmsRequestOverview data-testid="overview" :data-delivery="dataDelivery" />
+      <el-button data-testid="request-new" class="dms__reset" link @click="() => setNewDmsDialogOpenState(true)">
+        {{ t('dataDelivery.newRequest') }}
+      </el-button>
+    </div>
   </section>
 
-  <section v-if="dataDelivery && dataDelivery.deliveryInfos?.length > 0">
+  <section v-else-if="!isDeliveryInitiated && userRole === Role.FdpgMember">
+    <h2>
+      {{ t('dataDelivery.dataManagementSiteAbbreviation') }}
+    </h2>
+    <el-card class="dms__card">
+      <div class="dms__card__text_row">
+        <p class="dms__card_row_header">{{ t('dataDelivery.noDataDeliveryInitiatedHeader') }}</p>
+        <p>
+          {{
+            t('dataDelivery.noDataDeliveryInitiatedBody', {
+              dms: locationLookupMap[dataDelivery!.dataManagementSite]?.display,
+            })
+          }}
+        </p>
+      </div>
+
+      <div class="dms__card__button_row">
+        <el-button @click="() => setNewDmsDialogOpenState(true)">{{ t('dataDelivery.openSelectDmsDialog') }}</el-button>
+        <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
+          t('dataDelivery.createDataDelivery')
+        }}</el-button>
+      </div>
+    </el-card>
+  </section>
+
+  <section v-if="isDeliveryInitiated">
     <h2>
       {{ t('dataDelivery.dataDelivery') }}
     </h2>
     <DmsDeliveryInfoOverview
-      :data-delivery="dataDelivery"
+      :data-delivery="dataDelivery!"
+      :can-initiate-dms="userRole === Role.FdpgMember"
+      :can-manual-initiate="userRole === Role.FdpgMember || userRole === Role.DataManagementOffice"
+      :can-initiate-dsf-delivery="userRole === Role.FdpgMember"
+      :can-rate-delivery="userRole === Role.DataManagementOffice"
       @open-dialog:new-dms="setNewDmsDialogOpenState"
       @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
       @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
@@ -90,13 +94,18 @@ import type { ILocation } from '@/types/location.types'
 import useNotifications from '@/composables/use-notifications'
 import InitiateDeliveryInfoDialog from './InitiateDeliveryInfoDialog.vue'
 import DmsDeliveryInfoOverview from './DmsDeliveryInfoOverview.vue'
+import { useAuthStore } from '@/stores/auth/auth.store'
+import { Role } from '@/types/oidc.types'
 
 const { t } = useI18n()
 const proposalStore = useProposalStore()
 const locationStore = useLocationStore()
+const authStore = useAuthStore()
 const { showErrorMessage } = useNotifications()
 
 const locationLookupMap = ref<Record<string, ILocation>>({})
+
+const userRole = computed(() => authStore.singleKnownRole)
 
 const dataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 const selectableLocations = computed(
@@ -117,7 +126,11 @@ const isLocationInquiryStep = computed(
 )
 
 const isDeliveryInitiated = computed(
-  () => !!dataDelivery.value?.deliveryInfos && dataDelivery.value.deliveryInfos.length > 0,
+  () =>
+    !!dataDelivery.value?.deliveryInfos &&
+    dataDelivery.value.deliveryInfos.length > 0 &&
+    dataDelivery.value.dataManagementSite &&
+    dataDelivery.value.acceptance === DeliveryAcceptance.ACCEPTED,
 )
 
 const setNewDmsDialogOpenState = (openState: boolean) => {

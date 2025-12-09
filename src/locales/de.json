@@ -1026,6 +1026,9 @@
     "dataDelivery": "Datenlieferung",
     "deliveryName": "Lieferung {deliveryName}",
     "deliveryUntil": "Erwartet bis {deliveryDate}",
+    "deliveryWasCanceled": "Abgebrochen am: {canceledDate}",
+    "waitingForDataSet": "Warten auf Ergebnisse. ",
+    "forwardedOn": "Weitergeleitet am: {forwardedDate}",
     "cancelDelivery": "Lieferung abbrechen",
     "forwardDelivery": "Lieferung weiterleiten",
     "deliveryInfoLocation": "DIZ",
@@ -1035,6 +1038,7 @@
     "subdeliveryStatus__CANCELED": "Abgebrochen",
     "subdeliveryStatus__DELIVERED": "Geliefert",
     "subdeliveryStatus__ACCEPTED": "Bestätigt",
+    "subdeliveryStatus__REPEATED": "Wiederholt",
     "manualEntry": "Datenlieferung manuell eintragen",
     "createFurtherDataDelivery": "Weitere Datenlieferung anstoßen",
     "initiateDataDeliveryTitle": "Neue Datenlieferung anstoßen?",
@@ -1049,7 +1053,18 @@
     "rateDelivery": "Lieferung bewerten",
     "errorInitiateDeliveryInfo": "Fehler beim initiieren der Lieferung",
     "errorSelectDms": "Fehler bei DMST Auswahl",
-    "syncFailed": "Fehler bei der synchronization mit DSF"
+    "syncFailed": "Fehler bei der synchronization mit DSF",
+    "forwardDeliveryTitle": "{deliveryName} wirklich weiterleiten?",
+    "forwardDeliveryMessage": "Ihre aktuelle Lieferung von der {dmsDisplay} wird an die Forschenden weitergeleitet. Noch ausstehende Lieferung einzelner Standort können nicht mehr berücksichtigt werden. Möchten Sie trotzdem fortfahren?",
+    "forwardDeliveryDialogForwardButton": "Lieferung weiterleiten",
+    "cancelDeliveryDialogTitle": "{deliveryName} wirklich abbrechen?",
+    "cancelDeliveryDialogMessage": "Wenn Sie fortfahren, wird die laufende Lieferung von der {dmsDisplay} abgebrochen. Noch ausstehende Lieferungen anderer Standorte können dann nicht mehr abgeschlossen werden.\n",
+    "cancelDeliveryDialogCancelButton": "Lieferung abbrechen",
+    "rateDeliveryDialogTitle": "Lieferung bewerten",
+    "rateDeliveryDialogMessage": "Bitte bewerten Sie die Lieferung.",
+    "rateDeliveryAccept": "Lieferung ist bestätigt",
+    "rateDeliveryRepeat": "Lieferung wird wiederholt",
+    "rateDeliverySubmit": "Okay"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",
