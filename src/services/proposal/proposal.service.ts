@@ -572,6 +572,43 @@ export class ProposalService {
     }
   }
 
+  async setDmsAcceptance(proposalId: string, acceptance: DeliveryAcceptance): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery/acceptance`, undefined, {
+          params: {
+            acceptance,
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async extendDeliveryInfo(proposalId: string, deliveryInfoId: string, newDeliveryDate: Date): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/extend-delivery`, undefined, {
+          params: {
+            deliveryInfoId,
+            newDeliveryDate: newDeliveryDate.toISOString(),
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
   async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
     await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
   }

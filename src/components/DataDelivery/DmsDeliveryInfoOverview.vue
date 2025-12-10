@@ -7,22 +7,30 @@
           <div class="delivery-info__el-collapse-item-title">
             {{ t('dataDelivery.deliveryName', { deliveryName: deliveryInfo.name }) }}
           </div>
-          <div
-            v-if="canInitiateDms && deliveryInfo.status === DeliveryInfoStatus.PENDING"
-            class="delivery-info__interaction"
-          >
+          <div v-if="canInitiateDms" class="delivery-info__interaction">
             <el-button
+              v-if="[DeliveryInfoStatus.PENDING, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(deliveryInfo.status)"
               type="primary"
               plain
               class="delivery-info__collapse-buttons"
-              @click.stop="() => setCancelDeliveryDialogOpen(true, deliveryInfo)"
+              @click.stop="setExtendDeliveryDialogOpen(true, deliveryInfo)"
+            >
+              {{ t('dataDelivery.extendDelivery') }}
+            </el-button>
+            <el-button
+              v-if="deliveryInfo.status === DeliveryInfoStatus.PENDING"
+              type="primary"
+              plain
+              class="delivery-info__collapse-buttons"
+              @click.stop="setCancelDeliveryDialogOpen(true, deliveryInfo)"
               >{{ t('dataDelivery.cancelDelivery') }}</el-button
             >
             <el-button
+              v-if="deliveryInfo.status === DeliveryInfoStatus.PENDING"
               type="primary"
               :disabled="isForwardButtonDisabled(deliveryInfo)"
               class="delivery-info__collapse-buttons"
-              @click.stop="() => setForwardDeliveryDialogOpen(true, deliveryInfo)"
+              @click.stop="setForwardDeliveryDialogOpen(true, deliveryInfo)"
               >{{ t('dataDelivery.forwardDelivery') }}</el-button
             >
           </div>
@@ -30,38 +38,43 @@
       </template>
       <div class="delivery-info__collapse-body">
         <div class="delivery-info__information">
-          <p v-if="deliveryInfo.status === DeliveryInfoStatus.PENDING">
-            {{ t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) }) }}
-          </p>
-          <p v-if="deliveryInfo.status === DeliveryInfoStatus.CANCELED">
-            {{
-              t('dataDelivery.deliveryWasCanceled', { canceledDate: getLocaleDateString(deliveryInfo.forwardedOnDate) })
-            }}
-          </p>
-          <div v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
-            <p>
+          <div class="delivery-info__status-date">
+            <div
+              v-if="[DeliveryInfoStatus.PENDING, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(deliveryInfo.status)"
+              class="delivery-info__extend-delivery-container"
+            >
+              <p>
+                {{ t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) }) }}
+              </p>
+            </div>
+            <p v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
+              {{ t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) }) }}
+            </p>
+            <p v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
+              {{ t('dataDelivery.waitingForDataSet') }}
+            </p>
+            <p v-if="deliveryInfo.status === DeliveryInfoStatus.CANCELED">
               {{
-                t('dataDelivery.waitingForDataSet', {
-                  forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate),
+                t('dataDelivery.deliveryWasCanceled', {
+                  canceledDate: getLocaleDateString(deliveryInfo.forwardedOnDate),
                 })
               }}
             </p>
-            <p>
-              {{ t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) }) }}
-            </p>
-          </div>
-          <div v-if="deliveryInfo.status === DeliveryInfoStatus.FINISHED">
-            <p>
-              {{ t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) }) }}
-            </p>
-            <a
-              v-if="deliveryInfo.resultUrl"
-              link
-              :href="deliveryInfo.resultUrl"
-              target="_blank"
-              class="delivery-info__result-url"
-              >{{ deliveryInfo.resultUrl }}</a
-            >
+            <div v-if="deliveryInfo.status === DeliveryInfoStatus.FINISHED">
+              <p>
+                {{
+                  t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) })
+                }}
+              </p>
+              <a
+                v-if="deliveryInfo.resultUrl"
+                link
+                :href="deliveryInfo.resultUrl"
+                target="_blank"
+                class="delivery-info__result-url"
+                >{{ deliveryInfo.resultUrl }}</a
+              >
+            </div>
           </div>
 
           <span
@@ -218,6 +231,14 @@
     @close-dialog="setRateDeliveryDialogOpen(false)"
     @submit="onRateSubDelivery"
   />
+
+  <ExtendDeliveryDialog
+    v-if="selectedDeliveryInfo"
+    :model-value="isExtendDeliveryDialogOpen"
+    :delivery-info="selectedDeliveryInfo"
+    @submit="onExtendDelivery"
+    @close-dialog="setExtendDeliveryDialogOpen(false)"
+  />
   <!-- Dialogs end -->
 </template>
 
@@ -239,6 +260,9 @@ import { useI18n } from 'vue-i18n'
 import { RefreshRight } from '@element-plus/icons-vue'
 import RateSubDeliveryDialog from './RateSubDeliveryDialog.vue'
 import FdpgDialog from '../FdpgDialog.vue'
+import axios from 'axios'
+import { BadRequestError } from '@/types/bad-request-error.enum'
+import ExtendDeliveryDialog from './ExtendDeliveryDialog.vue'
 
 const props = defineProps({
   dataDelivery: { type: Object as PropType<IDataDelivery>, required: true },
@@ -248,12 +272,7 @@ const props = defineProps({
   canInitiateDsfDelivery: { type: Boolean, default: false },
 })
 
-const emit = defineEmits([
-  'openDialog:manualDelivery',
-  'openDialog:initiateDelivery',
-  'openDialog:newDms',
-  'openDialog:rateDelivery',
-])
+const emit = defineEmits(['openDialog:manualDelivery', 'openDialog:initiateDelivery', 'openDialog:newDms'])
 
 const proposalStore = useProposalStore()
 const locationStore = useLocationStore()
@@ -266,6 +285,7 @@ const locationLookupMap = ref<Record<string, ILocation>>({})
 const isForwardDeliveryDialogOpen = ref(false)
 const isCancelDeliveryDialogOpen = ref(false)
 const isRateDeliveryDialogOpen = ref(false)
+const isExtendDeliveryDialogOpen = ref(false)
 
 const selectedDeliveryInfo: Ref<IDeliveryInfo | null> = ref(null)
 const selectedSubDelivery: Ref<{ deliveryInfo: IDeliveryInfo; subDelivery: ISubDelivery } | null> = ref(null)
@@ -333,6 +353,16 @@ const setRateDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryI
   isRateDeliveryDialogOpen.value = openState
 }
 
+const setExtendDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
+  if (openState && !deliveryInfo) {
+    showErrorMessage()
+    return
+  }
+
+  selectedDeliveryInfo.value = deliveryInfo ?? null
+  isExtendDeliveryDialogOpen.value = openState
+}
+
 const setDeliveryInfoStatus = async (
   deliveryInfo: IDeliveryInfo | null,
   newStatus: DeliveryInfoStatus,
@@ -351,7 +381,10 @@ const setDeliveryInfoStatus = async (
       })
     }
   } catch (error) {
-    showErrorMessage(t('dataDelivery.setStatusFailed', { deliveryName: deliveryInfo.name }))
+    handleFhirQuestionnairResponseNotFoundOrDefaultError(
+      error,
+      t('dataDelivery.setStatusFailed', { deliveryName: deliveryInfo.name }),
+    )
   } finally {
     closeDialogFn(false)
   }
@@ -378,6 +411,35 @@ const onRateSubDelivery = async (rating: SubDeliveryStatus): Promise<void> => {
   } finally {
     setRateDeliveryDialogOpen(false)
   }
+}
+
+const onExtendDelivery = async (deliveryInfoId: string, newDeliveryDate: Date) => {
+  if (!deliveryInfoId) {
+    showErrorMessage()
+    return
+  }
+
+  try {
+    if (proposalStore.currentProposal?._id) {
+      await proposalStore.extendDeliveryInfo(proposalStore.currentProposal?._id, deliveryInfoId, newDeliveryDate)
+    }
+  } catch (error) {
+    handleFhirQuestionnairResponseNotFoundOrDefaultError(error)
+  } finally {
+    setExtendDeliveryDialogOpen(false)
+  }
+}
+
+const handleFhirQuestionnairResponseNotFoundOrDefaultError = (error: any, defaultMessage?: string) => {
+  if (axios.isAxiosError(error) && error.response?.data?.errors) {
+    const isQrNotFound = error.response?.data.errors.find(
+      (apiError: { code: string }) => apiError.code === BadRequestError.FhirQuestionnairResponseNotFound,
+    )
+    if (isQrNotFound) {
+      showErrorMessage(t('dataDelivery.fhirQrNotFound'))
+    }
+  }
+  showErrorMessage(defaultMessage)
 }
 
 onMounted(async () => {
@@ -473,5 +535,20 @@ onMounted(async () => {
 
 .delivery-info__result-url {
   color: $blue;
+}
+
+.delivery-info__status-date {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.delivery-info__extend-delivery-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1em;
 }
 </style>

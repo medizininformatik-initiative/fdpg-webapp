@@ -1064,7 +1064,7 @@
     "rateDelivery": "Rate Delivery",
     "errorInitiateDeliveryInfo": "Error on initiate delivery",
     "errorSelectDms": "Error on DMS selection",
-    "syncFailed": "Error on sync with DSF",
+    "syncFailed": "Sync failed. Check if DSF is available.",
     "forwardDeliveryTitle": "Forward {deliveryName}?",
     "forwardDeliveryMessage": "Your current delivery from {dmsDisplay} will be forwarded to the researchers. Pending deliveries to individual locations can no longer be taken into account. Would you still like to continue?",
     "forwardDeliveryDialogForwardButton": "Forward delivery",
@@ -1075,7 +1075,10 @@
     "rateDeliveryDialogMessage": "Please rate the delivery.",
     "rateDeliveryAccept": "Delivery is accepted",
     "rateDeliveryRepeat": "Delivery will be repeated",
-    "rateDeliverySubmit": "Okay"
+    "rateDeliverySubmit": "Okay",
+    "extendDelivery": "Extend delivery",
+    "fhirQrNotFound": "Could not find DSF 'QuestionnairResponse' with attached businessKey. Operation aborted.",
+    "setStatusFailed": "Error on update of {deliveryName}"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

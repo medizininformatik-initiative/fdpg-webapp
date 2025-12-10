@@ -1064,7 +1064,7 @@
     "rateDelivery": "Lieferung bewerten",
     "errorInitiateDeliveryInfo": "Fehler beim initiieren der Lieferung",
     "errorSelectDms": "Fehler bei DMST Auswahl",
-    "syncFailed": "Fehler bei der synchronization mit DSF",
+    "syncFailed": "Synchronization fehlgeschlagen. Überprüfen Sie ob das DSF verfügbar ist.",
     "forwardDeliveryTitle": "{deliveryName} wirklich weiterleiten?",
     "forwardDeliveryMessage": "Ihre aktuelle Lieferung von der {dmsDisplay} wird an die Forschenden weitergeleitet. Noch ausstehende Lieferung einzelner Standort können nicht mehr berücksichtigt werden. Möchten Sie trotzdem fortfahren?",
     "forwardDeliveryDialogForwardButton": "Lieferung weiterleiten",
@@ -1075,7 +1075,10 @@
     "rateDeliveryDialogMessage": "Bitte bewerten Sie die Lieferung.",
     "rateDeliveryAccept": "Lieferung ist bestätigt",
     "rateDeliveryRepeat": "Lieferung wird wiederholt",
-    "rateDeliverySubmit": "Okay"
+    "rateDeliverySubmit": "Okay",
+    "extendDelivery": "Lieferung verlängern",
+    "fhirQrNotFound": "DSF 'QuestionnairResponse' mit businessKey nicht gefunden. Operation wurde abgebrochen",
+    "setStatusFailed": "Fehler bei Update von {deliveryName}"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",
