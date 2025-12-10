@@ -131,6 +131,16 @@ const FDPG_PANELS: Record<FdpgDashboardRoutes, PanelType[]> = {
       hasClickAction: true,
     },
   ],
+  [RouteName.Overview]: [
+    {
+      type: CardType.Overview,
+      header: 'general.overview',
+      query: PanelQuery.FdpgOverview,
+      hasClickAction: true,
+      isTable: true,
+      fullHeight: true,
+    },
+  ],
 }
 
 const DMS_PANELS: PanelType[] = [

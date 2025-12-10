@@ -13,4 +13,5 @@ export enum CardType {
   Requested = 'Requested',
   Pending = 'Pending',
   Current = 'Current',
+  Overview = 'Overview',
 }

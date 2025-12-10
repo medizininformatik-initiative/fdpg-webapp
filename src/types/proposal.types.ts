@@ -370,6 +370,7 @@ export interface PanelType {
   header: string
   isTable?: boolean
   hasClickAction?: boolean
+  fullHeight?: boolean
 }
 
 export interface IProposalHistory {
