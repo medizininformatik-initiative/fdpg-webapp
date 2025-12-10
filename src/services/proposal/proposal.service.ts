@@ -2,6 +2,7 @@ import { ApiClient } from '@/httpClients/api/api.client'
 import type { ISortAndOrderBy } from '@/types/sort-filter.types'
 import {
   DeliveryAcceptance,
+  ProposalStatus,
   type FdpgChecklistItemUpdateResponse,
   type IApplicant,
   type IDataDelivery,
@@ -21,7 +22,6 @@ import {
   type IResearcherIdentity,
   type ISelectedCohort,
   type IUpload,
-  type ProposalStatus,
   type IDeliveryInfo,
   SubDeliveryStatus,
   type ISubDelivery,
@@ -611,6 +611,18 @@ export class ProposalService {
 
   async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
     await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
+  }
+
+  async updateDelivieriesForAnalysis(proposalId: string): Promise<IProposal> {
+    try {
+      return (
+        await this.apiClient.put<IProposal, AxiosResponse<IProposal>>(
+          `${this.basePath}/${proposalId}/data-delivery/analysis-started`,
+        )
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
   }
 
   async catch(error: any) {

@@ -81,7 +81,8 @@
     "invalidUrl": "Invalid URL",
     "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
     "overview": "Overview",
-    "textCopied": "Text copied to clipboard"
+    "textCopied": "Text copied to clipboard",
+    "none": "None"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -824,7 +825,13 @@
     "registerProject": "Register Project",
     "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
     "projectAssignee": "Project assignee",
-    "redirectToFeasibilityPortal": "Feasibility Portal"
+    "redirectToFeasibilityPortal": "Feasibility Portal",
+    "startAnalysis": "Start data analysis",
+    "startAnalysisModalTitle": "Start data analysis",
+    "startAnalysisModalDescription": "Start data analysis. Current running deliveries will be marked as canceled: {deliveriesToBeCanceled}. Current deliveries will be marked as received: {deliveriesToBeMarkedAsReceived}.",
+    "finishAnalysis": "Finish data analysis",
+    "finishAnalysisModalTitle": "Finish data analysis",
+    "finishAnalysisModalDescription": "Finish data analysis"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -932,7 +939,8 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Your location must sign the contract by {date}.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "The contract requirements have been accepted. The contract for the project is in the process of being finalized.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "The contract requirements are being reviewed.",
-    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing"
+    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing",
+    "DATA_RESEARCH_FINISHED": "The analysis phase of the project is concluded."
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Check",

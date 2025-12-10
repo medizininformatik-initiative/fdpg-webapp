@@ -3,6 +3,7 @@ import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
 import {
   DeliveryAcceptance,
+  ProposalStatus,
   SubDeliveryStatus,
   type IApplicant,
   type IDataDelivery,
@@ -22,14 +23,13 @@ import {
   type ISelectedCohort,
   type ISubDelivery,
   type IUpload,
-  type ProposalStatus,
   type SortableFields,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
-import { debounce } from 'lodash-es'
+import { debounce, update } from 'lodash-es'
 import { getDateDiff } from '@/utils/date.util'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
@@ -683,6 +683,15 @@ export const useProposalStore = defineStore('Proposal', {
 
     async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
       await this.apiService.updateProjectAssignee(proposalId, projectAssignee)
+    },
+
+    async setToDataResearch(proposalId: string): Promise<IProposal> {
+      await this.updateProposalStatus(proposalId, ProposalStatus.DataResearch)
+      const updatedProposal = await this.apiService.updateDelivieriesForAnalysis(proposalId)
+      if (updatedProposal) {
+        this.currentProposal = updatedProposal
+      }
+      return updatedProposal
     },
   },
 

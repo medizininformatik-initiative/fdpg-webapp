@@ -62,7 +62,6 @@ import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { ProposalStatus } from '@/types/proposal.types'
-import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -79,7 +78,6 @@ import type { ILocation } from '@/types/location.types'
 import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import ParticipatingResearcher from '@/components/ParticipatingResearcher.vue'
-import DmsDeliveryInfoOverview from '@/components/DataDelivery/DmsDeliveryInfoOverview.vue'
 import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 const { t } = useI18n()
@@ -92,9 +90,12 @@ const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
   ProposalStatus.DataCorrupt,
+  ProposalStatus.DataResearchFinished,
   ProposalStatus.FinishedProject,
   ProposalStatus.ReadyToArchive,
 ]
+
+const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -104,6 +105,7 @@ const showContractingParticipants = computed(() => {
     status.value === ProposalStatus.ExpectDataDelivery ||
     status.value === ProposalStatus.DataResearch ||
     status.value === ProposalStatus.DataCorrupt ||
+    status.value === ProposalStatus.DataResearchFinished ||
     status.value === ProposalStatus.ReadyToArchive ||
     status.value === ProposalStatus.FinishedProject ||
     status.value === ProposalStatus.Archived ||
@@ -112,6 +114,16 @@ const showContractingParticipants = computed(() => {
 })
 
 const locationStore = useLocationStore()
+
+const changeStatus = async (proposalStatus: ProposalStatus) => {
+  try {
+    await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error: any) {
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
 
 const locationMapRef: Ref<Record<string, ILocation>> = ref({})
 
@@ -124,9 +136,6 @@ const possibleLocations = computed(() =>
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
-
-const proposalDataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
-const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
@@ -195,16 +204,6 @@ const handleContractSignConfirm = async (file: UploadFile) => {
 
 const handleContractDeclineConfirm = async (declineReason: string) => {
   await setContractSign({ value: false, declineReason })
-}
-
-const changeStatus = async (proposalStatus: ProposalStatus) => {
-  try {
-    await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
-    showSuccessMessage(t('general.submitted'))
-    await router.push({ name: RouteName.Dashboard })
-  } catch (error: any) {
-    showErrorMessage(t('general.failedSubmit'))
-  }
 }
 
 const handleArchiveProjectClick = () => {
@@ -296,6 +295,7 @@ const getCommentTodos = (comments: ICommentDetail[]): IProjectTodo[] => {
         actionLabel: 'proposal.viewTodoInProposal',
         type: 'comment',
         testId: 'todo__button__viewTodoInProposal',
+        readonly: false,
       }
     })
 }
@@ -315,6 +315,7 @@ const getContractSignTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleSignContract(decision),
         type: 'decision',
         testId: 'todo__button__signContract',
+        readonly: false,
       },
     ]
   } else {
@@ -323,7 +324,7 @@ const getContractSignTodo = (): IProjectTodo[] => {
 }
 
 const getFinishProjectTodo = (hasDeclined: boolean): IProjectTodo[] => {
-  const isReadyToFinishProject = proposalStore.currentProposal?.status === ProposalStatus.DataResearch
+  const isReadyToFinishProject = proposalStore.currentProposal?.status === ProposalStatus.DataResearchFinished
 
   if (isReadyToFinishProject && !hasDeclined) {
     return [
@@ -333,6 +334,7 @@ const getFinishProjectTodo = (hasDeclined: boolean): IProjectTodo[] => {
         action: (decision: boolean) => handleFinishProject(decision),
         type: 'decision',
         testId: 'todo__button__finishProject',
+        readonly: false,
       },
     ]
   } else {

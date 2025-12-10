@@ -72,6 +72,7 @@ const historyList = computed(() => {
         }
         break
       case ProjectHistoryType.DataDeliveryStarted:
+      case ProjectHistoryType.DataDeliveryManualEntry:
       case ProjectHistoryType.DataDeliveryCanceled:
       case ProjectHistoryType.DataDeliveryForwarded:
       case ProjectHistoryType.DataDeliveryConcluded:

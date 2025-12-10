@@ -57,6 +57,7 @@ const stepMap: Record<ProposalStatus | 'default', number> = {
   [ProposalStatus.ExpectDataDelivery]: 4,
   [ProposalStatus.DataCorrupt]: 4,
   [ProposalStatus.DataResearch]: 5,
+  [ProposalStatus.DataResearchFinished]: 6,
   [ProposalStatus.FinishedProject]: 6,
   [ProposalStatus.Rejected]: 6,
   [ProposalStatus.Archived]: 6,

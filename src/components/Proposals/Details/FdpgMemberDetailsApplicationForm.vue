@@ -117,7 +117,7 @@ import type { IDetailActionRow } from '@/types/detail-action-row.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import type { IFdpgChecklist } from '@/types/proposal.types'
-import { ProposalStatus } from '@/types/proposal.types'
+import { DeliveryInfoStatus, ProposalStatus } from '@/types/proposal.types'
 import { useFdpgProposalCommon } from '@/composables/use-fdpg-proposal-common'
 import { useFdpgApplicationForm } from '@/composables/use-fdpg-application-form'
 
@@ -178,6 +178,8 @@ const {
   handleDownloadLocationCsvClick,
   handleContractSignConfirm,
   handleRegisterProjectClick,
+  handleStartAnalysisClick,
+  handleFinishAnalysisClick,
 } = useFdpgApplicationForm(proposalId, status, changeStatus, t, t)
 
 // Project Todos
@@ -320,7 +322,34 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__downloadLocationCsv',
     action: handleDownloadLocationCsvClick,
     position: 'right',
-    isHidden: false,
+    isHidden: [
+      ProposalStatus.ExpectDataDelivery,
+      ProposalStatus.DataResearch,
+      ProposalStatus.DataResearchFinished,
+      ProposalStatus.FinishedProject,
+    ].includes(status.value),
+    isDisabled: proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: 'proposal.startAnalysis',
+    testId: 'button__startAnalysis',
+    action: handleStartAnalysisClick,
+    position: 'right',
+    isHidden: status.value !== ProposalStatus.ExpectDataDelivery,
+    isDisabled:
+      proposalStore.currentProposal?.isLocked ||
+      !proposalStore.currentProposal?.dataDelivery?.deliveryInfos.some((deliveryInfo) =>
+        [DeliveryInfoStatus.FETCHED_BY_RESEARCHER, DeliveryInfoStatus.RESULTS_AVAILABLE].includes(deliveryInfo.status),
+      ),
+  },
+  {
+    type: 'primary',
+    label: 'proposal.finishAnalysis',
+    testId: 'button__finishAnalysis',
+    action: handleFinishAnalysisClick,
+    position: 'right',
+    isHidden: proposalStore.currentProposal?.status !== ProposalStatus.DataResearch,
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {

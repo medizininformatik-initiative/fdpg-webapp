@@ -81,7 +81,8 @@
     "invalidUrl": "ungültige URL",
     "fileSizeExceedsLimit": "Die Dateigröße überschreitet die maximal zulässige Größe",
     "overview": "Überblick",
-    "textCopied": "Text wurde in die Zwischenablage kopiert"
+    "textCopied": "Text wurde in die Zwischenablage kopiert",
+    "none": "Keine"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -824,7 +825,13 @@
     "registerProject": "Projekt registrieren",
     "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
     "projectAssignee": "Abtretungsempfänger:in",
-    "redirectToFeasibilityPortal": "Datenportal"
+    "redirectToFeasibilityPortal": "Datenportal",
+    "startAnalysis": "Datenanalyse starten",
+    "startAnalysisModalTitle": "Datenanalyse starten",
+    "startAnalysisModalDescription": "Datenanalyse starten. Laufende Lieferungen werden als abgebrochen markiert: {deliveriesToBeCanceled}. Laufende Lieferungen werden als erhalten markiert: {deliveriesToBeMarkedAsReceived}",
+    "finishAnalysis": "Datenanalyse beenden",
+    "finishAnalysisModalTitle": "Datenanalyse beenden",
+    "finishAnalysisModalDescription": "Datenanalyse beenden"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -932,7 +939,8 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Ihr Standort muss den Vertrag bis zum {date} unterzeichnen.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "Die Vertragsauflagen wurden angenommen. Der Vertrag zum Projekt befindet sich in der Abstimmung.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "Die Vertragsauflagen werden geprüft.",
-    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt"
+    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt",
+    "DATA_RESEARCH_FINISHED": "Die Analysephase des Projektes ist beendet."
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Prüfung",

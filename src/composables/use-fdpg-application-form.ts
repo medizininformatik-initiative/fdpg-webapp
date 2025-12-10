@@ -3,8 +3,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useLayoutStore } from '@/stores/layout.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import { ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
+import { useMessageBoxStore, type DecisionType, type IMessageBox } from '@/stores/messageBox.store'
+import { DeliveryInfoStatus, ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import type { UploadFile } from 'element-plus'
 
@@ -51,6 +51,7 @@ export function useFdpgApplicationForm(
       status.value === ProposalStatus.ExpectDataDelivery ||
       status.value === ProposalStatus.DataResearch ||
       status.value === ProposalStatus.DataCorrupt ||
+      status.value === ProposalStatus.DataResearchFinished ||
       status.value === ProposalStatus.ReadyToArchive ||
       status.value === ProposalStatus.FinishedProject ||
       status.value === ProposalStatus.Archived ||
@@ -224,6 +225,76 @@ export function useFdpgApplicationForm(
     }
   }
 
+  const handleStartAnalysisClick = async () => {
+    const deliveries = proposalStore.currentProposal?.dataDelivery?.deliveryInfos ?? []
+    const deliveriesToBeCanceled =
+      deliveries
+        .filter(
+          ({ status }) =>
+            ![
+              DeliveryInfoStatus.RESULTS_AVAILABLE,
+              DeliveryInfoStatus.WAITING_FOR_DATA_SET,
+              DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+              DeliveryInfoStatus.CANCELED,
+            ].includes(status),
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    const deliveriesToBeMarkedAsReceived =
+      deliveries
+        .filter(
+          ({ status }) =>
+            [
+              DeliveryInfoStatus.RESULTS_AVAILABLE,
+              DeliveryInfoStatus.WAITING_FOR_DATA_SET,
+              DeliveryInfoStatus.CANCELED,
+            ].includes(status) && status !== DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.startAnalysisModalTitle',
+      message: t('proposal.startAnalysisModalDescription', { deliveriesToBeCanceled, deliveriesToBeMarkedAsReceived }),
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          try {
+            await proposalStore.setToDataResearch(proposalId.value)
+            showSuccessMessage(t('general.submitted'))
+            await router.push({ name: layoutStore.lastDashboard })
+          } catch (error: any) {
+            showErrorMessage(t('general.failedSubmit'))
+          }
+        }
+      },
+    } as IMessageBox)
+  }
+
+  const handleFinishAnalysisClick = async () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.finishAnalysisModalTitle',
+      message: 'proposal.finishAnalysisModalDescription',
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          try {
+            await proposalStore.updateProposalStatus(proposalId.value, ProposalStatus.DataResearchFinished)
+            showSuccessMessage(t('general.submitted'))
+            await router.push({ name: layoutStore.lastDashboard })
+          } catch (error: any) {
+            showErrorMessage(t('general.failedSubmit'))
+          }
+        }
+      },
+    })
+  }
+
   const handleRegisterProjectClick = async () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
@@ -271,5 +342,7 @@ export function useFdpgApplicationForm(
     handleContractSignConfirm,
     handleRegisterProjectClick,
     initContracting,
+    handleStartAnalysisClick,
+    handleFinishAnalysisClick,
   }
 }

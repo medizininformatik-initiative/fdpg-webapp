@@ -44,11 +44,13 @@
     </h2>
     <DmsDeliveryInfoOverview
       :data-delivery="dataDelivery!"
-      :can-initiate-dms="userRole === Role.FdpgMember"
-      :can-manual-initiate="userRole === Role.FdpgMember || userRole === Role.DataManagementOffice"
-      :can-initiate-dsf-delivery="userRole === Role.FdpgMember"
-      :can-rate-delivery="userRole === Role.DataManagementOffice"
-      :can-fetch-results="userRole === Role.Researcher"
+      :can-initiate-dms="userRole === Role.FdpgMember && isDataDeliveryStatus"
+      :can-manual-initiate="
+        (userRole === Role.FdpgMember || userRole === Role.DataManagementOffice) && isDataDeliveryStatus
+      "
+      :can-initiate-dsf-delivery="userRole === Role.FdpgMember && isDataDeliveryStatus"
+      :can-rate-delivery="userRole === Role.DataManagementOffice && isDataDeliveryStatus"
+      :can-fetch-results="userRole === Role.Researcher && isDataDeliveryStatus"
       @open-dialog:new-dms="setNewDmsDialogOpenState"
       @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
       @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
@@ -88,7 +90,7 @@ import { computed, onMounted, ref, type Ref } from 'vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store.ts'
 import MissingDataDeliverySetup from '@/components/DataDelivery/MissingDataDeliverySetup.vue'
 import DmsRequestOverview from '@/components/DataDelivery/DmsRequestOverview.vue'
-import { DeliveryAcceptance, type IDataDelivery, type IDeliveryInfo } from '@/types/proposal.types'
+import { DeliveryAcceptance, ProposalStatus, type IDataDelivery, type IDeliveryInfo } from '@/types/proposal.types'
 import RequestNewDmsDialog from './RequestNewDmsDialog.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
@@ -107,6 +109,8 @@ const { showErrorMessage } = useNotifications()
 const locationLookupMap = ref<Record<string, ILocation>>({})
 
 const userRole = computed(() => authStore.singleKnownRole)
+
+const isDataDeliveryStatus = computed(() => ProposalStatus.ExpectDataDelivery === proposalStore.currentProposal?.status)
 
 const dataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 const selectableLocations = computed(
