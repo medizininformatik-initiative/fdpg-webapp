@@ -34,6 +34,22 @@
               >{{ t('dataDelivery.forwardDelivery') }}</el-button
             >
           </div>
+          <div v-if="canFetchResults && deliveryInfo.status === DeliveryInfoStatus.RESULTS_AVAILABLE">
+            <el-button
+              v-if="deliveryInfo.resultUrl"
+              type="primary"
+              plain
+              class="delivery-info__collapse-buttons"
+              @click.stop="setClipboard(deliveryInfo.resultUrl)"
+              >{{ t('dataDelivery.copyToClipboard') }}</el-button
+            >
+            <el-button
+              type="primary"
+              class="delivery-info__collapse-buttons"
+              @click.stop="setConfirmFetchedResultsDialogOpen(true, deliveryInfo)"
+              >{{ t('dataDelivery.resultsFetched') }}</el-button
+            >
+          </div>
         </div>
       </template>
       <div class="delivery-info__collapse-body">
@@ -43,51 +59,73 @@
               v-if="[DeliveryInfoStatus.PENDING, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(deliveryInfo.status)"
               class="delivery-info__extend-delivery-container"
             >
-              <p>
+              <FdpgLabel class="delivery-info__status--label">
                 {{ t('dataDelivery.deliveryUntil', { deliveryDate: getLocaleDateString(deliveryInfo.deliveryDate) }) }}
-              </p>
+              </FdpgLabel>
             </div>
-            <p v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
+            <FdpgLabel
+              v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET"
+              class="delivery-info__status--label"
+            >
               {{ t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) }) }}
-            </p>
-            <p v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET">
+            </FdpgLabel>
+            <FdpgLabel
+              v-if="deliveryInfo.status === DeliveryInfoStatus.WAITING_FOR_DATA_SET"
+              class="delivery-info__status--label"
+            >
               {{ t('dataDelivery.waitingForDataSet') }}
-            </p>
-            <p v-if="deliveryInfo.status === DeliveryInfoStatus.CANCELED">
+            </FdpgLabel>
+            <FdpgLabel v-if="deliveryInfo.status === DeliveryInfoStatus.CANCELED" class="delivery-info__status--label">
               {{
                 t('dataDelivery.deliveryWasCanceled', {
                   canceledDate: getLocaleDateString(deliveryInfo.forwardedOnDate),
                 })
               }}
-            </p>
-            <div v-if="deliveryInfo.status === DeliveryInfoStatus.FINISHED">
-              <p>
+            </FdpgLabel>
+            <div v-if="deliveryInfo.status === DeliveryInfoStatus.RESULTS_AVAILABLE">
+              <FdpgLabel class="delivery-info__status--label">
                 {{
                   t('dataDelivery.forwardedOn', { forwardedDate: getLocaleDateString(deliveryInfo.forwardedOnDate) })
                 }}
-              </p>
-              <a
-                v-if="deliveryInfo.resultUrl"
-                link
-                :href="deliveryInfo.resultUrl"
-                target="_blank"
-                class="delivery-info__result-url"
-                >{{ deliveryInfo.resultUrl }}</a
-              >
+              </FdpgLabel>
+
+              <FdpgLabel class="delivery-info__status--label">
+                <a
+                  v-if="deliveryInfo.resultUrl"
+                  link
+                  :href="deliveryInfo.resultUrl"
+                  target="_blank"
+                  class="delivery-info__result-url"
+                  >{{ deliveryInfo.resultUrl }}</a
+                >
+              </FdpgLabel>
             </div>
+            <FdpgLabel
+              v-if="deliveryInfo.status === DeliveryInfoStatus.FETCHED_BY_RESEARCHER"
+              class="delivery-info__status--label"
+            >
+              {{
+                t('dataDelivery.fetchedResultsOn', {
+                  fetchedResultsOn: getLocaleDateString(deliveryInfo.fetchedResultsOn),
+                })
+              }}
+            </FdpgLabel>
           </div>
 
-          <span
+          <div
             v-if="
               !deliveryInfo.manualEntry &&
               [DeliveryInfoStatus.PENDING, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(deliveryInfo.status)
             "
+            class="delivery-info_sync-container"
           >
-            {{
-              t('dataDelivery.lastSynced', {
-                lastSynced: getLocaleDateTimeString(deliveryInfo.lastSynced),
-              })
-            }}
+            <FdpgLabel class="delivery-info__status--label">
+              {{
+                t('dataDelivery.lastSynced', {
+                  lastSynced: getLocaleDateTimeString(deliveryInfo.lastSynced),
+                })
+              }}
+            </FdpgLabel>
             <el-button
               v-if="canInitiateDms"
               type="primary"
@@ -96,18 +134,18 @@
               @click="async () => await syncDeliveryInfoWithDmst(deliveryInfo)"
               v-bind:loading="loadingIds.has(deliveryInfo._id)"
             />
-          </span>
+          </div>
         </div>
         <el-table :data="deliveryInfo.subDeliveries">
           <el-table-column :label="t('dataDelivery.deliveryInfoLocation')">
             <template #default="tableProps">
-              <p>
+              <FdpgLabel class="delivery-info__status--label">
                 {{
                   tableProps.row.location
                     ? locationLookupMap[tableProps.row.location]?.display
                     : tableProps.row.location
                 }}
-              </p>
+              </FdpgLabel>
             </template>
           </el-table-column>
 
@@ -121,9 +159,9 @@
 
           <el-table-column :label="t('dataDelivery.deliveryInfoUpdatedAt')">
             <template #default="tableProps">
-              <p>
+              <FdpgLabel class="delivery-info__status--label">
                 {{ (tableProps.row as ISubDelivery).updatedAt ? getLocaleDateString(tableProps.row.updatedAt) : '-' }}
-              </p>
+              </FdpgLabel>
             </template>
           </el-table-column>
 
@@ -239,6 +277,32 @@
     @submit="onExtendDelivery"
     @close-dialog="setExtendDeliveryDialogOpen(false)"
   />
+
+  <FdpgDialog
+    v-if="selectedDeliveryInfo"
+    :model-value="isConfirmFetchedResultsDialogOpen"
+    :title="
+      t('dataDelivery.confirmFetchedResultsTitle', {
+        deliveryName: selectedDeliveryInfo?.name,
+      })
+    "
+    :message="t('dataDelivery.confirmFetchedResultsMessage')"
+  >
+    <template #footer>
+      <el-button plain link @click="setConfirmFetchedResultsDialogOpen(false)">{{ t('general.cancel') }}</el-button>
+      <el-button
+        type="primary"
+        @click="
+          setDeliveryInfoStatus(
+            selectedDeliveryInfo,
+            DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+            setConfirmFetchedResultsDialogOpen,
+          )
+        "
+        >{{ t('general.confirm') }}</el-button
+      >
+    </template>
+  </FdpgDialog>
   <!-- Dialogs end -->
 </template>
 
@@ -263,6 +327,7 @@ import FdpgDialog from '../FdpgDialog.vue'
 import axios from 'axios'
 import { BadRequestError } from '@/types/bad-request-error.enum'
 import ExtendDeliveryDialog from './ExtendDeliveryDialog.vue'
+import FdpgLabel from '../FdpgLabel.vue'
 
 const props = defineProps({
   dataDelivery: { type: Object as PropType<IDataDelivery>, required: true },
@@ -270,13 +335,14 @@ const props = defineProps({
   canRateDelivery: { type: Boolean, default: false },
   canManualInitiate: { type: Boolean, default: false },
   canInitiateDsfDelivery: { type: Boolean, default: false },
+  canFetchResults: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['openDialog:manualDelivery', 'openDialog:initiateDelivery', 'openDialog:newDms'])
 
 const proposalStore = useProposalStore()
 const locationStore = useLocationStore()
-const { showErrorMessage } = useNotifications()
+const { showErrorMessage, showInfoMessage } = useNotifications()
 const { t } = useI18n()
 
 const loadingIds = ref(new Set())
@@ -286,6 +352,7 @@ const isForwardDeliveryDialogOpen = ref(false)
 const isCancelDeliveryDialogOpen = ref(false)
 const isRateDeliveryDialogOpen = ref(false)
 const isExtendDeliveryDialogOpen = ref(false)
+const isConfirmFetchedResultsDialogOpen = ref(false)
 
 const selectedDeliveryInfo: Ref<IDeliveryInfo | null> = ref(null)
 const selectedSubDelivery: Ref<{ deliveryInfo: IDeliveryInfo; subDelivery: ISubDelivery } | null> = ref(null)
@@ -363,6 +430,16 @@ const setExtendDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliver
   isExtendDeliveryDialogOpen.value = openState
 }
 
+const setConfirmFetchedResultsDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
+  if (openState && !deliveryInfo) {
+    showErrorMessage()
+    return
+  }
+
+  selectedDeliveryInfo.value = deliveryInfo ?? null
+  isConfirmFetchedResultsDialogOpen.value = openState
+}
+
 const setDeliveryInfoStatus = async (
   deliveryInfo: IDeliveryInfo | null,
   newStatus: DeliveryInfoStatus,
@@ -428,6 +505,16 @@ const onExtendDelivery = async (deliveryInfoId: string, newDeliveryDate: Date) =
   } finally {
     setExtendDeliveryDialogOpen(false)
   }
+}
+
+const setClipboard = async (text: string) => {
+  const type = 'text/plain'
+  const clipboardItemData = {
+    [type]: text,
+  }
+  const clipboardItem = new ClipboardItem(clipboardItemData)
+  await navigator.clipboard.write([clipboardItem])
+  showInfoMessage(t('general.textCopied'))
 }
 
 const handleFhirQuestionnairResponseNotFoundOrDefaultError = (error: any, defaultMessage?: string) => {
@@ -496,6 +583,13 @@ onMounted(async () => {
   padding-top: 1em;
 }
 
+.delivery-info_sync-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
 .delivery-info__sub-status {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -550,5 +644,11 @@ onMounted(async () => {
   justify-content: flex-start;
   align-items: center;
   gap: 1em;
+}
+
+.delivery-info__status--label {
+  font-weight: inherit;
+  margin-bottom: unset;
+  padding: 5px;
 }
 </style>

@@ -759,7 +759,8 @@ export interface IDeliveryInfo {
   updatedAt?: Date
   manualEntry: boolean
   resultUrl?: string
-  forwardedOnDate?: Date
+  forwardedOnDate?: Date // forwarded or canceled date
+  fetchedResultsOn?: Date
   dms: string
 }
 
@@ -787,9 +788,10 @@ export enum DeliveryAcceptance {
 
 export enum DeliveryInfoStatus {
   PENDING = 'PENDING',
-  FINISHED = 'FINISHED',
   CANCELED = 'CANCELED',
   WAITING_FOR_DATA_SET = 'WAITING_FOR_DATA_SET',
+  RESULTS_AVAILABLE = 'RESULTS_AVAILABLE',
+  FETCHED_BY_RESEARCHER = 'FETCHED_BY_RESEARCHER',
 }
 
 export interface IProjectAssignee {

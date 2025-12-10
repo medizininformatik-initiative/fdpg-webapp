@@ -80,7 +80,8 @@
     "readyForPublication": "publikationsreif",
     "invalidUrl": "ungültige URL",
     "fileSizeExceedsLimit": "Die Dateigröße überschreitet die maximal zulässige Größe",
-    "overview": "Überblick"
+    "overview": "Überblick",
+    "textCopied": "Text wurde in die Zwischenablage kopiert"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -1036,10 +1037,11 @@
     "dmstQuestionOfAcceptanceBody": "Das Forschungsdatenportal hat eine Datenlieferung bei Ihnen angefragt. Bitte antworten Sie bis zum {dueDate}",
     "dataDelivery": "Datenlieferung",
     "deliveryName": "Lieferung {deliveryName}",
-    "deliveryUntil": "Erwartet bis {deliveryDate}",
+    "deliveryUntil": "Erwartet bis: {deliveryDate}",
     "deliveryWasCanceled": "Abgebrochen am: {canceledDate}",
     "waitingForDataSet": "Warten auf Ergebnisse. ",
     "forwardedOn": "Weitergeleitet am: {forwardedDate}",
+    "fetchedResultsOn": "Daten abgeholt am: {fetchedResultsOn}",
     "cancelDelivery": "Lieferung abbrechen",
     "forwardDelivery": "Lieferung weiterleiten",
     "deliveryInfoLocation": "DIZ",
@@ -1078,7 +1080,11 @@
     "rateDeliverySubmit": "Okay",
     "extendDelivery": "Lieferung verlängern",
     "fhirQrNotFound": "DSF 'QuestionnairResponse' mit businessKey nicht gefunden. Operation wurde abgebrochen",
-    "setStatusFailed": "Fehler bei Update von {deliveryName}"
+    "setStatusFailed": "Fehler bei Update von {deliveryName}",
+    "copyToClipboard": "Link kopieren",
+    "resultsFetched": "Datenlieferung abholen",
+    "confirmFetchedResultsTitle": "Datenlieferung abholen",
+    "confirmFetchedResultsMessage": "Lieferung wird als abgeholt markiert"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",

@@ -80,7 +80,8 @@
     "readyForPublication": "Ready for publication ",
     "invalidUrl": "Invalid URL",
     "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
-    "overview": "Overview"
+    "overview": "Overview",
+    "textCopied": "Text copied to clipboard"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -1036,10 +1037,11 @@
     "dmstQuestionOfAcceptanceBody": "The research portal has indicated that DMS is the data delivery partner for this project. Please confirm your acceptance. Please anwer until {dueDate}",
     "dataDelivery": "Data Delivery",
     "deliveryName": "Delivery {deliveryName}",
-    "deliveryUntil": "Expected until {deliveryDate}",
+    "deliveryUntil": "Expected until: {deliveryDate}",
     "deliveryWasCanceled": "Canceled on: {canceledDate}",
     "waitingForDataSet": "Waiting for results.",
     "forwardedOn": "Forwarded on: {forwardedDate}",
+    "fetchedResultsOn": "Fetched data on: {fetchedResultsOn}",
     "cancelDelivery": "Cancel delivery",
     "forwardDelivery": "Forward delivery",
     "deliveryInfoLocation": "DIC",
@@ -1078,7 +1080,11 @@
     "rateDeliverySubmit": "Okay",
     "extendDelivery": "Extend delivery",
     "fhirQrNotFound": "Could not find DSF 'QuestionnairResponse' with attached businessKey. Operation aborted.",
-    "setStatusFailed": "Error on update of {deliveryName}"
+    "setStatusFailed": "Error on update of {deliveryName}",
+    "copyToClipboard": "Copy link",
+    "resultsFetched": "Fetch results",
+    "confirmFetchedResultsTitle": "Fetch results",
+    "confirmFetchedResultsMessage": "Delivery will be marked as fetched"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

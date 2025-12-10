@@ -48,6 +48,7 @@
       :can-manual-initiate="userRole === Role.FdpgMember || userRole === Role.DataManagementOffice"
       :can-initiate-dsf-delivery="userRole === Role.FdpgMember"
       :can-rate-delivery="userRole === Role.DataManagementOffice"
+      :can-fetch-results="userRole === Role.Researcher"
       @open-dialog:new-dms="setNewDmsDialogOpenState"
       @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
       @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"
