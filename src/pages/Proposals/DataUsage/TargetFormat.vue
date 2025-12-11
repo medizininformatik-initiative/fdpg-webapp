@@ -22,10 +22,10 @@
       <el-col :sm="24">
         <FdpgFormItem :prop="`userProject.typeOfUse.targetFormatOther`" :disabled="reviewMode || typeOfUseForm.isDone">
           <FdpgLabel html-for="proposal.targetFormatOther" size="small" />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="typeOfUseForm.targetFormatOther"
             data-testId="typeOfUseForm.targetFormatOther"
-            placeholder="proposal.textPlaceholder"
+            :placeholder="t('proposal.textPlaceholder')"
             :disabled="reviewMode || typeOfUseForm.isDone"
             :form-ref="formRef"
             field-path="userProject.typeOfUse.targetFormatDetails"
@@ -41,9 +41,9 @@ import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { ITypeOfUse } from '@/types/proposal.types'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useVModel } from '@vueuse/core'
-
+import { useI18n } from 'vue-i18n'
 const props = defineProps({
   modelValue: {
     type: Object as PropType<ITypeOfUse>,
@@ -64,7 +64,7 @@ const props = defineProps({
   },
 })
 const emit = defineEmits(['update:modelValue'])
-
+const { t } = useI18n()
 const typeOfUseForm = useVModel(props, 'modelValue', emit)
 </script>
 
