@@ -148,14 +148,14 @@
     "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert",
     "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}",
     "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Kopiert aus dem Vorschlag {originalProposalAbbreviation} für die interne Registrierung durch FDPG",
-    "DMO_REQUEST": "{location} wurde angefragt für die Rolle der DMST",
+    "DMO_REQUEST": "{requestedDms} wurde angefragt für die Rolle der DMST",
     "DMO_DENY": "{location} hat die Rolle der DMST abgelehnt",
     "DMO_ACCEPT": "{location} hat die Rollder DMST angenommen",
-    "DATA_DELIVERY_STARTED": "Die Datenlieferung {deliveryName} wurde gestartet.",
-    "DATA_DELIVERY_MANUAL_ENTRY": "Die Datenlieferung {deliveryName} wurde dokumentiert.",
-    "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet.",
-    "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen.",
-    "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet."
+    "DATA_DELIVERY_STARTED": "Die Datenlieferung {deliveryName} wurde gestartet",
+    "DATA_DELIVERY_MANUAL_ENTRY": "Die Datenlieferung {deliveryName} wurde dokumentiert",
+    "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet",
+    "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen",
+    "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet"
   },
   "header": {
     "login": "Anmelden",

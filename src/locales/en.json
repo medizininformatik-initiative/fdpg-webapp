@@ -148,14 +148,14 @@
     "PARTICIPANT_UPDATED": "Participants were updated",
     "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}",
     "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n",
-    "DMO_REQUEST": "{location} has been requested for role DMO. ",
-    "DMO_DENY": "{location} has rejected the role DMO. ",
+    "DMO_REQUEST": "{requestedDms} has been requested for role DMO",
+    "DMO_DENY": "{location} has rejected the role DMO",
     "DMO_ACCEPT": "{location} has accepted the role DMO",
-    "DATA_DELIVERY_STARTED": "Data delivery {deliveryName} has been started.",
-    "DATA_DELIVERY_MANUAL_ENTRY": "Data delivery {deliveryName} has been documented.",
-    "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher.",
-    "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled. ",
-    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded."
+    "DATA_DELIVERY_STARTED": "Data delivery {deliveryName} has been started",
+    "DATA_DELIVERY_MANUAL_ENTRY": "Data delivery {deliveryName} has been documented",
+    "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher",
+    "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled",
+    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded"
   },
   "header": {
     "login": "Login",

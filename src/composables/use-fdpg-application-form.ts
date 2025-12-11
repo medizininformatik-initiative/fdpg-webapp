@@ -190,8 +190,8 @@ export function useFdpgApplicationForm(
   const handleFinishProjectDeclineClick = () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
-      title: 'proposal.readyToArchiveModalTitle',
-      message: 'proposal.readyToArchiveModalDescription',
+      title: 'proposal.declineProjectFinish',
+      message: 'proposal.declineProjectFinish',
       confirmButtonText: 'general.confirm',
       cancelButtonText: 'general.cancel',
       callback: async (decision: DecisionType) =>
@@ -244,11 +244,8 @@ export function useFdpgApplicationForm(
       deliveries
         .filter(
           ({ status }) =>
-            [
-              DeliveryInfoStatus.RESULTS_AVAILABLE,
-              DeliveryInfoStatus.WAITING_FOR_DATA_SET,
-              DeliveryInfoStatus.CANCELED,
-            ].includes(status) && status !== DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+            [DeliveryInfoStatus.RESULTS_AVAILABLE, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(status) &&
+            status !== DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
         )
         .map(({ name }) => name)
         .join(', ') || t('general.none')

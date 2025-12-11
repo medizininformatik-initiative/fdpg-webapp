@@ -114,10 +114,7 @@ const isDataDeliveryStatus = computed(() => ProposalStatus.ExpectDataDelivery ==
 
 const dataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
 const selectableLocations = computed(
-  () =>
-    proposalStore.currentProposal?.userProject?.addressees?.desiredLocations?.map(
-      (loc) => locationLookupMap.value[loc],
-    ) ?? [],
+  () => proposalStore.currentProposal?.signedContracts?.map((loc) => locationLookupMap.value[loc]) ?? [],
 )
 
 const isDmsOverrideDialogOpen = ref(false)
