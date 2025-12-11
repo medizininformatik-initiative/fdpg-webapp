@@ -621,10 +621,9 @@ export const useProposalStore = defineStore('Proposal', {
 
     async updateDmsAcceptanceForDataDelivery(
       proposalId: string,
-      dmsId: string,
       acceptance: DeliveryAcceptance,
     ): Promise<IDataDelivery> {
-      const dataDelivery = await this.apiService.updateDmsAcceptanceForDataDelivery(proposalId, dmsId, acceptance)
+      const dataDelivery = await this.apiService.setDmsAcceptance(proposalId, acceptance)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
@@ -649,16 +648,6 @@ export const useProposalStore = defineStore('Proposal', {
 
     async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
       const dataDelivery = await this.apiService.setDeliveryInfoStatus(proposalId, deliveryInfo)
-
-      if (proposalId === this.currentProposal?._id) {
-        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
-      }
-
-      return dataDelivery
-    },
-
-    async setDmsAcceptance(proposalId: string, acceptance: DeliveryAcceptance): Promise<IDataDelivery> {
-      const dataDelivery = await this.apiService.setDmsAcceptance(proposalId, acceptance)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }

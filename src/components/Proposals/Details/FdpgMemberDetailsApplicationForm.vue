@@ -58,8 +58,11 @@
       title="proposal.checklistVerification"
       @update:listItem="(event: Partial<IFdpgChecklist>) => updateChecklistItem(event)"
     ></FdpgCheckList>
+
     <ProjectDMSOverview v-if="shouldDisplayDmsOverview" />
+
     <DetailActionRow :buttons="actionButtons"></DetailActionRow>
+
     <ProjectHistory />
 
     <div class="divider" />
@@ -147,6 +150,7 @@ const {
   openLockModal,
   changeStatus,
   handleArchiveProjectClick,
+  handleReadyToArchiveProjectClick,
   handleSaveDeadlines,
   updateChecklistItem,
   onProjectAssigneeChange,
@@ -179,7 +183,6 @@ const {
   handleContractSignConfirm,
   handleRegisterProjectClick,
   handleStartAnalysisClick,
-  handleFinishAnalysisClick,
 } = useFdpgApplicationForm(proposalId, status, changeStatus, t, t)
 
 // Project Todos
@@ -237,6 +240,34 @@ const quickInfo = computed<IQuickInfo[]>(() => [
 // Top Bar Buttons
 const topBarButtons = computed<IButtonConfig[]>(() => [
   {
+    type: 'primary',
+    plain: true,
+    label: 'proposal.finishProject',
+    testId: 'button__finishProject',
+    action: handleFinishProjectClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
+    isHidden: status.value !== ProposalStatus.DataResearch,
+  },
+  {
+    type: 'primary',
+    plain: true,
+    label: 'proposal.readyToArchive',
+    testId: 'button__readyToArchive',
+    action: handleReadyToArchiveProjectClick,
+    position: 'right',
+    isDisabled: proposalStore.currentProposal?.isLocked,
+    isHidden: status.value !== ProposalStatus.FinishedProject,
+  },
+  {
+    type: 'primary',
+    plain: true,
+    label: 'proposal.archiveProject',
+    testId: 'button__archiveProposal',
+    action: handleArchiveProjectClick,
+    isHidden: ![ProposalStatus.Rejected, ProposalStatus.ReadyToArchive].includes(status.value),
+  },
+  {
     label: 'proposal.exportAttachments',
     testId: 'button__exportAttachments',
     isHidden: !proposalId.value || proposalStore.currentProposal?.uploads?.length === 0,
@@ -275,13 +306,6 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     label: 'proposal.toTheRequest',
     testId: 'button__toProposal',
     action: openReviewPage,
-  },
-  {
-    type: 'primary',
-    label: 'proposal.archiveProject',
-    testId: 'button__archiveProposal',
-    action: handleArchiveProjectClick,
-    isHidden: !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
   },
 ])
 
@@ -322,12 +346,9 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     testId: 'button__downloadLocationCsv',
     action: handleDownloadLocationCsvClick,
     position: 'right',
-    isHidden: [
-      ProposalStatus.ExpectDataDelivery,
-      ProposalStatus.DataResearch,
-      ProposalStatus.DataResearchFinished,
-      ProposalStatus.FinishedProject,
-    ].includes(status.value),
+    isHidden: [ProposalStatus.ExpectDataDelivery, ProposalStatus.DataResearch, ProposalStatus.FinishedProject].includes(
+      status.value,
+    ),
     isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
@@ -342,15 +363,6 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
       !proposalStore.currentProposal?.dataDelivery?.deliveryInfos.some((deliveryInfo) =>
         [DeliveryInfoStatus.FETCHED_BY_RESEARCHER, DeliveryInfoStatus.RESULTS_AVAILABLE].includes(deliveryInfo.status),
       ),
-  },
-  {
-    type: 'primary',
-    label: 'proposal.finishAnalysis',
-    testId: 'button__finishAnalysis',
-    action: handleFinishAnalysisClick,
-    position: 'right',
-    isHidden: proposalStore.currentProposal?.status !== ProposalStatus.DataResearch,
-    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',
@@ -387,15 +399,6 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     isDisabled:
       (proposalStore.currentProposal ? proposalStore.currentProposal?.signedContracts?.length <= 0 : true) ||
       proposalStore.currentProposal?.isLocked,
-  },
-  {
-    type: 'primary',
-    label: 'proposal.finishProject',
-    testId: 'button__finishProject',
-    action: handleFinishProjectClick,
-    position: 'right',
-    isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.DataResearch,
   },
   {
     label: 'proposal.finishProjectDecline',

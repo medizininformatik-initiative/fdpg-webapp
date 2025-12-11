@@ -827,11 +827,11 @@
     "projectAssignee": "Abtretungsempfänger:in",
     "redirectToFeasibilityPortal": "Datenportal",
     "startAnalysis": "Datenanalyse starten",
-    "startAnalysisModalTitle": "Datenanalyse starten",
-    "startAnalysisModalDescription": "Datenanalyse starten. Laufende Lieferungen werden als abgebrochen markiert: {deliveriesToBeCanceled}. Laufende Lieferungen werden als erhalten markiert: {deliveriesToBeMarkedAsReceived}",
-    "finishAnalysis": "Datenanalyse beenden",
-    "finishAnalysisModalTitle": "Datenanalyse beenden",
-    "finishAnalysisModalDescription": "Datenanalyse beenden"
+    "startAnalysisModalTitle": "Datenanalyse starten Überschrift",
+    "startAnalysisModalDescription": "Datenanalyse starten Beschreibung. Laufende Lieferungen werden als abgebrochen markiert: {deliveriesToBeCanceled}. Laufende Lieferungen werden als erhalten markiert: {deliveriesToBeMarkedAsReceived}",
+    "readyToArchive": "Bereit zum archivieren",
+    "readyToArchiveProjectModalTitle": "Bereit zum archivieren Überschrift",
+    "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -913,7 +913,7 @@
   "projectStatus": {
     "DRAFT": "Der Antrag befindet sich noch im Entwurfsprozess.",
     "REJECTED": "Der Antrag wurde abgelehnt.",
-    "ARCHIVED": "Der Antrag ist archiviert.",
+    "ARCHIVED": "Das Projekt wurde archiviert.",
     "REWORK": "Der Antrag ist zur Überarbeitung zurückgewiesen.",
     "FDPG_CHECK_FOR_RESEARCHER": "Der Antrag wird nun bis zum {date} durch das Forschungsdatenportal geprüft.",
     "FDPG_CHECK_FOR_FDPG": "Sie müssen den Antrag bis zum {date} prüfen.",
@@ -922,8 +922,8 @@
     "EXPECT_DATA_DELIVERY": "Die Projektdaten/-ergebnisse werden für die Abholung vorbereitet.",
     "DATA_RESEARCH": "Das Projekt befindet sich in der Analysephase.",
     "DATA_CORRUPT": "Die Projektdaten/-ergebnisse befinden sich in der Überprüfung.",
-    "FINISHED_PROJECT": "Das Projekt ist abgeschlossen.",
-    "READY_TO_ARCHIVE": "Das Projekt kann archiviert werden.",
+    "FINISHED_PROJECT": "Das Projekt wurde durch die Forschenden auf “Projekt beendet” gesetzt. Die Voraussetzungen für den finalen Projektabschluss werden nun durch das FDPG geprüft.",
+    "READY_TO_ARCHIVE": "Das Projekt ist abgeschlossen.",
     "LOC_DIZ_CHECK": "Der Projektvorschlag muss bis zum {date} von Ihrem DIZ geprüft werden.",
     "LOC_DIZ_APPROVED": "Der Projektvorschlag muss bis zum {date} von Ihrem UAC geprüft werden.",
     "LOC_UAC_APPROVED": "Der Projektvorschlag wird bis zum {date} von anderen Standorten bearbeitet.",
@@ -939,8 +939,7 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Ihr Standort muss den Vertrag bis zum {date} unterzeichnen.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "Die Vertragsauflagen wurden angenommen. Der Vertrag zum Projekt befindet sich in der Abstimmung.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "Die Vertragsauflagen werden geprüft.",
-    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt",
-    "DATA_RESEARCH_FINISHED": "Die Analysephase des Projektes ist beendet."
+    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt"
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Prüfung",

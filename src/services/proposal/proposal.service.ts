@@ -494,28 +494,6 @@ export class ProposalService {
     }
   }
 
-  async updateDmsAcceptanceForDataDelivery(
-    proposalId: string,
-    dmsId: string,
-    acceptance: DeliveryAcceptance,
-  ): Promise<IDataDelivery> {
-    try {
-      return (
-        await this.apiClient.put<
-          IDataDelivery,
-          AxiosResponse<IDataDelivery>,
-          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
-        >(`${this.basePath}/${proposalId}/data-delivery`, {
-          dataManagementSite: dmsId,
-          acceptance,
-          deliveryInfos: [],
-        })
-      ).data
-    } catch (error: any) {
-      throw new Error(error)
-    }
-  }
-
   async initiateDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
     try {
       return (

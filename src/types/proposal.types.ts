@@ -33,7 +33,6 @@ export enum ProposalStatus {
   ExpectDataDelivery = 'EXPECT_DATA_DELIVERY',
   DataResearch = 'DATA_RESEARCH',
   DataCorrupt = 'DATA_CORRUPT',
-  DataResearchFinished = 'DATA_RESEARCH_FINISHED',
   FinishedProject = 'FINISHED_PROJECT',
   ReadyToArchive = 'READY_TO_ARCHIVE',
   ReadyToPublish = 'READY_TO_PUBLISH',

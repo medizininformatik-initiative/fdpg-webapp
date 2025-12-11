@@ -90,7 +90,6 @@ const currentProposalStatus = [
   ProposalStatus.ExpectDataDelivery,
   ProposalStatus.DataResearch,
   ProposalStatus.DataCorrupt,
-  ProposalStatus.DataResearchFinished,
   ProposalStatus.FinishedProject,
   ProposalStatus.ReadyToArchive,
 ]
@@ -105,7 +104,6 @@ const showContractingParticipants = computed(() => {
     status.value === ProposalStatus.ExpectDataDelivery ||
     status.value === ProposalStatus.DataResearch ||
     status.value === ProposalStatus.DataCorrupt ||
-    status.value === ProposalStatus.DataResearchFinished ||
     status.value === ProposalStatus.ReadyToArchive ||
     status.value === ProposalStatus.FinishedProject ||
     status.value === ProposalStatus.Archived ||
@@ -324,7 +322,7 @@ const getContractSignTodo = (): IProjectTodo[] => {
 }
 
 const getFinishProjectTodo = (hasDeclined: boolean): IProjectTodo[] => {
-  const isReadyToFinishProject = proposalStore.currentProposal?.status === ProposalStatus.DataResearchFinished
+  const isReadyToFinishProject = proposalStore.currentProposal?.status === ProposalStatus.DataResearch
 
   if (isReadyToFinishProject && !hasDeclined) {
     return [

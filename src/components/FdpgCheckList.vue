@@ -127,9 +127,11 @@ onMounted(() => {
   if (
     props.status === ProposalStatus.FdpgCheck &&
     props.checklist?.checkListVerification.every((item) => item.isAnswered)
-  )
+  ) {
     activeName.value = 'checklistVerification'
-  else if (props.status === ProposalStatus.LocationCheck) activeName.value = ''
+  } else {
+    activeName.value = ''
+  }
 })
 </script>
 

@@ -827,11 +827,11 @@
     "projectAssignee": "Project assignee",
     "redirectToFeasibilityPortal": "Feasibility Portal",
     "startAnalysis": "Start data analysis",
-    "startAnalysisModalTitle": "Start data analysis",
-    "startAnalysisModalDescription": "Start data analysis. Current running deliveries will be marked as canceled: {deliveriesToBeCanceled}. Current deliveries will be marked as received: {deliveriesToBeMarkedAsReceived}.",
-    "finishAnalysis": "Finish data analysis",
-    "finishAnalysisModalTitle": "Finish data analysis",
-    "finishAnalysisModalDescription": "Finish data analysis"
+    "startAnalysisModalTitle": "Start data analysis title",
+    "startAnalysisModalDescription": "Start data analysis description. Current running deliveries will be marked as canceled: {deliveriesToBeCanceled}. Current deliveries will be marked as received: {deliveriesToBeMarkedAsReceived}.",
+    "readyToArchive": "Ready to archive",
+    "readyToArchiveProjectModalTitle": "Ready to archive title",
+    "readyToArchiveProjectModalDescription": "Ready to archive description"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -913,7 +913,7 @@
   "projectStatus": {
     "DRAFT": "The proposal is still in draft status",
     "REJECTED": "The proposal was rejected",
-    "ARCHIVED": "The proposal is archived",
+    "ARCHIVED": "The project has been archived.",
     "REWORK": "The proposal is rejected for revision",
     "FDPG_CHECK_FOR_RESEARCHER": "The proposal will now be reviewed by the Research Data Portal by {date}.",
     "FDPG_CHECK_FOR_FDPG": "You must review the proposal by {date}.",
@@ -922,8 +922,8 @@
     "EXPECT_DATA_DELIVERY": "The project data/results are being prepared for collection.",
     "DATA_RESEARCH": "The project is in the analysis phase.",
     "DATA_CORRUPT": "The project data/results are in review.",
-    "FINISHED_PROJECT": "The project is completed.",
-    "READY_TO_ARCHIVE": "The project is ready to be archived.",
+    "FINISHED_PROJECT": "The project has been set to “Project finished” and is beeing check by the FDPG before project completion.",
+    "READY_TO_ARCHIVE": "The project has been conclueded.",
     "LOC_DIZ_CHECK": "The project proposal must be reviewed by your DIZ by {date}.",
     "LOC_DIZ_APPROVED": "The project proposal needs to be reviewed by your UAC by {date}.",
     "LOC_UAC_APPROVED": "The project proposal will be processed by other locations by {date}.",
@@ -939,8 +939,7 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Your location must sign the contract by {date}.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "The contract requirements have been accepted. The contract for the project is in the process of being finalized.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "The contract requirements are being reviewed.",
-    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing",
-    "DATA_RESEARCH_FINISHED": "The analysis phase of the project is concluded."
+    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing"
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Check",

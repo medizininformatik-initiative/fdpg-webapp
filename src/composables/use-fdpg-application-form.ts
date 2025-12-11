@@ -51,7 +51,6 @@ export function useFdpgApplicationForm(
       status.value === ProposalStatus.ExpectDataDelivery ||
       status.value === ProposalStatus.DataResearch ||
       status.value === ProposalStatus.DataCorrupt ||
-      status.value === ProposalStatus.DataResearchFinished ||
       status.value === ProposalStatus.ReadyToArchive ||
       status.value === ProposalStatus.FinishedProject ||
       status.value === ProposalStatus.Archived ||
@@ -184,16 +183,16 @@ export function useFdpgApplicationForm(
       confirmButtonText: 'proposal.finishProject',
       cancelButtonText: 'general.cancel',
       callback: async (decision: DecisionType) =>
-        decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToArchive) : undefined,
+        decision === 'confirm' ? await changeStatus(ProposalStatus.FinishedProject) : undefined,
     })
   }
 
   const handleFinishProjectDeclineClick = () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
-      title: 'proposal.declineToReadyToArchiveModalTitle',
-      message: 'proposal.declineToReadyToArchiveModalDescription',
-      confirmButtonText: 'proposal.finishProjectDecline',
+      title: 'proposal.readyToArchiveModalTitle',
+      message: 'proposal.readyToArchiveModalDescription',
+      confirmButtonText: 'general.confirm',
       cancelButtonText: 'general.cancel',
       callback: async (decision: DecisionType) =>
         decision === 'confirm' ? await changeStatus(ProposalStatus.DataResearch) : undefined,
@@ -274,27 +273,6 @@ export function useFdpgApplicationForm(
     } as IMessageBox)
   }
 
-  const handleFinishAnalysisClick = async () => {
-    messageBoxStore.setMessageBoxInfo({
-      ...messageBoxDefaults,
-      title: 'proposal.finishAnalysisModalTitle',
-      message: 'proposal.finishAnalysisModalDescription',
-      confirmButtonText: 'general.confirm',
-      cancelButtonText: 'general.cancel',
-      callback: async (decision: DecisionType) => {
-        if (decision === 'confirm') {
-          try {
-            await proposalStore.updateProposalStatus(proposalId.value, ProposalStatus.DataResearchFinished)
-            showSuccessMessage(t('general.submitted'))
-            await router.push({ name: layoutStore.lastDashboard })
-          } catch (error: any) {
-            showErrorMessage(t('general.failedSubmit'))
-          }
-        }
-      },
-    })
-  }
-
   const handleRegisterProjectClick = async () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
@@ -343,6 +321,5 @@ export function useFdpgApplicationForm(
     handleRegisterProjectClick,
     initContracting,
     handleStartAnalysisClick,
-    handleFinishAnalysisClick,
   }
 }

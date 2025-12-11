@@ -182,7 +182,6 @@ const handleDmsAcceptanceResponse = async (isAccepted: boolean) => {
     try {
       await proposalStore.updateDmsAcceptanceForDataDelivery(
         proposalId,
-        dmsId,
         isAccepted ? DeliveryAcceptance.ACCEPTED : DeliveryAcceptance.DENIED,
       )
     } catch {
