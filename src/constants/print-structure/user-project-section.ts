@@ -37,6 +37,11 @@ const generalProjectInformationCard: IDefinitionCard<IUserProject, 'generalProje
       size: 12,
       definitions: [[{ key: 'fundingReferenceNumber' }]],
     },
+    {
+      label: 'proposal.keywords',
+      size: 12,
+      definitions: [[{ key: 'keywords', isList: true }]],
+    },
   ],
 }
 
