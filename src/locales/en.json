@@ -79,7 +79,8 @@
     "published": "Published",
     "readyForPublication": "Ready for publication ",
     "invalidUrl": "Invalid URL",
-    "fileSizeExceedsLimit": "File size exceeds the maximum allowed size"
+    "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
+    "overview": "Overview"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -99,7 +100,8 @@
     "process": "PENDING",
     "progress": "Progress:",
     "completed": "{progress}% filled out",
-    "published": "Published"
+    "published": "Published",
+    "overview": "Overview"
   },
   "history": {
     "PROPOSAL_CREATING": "Proposal has been created",
@@ -189,7 +191,8 @@
     "xOngoingProjectContracts": "{x} ongoing project contracts",
     "xCompletedProjectContracts": "{x} completed project contracts",
     "registerProject": "Register a project",
-    "comingUp": "Coming up ({count})"
+    "comingUp": "Coming up ({count})",
+    "overview": "Overview"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -238,7 +241,7 @@
     "belongingOptional": "Affiliation, e.g. institute",
     "pleaseEnterTheBelonging": "Please indicate the affiliation as it appears on your website, without abbreviations.",
     "emailAddress": "E-Mail Address",
-    "pleaseEnterTheEmailAddress": "Please enter the institution's email address (e.g. info{'@'}...).",
+    "pleaseEnterTheEmailAddress": "Please enter the oersons or institution's email address (institution e.g. info{'@'}...).",
     "informationAboutTheUserProject": "Information about the user project",
     "generalProjectInformation": "General project information",
     "projectTitle": "Project title",
@@ -1026,6 +1029,9 @@
     "dataDelivery": "Data Delivery",
     "deliveryName": "Delivery {deliveryName}",
     "deliveryUntil": "Expected until {deliveryDate}",
+    "deliveryWasCanceled": "Canceled on: {canceledDate}",
+    "waitingForDataSet": "Waiting for results.",
+    "forwardedOn": "Forwarded on: {forwardedDate}",
     "cancelDelivery": "Cancel delivery",
     "forwardDelivery": "Forward delivery",
     "deliveryInfoLocation": "DIC",
@@ -1035,6 +1041,7 @@
     "subdeliveryStatus__CANCELED": "Canceled",
     "subdeliveryStatus__DELIVERED": "Delivered",
     "subdeliveryStatus__ACCEPTED": "Accepted",
+    "subdeliveryStatus__REPEATED": "Repeated",
     "manualEntry": "Enter data delivery manually",
     "createFurtherDataDelivery": "Create another data delivery",
     "initiateDataDeliveryTitle": "Create new delivery?",
@@ -1049,7 +1056,18 @@
     "rateDelivery": "Rate Delivery",
     "errorInitiateDeliveryInfo": "Error on initiate delivery",
     "errorSelectDms": "Error on DMS selection",
-    "syncFailed": "Error on sync with DSF"
+    "syncFailed": "Error on sync with DSF",
+    "forwardDeliveryTitle": "Forward {deliveryName}?",
+    "forwardDeliveryMessage": "Your current delivery from {dmsDisplay} will be forwarded to the researchers. Pending deliveries to individual locations can no longer be taken into account. Would you still like to continue?",
+    "forwardDeliveryDialogForwardButton": "Forward delivery",
+    "cancelDeliveryDialogTitle": "Cancel {deliveryName}?",
+    "cancelDeliveryDialogMessage": "If you continue, the current delivery will be canceled by {dmsDisplay}. Any outstanding deliveries from other locations can then no longer be completed.",
+    "cancelDeliveryDialogCancelButton": "Cancel delivery",
+    "rateDeliveryDialogTitle": "Rate delivery",
+    "rateDeliveryDialogMessage": "Please rate the delivery.",
+    "rateDeliveryAccept": "Delivery is accepted",
+    "rateDeliveryRepeat": "Delivery will be repeated",
+    "rateDeliverySubmit": "Okay"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",

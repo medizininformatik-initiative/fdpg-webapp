@@ -102,6 +102,16 @@ const routes: RouteRecordRaw[] = [
           ],
         },
       },
+      {
+        path: '/overview',
+        name: RouteName.Overview,
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [Role.FdpgMember],
+        },
+      },
 
       {
         path: '/proposals/:id/details',

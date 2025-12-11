@@ -32,6 +32,7 @@
         :columns="tableColumns[panel.query]"
         :user-role="Role.FdpgMember"
         :click-action-disabled="!panel.hasClickAction"
+        :full-height="panel.fullHeight"
       />
       <FdpgProposalCardPanel
         v-else
@@ -87,7 +88,11 @@ const header = computed<Header>(() => {
         main: 'general.completed',
         sub: 'dashboard.xCompletedProjectContracts',
       }
-
+    case RouteName.Overview:
+      return {
+        main: 'dashboard.overview',
+        sub: 'dashboard.xProposals',
+      }
     default:
       return {
         main: 'general.requested',
