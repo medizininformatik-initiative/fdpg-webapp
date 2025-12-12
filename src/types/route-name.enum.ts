@@ -14,7 +14,7 @@ export enum RouteName {
   EditRegisteredProject = 'EditRegisteredProject',
   RegisterNewProject = 'RegisterNewProject',
   Locations = 'Locations',
+  Overview = 'Overview',
 }
 
-export type FdpgDashboardRoutes = RouteName.Dashboard | RouteName.Pending | RouteName.Ongoing | RouteName.Completed
-// | RouteName.Published
+export type FdpgDashboardRoutes = RouteName.Overview | RouteName.Pending | RouteName.Ongoing | RouteName.Completed

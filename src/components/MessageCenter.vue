@@ -81,7 +81,15 @@ const { params } = useRoute()
 const { t } = useI18n()
 const proposalId = params.id as string
 
-const showDoneComments = ref(true)
+const showDoneCommentsValue = ref(localStorage.getItem(`showDoneComments_${proposalId}_${props.type}`) === 'true')
+
+const showDoneComments = computed({
+  get: () => showDoneCommentsValue.value,
+  set: (value: boolean) => {
+    showDoneCommentsValue.value = value
+    localStorage.setItem(`showDoneComments_${proposalId}_${props.type}`, value.toString())
+  },
+})
 
 const titleForType = computed<TranslationSchema>(() => {
   if (props.type === CommentType.PROPOSAL_MESSAGE_TO_OWNER) {

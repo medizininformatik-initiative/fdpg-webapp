@@ -22,7 +22,7 @@ const privacyByUsageCard: IDefinitionCardArrayVirtual<IVirtualWrap<IDataPrivacyO
     {
       label: 'proposal.dataPrivacy',
       size: 24,
-      definitions: [[{ key: 'text', kind: 'translatable', prefix: '' }]],
+      definitions: [[{ key: 'text' }]],
     },
   ],
 }

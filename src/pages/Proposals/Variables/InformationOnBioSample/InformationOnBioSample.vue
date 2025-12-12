@@ -95,10 +95,11 @@
               :rules="isRegisteringForm ? [] : biosampleRules.typeDetails"
             >
               <FdpgLabel html-for="proposal.biosampleTypeDetails" />
-              <FdpgInput
+
+              <FdpgTextEditor
                 v-model="biosample.typeDetails"
                 :data-testId="'biosample.typeDetails__' + index"
-                placeholder="proposal.biosampleTypePlaceholder"
+                :placeholder="t('proposal.biosampleTypePlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
               />
             </FdpgFormItem>
@@ -110,10 +111,10 @@
               :rules="biosampleRules.requirements"
             >
               <FdpgLabel html-for="proposal.biosampleMaterialRequirements" required />
-              <FdpgInput
+              <FdpgTextEditor
                 v-model="biosample.requirements"
                 :data-testId="'biosample.requirements__' + index"
-                placeholder="proposal.biosampleMaterialRequirementsPlaceholder"
+                :placeholder="t('proposal.biosampleMaterialRequirementsPlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
               />
             </FdpgFormItem>

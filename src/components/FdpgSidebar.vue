@@ -65,6 +65,11 @@ interface Menu {
 const fdpgRoleSidebar: SidebarMenu[] = [
   {
     kind: MenuType.Route,
+    to: RouteName.Overview,
+    title: 'sidebar.overview',
+  },
+  {
+    kind: MenuType.Route,
     to: RouteName.Dashboard,
     title: 'general.requested',
   },
