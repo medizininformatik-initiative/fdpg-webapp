@@ -80,7 +80,9 @@
     "readyForPublication": "publikationsreif",
     "invalidUrl": "ungültige URL",
     "fileSizeExceedsLimit": "Die Dateigröße überschreitet die maximal zulässige Größe",
-    "overview": "Überblick"
+    "overview": "Überblick",
+    "textCopied": "Text wurde in die Zwischenablage kopiert",
+    "none": "Keine"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -145,7 +147,15 @@
     "PARTICIPANT_REMOVED": "Teilnehmer {participantName} wurde vom Projekt entfernt",
     "PARTICIPANT_UPDATED": "Teilnehmer wurden aktualisiert",
     "FDPG_PROJECT_ASSIGNEE_CHANGE": "Neuer Ansprechpartner: {newAssigneeMail}",
-    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Kopiert aus dem Vorschlag {originalProposalAbbreviation} für die interne Registrierung durch FDPG"
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Kopiert aus dem Vorschlag {originalProposalAbbreviation} für die interne Registrierung durch FDPG",
+    "DMO_REQUEST": "{requestedDms} wurde angefragt für die Rolle der DMST",
+    "DMO_DENY": "{location} hat die Rolle der DMST abgelehnt",
+    "DMO_ACCEPT": "{location} hat die Rollder DMST angenommen",
+    "DATA_DELIVERY_STARTED": "Die Datenlieferung {deliveryName} wurde gestartet",
+    "DATA_DELIVERY_MANUAL_ENTRY": "Die Datenlieferung {deliveryName} wurde dokumentiert",
+    "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet",
+    "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen",
+    "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet"
   },
   "header": {
     "login": "Anmelden",
@@ -815,7 +825,13 @@
     "registerProject": "Projekt registrieren",
     "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
     "projectAssignee": "Abtretungsempfänger:in",
-    "redirectToFeasibilityPortal": "Datenportal"
+    "redirectToFeasibilityPortal": "Datenportal",
+    "startAnalysis": "Datenanalyse starten",
+    "startAnalysisModalTitle": "Datenanalyse starten Überschrift",
+    "startAnalysisModalDescription": "Datenanalyse starten Beschreibung. Laufende Lieferungen werden als abgebrochen markiert: {deliveriesToBeCanceled}. Laufende Lieferungen werden als erhalten markiert: {deliveriesToBeMarkedAsReceived}",
+    "readyToArchive": "Bereit zum archivieren",
+    "readyToArchiveProjectModalTitle": "Bereit zum archivieren Überschrift",
+    "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -897,7 +913,7 @@
   "projectStatus": {
     "DRAFT": "Der Antrag befindet sich noch im Entwurfsprozess.",
     "REJECTED": "Der Antrag wurde abgelehnt.",
-    "ARCHIVED": "Der Antrag ist archiviert.",
+    "ARCHIVED": "Das Projekt wurde archiviert.",
     "REWORK": "Der Antrag ist zur Überarbeitung zurückgewiesen.",
     "FDPG_CHECK_FOR_RESEARCHER": "Der Antrag wird nun bis zum {date} durch das Forschungsdatenportal geprüft.",
     "FDPG_CHECK_FOR_FDPG": "Sie müssen den Antrag bis zum {date} prüfen.",
@@ -906,8 +922,8 @@
     "EXPECT_DATA_DELIVERY": "Die Projektdaten/-ergebnisse werden für die Abholung vorbereitet.",
     "DATA_RESEARCH": "Das Projekt befindet sich in der Analysephase.",
     "DATA_CORRUPT": "Die Projektdaten/-ergebnisse befinden sich in der Überprüfung.",
-    "FINISHED_PROJECT": "Das Projekt ist abgeschlossen.",
-    "READY_TO_ARCHIVE": "Das Projekt kann archiviert werden.",
+    "FINISHED_PROJECT": "Das Projekt wurde durch die Forschenden auf “Projekt beendet” gesetzt. Die Voraussetzungen für den finalen Projektabschluss werden nun durch das FDPG geprüft.",
+    "READY_TO_ARCHIVE": "Das Projekt ist abgeschlossen.",
     "LOC_DIZ_CHECK": "Der Projektvorschlag muss bis zum {date} von Ihrem DIZ geprüft werden.",
     "LOC_DIZ_APPROVED": "Der Projektvorschlag muss bis zum {date} von Ihrem UAC geprüft werden.",
     "LOC_UAC_APPROVED": "Der Projektvorschlag wird bis zum {date} von anderen Standorten bearbeitet.",
@@ -1028,10 +1044,11 @@
     "dmstQuestionOfAcceptanceBody": "Das Forschungsdatenportal hat eine Datenlieferung bei Ihnen angefragt. Bitte antworten Sie bis zum {dueDate}",
     "dataDelivery": "Datenlieferung",
     "deliveryName": "Lieferung {deliveryName}",
-    "deliveryUntil": "Erwartet bis {deliveryDate}",
+    "deliveryUntil": "Erwartet bis: {deliveryDate}",
     "deliveryWasCanceled": "Abgebrochen am: {canceledDate}",
     "waitingForDataSet": "Warten auf Ergebnisse. ",
     "forwardedOn": "Weitergeleitet am: {forwardedDate}",
+    "fetchedResultsOn": "Daten abgeholt am: {fetchedResultsOn}",
     "cancelDelivery": "Lieferung abbrechen",
     "forwardDelivery": "Lieferung weiterleiten",
     "deliveryInfoLocation": "DIZ",
@@ -1056,7 +1073,7 @@
     "rateDelivery": "Lieferung bewerten",
     "errorInitiateDeliveryInfo": "Fehler beim initiieren der Lieferung",
     "errorSelectDms": "Fehler bei DMST Auswahl",
-    "syncFailed": "Fehler bei der synchronization mit DSF",
+    "syncFailed": "Synchronization fehlgeschlagen. Überprüfen Sie ob das DSF verfügbar ist.",
     "forwardDeliveryTitle": "{deliveryName} wirklich weiterleiten?",
     "forwardDeliveryMessage": "Ihre aktuelle Lieferung von der {dmsDisplay} wird an die Forschenden weitergeleitet. Noch ausstehende Lieferung einzelner Standort können nicht mehr berücksichtigt werden. Möchten Sie trotzdem fortfahren?",
     "forwardDeliveryDialogForwardButton": "Lieferung weiterleiten",
@@ -1067,7 +1084,14 @@
     "rateDeliveryDialogMessage": "Bitte bewerten Sie die Lieferung.",
     "rateDeliveryAccept": "Lieferung ist bestätigt",
     "rateDeliveryRepeat": "Lieferung wird wiederholt",
-    "rateDeliverySubmit": "Okay"
+    "rateDeliverySubmit": "Okay",
+    "extendDelivery": "Lieferung verlängern",
+    "fhirQrNotFound": "DSF 'QuestionnairResponse' mit businessKey nicht gefunden. Operation wurde abgebrochen",
+    "setStatusFailed": "Fehler bei Update von {deliveryName}",
+    "copyToClipboard": "Link kopieren",
+    "resultsFetched": "Datenlieferung abholen",
+    "confirmFetchedResultsTitle": "Datenlieferung abholen",
+    "confirmFetchedResultsMessage": "Lieferung wird als abgeholt markiert"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Synchronisierung nicht möglich: Fehlende erforderliche Felder {fields}. Bitte füllen Sie vor der Synchronisierung den Abschnitt „Registrierungsinformationen“ aus.",

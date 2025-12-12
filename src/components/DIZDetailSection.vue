@@ -14,7 +14,7 @@
           </template>
 
           <div class="table-container">
-            <el-table :data="tableData" stripe style="width: 100%">
+            <el-table :data="tableData" stripe>
               <el-table-column
                 prop="localProjectIdentifier"
                 :label="t('proposal.localProjectIdentifier')"
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, type PropType, onMounted } from 'vue'
+import { ref, computed, reactive, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/auth/auth.store'
@@ -126,7 +126,7 @@ const tableData = computed<IDizDetails[]>(() => {
       {
         localProjectIdentifier: '',
         documentationLinks: '',
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       },
     ]
 })
@@ -140,7 +140,7 @@ const handleSave = async () => {
       await proposalStore.createDizDetails(proposalId.value, {
         localProjectIdentifier: tableData.value[0].localProjectIdentifier,
         documentationLinks: tableData.value[0].documentationLinks,
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       })
       showSuccessMessage(t('proposal.dizDetailsCreated'))
     } else {
@@ -149,7 +149,7 @@ const handleSave = async () => {
         _id: tableData.value[0]._id as string,
         localProjectIdentifier: tableData.value[0].localProjectIdentifier,
         documentationLinks: tableData.value[0].documentationLinks,
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       })
       showSuccessMessage(t('proposal.dizDetailsUpdated'))
     }

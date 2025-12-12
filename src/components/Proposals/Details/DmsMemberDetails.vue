@@ -7,17 +7,7 @@
     <ProjectStatus :proposal-status="proposalStatus"></ProjectStatus>
     <ProjectTodos :project-todos="projectTodos" />
 
-    <section v-if="proposalDataDelivery && proposalDataDelivery.deliveryInfos?.length > 0">
-      <h2>
-        {{ t('dataDelivery.dataDelivery') }}
-      </h2>
-      <DmsDeliveryInfoOverview
-        :data-delivery="proposalDataDelivery"
-        :show-actions="false"
-        :can-rate-delivery="true"
-        @open-dialog:rate-delivery="() => console.log('TODO')"
-      />
-    </section>
+    <ProjectDMSOverview />
 
     <ProjectHistory />
 
@@ -50,7 +40,7 @@ import { CommentType } from '@/types/comment.interface'
 import ProjectTodos from '@/components/ProjectTodos.vue'
 import type { IProjectTodo } from '@/types/project-todo.interface.ts'
 import { getLocaleDateString } from '@/utils/date.util.ts'
-import DmsDeliveryInfoOverview from '@/components/DataDelivery/DmsDeliveryInfoOverview.vue'
+import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 // Composables
 const { t } = useI18n()
@@ -192,7 +182,6 @@ const handleDmsAcceptanceResponse = async (isAccepted: boolean) => {
     try {
       await proposalStore.updateDmsAcceptanceForDataDelivery(
         proposalId,
-        dmsId,
         isAccepted ? DeliveryAcceptance.ACCEPTED : DeliveryAcceptance.DENIED,
       )
     } catch {

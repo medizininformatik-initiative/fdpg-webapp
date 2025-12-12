@@ -335,6 +335,16 @@ export enum ProjectHistoryType {
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
 
+  /** Data Delivery */
+  DmoRequest = 'DMO_REQUEST',
+  DmoDeny = 'DMO_DENY',
+  DmoAccept = 'DMO_ACCEPT',
+  DataDeliveryStarted = 'DATA_DELIVERY_STARTED',
+  DataDeliveryManualEntry = 'DATA_DELIVERY_MANUAL_ENTRY',
+  DataDeliveryForwarded = 'DATA_DELIVERY_FORWARDED',
+  DataDeliveryCanceled = 'DATA_DELIVERY_CANCELED',
+  DataDeliveryConcluded = 'DATA_DELIVERY_CONCLUDED',
+
   // Misc
   ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }
@@ -748,6 +758,11 @@ export interface IDeliveryInfo {
   lastSynced?: Date
   createdAt?: Date
   updatedAt?: Date
+  manualEntry: boolean
+  resultUrl?: string
+  forwardedOnDate?: Date // forwarded or canceled date
+  fetchedResultsOn?: Date
+  dms: string
 }
 
 export interface ISubDelivery {
@@ -763,6 +778,7 @@ export enum SubDeliveryStatus {
   DELIVERED = 'DELIVERED',
   ACCEPTED = 'ACCEPTED',
   CANCELED = 'CANCELED',
+  REPEATED = 'REPEATED',
 }
 
 export enum DeliveryAcceptance {
@@ -773,8 +789,10 @@ export enum DeliveryAcceptance {
 
 export enum DeliveryInfoStatus {
   PENDING = 'PENDING',
-  FINISHED = 'FINISHED',
   CANCELED = 'CANCELED',
+  WAITING_FOR_DATA_SET = 'WAITING_FOR_DATA_SET',
+  RESULTS_AVAILABLE = 'RESULTS_AVAILABLE',
+  FETCHED_BY_RESEARCHER = 'FETCHED_BY_RESEARCHER',
 }
 
 export interface IProjectAssignee {

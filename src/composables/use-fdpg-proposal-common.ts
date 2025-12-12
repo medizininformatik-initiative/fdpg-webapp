@@ -63,6 +63,7 @@ export function useFdpgProposalCommon() {
     ProposalStatus.DataCorrupt,
     ProposalStatus.FinishedProject,
     ProposalStatus.ReadyToArchive,
+    ProposalStatus.Archived,
   ]
 
   const shouldDisplayDmsOverview = computed(() => showDmsCommentStatus.includes(status.value))
@@ -146,6 +147,18 @@ export function useFdpgProposalCommon() {
     } catch (error: any) {
       showErrorMessage(t('general.failedSubmit'))
     }
+  }
+
+  const handleReadyToArchiveProjectClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.readyToArchiveProjectModalTitle',
+      message: 'proposal.readyToArchiveProjectModalDescription',
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToArchive) : undefined,
+    })
   }
 
   const handleArchiveProjectClick = () => {
@@ -316,6 +329,7 @@ export function useFdpgProposalCommon() {
     openLockModal,
     changeLockingState,
     changeStatus,
+    handleReadyToArchiveProjectClick,
     handleArchiveProjectClick,
     handleSaveDeadlines,
     updateChecklistItem,

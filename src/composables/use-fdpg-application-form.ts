@@ -3,8 +3,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useLayoutStore } from '@/stores/layout.store'
-import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
-import { ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
+import { useMessageBoxStore, type DecisionType, type IMessageBox } from '@/stores/messageBox.store'
+import { DeliveryInfoStatus, ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import type { UploadFile } from 'element-plus'
 
@@ -183,16 +183,16 @@ export function useFdpgApplicationForm(
       confirmButtonText: 'proposal.finishProject',
       cancelButtonText: 'general.cancel',
       callback: async (decision: DecisionType) =>
-        decision === 'confirm' ? await changeStatus(ProposalStatus.ReadyToArchive) : undefined,
+        decision === 'confirm' ? await changeStatus(ProposalStatus.FinishedProject) : undefined,
     })
   }
 
   const handleFinishProjectDeclineClick = () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
-      title: 'proposal.declineToReadyToArchiveModalTitle',
-      message: 'proposal.declineToReadyToArchiveModalDescription',
-      confirmButtonText: 'proposal.finishProjectDecline',
+      title: 'proposal.declineProjectFinish',
+      message: 'proposal.declineProjectFinish',
+      confirmButtonText: 'general.confirm',
       cancelButtonText: 'general.cancel',
       callback: async (decision: DecisionType) =>
         decision === 'confirm' ? await changeStatus(ProposalStatus.DataResearch) : undefined,
@@ -222,6 +222,52 @@ export function useFdpgApplicationForm(
     } catch (error: any) {
       showErrorMessage(t('general.failedSubmit'))
     }
+  }
+
+  const handleStartAnalysisClick = async () => {
+    const deliveries = proposalStore.currentProposal?.dataDelivery?.deliveryInfos ?? []
+    const deliveriesToBeCanceled =
+      deliveries
+        .filter(
+          ({ status }) =>
+            ![
+              DeliveryInfoStatus.RESULTS_AVAILABLE,
+              DeliveryInfoStatus.WAITING_FOR_DATA_SET,
+              DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+              DeliveryInfoStatus.CANCELED,
+            ].includes(status),
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    const deliveriesToBeMarkedAsReceived =
+      deliveries
+        .filter(
+          ({ status }) =>
+            [DeliveryInfoStatus.RESULTS_AVAILABLE, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(status) &&
+            status !== DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.startAnalysisModalTitle',
+      message: t('proposal.startAnalysisModalDescription', { deliveriesToBeCanceled, deliveriesToBeMarkedAsReceived }),
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          try {
+            await proposalStore.setToDataResearch(proposalId.value)
+            showSuccessMessage(t('general.submitted'))
+            await router.push({ name: layoutStore.lastDashboard })
+          } catch (error: any) {
+            showErrorMessage(t('general.failedSubmit'))
+          }
+        }
+      },
+    } as IMessageBox)
   }
 
   const handleRegisterProjectClick = async () => {
@@ -271,5 +317,6 @@ export function useFdpgApplicationForm(
     handleContractSignConfirm,
     handleRegisterProjectClick,
     initContracting,
+    handleStartAnalysisClick,
   }
 }

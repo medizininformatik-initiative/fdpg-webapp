@@ -21,7 +21,11 @@
         </td>
 
         <td class="dms__td dms__td--center">
-          <span :data-testId="`dataDelivery.${dataDelivery.acceptance}`" class="dms__status">
+          <span
+            :data-testId="`dataDelivery.${dataDelivery.acceptance}`"
+            :data-variant="dataDelivery.acceptance"
+            class="dms__status"
+          >
             {{ t(`dataDelivery.${dataDelivery.acceptance}`) }}
           </span>
         </td>

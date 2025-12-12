@@ -12,12 +12,9 @@
     <LocationVotePanel v-if="showLocationVotePanel" />
     <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
-    <section v-if="proposalDataDelivery && proposalDataDelivery.deliveryInfos?.length > 0">
-      <h2>
-        {{ t('dataDelivery.dataDelivery') }}
-      </h2>
-      <DmsDeliveryInfoOverview :data-delivery="proposalDataDelivery" :show-actions="false" :can-rate-delivery="false" />
-    </section>
+    <ProjectDMSOverview
+      v-if="currentProposalStatus.includes(proposalStore.currentProposal?.status ?? ProposalStatus.Draft)"
+    />
 
     <ProjectPublications
       v-if="showPublicationsAndReports"
@@ -65,7 +62,6 @@ import type { ICommentDetail } from '@/types/comment.interface'
 import { CommentType } from '@/types/comment.interface'
 import type { IProjectTodo } from '@/types/project-todo.interface'
 import { ProposalStatus } from '@/types/proposal.types'
-import { ProposalType } from '@/types/proposal-type.enum'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { RouteName } from '@/types/route-name.enum'
 import type { ContractDecision } from '@/types/sign-contract.types'
@@ -82,7 +78,7 @@ import type { ILocation } from '@/types/location.types'
 import { isParticipatingScientist as isUserParticipatingScientist } from '@/utils/proposal-permissions.util'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import ParticipatingResearcher from '@/components/ParticipatingResearcher.vue'
-import DmsDeliveryInfoOverview from '@/components/DataDelivery/DmsDeliveryInfoOverview.vue'
+import ProjectDMSOverview from '@/components/DataDelivery/ProjectDMSOverview.vue'
 
 const { t } = useI18n()
 const messageBoxStore = useMessageBoxStore()
@@ -97,6 +93,8 @@ const currentProposalStatus = [
   ProposalStatus.FinishedProject,
   ProposalStatus.ReadyToArchive,
 ]
+
+const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
 const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
@@ -115,6 +113,16 @@ const showContractingParticipants = computed(() => {
 
 const locationStore = useLocationStore()
 
+const changeStatus = async (proposalStatus: ProposalStatus) => {
+  try {
+    await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
+    showSuccessMessage(t('general.submitted'))
+    await router.push({ name: RouteName.Dashboard })
+  } catch (error: any) {
+    showErrorMessage(t('general.failedSubmit'))
+  }
+}
+
 const locationMapRef: Ref<Record<string, ILocation>> = ref({})
 
 const possibleLocations = computed(() =>
@@ -126,9 +134,6 @@ const possibleLocations = computed(() =>
 const showLocationVotePanel = computed(() => {
   return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
 })
-
-const proposalDataDelivery = computed(() => proposalStore.currentProposal?.dataDelivery)
-const status = computed(() => proposalStore.currentProposal?.status as ProposalStatus)
 
 const { showErrorMessage, showSuccessMessage } = useNotifications()
 
@@ -197,16 +202,6 @@ const handleContractSignConfirm = async (file: UploadFile) => {
 
 const handleContractDeclineConfirm = async (declineReason: string) => {
   await setContractSign({ value: false, declineReason })
-}
-
-const changeStatus = async (proposalStatus: ProposalStatus) => {
-  try {
-    await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
-    showSuccessMessage(t('general.submitted'))
-    await router.push({ name: RouteName.Dashboard })
-  } catch (error: any) {
-    showErrorMessage(t('general.failedSubmit'))
-  }
 }
 
 const handleArchiveProjectClick = () => {
@@ -298,6 +293,7 @@ const getCommentTodos = (comments: ICommentDetail[]): IProjectTodo[] => {
         actionLabel: 'proposal.viewTodoInProposal',
         type: 'comment',
         testId: 'todo__button__viewTodoInProposal',
+        readonly: false,
       }
     })
 }
@@ -317,6 +313,7 @@ const getContractSignTodo = (): IProjectTodo[] => {
         action: (decision: boolean) => handleSignContract(decision),
         type: 'decision',
         testId: 'todo__button__signContract',
+        readonly: false,
       },
     ]
   } else {
@@ -335,6 +332,7 @@ const getFinishProjectTodo = (hasDeclined: boolean): IProjectTodo[] => {
         action: (decision: boolean) => handleFinishProject(decision),
         type: 'decision',
         testId: 'todo__button__finishProject',
+        readonly: false,
       },
     ]
   } else {

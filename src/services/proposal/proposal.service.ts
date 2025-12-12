@@ -2,6 +2,7 @@ import { ApiClient } from '@/httpClients/api/api.client'
 import type { ISortAndOrderBy } from '@/types/sort-filter.types'
 import {
   DeliveryAcceptance,
+  ProposalStatus,
   type FdpgChecklistItemUpdateResponse,
   type IApplicant,
   type IDataDelivery,
@@ -21,8 +22,9 @@ import {
   type IResearcherIdentity,
   type ISelectedCohort,
   type IUpload,
-  type ProposalStatus,
   type IDeliveryInfo,
+  SubDeliveryStatus,
+  type ISubDelivery,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -478,40 +480,14 @@ export class ProposalService {
     }
   }
 
-  async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+  async updateDmsForDataDelivery(proposalId: string, dataDelivery: IDataDelivery): Promise<IDataDelivery> {
     try {
       return (
         await this.apiClient.put<
           IDataDelivery,
           AxiosResponse<IDataDelivery>,
           Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
-        >(`${this.basePath}/${proposalId}/data-delivery`, {
-          dataManagementSite: dmsId,
-          acceptance: DeliveryAcceptance.PENDING,
-          deliveryInfos: [],
-        })
-      ).data
-    } catch (error: any) {
-      throw new Error(error)
-    }
-  }
-
-  async updateDmsAcceptanceForDataDelivery(
-    proposalId: string,
-    dmsId: string,
-    acceptance: DeliveryAcceptance,
-  ): Promise<IDataDelivery> {
-    try {
-      return (
-        await this.apiClient.put<
-          IDataDelivery,
-          AxiosResponse<IDataDelivery>,
-          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
-        >(`${this.basePath}/${proposalId}/data-delivery`, {
-          dataManagementSite: dmsId,
-          acceptance,
-          deliveryInfos: [],
-        })
+        >(`${this.basePath}/${proposalId}/data-delivery`, dataDelivery)
       ).data
     } catch (error: any) {
       throw new Error(error)
@@ -546,8 +522,85 @@ export class ProposalService {
     }
   }
 
+  async rateSubDelivery(proposalId: string, deliveryInfoId: string, subDeliveryToUpdate: ISubDelivery) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<ISubDelivery, 'createdAt' | 'updatedAt'>
+        >(`${this.basePath}/${proposalId}/sub-delivery/rate`, subDeliveryToUpdate, { params: { deliveryInfoId } })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/set-status`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async setDmsAcceptance(proposalId: string, acceptance: DeliveryAcceptance): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery/acceptance`, undefined, {
+          params: {
+            acceptance,
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async extendDeliveryInfo(proposalId: string, deliveryInfoId: string, newDeliveryDate: Date): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/extend-delivery`, undefined, {
+          params: {
+            deliveryInfoId,
+            newDeliveryDate: newDeliveryDate.toISOString(),
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
   async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
     await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
+  }
+
+  async updateDelivieriesForAnalysis(proposalId: string): Promise<IProposal> {
+    try {
+      return (
+        await this.apiClient.put<IProposal, AxiosResponse<IProposal>>(
+          `${this.basePath}/${proposalId}/data-delivery/analysis-started`,
+        )
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
   }
 
   async catch(error: any) {

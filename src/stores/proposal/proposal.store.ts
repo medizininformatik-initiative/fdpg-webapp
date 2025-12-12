@@ -3,6 +3,8 @@ import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
 import {
   DeliveryAcceptance,
+  ProposalStatus,
+  SubDeliveryStatus,
   type IApplicant,
   type IDataDelivery,
   type IDeliveryInfo,
@@ -19,15 +21,15 @@ import {
   type IReportUpdate,
   type IResearcherIdentity,
   type ISelectedCohort,
+  type ISubDelivery,
   type IUpload,
-  type ProposalStatus,
   type SortableFields,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
-import { debounce } from 'lodash-es'
+import { debounce, update } from 'lodash-es'
 import { getDateDiff } from '@/utils/date.util'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
@@ -587,8 +589,8 @@ export const useProposalStore = defineStore('Proposal', {
       return dataDelivery
     },
 
-    async updateDmsForDataDelivery(proposalId: string, dmsId: string): Promise<IDataDelivery> {
-      const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, dmsId)
+    async updateDmsForDataDelivery(proposalId: string, transientDataDelivery: IDataDelivery): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, transientDataDelivery)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
@@ -619,10 +621,47 @@ export const useProposalStore = defineStore('Proposal', {
 
     async updateDmsAcceptanceForDataDelivery(
       proposalId: string,
-      dmsId: string,
       acceptance: DeliveryAcceptance,
     ): Promise<IDataDelivery> {
-      const dataDelivery = await this.apiService.updateDmsAcceptanceForDataDelivery(proposalId, dmsId, acceptance)
+      const dataDelivery = await this.apiService.setDmsAcceptance(proposalId, acceptance)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async rateSubDelivery(
+      proposalId: string,
+      deliveryInfoId: string,
+      subDelivery: ISubDelivery,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.rateSubDelivery(proposalId, deliveryInfoId, subDelivery)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.setDeliveryInfoStatus(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async extendDeliveryInfo(
+      proposalId: string,
+      deliveryInfoId: string,
+      newDeliveryDate: Date,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.extendDeliveryInfo(proposalId, deliveryInfoId, newDeliveryDate)
 
       if (proposalId === this.currentProposal?._id) {
         this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
@@ -633,6 +672,15 @@ export const useProposalStore = defineStore('Proposal', {
 
     async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
       await this.apiService.updateProjectAssignee(proposalId, projectAssignee)
+    },
+
+    async setToDataResearch(proposalId: string): Promise<IProposal> {
+      await this.updateProposalStatus(proposalId, ProposalStatus.DataResearch)
+      const updatedProposal = await this.apiService.updateDelivieriesForAnalysis(proposalId)
+      if (updatedProposal) {
+        this.currentProposal = updatedProposal
+      }
+      return updatedProposal
     },
   },
 

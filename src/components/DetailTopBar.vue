@@ -4,14 +4,14 @@
       effect="dark"
       :content="
         proposalStore.currentProposal?.userProject.generalProjectInformation.projectTitle ??
-        $t('dashboard.researchRequestForDataDelivery')
+        t('dashboard.researchRequestForDataDelivery')
       "
       placement="bottom-end"
     >
       <h1 class="title">
         {{
           proposalStore.currentProposal?.userProject.generalProjectInformation.projectTitle ??
-          $t('dashboard.researchRequestForDataDelivery')
+          t('dashboard.researchRequestForDataDelivery')
         }}
       </h1>
     </el-tooltip>
@@ -19,13 +19,13 @@
       <template v-for="(button, idx) in buttons" :key="'button' + idx">
         <el-button
           v-if="!button.isHidden"
-          :plain="!button.type"
+          :plain="button.plain ?? !button.type"
           :data-testId="button.testId"
           :type="button.type"
           v-loading="button.isLoading"
           @click="button.action"
         >
-          {{ $t(button.label) }}
+          {{ t(button.label) }}
         </el-button>
       </template>
     </div>
@@ -36,8 +36,11 @@
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import type { PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const proposalStore = useProposalStore()
+
+const { t } = useI18n()
 
 defineProps({
   buttons: {

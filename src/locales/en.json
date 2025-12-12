@@ -80,7 +80,9 @@
     "readyForPublication": "Ready for publication ",
     "invalidUrl": "Invalid URL",
     "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
-    "overview": "Overview"
+    "overview": "Overview",
+    "textCopied": "Text copied to clipboard",
+    "none": "None"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -145,7 +147,15 @@
     "PARTICIPANT_REMOVED": "Participant {participantName} was removed from the project",
     "PARTICIPANT_UPDATED": "Participants were updated",
     "FDPG_PROJECT_ASSIGNEE_CHANGE": "New project assignee: {newAssigneeMail}",
-    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n"
+    "PROPOSAL_COPY_AS_INTERNAL_REGISTRATION": "Copied from proposal {originalProposalAbbreviation} for internal registration by FDPG\n",
+    "DMO_REQUEST": "{requestedDms} has been requested for role DMO",
+    "DMO_DENY": "{location} has rejected the role DMO",
+    "DMO_ACCEPT": "{location} has accepted the role DMO",
+    "DATA_DELIVERY_STARTED": "Data delivery {deliveryName} has been started",
+    "DATA_DELIVERY_MANUAL_ENTRY": "Data delivery {deliveryName} has been documented",
+    "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher",
+    "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled",
+    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded"
   },
   "header": {
     "login": "Login",
@@ -815,7 +825,13 @@
     "registerProject": "Register Project",
     "projectCopiedForRegistration": "Project copied successfully. Please fill in the registration details.",
     "projectAssignee": "Project assignee",
-    "redirectToFeasibilityPortal": "Feasibility Portal"
+    "redirectToFeasibilityPortal": "Feasibility Portal",
+    "startAnalysis": "Start data analysis",
+    "startAnalysisModalTitle": "Start data analysis title",
+    "startAnalysisModalDescription": "Start data analysis description. Current running deliveries will be marked as canceled: {deliveriesToBeCanceled}. Current deliveries will be marked as received: {deliveriesToBeMarkedAsReceived}.",
+    "readyToArchive": "Ready to archive",
+    "readyToArchiveProjectModalTitle": "Ready to archive title",
+    "readyToArchiveProjectModalDescription": "Ready to archive description"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -897,7 +913,7 @@
   "projectStatus": {
     "DRAFT": "The proposal is still in draft status",
     "REJECTED": "The proposal was rejected",
-    "ARCHIVED": "The proposal is archived",
+    "ARCHIVED": "The project has been archived.",
     "REWORK": "The proposal is rejected for revision",
     "FDPG_CHECK_FOR_RESEARCHER": "The proposal will now be reviewed by the Research Data Portal by {date}.",
     "FDPG_CHECK_FOR_FDPG": "You must review the proposal by {date}.",
@@ -906,8 +922,8 @@
     "EXPECT_DATA_DELIVERY": "The project data/results are being prepared for collection.",
     "DATA_RESEARCH": "The project is in the analysis phase.",
     "DATA_CORRUPT": "The project data/results are in review.",
-    "FINISHED_PROJECT": "The project is completed.",
-    "READY_TO_ARCHIVE": "The project is ready to be archived.",
+    "FINISHED_PROJECT": "The project has been set to “Project finished” and is beeing check by the FDPG before project completion.",
+    "READY_TO_ARCHIVE": "The project has been conclueded.",
     "LOC_DIZ_CHECK": "The project proposal must be reviewed by your DIZ by {date}.",
     "LOC_DIZ_APPROVED": "The project proposal needs to be reviewed by your UAC by {date}.",
     "LOC_UAC_APPROVED": "The project proposal will be processed by other locations by {date}.",
@@ -1028,10 +1044,11 @@
     "dmstQuestionOfAcceptanceBody": "The research portal has indicated that DMS is the data delivery partner for this project. Please confirm your acceptance. Please anwer until {dueDate}",
     "dataDelivery": "Data Delivery",
     "deliveryName": "Delivery {deliveryName}",
-    "deliveryUntil": "Expected until {deliveryDate}",
+    "deliveryUntil": "Expected until: {deliveryDate}",
     "deliveryWasCanceled": "Canceled on: {canceledDate}",
     "waitingForDataSet": "Waiting for results.",
     "forwardedOn": "Forwarded on: {forwardedDate}",
+    "fetchedResultsOn": "Fetched data on: {fetchedResultsOn}",
     "cancelDelivery": "Cancel delivery",
     "forwardDelivery": "Forward delivery",
     "deliveryInfoLocation": "DIC",
@@ -1056,7 +1073,7 @@
     "rateDelivery": "Rate Delivery",
     "errorInitiateDeliveryInfo": "Error on initiate delivery",
     "errorSelectDms": "Error on DMS selection",
-    "syncFailed": "Error on sync with DSF",
+    "syncFailed": "Sync failed. Check if DSF is available.",
     "forwardDeliveryTitle": "Forward {deliveryName}?",
     "forwardDeliveryMessage": "Your current delivery from {dmsDisplay} will be forwarded to the researchers. Pending deliveries to individual locations can no longer be taken into account. Would you still like to continue?",
     "forwardDeliveryDialogForwardButton": "Forward delivery",
@@ -1067,7 +1084,14 @@
     "rateDeliveryDialogMessage": "Please rate the delivery.",
     "rateDeliveryAccept": "Delivery is accepted",
     "rateDeliveryRepeat": "Delivery will be repeated",
-    "rateDeliverySubmit": "Okay"
+    "rateDeliverySubmit": "Okay",
+    "extendDelivery": "Extend delivery",
+    "fhirQrNotFound": "Could not find DSF 'QuestionnairResponse' with attached businessKey. Operation aborted.",
+    "setStatusFailed": "Error on update of {deliveryName}",
+    "copyToClipboard": "Copy link",
+    "resultsFetched": "Fetch results",
+    "confirmFetchedResultsTitle": "Fetch results",
+    "confirmFetchedResultsMessage": "Delivery will be marked as fetched"
   },
   "registeringForm": {
     "syncDisabledMissingFields": "Cannot sync: Missing required fields {fields}. Please complete the Registration Info section before syncing.",
