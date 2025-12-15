@@ -155,7 +155,8 @@
     "DATA_DELIVERY_MANUAL_ENTRY": "Data delivery {deliveryName} has been documented",
     "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher",
     "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled",
-    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded"
+    "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded",
+    "CONTRACTING_SKIPPED": "Contracting procedure was skipped"
   },
   "header": {
     "login": "Login",
@@ -831,7 +832,10 @@
     "startAnalysisModalDescription": "Start data analysis description. Current running deliveries will be marked as canceled: {deliveriesToBeCanceled}. Current deliveries will be marked as received: {deliveriesToBeMarkedAsReceived}.",
     "readyToArchive": "Ready to archive",
     "readyToArchiveProjectModalTitle": "Ready to archive title",
-    "readyToArchiveProjectModalDescription": "Ready to archive description"
+    "readyToArchiveProjectModalDescription": "Ready to archive description",
+    "toContractingSkipModalTitle": "Proceed without contract?",
+    "toContractingSkipModalDescription": "Following locations do not need to sign a contract.",
+    "initiateContractSkip": "Proceed without contract"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

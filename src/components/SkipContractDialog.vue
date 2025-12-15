@@ -3,15 +3,15 @@
     v-model="dialogOpen"
     class="initiate-contract-dialog"
     width="50%"
-    :title="t('proposal.toContractingModalTitle')"
+    :title="t('proposal.toContractingSkipModalTitle')"
     :before-close="closeDialog"
     :show-close="false"
   >
     <div>
-      <p>{{ t('proposal.toContractingModalDescription') }}</p>
-      <div v-if="contractDraft" class="fdpg-upload-list-item">
-        <p class="fdpg-upload-file__name">{{ contractDraft.name }}</p>
-        <span>({{ ((contractDraft?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
+      <p>{{ t('proposal.toContractingSkipModalDescription') }}</p>
+      <div v-if="contractSkipFile" class="fdpg-upload-list-item">
+        <p class="fdpg-upload-file__name">{{ contractSkipFile.name }}</p>
+        <span>({{ ((contractSkipFile?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
         <el-icon
           class="el-icon-close"
           data-testId="icon__removeInitiateContractFile"
@@ -28,7 +28,7 @@
         :is-disabled="isSubmitting"
         @change="handleUploadFile"
       >
-        <el-button v-if="!contractDraft" class="upload-button" link>
+        <el-button v-if="!contractSkipFile" class="upload-button" link>
           {{ t('proposal.chooseAFile') }}
           <template #icon>
             <el-icon class="bi-paperclip"></el-icon>
@@ -47,16 +47,16 @@
     </div>
     <template #footer>
       <span>
-        <el-button link data-testId="button__closeInitiateContractDialog" @click="closeDialog">
+        <el-button link data-testId="button__closeInitiateContractSkipDialog" @click="closeDialog">
           {{ t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
-          :disabled="initiateContractButtonDisabled"
+          :disabled="initiateContractSkipButtonDisabled"
           data-testid="button__initiateContract"
-          @click="initiateContract"
+          @click="initiateSkipContract"
         >
-          {{ t('proposal.initiateContract') }}
+          {{ t('proposal.initiateContractSkip') }}
         </el-button>
       </span>
     </template>
@@ -65,7 +65,7 @@
 
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
-import { computed, onMounted, ref, watch, watchEffect, type ComputedRef, type PropType, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, type PropType, type Ref } from 'vue'
 import { useRoute } from 'vue-router'
 import FdpgUpload from '@/components/FdpgUpload.vue'
 import FdpgDialog from '@/components/FdpgDialog.vue'
@@ -78,7 +78,7 @@ import type { ILocation } from '@/types/location.types'
 import { useI18n } from 'vue-i18n'
 import LocationSelect from './LocationSelect.vue'
 
-const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContract'])
+const emit = defineEmits(['update:modelValue', 'closeDialog', 'initiateContractSkip'])
 
 const props = defineProps({
   modelValue: {
@@ -97,25 +97,25 @@ const props = defineProps({
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
-  contractDraft.value = null
+  contractSkipFile.value = null
   dialogOpen.value = false
 }
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 
-const contractDraft = ref<UploadFile | null>()
+const contractSkipFile = ref<UploadFile | null>()
 
 const handleUploadFile = (file: UploadFile) => {
-  contractDraft.value = file
+  contractSkipFile.value = file
 }
 
 const handleRemoveFile = () => {
-  contractDraft.value = null
+  contractSkipFile.value = null
 }
 
-const initiateContractButtonDisabled = computed(
-  () => !contractDraft.value || (selectedLocations.value?.length ?? 0) <= 0 || props.isSubmitting,
+const initiateContractSkipButtonDisabled = computed(
+  () => !contractSkipFile.value || (selectedLocations.value?.length ?? 0) <= 0 || props.isSubmitting,
 )
 
 const { t } = useI18n()
@@ -144,14 +144,19 @@ onMounted(async () => {
 })
 
 const { showErrorMessage } = useNotifications()
-const { uploadsForType } = useUpload(proposalId, [UseCaseUpload.ContractDraft], showErrorMessage)
+const { uploadsForType } = useUpload(proposalId, [UseCaseUpload.SkipContract], showErrorMessage)
 
-const initiateContract = () => {
-  if (contractDraft.value) {
-    emit('initiateContract', contractDraft.value, selectedLocations.value)
+const initiateSkipContract = () => {
+  if (contractSkipFile.value) {
+    emit('initiateContractSkip', selectedLocations.value, contractSkipFile.value.raw)
   }
 }
 
 // for testing
-defineExpose({ contractDraft, initiateContractButtonDisabled, selectedLocations, isSubmitting: props.isSubmitting })
+defineExpose({
+  contractSkipFile,
+  initiateContractSkipButtonDisabled,
+  selectedLocations,
+  isSubmitting: props.isSubmitting,
+})
 </script>

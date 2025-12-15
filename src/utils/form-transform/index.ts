@@ -163,5 +163,6 @@ export const transformForm = (
     registerFormId: form?.registerFormId,
     dataDelivery: form?.dataDelivery,
     projectAssignee: form?.projectAssignee,
+    contractingSkipped: form?.contractingSkipped,
   }
 }

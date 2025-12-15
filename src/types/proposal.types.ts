@@ -330,6 +330,7 @@ export enum ProjectHistoryType {
   ContractUacApproved = 'CONTRACT_UAC_APPROVED',
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
+  ContractingSkipped = 'CONTRACTING_SKIPPED',
   FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
   ParticipantAdded = 'PARTICIPANT_ADDED',
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
@@ -604,6 +605,7 @@ export interface IProposal {
   type: ProposalType
   dataDelivery?: IDataDelivery
   projectAssignee?: IProjectAssignee
+  contractingSkipped: boolean
 }
 
 export enum FdpgTaskType {
