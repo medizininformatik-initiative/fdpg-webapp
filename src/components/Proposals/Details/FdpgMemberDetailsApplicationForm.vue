@@ -89,6 +89,13 @@
       :isSubmitting="isSubmitting"
       @initiate-contract="handleContractSignConfirm"
     />
+
+    <SkipContractDialog
+      v-model="isSkipContractDialogOpen"
+      :locations="uacLocations"
+      :isSubmitting="isSubmitting"
+      @initiate-contract-skip="handleSkipContractingConfirm"
+    />
   </el-container>
 </template>
 
@@ -99,6 +106,7 @@ import DetailActionRow from '@/components/DetailActionRow.vue'
 import DetailTopBar from '@/components/DetailTopBar.vue'
 import FdpgCheckList from '@/components/FdpgCheckList.vue'
 import InitiateContractDialog from '@/components/InitiateContractDialog.vue'
+import SkipContractDialog from '@/components/SkipContractDialog.vue'
 import LocationVotePanel from '@/components/LocationVotePanel.vue'
 import MessageCenter from '@/components/MessageCenter.vue'
 import ProjectStatus from '@/components/ProjectStatus.vue'
@@ -167,6 +175,7 @@ const {
 // Application Form specific functionality
 const {
   isInitiateContractDialogOpen,
+  isSkipContractDialogOpen,
   uacFullyApproved,
   uacLocations,
   showContractingParticipants,
@@ -176,11 +185,13 @@ const {
   handleRejectApplicationClick,
   handleToLocationCheckClick,
   handleToContractingClick,
+  handleToSkipContractingClick,
   handleToExpectDataDeliveryClick,
   handleFinishProjectClick,
   handleFinishProjectDeclineClick,
   handleDownloadLocationCsvClick,
   handleContractSignConfirm,
+  handleSkipContractingConfirm,
   handleRegisterProjectClick,
   handleStartAnalysisClick,
 } = useFdpgApplicationForm(proposalId, status, changeStatus, t, t)
@@ -388,6 +399,15 @@ const actionButtons = computed<IDetailActionRow[]>(() => [
     position: 'right',
     isHidden: status.value !== ProposalStatus.LocationCheck,
     isDisabled: uacFullyApproved.value.length <= 0 || proposalStore.currentProposal?.isLocked,
+  },
+  {
+    type: 'primary',
+    label: 'proposal.initiateContractSkip',
+    testId: 'button__initiateContractSkip',
+    action: handleToSkipContractingClick,
+    position: 'right',
+    isHidden: status.value !== ProposalStatus.LocationCheck,
+    isDisabled: proposalStore.currentProposal?.isLocked,
   },
   {
     type: 'primary',

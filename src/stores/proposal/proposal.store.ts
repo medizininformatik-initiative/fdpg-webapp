@@ -682,6 +682,11 @@ export const useProposalStore = defineStore('Proposal', {
       }
       return updatedProposal
     },
+
+    async skipContracting(proposalId: string, locations: string[], file?: File): Promise<void> {
+      const proposal = await this.apiService.skipContracting(proposalId, locations, file)
+      this.currentProposal = { ...proposal }
+    },
   },
 
   getters: {

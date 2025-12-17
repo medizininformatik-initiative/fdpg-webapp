@@ -7,6 +7,8 @@ import { useMessageBoxStore, type DecisionType, type IMessageBox } from '@/store
 import { DeliveryInfoStatus, ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import type { UploadFile } from 'element-plus'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
 
 export function useFdpgApplicationForm(
   proposalId: any,
@@ -20,8 +22,10 @@ export function useFdpgApplicationForm(
   const layoutStore = useLayoutStore()
   const router = useRouter()
   const { t } = useI18n()
+  const locationStore = useLocationStore()
 
   const isInitiateContractDialogOpen = ref(false)
+  const isSkipContractDialogOpen = ref(false)
 
   const messageBoxDefaults = {
     cancelButtonText: t('general.cancel'),
@@ -163,6 +167,10 @@ export function useFdpgApplicationForm(
     isInitiateContractDialogOpen.value = true
   }
 
+  const handleToSkipContractingClick = () => {
+    isSkipContractDialogOpen.value = true
+  }
+
   const handleToExpectDataDeliveryClick = () => {
     messageBoxStore.setMessageBoxInfo({
       ...messageBoxDefaults,
@@ -217,6 +225,21 @@ export function useFdpgApplicationForm(
 
     try {
       await proposalStore.initContracting(proposalId.value, file, selectedLocations)
+      showSuccessMessage(t('general.submitted'))
+      await router.push({ name: layoutStore.lastDashboard })
+    } catch (error: any) {
+      showErrorMessage(t('general.failedSubmit'))
+    }
+  }
+
+  const handleSkipContractingConfirm = async (selectedLocations: string[], file?: File) => {
+    if (!file) {
+      showErrorMessage(t('general.failedSubmit'))
+      return
+    }
+
+    try {
+      await proposalStore.skipContracting(proposalId.value, selectedLocations, file)
       showSuccessMessage(t('general.submitted'))
       await router.push({ name: layoutStore.lastDashboard })
     } catch (error: any) {
@@ -299,6 +322,7 @@ export function useFdpgApplicationForm(
   return {
     // State
     isInitiateContractDialogOpen,
+    isSkipContractDialogOpen,
     uacFullyApproved,
     uacLocations,
     showContractingParticipants,
@@ -310,6 +334,7 @@ export function useFdpgApplicationForm(
     handleRejectApplicationClick,
     handleToLocationCheckClick,
     handleToContractingClick,
+    handleToSkipContractingClick,
     handleToExpectDataDeliveryClick,
     handleFinishProjectClick,
     handleFinishProjectDeclineClick,
@@ -317,6 +342,7 @@ export function useFdpgApplicationForm(
     handleContractSignConfirm,
     handleRegisterProjectClick,
     initContracting,
+    handleSkipContractingConfirm,
     handleStartAnalysisClick,
   }
 }

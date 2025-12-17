@@ -656,4 +656,17 @@ export class ProposalService {
       throw new Error(error.message || 'An unexpected error occurred while syncing all proposals')
     }
   }
+
+  async skipContracting(proposalId: string, locations: string[], file?: File): Promise<IProposal> {
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('locations', JSON.stringify(locations))
+
+    const response = await this.apiClient.post(`${this.basePath}/${proposalId}/skip-contract`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  }
 }

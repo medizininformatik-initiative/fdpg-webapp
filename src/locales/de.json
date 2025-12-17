@@ -155,7 +155,8 @@
     "DATA_DELIVERY_MANUAL_ENTRY": "Die Datenlieferung {deliveryName} wurde dokumentiert",
     "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet",
     "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen",
-    "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet"
+    "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet",
+    "CONTRACTING_SKIPPED": "Vertragsschritt wurde übersprungen"
   },
   "header": {
     "login": "Anmelden",
@@ -831,7 +832,10 @@
     "startAnalysisModalDescription": "Datenanalyse starten Beschreibung. Laufende Lieferungen werden als abgebrochen markiert: {deliveriesToBeCanceled}. Laufende Lieferungen werden als erhalten markiert: {deliveriesToBeMarkedAsReceived}",
     "readyToArchive": "Bereit zum archivieren",
     "readyToArchiveProjectModalTitle": "Bereit zum archivieren Überschrift",
-    "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung"
+    "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung",
+    "toContractingSkipModalTitle": "Ohne Vertrag fortfahren?",
+    "toContractingSkipModalDescription": "Für die folgenden Standorte wird kein unterschriebener Vertrag gebraucht.",
+    "initiateContractSkip": "Ohne Vertrag fortfahren"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",

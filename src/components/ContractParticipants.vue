@@ -33,7 +33,7 @@
     <section v-show="activeTab === 'owner'" role="region">
       <section role="row" class="contract-row">
         <div>{{ ownerRow.ownerName }}</div>
-        <div class="contract-info">
+        <div v-if="!isContractingSkipped" class="contract-info">
           <div class="contract-status" :class="ownerRow.status.style">{{ t(ownerRow.status.text) }}</div>
           <div class="contract-date">
             {{ ownerRow.signedAt }}
@@ -59,7 +59,7 @@
         class="contract-row"
       >
         <div>{{ locationLookUpMapRef[location.location]?.display ?? `unknown ${location.location}` }}</div>
-        <div class="contract-info">
+        <div v-if="!isContractingSkipped" class="contract-info">
           <div class="contract-status" :class="location.status.style">{{ t(location.status.text) }}</div>
           <div class="contract-date">
             {{ location.signedAt ? new Date(location.signedAt).toLocaleDateString() : '-' }}
@@ -102,6 +102,7 @@ const locationStore = useLocationStore()
 const isResearcher = computed(() => authStore.singleKnownRole === Role.Researcher)
 const signedContractsCount = computed(() => proposalStore.currentProposal?.signedContractsCount ?? 0)
 const signedContractsPendingCount = computed(() => proposalStore.currentProposal?.signedContractsPendingCount ?? 0)
+const isContractingSkipped = computed(() => proposalStore.currentProposal?.contractingSkipped)
 
 const locationLookUpMapRef: Ref<Record<string, ILocation>> = ref({})
 

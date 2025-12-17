@@ -206,7 +206,11 @@ const {
   uploadsForType: contracts,
   handleRemoveFile: handleContractRemove,
   isAppendixLoading: isContractsLoading,
-} = useUpload(proposalId, [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract], showErrorMessage)
+} = useUpload(
+  proposalId,
+  [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract, UseCaseUpload.SkipContract],
+  showErrorMessage,
+)
 
 const handleContractAppendixAdd = async (file: UploadFile) => {
   await handleContractAppendixUpload(file)
