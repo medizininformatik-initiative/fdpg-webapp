@@ -64,6 +64,7 @@ describe('DataSourceItem', () => {
         dataSource: mockDataSource,
         isSelected: false,
         platformIdentifier: PlatformIdentifier.DIFE,
+        proposalId: 'id',
       },
       global: {
         mocks: {
