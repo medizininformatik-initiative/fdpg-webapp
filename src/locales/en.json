@@ -835,7 +835,9 @@
     "readyToArchiveProjectModalDescription": "Ready to archive description",
     "toContractingSkipModalTitle": "Proceed without contract?",
     "toContractingSkipModalDescription": "Following locations do not need to sign a contract.",
-    "initiateContractSkip": "Proceed without contract"
+    "initiateContractSkip": "Proceed without contract",
+    "researcherRepeatDeliveryModalTitle": "Proceed with data delivery?",
+    "researcherRepeatDeliveryModalDescription": "The status of the proposal will be set back to data delivery."
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

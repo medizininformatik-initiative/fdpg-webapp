@@ -50,7 +50,10 @@
       "
       :can-initiate-dsf-delivery="userRole === Role.FdpgMember && isDataDeliveryStatus"
       :can-rate-delivery="userRole === Role.DataManagementOffice && isDataDeliveryStatus"
-      :can-fetch-results="userRole === Role.Researcher && isDataDeliveryStatus"
+      :can-fetch-results="
+        [Role.DataSourceMember, Role.FdpgMember, Role.Researcher].includes(userRole ?? Role.UacMember) &&
+        isDataDeliveryStatus
+      "
       @open-dialog:new-dms="setNewDmsDialogOpenState"
       @open-dialog:manual-delivery="setManualDeliveryInfoEntryDialogOpen"
       @open-dialog:initiate-delivery="setInitiateDeliveryDialogOpenState"

@@ -177,12 +177,25 @@ const handleFinishProjectWithModal = () => {
   })
 }
 
+const handleRepeatDeliveryWithModal = () => {
+  messageBoxStore.setMessageBoxInfo({
+    cancelButtonText: 'general.cancel',
+    cancelButtonClass: 'el-button--text',
+    showCancelButton: true,
+    title: 'proposal.researcherRepeatDeliveryModalTitle',
+    message: 'proposal.researcherRepeatDeliveryModalDescription',
+    confirmButtonText: 'general.confirm',
+    callback: async (decision: DecisionType) =>
+      decision === 'confirm' ? await changeStatus(ProposalStatus.ExpectDataDelivery) : undefined,
+  })
+}
+
 const hasDeclinedFinishProject = ref(false)
 const handleFinishProject = (decision: boolean) => {
-  if (decision === true) {
+  if (decision) {
     handleFinishProjectWithModal()
-  } else if (decision === false) {
-    hasDeclinedFinishProject.value = true
+  } else {
+    handleRepeatDeliveryWithModal()
   }
 }
 

@@ -835,7 +835,9 @@
     "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung",
     "toContractingSkipModalTitle": "Ohne Vertrag fortfahren?",
     "toContractingSkipModalDescription": "Für die folgenden Standorte wird kein unterschriebener Vertrag gebraucht.",
-    "initiateContractSkip": "Ohne Vertrag fortfahren"
+    "initiateContractSkip": "Ohne Vertrag fortfahren",
+    "researcherRepeatDeliveryModalTitle": "Mit Datenlieferung fortfahren?",
+    "researcherRepeatDeliveryModalDescription": "Der Status des Antrags wird wieder auf Datenlieferung zurück gesetzt."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
