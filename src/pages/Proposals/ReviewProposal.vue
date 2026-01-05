@@ -146,9 +146,9 @@ const sections = computed(
       projectResponsibilitySection(locationMapRef.value),
       projectUserSection,
       participantSection(locationMapRef.value),
-      userProjectSection(authStore.assignedDataSources, locationMapRef.value),
+      userProjectSection(authStore.assignedDataSources, locationMapRef.value, proposalData.value?.selectedDataSources),
       requestedDataSection,
-      biosampleSection(authStore.assignedDataSources),
+      biosampleSection(authStore.assignedDataSources, proposalData.value?.selectedDataSources),
     ] as DefinitionSection<IProposal, keyof IProposal>[],
 )
 
