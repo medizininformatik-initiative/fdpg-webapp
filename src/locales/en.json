@@ -82,7 +82,10 @@
     "fileSizeExceedsLimit": "File size exceeds the maximum allowed size",
     "overview": "Overview",
     "textCopied": "Text copied to clipboard",
-    "none": "None"
+    "none": "None",
+    "internalError ": "There are problems with the system. Please try again later or contact the FDPG team (info{'@'}forschen-fuer-gesundheit.de",
+    "expiredSession": "Your session has expired, please renew your session.",
+    "authError": "Please wait until your role has been assigned by the FDPG team. We are currently checking your registration. It takes longer than 48 hours (weekdays)? You may contact info{'@'}forschen-fuer-gesundheit.de”"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -93,7 +96,7 @@
     "Variables": "Select the Variables",
     "Casesohort": "Select the Cases/Cohorts/Patients",
     "DataUsage": "Planned Data use",
-    "ProjectDetails": "General Project Detail",
+    "ProjectDetails": "General Project Details",
     "ProjectParticipants": "Project Participants",
     "ResearchProject": "Details of the research project",
     "success": "FINISH",
@@ -835,7 +838,10 @@
     "readyToArchiveProjectModalDescription": "Ready to archive description",
     "toContractingSkipModalTitle": "Proceed without contract?",
     "toContractingSkipModalDescription": "Following locations do not need to sign a contract.",
-    "initiateContractSkip": "Proceed without contract"
+    "initiateContractSkip": "Proceed without contract",
+    "researcherRepeatDeliveryModalTitle": "Proceed with data delivery?",
+    "researcherRepeatDeliveryModalDescription": "The status of the proposal will be set back to data delivery.",
+    "substatus": "Substatus"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -943,7 +949,32 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Your location must sign the contract by {date}.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "The contract requirements have been accepted. The contract for the project is in the process of being finalized.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "The contract requirements are being reviewed.",
-    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing"
+    "PROJECT_IS_LOCKED": "The Proposal is currently locked for editing",
+    "SUBSTATUS__DRAFT": "Draft",
+    "SUBSTATUS__REJECTED": "Rejected",
+    "SUBSTATUS__REWORK": "Rework",
+    "SUBSTATUS__FDPG_CHECK_INITIAL_VIEW": "FDPG Check: Initial View",
+    "SUBSTATUS__FDPG_CHECK_DEPTH_CHECK": "FDPG Check: Depth Check",
+    "SUBSTATUS__FDPG_CHECK_ETHICS_CHECK": "FDPG Check: Ethics Check",
+    "SUBSTATUS__FDPG_CHECK_DONE": "FDPG Check: Done",
+    "SUBSTATUS__LOCATION_CHECK_VOTING_IN_PROGRESS": "Location Check: Voting in Progress",
+    "SUBSTATUS__LOCATION_CHECK_VOTING_DONE": "Location Check: Voting Done",
+    "SUBSTATUS__CONTRACTING_RESEARCHER_STEP": "Contracting: Researcher Step",
+    "SUBSTATUS__CONTRACTING_LOCATION_STEP": "Contracting: Location Step",
+    "SUBSTATUS__CONTRACTING_DONE": "Contracting: Done",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_SELECT_DMS": "Data Delivery: Select DMS",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_WAITING_FOR_DMS_RESPONSE": "Data Delivery: Waiting for DMS Response",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_DMS_DENIED": "Data Delivery: DMS Denied",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_EMPTY_DELIVIERIES": "Data Delivery: No Deliveries",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_PENDING": "Data Delivery: Pending",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_DONE": "Data Delivery: Done",
+    "SUBSTATUS__DATA_RESEARCH": "Data Research",
+    "SUBSTATUS__DATA_CORRUPT": "Data Corrupt",
+    "SUBSTATUS__FINISHED_PROJECT": "Finished Project",
+    "SUBSTATUS__READY_TO_ARCHIVE": "Ready to Archive",
+    "SUBSTATUS__READY_TO_PUBLISH": "Ready to Publish",
+    "SUBSTATUS__PUBLISHED": "Published",
+    "SUBSTATUS__ARCHIVED": "Archived"
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Check",

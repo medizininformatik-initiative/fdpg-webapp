@@ -61,8 +61,13 @@
         <template v-else-if="column.type === ColumnType.Status" #default="scope">
           {{ getStatusFilter(getNestedProperty(scope.row, column.prop)) }}
         </template>
+
         <template v-else-if="column.type === ColumnType.ProjectStatus" #default="scope">
           {{ getNestedProperty(scope.row, column.prop) }}
+        </template>
+
+        <template v-else-if="column.type === ColumnType.ProjectSubstatus" #default="scope">
+          {{ t(`projectStatus.SUBSTATUS__${getNestedProperty(scope.row, column.prop)}`) }}
         </template>
       </el-table-column>
     </el-table>
@@ -89,6 +94,7 @@ enum ColumnType {
   Date = 'date',
   Status = 'status',
   ProjectStatus = 'projectStatus',
+  ProjectSubstatus = 'projectSubstatus',
 }
 
 interface IColumn {
@@ -172,6 +178,7 @@ const proposalStatusMap: Record<string, string[]> = {
 const getStatusFilter = (statusTitle: string): string | undefined => {
   return Object.keys(proposalStatusMap).find((key) => (proposalStatusMap[key].includes(statusTitle) ? key : ''))
 }
+
 const {
   handleFocus,
   focusNextRow,

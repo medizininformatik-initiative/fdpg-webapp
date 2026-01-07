@@ -23,7 +23,6 @@ import {
   type ISelectedCohort,
   type IUpload,
   type IDeliveryInfo,
-  SubDeliveryStatus,
   type ISubDelivery,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
