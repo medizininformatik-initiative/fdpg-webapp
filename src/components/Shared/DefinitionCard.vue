@@ -25,13 +25,19 @@
                   v-if="!content.isList"
                   :definition="content"
                   :value="getValue(dtoAccess, content)"
+                  :data-object="dtoAccess"
                 />
                 <ul v-if="content.isList">
                   <li
                     v-for="(listItem, listItemIdx) in getValue(dtoAccess, content)"
                     :key="'li' + termIdx + listItemIdx"
                   >
-                    <DefinitionCardItem class="print-region" :definition="content" :value="listItem" />
+                    <DefinitionCardItem 
+                      class="print-region" 
+                      :definition="content" 
+                      :value="listItem"
+                      :data-object="dtoAccess" 
+                    />
                   </li>
                 </ul>
               </template>

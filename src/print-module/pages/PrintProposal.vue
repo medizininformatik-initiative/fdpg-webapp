@@ -140,6 +140,7 @@ const dataPrivacyOverview = computed(() => {
     data.push({
       headline: t('proposal.dataPrivacyExtra'),
       text: proposalData.value?.userProject.typeOfUse.dataPrivacyExtra,
+      translation: false,
     })
   }
   return { content: { data } } as IVirtualWrap<IDataPrivacyOverview>

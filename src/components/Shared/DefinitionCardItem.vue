@@ -4,7 +4,7 @@
     {{ t(definition.defaultValue) }}
   </template>
   <template v-else>
-    <template v-if="definition.kind === 'translatable'">
+    <template v-if="definition.kind === 'translatable' && shouldUseTranslation">
       <div class="card-item-value">{{ t(`${definition.prefix}${value}`) }}</div>
     </template>
 
@@ -42,10 +42,11 @@
 <script setup lang="ts">
 import type { Definitions } from '@/components/Shared/definition-card.types'
 import type { PropType } from 'vue'
+import { computed } from 'vue'
 import { getLocaleDateString } from '@/utils/date.util'
 import { useI18n } from 'vue-i18n'
 
-defineProps({
+const props = defineProps({
   value: {
     type: [String, Number, Boolean, Date, Array, Object] as PropType<
       string | number | boolean | Date | any[] | Record<string, any>
@@ -56,6 +57,15 @@ defineProps({
     type: Object as PropType<Definitions<any, any>>,
     required: true,
   },
+  dataObject: {
+    type: Object as PropType<Record<string, any>>,
+    required: false,
+    default: () => ({}),
+  },
+})
+
+const shouldUseTranslation = computed(() => {
+  return props.dataObject?.translation !== false
 })
 
 const { t } = useI18n()
