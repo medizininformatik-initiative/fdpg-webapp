@@ -45,6 +45,10 @@ defineProps({
     required: true,
   },
 })
+
+defineOptions({
+  inheritAttrs: false, // Stops ID from attaching to the root <div>
+})
 </script>
 
 <style lang="scss">
