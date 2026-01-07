@@ -710,6 +710,7 @@ export interface IProposalDetail {
     isInternalRegistration?: boolean
     originalProposalId?: string
   }
+  projectAssignee?: IProjectAssignee
 }
 
 export interface IDeclineReason {
