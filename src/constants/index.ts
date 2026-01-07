@@ -105,16 +105,15 @@ export const tableColumns = {
   [PanelQuery.FdpgOverview]: [
     ...defaultColumns,
     {
-      prop: 'status',
-      header: 'proposal.status',
+      prop: 'substatus',
+      header: 'proposal.substatus',
       sortable: true,
-      type: 'status',
+      type: 'projectSubstatus',
     },
     {
-      prop: 'status',
-      header: 'proposal.projectStatus',
+      prop: 'projectAssignee.lastName',
+      header: 'proposal.projectAssignee',
       sortable: true,
-      type: 'projectStatus',
     },
     {
       prop: 'deadlines.DUE_DAYS_FDPG_CHECK',
