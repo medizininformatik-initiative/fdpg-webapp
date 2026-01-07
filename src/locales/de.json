@@ -82,7 +82,10 @@
     "fileSizeExceedsLimit": "Die Dateigröße überschreitet die maximal zulässige Größe",
     "overview": "Überblick",
     "textCopied": "Text wurde in die Zwischenablage kopiert",
-    "none": "Keine"
+    "none": "Keine",
+    "internalError": "Es gibt Probleme mit dem System. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an das FDPG-Team (info{'@'}forschen-fuer-gesundheit.de).",
+    "expiredSession": "Ihre Sitzung ist abgelaufen, bitte verlängern Sie Ihre Sitzung.",
+    "authError": "Bitte warten Sie, bis Ihre Rolle vom FDPG-Team zugewiesen wurde. Wir prüfen gerade Ihre Anmeldung. Es dauert länger als 48 Stunden (Wochentage)? Sie können Kontakt aufnehmen mit info{'@'}forschen-fuer-gesundheit.de"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -825,7 +828,7 @@
     "registerProjectModalDescription": "Es wird eine Kopie dieses Projekts als Registrierungsformular erstellt. Sie können dann die Veröffentlichungsdetails ausfüllen und es im FDPG-Register veröffentlichen. Das Originalprojekt bleibt unverändert.",
     "registerProject": "Projekt registrieren",
     "projectCopiedForRegistration": "Projekt erfolgreich kopiert. Bitte füllen Sie die Registrierungsdetails aus.",
-    "projectAssignee": "Abtretungsempfänger:in",
+    "projectAssignee": "Bearbeiter",
     "redirectToFeasibilityPortal": "Datenportal",
     "startAnalysis": "Datenanalyse starten",
     "startAnalysisModalTitle": "Datenanalyse starten Überschrift",
@@ -835,7 +838,9 @@
     "readyToArchiveProjectModalDescription": "Bereit zum archivieren Beschreibung",
     "toContractingSkipModalTitle": "Ohne Vertrag fortfahren?",
     "toContractingSkipModalDescription": "Für die folgenden Standorte wird kein unterschriebener Vertrag gebraucht.",
-    "initiateContractSkip": "Ohne Vertrag fortfahren"
+    "initiateContractSkip": "Ohne Vertrag fortfahren",
+    "researcherRepeatDeliveryModalTitle": "Mit Datenlieferung fortfahren?",
+    "researcherRepeatDeliveryModalDescription": "Der Status des Antrags wird wieder auf Datenlieferung zurück gesetzt."
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
