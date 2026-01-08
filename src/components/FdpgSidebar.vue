@@ -95,7 +95,7 @@ const fdpgRoleSidebar: SidebarMenu[] = [
   },
   {
     kind: MenuType.Route,
-    to: RouteName.Archive,
+    to: RouteName.Archived,
     title: 'general.archive',
   },
   {
@@ -115,7 +115,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -131,7 +131,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -145,7 +145,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -159,7 +159,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -173,7 +173,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },

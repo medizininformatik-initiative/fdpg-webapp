@@ -839,3 +839,15 @@ export interface IProjectAssignee {
   lastName?: string
   email: string
 }
+export interface IProposalCountByStatus {
+  critical: number
+  high: number
+  low: number
+  medium: number
+  total: number
+}
+
+export interface IProposalStatistics {
+  panels: { [key in PanelQuery]?: IProposalCountByStatus }
+  total?: number
+}
