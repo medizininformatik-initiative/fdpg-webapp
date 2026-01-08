@@ -692,7 +692,6 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         gap: 2rem;
-        color: $green;
       }
       .condition-status {
         border-radius: 5px;

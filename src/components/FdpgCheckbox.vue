@@ -67,7 +67,7 @@ defineOptions({
 
       &.is-checked {
         .el-checkbox__label {
-          color: $white;
+          color: $black;
         }
       }
       &.el-checkbox--small {
