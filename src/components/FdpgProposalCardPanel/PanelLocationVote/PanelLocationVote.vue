@@ -2,9 +2,9 @@
   <el-row :gutter="20" class="vote" v-if="isMII">
     <el-col :span="12">
       <el-progress
-        text-inside
         :percentage="(voteCount / proposal.requestedLocationsCount) * 100"
         :color="percentColors"
+        :show-text="false"
       />
       <p class="uac-vote">
         {{ t('dashboard.uacVote') }}: <span>{{ `${voteCount}/${proposal.requestedLocationsCount}` }}</span>
@@ -12,9 +12,9 @@
     </el-col>
     <el-col :span="12">
       <el-progress
-        text-inside
         :percentage="(proposal.totalPromisedDataAmount / proposal.desiredDataAmount) * 100"
         :color="percentColors"
+        :show-text="false"
       />
       <p class="uac-data">
         <span>{{ `${proposal.totalPromisedDataAmount}/${proposal.desiredDataAmount}` }}</span>
