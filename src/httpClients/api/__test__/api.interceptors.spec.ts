@@ -1,5 +1,5 @@
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
@@ -7,7 +7,7 @@ import type { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalA
 import { AxiosError } from 'axios'
 import { setActivePinia } from 'pinia'
 import { requestInterceptor, responseInterceptor } from '../api.interceptors'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 describe('UsePanels', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
 
@@ -15,7 +15,7 @@ describe('UsePanels', () => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   it('should add Authoriation to header', async () => {

@@ -44,7 +44,6 @@ export interface IProposalState {
   currentProposal?: IProposal
   currentSortField: SortableFields
   currentSortDirection: SortDirection
-  counts: { [key in PanelQuery]?: IProposalCount }
   _checkListLastSuccess: IFdpgChecklist
   search?: string
   statistics: IProposalStatistics
@@ -57,7 +56,6 @@ export const useProposalStore = defineStore('Proposal', {
     currentProposal: undefined,
     currentSortField: 'submittedAt',
     currentSortDirection: SortDirection.DESC,
-    counts: {},
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
       initialViewing: false,

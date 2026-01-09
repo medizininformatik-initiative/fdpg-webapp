@@ -1,4 +1,4 @@
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { mockProposal } from '@/mocks/proposal.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { BadRequestError } from '@/types/bad-request-error.enum'
@@ -26,7 +26,7 @@ describe('UseNotifications', () => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
     proposalStore.currentProposal = mockProposal
   })
 

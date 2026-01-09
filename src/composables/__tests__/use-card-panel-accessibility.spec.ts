@@ -1,4 +1,4 @@
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
@@ -21,7 +21,7 @@ describe('UseCardPanelAccessibility', () => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   describe('moveFocusToPanelRow', () => {

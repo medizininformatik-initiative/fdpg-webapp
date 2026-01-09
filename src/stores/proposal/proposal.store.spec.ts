@@ -15,7 +15,6 @@ import type {
   IReportUpdate,
   IReportGet,
   IFdpgChecklist,
-  InternalCheckNote,
   FdpgChecklistItemUpdateResponse,
 } from '@/types/proposal.types'
 import { ParticipantType, ProposalStatus } from '@/types/proposal.types'
@@ -27,9 +26,51 @@ import { NoErrorThrownError, getError } from '@/__test__/get-error'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { DueDateEnum, type Deadlines } from '@/types/due-date.enum'
 
-vi.mock('@/services/proposal/proposal.service')
+const mockServiceInstance = {
+  getAll: vi.fn(),
+  get: vi.fn(),
+  create: vi.fn(),
+  update: vi.fn(),
+  updateStatus: vi.fn(),
+  updateLockingState: vi.fn(),
+  getStatistics: vi.fn(),
+  uploadFile: vi.fn(),
+  deleteUpload: vi.fn(),
+  getResearcherInfo: vi.fn(),
+  deleteProposal: vi.fn(),
+  duplicateProposal: vi.fn(),
+  checkUnique: vi.fn(),
+  markSectionAsDone: vi.fn(),
+  createPublication: vi.fn(),
+  updatePublication: vi.fn(),
+  deletePublication: vi.fn(),
+  getReports: vi.fn(),
+  getReportContent: vi.fn(),
+  createReport: vi.fn(),
+  updateReport: vi.fn(),
+  deleteReport: vi.fn(),
+  updateFdpgChecklist: vi.fn(),
+  updateFdpgCheckNotes: vi.fn(),
+  getProposalPdfFile: vi.fn(),
+  updateDeadlines: vi.fn(),
+  markUacConditionAsAccepted: vi.fn(),
+  setUacVote: vi.fn(),
+  setDizApproval: vi.fn(),
+  setDizConditionApproval: vi.fn(),
+  signContract: vi.fn(),
+  initContracting: vi.fn(),
+  updateContracting: vi.fn(),
+  removeFile: vi.fn(),
+  getDownloadUrl: vi.fn(),
+  delete: vi.fn(),
+  duplicate: vi.fn(),
+}
 
-const proposalService = vi.mocked(new ProposalService())
+vi.mock('@/services/proposal/proposal.service', () => ({
+  ProposalService: vi.fn(() => mockServiceInstance),
+}))
+
+const proposalService = mockServiceInstance
 
 describe('Proposal Store', () => {
   beforeEach(() => {
@@ -50,7 +91,22 @@ describe('Proposal Store', () => {
       await store.fetch({ panelQuery: PanelQuery.Archived } as ISortAndOrderBy<any>)
       expect(proposalService.getAll).toHaveBeenCalledWith({ panelQuery: PanelQuery.Archived } as ISortAndOrderBy<any>)
       expect(store.proposals).toEqual({ [PanelQuery.Archived]: [mockProposalDetail] })
-      expect(store.counts).toEqual({ ARCHIVED: { critical: 1, high: 0, low: 0, total: 1 } })
+    })
+  })
+
+  describe('getStatistics', () => {
+    it('should call the service to get statistics', async () => {
+      const store = useProposalStore()
+      const mockStatistics = {
+        panels: {
+          DRAFT: { critical: 1, high: 2, medium: 0, low: 5, total: 8 },
+        },
+        total: 8,
+      }
+      proposalService.getStatistics.mockResolvedValueOnce(mockStatistics)
+      await store.getStatistics()
+      expect(proposalService.getStatistics).toHaveBeenCalled()
+      expect(store.statistics).toEqual(mockStatistics)
     })
   })
 
@@ -544,11 +600,7 @@ describe('Proposal Store', () => {
     const store = useProposalStore()
     store.currentProposal = getMockProposal()
 
-    const mockNote: InternalCheckNote = {
-      note: 'test note',
-      date: new Date(),
-      user: 'test user',
-    }
+    const mockNote = 'test note'
     const checklistUpdate: Partial<IFdpgChecklist> = {
       fdpgInternalCheckNotes: mockNote,
     }
