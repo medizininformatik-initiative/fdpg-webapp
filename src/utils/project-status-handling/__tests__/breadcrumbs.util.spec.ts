@@ -7,7 +7,7 @@ describe('breadcrumbs util', () => {
     [RouteName.Pending, 'general.pending'],
     [RouteName.Ongoing, 'general.current'],
     [RouteName.Completed, 'general.completed'],
-    [RouteName.Archive, 'general.archive'],
+    [RouteName.Archived, 'general.archive'],
     [RouteName.CreateProposal, 'sidebar.dashboard'],
   ]
 

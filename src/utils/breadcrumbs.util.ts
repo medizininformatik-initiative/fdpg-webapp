@@ -18,7 +18,7 @@ export const getLastDashboardTitle = (name: RouteName): TranslationSchema => {
     case 'Published': {
       return 'sidebar.published'
     }
-    case 'Archive': {
+    case 'Archived': {
       return 'general.archive'
     }
     default: {

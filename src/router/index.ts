@@ -69,8 +69,8 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: '/archive',
-        name: RouteName.Archive,
+        path: '/archived',
+        name: RouteName.Archived,
         component: () => import('@/pages/ArchivePage.vue'),
         meta: {
           resetBreadcrumbs: true,

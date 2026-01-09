@@ -16,6 +16,7 @@ import {
   type IProposal,
   type IProposalCount,
   type IProposalDetail,
+  type IProposalStatistics,
   type IPublicationCreateAndUpdate,
   type IReportCreate,
   type IReportUpdate,
@@ -43,9 +44,9 @@ export interface IProposalState {
   currentProposal?: IProposal
   currentSortField: SortableFields
   currentSortDirection: SortDirection
-  counts: { [key in PanelQuery]?: IProposalCount }
   _checkListLastSuccess: IFdpgChecklist
   search?: string
+  statistics: IProposalStatistics
 }
 
 export const useProposalStore = defineStore('Proposal', {
@@ -55,7 +56,6 @@ export const useProposalStore = defineStore('Proposal', {
     currentProposal: undefined,
     currentSortField: 'submittedAt',
     currentSortDirection: SortDirection.DESC,
-    counts: {},
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
       initialViewing: false,
@@ -66,33 +66,21 @@ export const useProposalStore = defineStore('Proposal', {
       projectProperties: [],
     },
     search: undefined,
+    statistics: {
+      panels: {},
+      total: 0,
+    },
   }),
 
   actions: {
+    async getStatistics(): Promise<void> {
+      const data = await this.apiService.getStatistics()
+      this.statistics = data
+    },
     async fetch(sortAndFilterBy: ISortAndOrderBy<any>): Promise<IProposalDetail[]> {
       const { panelQuery } = sortAndFilterBy
       const data = await this.apiService.getAll(sortAndFilterBy)
       this.proposals[panelQuery] = data
-
-      this.counts[panelQuery] = data.reduce(
-        (acc, proposal) => {
-          proposal.computedDueDate = proposal.dueDateForStatus ? getDateDiff(proposal.dueDateForStatus, 0) : undefined
-          if (proposal.computedDueDate !== undefined && proposal.computedDueDate < 0) {
-            acc.critical++
-          } else if (proposal.computedDueDate !== undefined) {
-            acc.high++
-          } else {
-            acc.low++
-          }
-          return acc
-        },
-        {
-          total: data.length,
-          critical: 0,
-          high: 0,
-          low: 0,
-        },
-      )
       return data
     },
 

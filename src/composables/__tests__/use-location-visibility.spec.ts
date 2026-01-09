@@ -1,4 +1,4 @@
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { CommentType } from '@/types/comment.interface'
 import { Role } from '@/types/oidc.types'
@@ -25,7 +25,7 @@ describe('UseLocationVisibility', () => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   it('should not be visible', async () => {

@@ -175,7 +175,7 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
   })
 
   const panels = computed<PanelType[]>(() => {
-    if (routeName.value === RouteName.Archive) {
+    if (routeName.value === RouteName.Archived) {
       return []
     } else if (routeName.value === RouteName.Published) {
       if (authStore.hasFdpgLevelPermissions()) {
@@ -199,12 +199,34 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
     }
   })
 
-  const proposalCount = computed(() =>
-    panels.value.reduce(
+  const proposalCount = computed(() => {
+    // Special handling for Archive route - panels array is empty, so get ARCHIVED count directly
+    if (routeName.value === RouteName.Archived) {
+      const archivedStats = proposalStore.statistics?.panels?.[PanelQuery.Archived]
+      if (archivedStats) {
+        return {
+          critical: archivedStats.critical || 0,
+          high: archivedStats.high || 0,
+          medium: archivedStats.medium || 0,
+          low: archivedStats.low || 0,
+          total: archivedStats.total || 0,
+        }
+      }
+      return {
+        critical: 0,
+        high: 0,
+        medium: 0,
+        low: 0,
+        total: 0,
+      }
+    }
+
+    // For other routes
+    return panels.value.reduce(
       (acc, { query }) => {
-        Object.keys(proposalStore.counts[query] || {}).forEach((key) => {
+        Object.keys(proposalStore.statistics.panels[query] || {}).forEach((key) => {
           const typedKey = key as keyof typeof acc
-          const count = proposalStore.counts[query]?.[typedKey] ?? 0
+          const count = proposalStore.statistics.panels[query]?.[typedKey] ?? 0
           acc[typedKey] += count
         })
         return acc
@@ -216,8 +238,8 @@ export default (routeName: ComputedRef<RouteRecordName>) => {
         low: 0,
         total: 0,
       },
-    ),
-  )
+    )
+  })
 
   return {
     panels,

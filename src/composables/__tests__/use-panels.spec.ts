@@ -1,4 +1,4 @@
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
@@ -19,7 +19,7 @@ describe('UsePanels', () => {
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
     authStore = vi.mocked(useAuthStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   it('should return the panels for the researcher', async () => {
@@ -44,10 +44,10 @@ describe('UsePanels', () => {
     const { panels, proposalCount } = usePanels(routeName)
 
     expect(panels.value.length).toEqual(5)
-    expect(proposalCount.value.total).toEqual(4 * 6)
-    expect(proposalCount.value.critical).toEqual(4 * 1)
-    expect(proposalCount.value.high).toEqual(4 * 2)
-    expect(proposalCount.value.low).toEqual(4 * 3)
+    expect(proposalCount.value.total).toEqual(5 * 6)
+    expect(proposalCount.value.critical).toEqual(5 * 1)
+    expect(proposalCount.value.high).toEqual(5 * 2)
+    expect(proposalCount.value.low).toEqual(5 * 3)
     expect(panels.value[0].query).toEqual(PanelQuery.DizRequested)
     expect(panels.value[1].query).toEqual(PanelQuery.DizPending)
     expect(panels.value[2].query).toEqual(PanelQuery.DizOngoing)

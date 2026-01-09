@@ -1,4 +1,4 @@
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import { setActivePinia } from 'pinia'
@@ -26,7 +26,7 @@ describe('UseNotifications', () => {
     setActivePinia(createTestingPinia())
     vi.useFakeTimers()
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   it('should call notification function if something is wrong', () => {
