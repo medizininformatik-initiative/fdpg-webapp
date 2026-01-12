@@ -44,6 +44,7 @@ export interface IProposalState {
   currentProposal?: IProposal
   currentSortField: SortableFields
   currentSortDirection: SortDirection
+  counts: { [key in PanelQuery]?: IProposalCount }
   _checkListLastSuccess: IFdpgChecklist
   search?: string
   statistics: IProposalStatistics
@@ -56,6 +57,7 @@ export const useProposalStore = defineStore('Proposal', {
     currentProposal: undefined,
     currentSortField: 'submittedAt',
     currentSortDirection: SortDirection.DESC,
+    counts: {},
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
       initialViewing: false,
@@ -81,6 +83,25 @@ export const useProposalStore = defineStore('Proposal', {
       const { panelQuery } = sortAndFilterBy
       const data = await this.apiService.getAll(sortAndFilterBy)
       this.proposals[panelQuery] = data
+      this.counts[panelQuery] = data.reduce(
+        (acc, proposal) => {
+          proposal.computedDueDate = proposal.dueDateForStatus ? getDateDiff(proposal.dueDateForStatus, 0) : undefined
+          if (proposal.computedDueDate !== undefined && proposal.computedDueDate < 0) {
+            acc.critical++
+          } else if (proposal.computedDueDate !== undefined) {
+            acc.high++
+          } else {
+            acc.low++
+          }
+          return acc
+        },
+        {
+          total: data.length,
+          critical: 0,
+          high: 0,
+          low: 0,
+        },
+      )
       return data
     },
 
