@@ -14,14 +14,7 @@
           @keydown.self.tab.shift="handleShiftTab($event)"
           >{{ t('dashboard.showAll') }}</el-button
         >
-        <el-button
-          v-if="proposals.length > displayCount"
-          link
-          class="alert-btn"
-          @click="handleShowMoreClick"
-          @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ t('dashboard.showMore') }}</el-button
-        >
+
         <el-button
           v-if="displayCount > defaultLength"
           link
@@ -124,13 +117,6 @@ const handleDuplicate = (id: string) => {
   } catch (error) {
     console.log('TODO: Handle Error', error)
   }
-}
-
-const handleShowMoreClick = () => {
-  displayCount.value +=
-    proposals.value.length - displayCount.value >= props.defaultLength
-      ? props.defaultLength
-      : proposals.value.length % props.defaultLength
 }
 
 const handleShowLessClick = () => {
