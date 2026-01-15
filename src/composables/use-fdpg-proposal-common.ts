@@ -293,7 +293,7 @@ export function useFdpgProposalCommon() {
   })
 
   const getLastDashboardTitle = (lastDashboard: string) => {
-    return t(`sidebar.${lastDashboard}`)
+    return t(`dashboard.${lastDashboard}`)
   }
 
   return {
