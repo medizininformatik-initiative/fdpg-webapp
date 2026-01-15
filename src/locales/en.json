@@ -206,7 +206,11 @@
     "xCompletedProjectContracts": "{x} completed project contracts",
     "registerProject": "Register a project",
     "comingUp": "Coming up ({count})",
-    "overview": "Overview"
+    "overview": "Overview",
+    "dashboard": "Dashboard",
+    "published": "Published",
+    "archived": "Archived",
+    "pending": "Pending"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Application form and study protocol",
@@ -723,7 +727,7 @@
     "informationOnDesiredControlDataAmount": "Information on the minimum amount of data required per location (based on the observation group)",
     "projectRecontact": "Re-contacting",
     "pseudonymizationInfo": "Information on the desired pseudonymization of the data sets",
-    "pseudonymizationInfo_enableRecordLinkage": "Data records for the same patient should be given the same pseudonym regardless of the treating institution (record linkage). Please provide a reason for this.",
+    "pseudonymizationInfo_enableRecordLinkage": "Data records for the same patient should be given the same pseudonym regardless of the treating institution (record linkage, not possible for distributed analyses and still a pilot). Please provide a reason for this.",
     "pseudonymizationInfo_siteGroupingEnabled": "Data records from a location should always be identifiable as belonging together (pseudonymous location variable required; default)",
     "pseudonymizationInfo_namedSiteVariable": "The origin locations of the data sets should be identifiable by name (location variable by name required). Please provide a reason for this.",
     "submitApplicationTitle": "You have completed the form completely.",

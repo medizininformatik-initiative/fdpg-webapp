@@ -206,7 +206,11 @@
     "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
     "registerProject": "Projekt registrieren",
     "comingUp": "Demnächst ({count})",
-    "overview": "Überblick"
+    "overview": "Überblick",
+    "dashboard": "Dashboard",
+    "published": "Veröffentlicht",
+    "archived": "Abgelegt",
+    "pending": "Ausstehend"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -723,7 +727,7 @@
     "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Beobachtungsgruppe)",
     "projectRecontact": "Rekontaktierung",
     "pseudonymizationInfo": "Angaben zur gewünschten Pseudonymisierung der Datensätze",
-    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten sollten unabhängig von der behandelnden Einrichtung dasselbe Pseudonym erhalten (Record-Linkage). Bitte geben Sie hierfür eine Begründung an.",
+    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten sollten unabhängig von der behandelnden Einrichtung dasselbe Pseudonym erhalten (Record-Linkage, nicht möglich bei verteilten Analysen und noch im Pilotierungsstadium). Bitte geben Sie hierfür eine Begründung an.",
     "pseudonymizationInfo_siteGroupingEnabled": "Datensätze eines Standorts sollten immer als zusammengehörig erkennbar sein (pseudonyme Standortvariable benötigt, Default).",
     "pseudonymizationInfo_namedSiteVariable": "Herkunftsstandorte der Datensätze sollten namentlich erkennbar sein (namentliche Standortvariable benötigt) Bitte geben Sie hierfür eine Begründung an.",
     "submitApplicationTitle": "Sie haben das Formular vollständig ausgefüllt.",
