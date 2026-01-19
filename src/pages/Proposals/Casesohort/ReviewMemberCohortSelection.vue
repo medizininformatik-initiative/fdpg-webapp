@@ -139,7 +139,7 @@ const redirectToFeasibilityPortal = async (queryId: number): Promise<void> => {
     window.open(url, '_blank')
   } catch (error) {
     console.error('Redirect to Feasibility Portal failed:', error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
   }
 }
 
@@ -171,7 +171,7 @@ const addCohort = (newCohort: ISelectedCohort) => {
 }
 const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) => {
   if (!raw) {
-    showErrorMessage()
+    showErrorMessage(t('general.pleaseSelectFile'))
   }
 
   emit('addCohort', newCohort, raw as File)
@@ -193,14 +193,14 @@ const closeManualDialog = () => {
 
 const downloadCsv = async (id?: number, label?: string) => {
   if (!id || !label) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
   try {
     await proposalStore.getFeasibilityCsvByQueryId(id, label)
   } catch (e) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
   }
 }
 
@@ -212,7 +212,7 @@ const handleDelete = async (cohort: ISelectedCohort) => {
   if (!!cohort._id) {
     cohorts.value = cohorts.value.filter((c) => c._id !== cohort._id)
   } else {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
   }
 }
 </script>

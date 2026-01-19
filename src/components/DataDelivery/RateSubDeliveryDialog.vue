@@ -49,7 +49,7 @@ const closeDialog = () => emit('closeDialog')
 
 const onRateSubDelivery = () => {
   if (!selectionRef.value) {
-    showErrorMessage()
+    showErrorMessage(t('general.pleaseSelectFile'))
     return
   }
 

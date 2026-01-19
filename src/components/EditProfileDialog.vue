@@ -217,7 +217,7 @@ const handleConfirm = async () => {
       await authStore.loadProfile()
       closeDialog()
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUpdateData'))
     }
   }
 }

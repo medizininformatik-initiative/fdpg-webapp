@@ -3,7 +3,7 @@
     v-model="dialogOpen"
     class="terms-dialog"
     width="50%"
-    :title="$t('proposal.termsDialogTitle')"
+    :title="t('proposal.termsDialogTitle')"
     :before-close="closeDialog"
     :show-close="false"
   >
@@ -31,7 +31,7 @@
     <template #footer>
       <span>
         <el-button link data-testId="button__closeSignDialog" @click="closeDialog">
-          {{ $t('general.cancel') }}
+          {{ t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
@@ -42,7 +42,7 @@
           data-testid="button__confirm"
           @click="confirm"
         >
-          {{ $t('proposal.submitApplication') }}
+          {{ t('proposal.submitApplication') }}
         </el-button>
       </span>
     </template>
@@ -63,7 +63,7 @@ import FdpgDialog from './FdpgDialog.vue'
 import { sanitizeUrl } from '@braintree/sanitize-url'
 
 const emit = defineEmits(['update:modelValue', 'confirm'])
-
+const { t } = useI18n()
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -106,7 +106,7 @@ onMounted(async () => {
         i18n.setLocaleMessage(locale, messages)
       })
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToLoadData'))
       console.log(error)
     }
   }

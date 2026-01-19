@@ -129,7 +129,7 @@ onMounted(async () => {
     try {
       await configStore.getDataPrivacy(props.platform)
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToLoadData'))
       console.log(error)
     }
   }
