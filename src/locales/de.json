@@ -83,9 +83,9 @@
     "overview": "Überblick",
     "textCopied": "Text wurde in die Zwischenablage kopiert",
     "none": "Keine",
-    "internalError": "Es gibt Probleme mit dem System. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an das FDPG-Team (info{'@'}forschen-fuer-gesundheit.de).",
+    "internalError ": "Es gibt Probleme mit dem System. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an das FDPG-Team (info{'@'}forschen-fuer-gesundheit.de",
     "expiredSession": "Ihre Sitzung ist abgelaufen, bitte verlängern Sie Ihre Sitzung.",
-    "authError": "Bitte warten Sie, bis Ihre Rolle vom FDPG-Team zugewiesen wurde. Wir prüfen gerade Ihre Anmeldung. Es dauert länger als 48 Stunden (Wochentage)? Sie können Kontakt aufnehmen mit info{'@'}forschen-fuer-gesundheit.de"
+    "authError": "Bitte warten Sie, bis Ihre Rolle vom FDPG-Team zugewiesen wurde. Wir prüfen gerade Ihre Anmeldung. Es dauert länger als 48 Stunden (Wochentage)? Sie können Kontakt aufnehmen mit info{'@'}forschen-fuer-gesundheit.de\""
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -206,7 +206,11 @@
     "xCompletedProjectContracts": "{x} abgeschlossene Projektverträge",
     "registerProject": "Projekt registrieren",
     "comingUp": "Demnächst ({count})",
-    "overview": "Überblick"
+    "overview": "Überblick",
+    "dashboard": "Dashboard",
+    "published": "Veröffentlicht",
+    "archived": "Abgelegt",
+    "pending": "Ausstehend"
   },
   "proposal": {
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
@@ -723,7 +727,7 @@
     "informationOnDesiredControlDataAmount": "Informationen zur minimal benötigten Datenmenge je Standort (bezogen auf die Beobachtungsgruppe)",
     "projectRecontact": "Rekontaktierung",
     "pseudonymizationInfo": "Angaben zur gewünschten Pseudonymisierung der Datensätze",
-    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten sollten unabhängig von der behandelnden Einrichtung dasselbe Pseudonym erhalten (Record-Linkage). Bitte geben Sie hierfür eine Begründung an.",
+    "pseudonymizationInfo_enableRecordLinkage": "Datensätze ein und desselben Patienten sollten unabhängig von der behandelnden Einrichtung dasselbe Pseudonym erhalten (Record-Linkage, nicht möglich bei verteilten Analysen und noch im Pilotierungsstadium). Bitte geben Sie hierfür eine Begründung an.",
     "pseudonymizationInfo_siteGroupingEnabled": "Datensätze eines Standorts sollten immer als zusammengehörig erkennbar sein (pseudonyme Standortvariable benötigt, Default).",
     "pseudonymizationInfo_namedSiteVariable": "Herkunftsstandorte der Datensätze sollten namentlich erkennbar sein (namentliche Standortvariable benötigt) Bitte geben Sie hierfür eine Begründung an.",
     "submitApplicationTitle": "Sie haben das Formular vollständig ausgefüllt.",
@@ -840,7 +844,8 @@
     "toContractingSkipModalDescription": "Für die folgenden Standorte wird kein unterschriebener Vertrag gebraucht.",
     "initiateContractSkip": "Ohne Vertrag fortfahren",
     "researcherRepeatDeliveryModalTitle": "Mit Datenlieferung fortfahren?",
-    "researcherRepeatDeliveryModalDescription": "Der Status des Antrags wird wieder auf Datenlieferung zurück gesetzt."
+    "researcherRepeatDeliveryModalDescription": "Der Status des Antrags wird wieder auf Datenlieferung zurück gesetzt.",
+    "substatus": "Substatus"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -948,7 +953,32 @@
     "LOC_RESEARCHER_ACCEPTED_CONTRACT": "Ihr Standort muss den Vertrag bis zum {date} unterzeichnen.",
     "LOC_CONDITIONAL_APPROVAL_ACCEPTED": "Die Vertragsauflagen wurden angenommen. Der Vertrag zum Projekt befindet sich in der Abstimmung.",
     "LOC_CONDITIONAL_APPROVAL_PENDING": "Die Vertragsauflagen werden geprüft.",
-    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt"
+    "PROJECT_IS_LOCKED": "Der Projektantrag ist aktuell für Bearbeitungen gesperrt",
+    "SUBSTATUS__DRAFT": "Entwurf",
+    "SUBSTATUS__REJECTED": "Abgelehnt",
+    "SUBSTATUS__REWORK": "Überarbeitung",
+    "SUBSTATUS__FDPG_CHECK_INITIAL_VIEW": "FDPG-Check: Initiale Ansicht",
+    "SUBSTATUS__FDPG_CHECK_DEPTH_CHECK": "FDPG-Check: Tiefenprüfung",
+    "SUBSTATUS__FDPG_CHECK_ETHICS_CHECK": "FDPG-Check: Ethikvotum",
+    "SUBSTATUS__FDPG_CHECK_DONE": "FDPG-Check: Abgeschlossen",
+    "SUBSTATUS__LOCATION_CHECK_VOTING_IN_PROGRESS": "Standortprüfung: Abstimmung läuft",
+    "SUBSTATUS__LOCATION_CHECK_VOTING_DONE": "Standortprüfung: Abstimmung beendet",
+    "SUBSTATUS__CONTRACTING_RESEARCHER_STEP": "Vertrag: Schritt Forschende",
+    "SUBSTATUS__CONTRACTING_LOCATION_STEP": "Vertrag: Schritt Standort",
+    "SUBSTATUS__CONTRACTING_DONE": "Vertrag: Abgeschlossen",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_SELECT_DMS": "Datenlieferung: DMS-Auswahl",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_WAITING_FOR_DMS_RESPONSE": "Datenlieferung: Warten auf DMS",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_DMS_DENIED": "Datenlieferung: DMS abgelehnt",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_EMPTY_DELIVIERIES": "Datenlieferung: Keine Lieferungen",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_PENDING": "Datenlieferung: Ausstehend",
+    "SUBSTATUS__EXPECT_DATA_DELIVERY_DONE": "Datenlieferung: Abgeschlossen",
+    "SUBSTATUS__DATA_RESEARCH": "Datenforschung",
+    "SUBSTATUS__DATA_CORRUPT": "Daten fehlerhaft",
+    "SUBSTATUS__FINISHED_PROJECT": "Projekt abgeschlossen",
+    "SUBSTATUS__READY_TO_ARCHIVE": "Bereit zur Archivierung",
+    "SUBSTATUS__READY_TO_PUBLISH": "Bereit zur Veröffentlichung",
+    "SUBSTATUS__PUBLISHED": "Veröffentlicht",
+    "SUBSTATUS__ARCHIVED": "Archiviert"
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Prüfung",

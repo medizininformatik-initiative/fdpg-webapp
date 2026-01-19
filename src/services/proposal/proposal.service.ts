@@ -23,8 +23,8 @@ import {
   type ISelectedCohort,
   type IUpload,
   type IDeliveryInfo,
-  SubDeliveryStatus,
   type ISubDelivery,
+  type IProposalStatistics,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -38,6 +38,11 @@ import type { AxiosResponse } from 'axios'
 export class ProposalService {
   private basePath = '/proposals'
   private apiClient = new ApiClient().client
+
+  async getStatistics(): Promise<IProposalStatistics> {
+    const response = await this.apiClient.get(`${this.basePath}/statistics`)
+    return response.data
+  }
 
   async create(proposal: DeepPartial<IProposal>): Promise<IProposal> {
     const response = await this.apiClient.post(this.basePath, proposal)

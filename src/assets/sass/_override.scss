@@ -342,13 +342,13 @@
         background-color: $gray-200;
 
         &::after {
-          border-color: $green;
+          border-color: $black;
         }
       }
     }
 
     .el-checkbox__label {
-      color: $white;
+      color: $black;
     }
   }
 

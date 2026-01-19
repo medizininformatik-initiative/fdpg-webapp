@@ -199,7 +199,7 @@ onMounted(async () => {
 
   .tab-bar {
     display: flex;
-    color: $blue;
+    color: $blue-200;
     font-weight: 600;
     margin-bottom: 20px;
 
@@ -209,7 +209,7 @@ onMounted(async () => {
       border-radius: 5px;
       cursor: pointer;
       &.active {
-        background: color.adjust($blue, $lightness: 40%);
+        background: color.adjust($blue, $lightness: 45%);
       }
     }
   }

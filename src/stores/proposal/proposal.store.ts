@@ -16,6 +16,7 @@ import {
   type IProposal,
   type IProposalCount,
   type IProposalDetail,
+  type IProposalStatistics,
   type IPublicationCreateAndUpdate,
   type IReportCreate,
   type IReportUpdate,
@@ -46,6 +47,7 @@ export interface IProposalState {
   counts: { [key in PanelQuery]?: IProposalCount }
   _checkListLastSuccess: IFdpgChecklist
   search?: string
+  statistics: IProposalStatistics
 }
 
 export const useProposalStore = defineStore('Proposal', {
@@ -66,14 +68,21 @@ export const useProposalStore = defineStore('Proposal', {
       projectProperties: [],
     },
     search: undefined,
+    statistics: {
+      panels: {},
+      total: 0,
+    },
   }),
 
   actions: {
+    async getStatistics(): Promise<void> {
+      const data = await this.apiService.getStatistics()
+      this.statistics = data
+    },
     async fetch(sortAndFilterBy: ISortAndOrderBy<any>): Promise<IProposalDetail[]> {
       const { panelQuery } = sortAndFilterBy
       const data = await this.apiService.getAll(sortAndFilterBy)
       this.proposals[panelQuery] = data
-
       this.counts[panelQuery] = data.reduce(
         (acc, proposal) => {
           proposal.computedDueDate = proposal.dueDateForStatus ? getDateDiff(proposal.dueDateForStatus, 0) : undefined

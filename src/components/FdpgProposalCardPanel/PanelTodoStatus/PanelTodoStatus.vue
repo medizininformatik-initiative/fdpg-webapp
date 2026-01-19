@@ -46,7 +46,7 @@ defineProps({
   }
 
   &.success {
-    color: $green;
+    color: $gray-900;
     font-weight: 600;
   }
 }
