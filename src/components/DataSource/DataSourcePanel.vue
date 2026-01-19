@@ -55,7 +55,6 @@ import {
   DataSourceSortField,
   SortOrder,
   type IDataSource,
-  type IDataSourcePaginatedResult,
   type ISyncStatus,
 } from '@/types/data-source.types'
 import useNotifications from '@/composables/use-notifications'
@@ -140,7 +139,7 @@ const loadDataSources = async () => {
 
 const updateActive = async (dataSource: IDataSource, active: boolean) => {
   await wrapWithLoading(async () => {
-    await dataSourceStore.updateActive(dataSource.nfdi4healthId, { active })
+    await dataSourceStore.updateActive(dataSource.externalIdentifier, { active })
     showSuccessMessage('dataSource.activeUpdated')
     // Update the data source in place instead of reloading all data
     const index = dataSourcesRef.value.findIndex((ds) => ds._id === dataSource._id)
@@ -152,7 +151,7 @@ const updateActive = async (dataSource: IDataSource, active: boolean) => {
 
 const approveDataSource = async (dataSource: IDataSource) => {
   await wrapWithLoading(async () => {
-    await dataSourceStore.updateStatus(dataSource.nfdi4healthId, { status: DataSourceStatus.APPROVED })
+    await dataSourceStore.updateStatus(dataSource.externalIdentifier, { status: DataSourceStatus.APPROVED })
     showSuccessMessage('dataSource.approved')
     await loadDataSources()
   }, 'dataSource.failedToApprove')
@@ -224,11 +223,6 @@ const wrapWithLoading = async (cb: Function, errorMessage: string) => {
   }
 }
 
-const formatDate = (date: Date | string) => {
-  const d = new Date(date)
-  return d.toLocaleString()
-}
-
 onMounted(async () => {
   await loadDataSources()
   await loadSyncStatus()
@@ -285,31 +279,31 @@ onUnmounted(() => {
 
     .search-input :deep(.el-input__wrapper) {
       box-shadow: none;
-      border-bottom: 1px solid #dcdfe6;
+      border-bottom: 1px solid $gray-600;
       border-radius: 0;
       padding-left: 0;
     }
 
     .search-input :deep(.el-input__wrapper:hover) {
-      border-bottom-color: #c0c4cc;
+      border-bottom-color: $gray-700;
     }
 
     .search-input :deep(.el-input__wrapper.is-focus) {
-      border-bottom-color: #409eff;
+      border-bottom-color: $blue;
       box-shadow: none;
     }
 
     .sync-status {
       font-size: 14px;
-      color: #606266;
+      color: $gray-900;
 
       .status-running {
-        color: #409eff;
+        color: $blue;
         font-weight: 500;
       }
 
       .status-completed {
-        color: #67c23a;
+        color: $green-400;
       }
     }
   }

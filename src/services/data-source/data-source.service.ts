@@ -27,17 +27,17 @@ export class DataSourceService {
     return response.data
   }
 
-  async getByNfdi4healthId(nfdi4healthId: string): Promise<IDataSource> {
-    const response = await this.apiClient.get(`${this.basePath}/nfdi4health/${nfdi4healthId}`)
+  async getByExternalIdentifier(externalIdentifier: string): Promise<IDataSource> {
+    const response = await this.apiClient.get(`${this.basePath}/external/${externalIdentifier}`)
     return response.data
   }
 
-  async updateStatus(nfdi4healthId: string, payload: IUpdateStatusPayload): Promise<void> {
-    await this.apiClient.patch(`${this.basePath}/${nfdi4healthId}/status`, payload)
+  async updateStatus(externalIdentifier: string, payload: IUpdateStatusPayload): Promise<void> {
+    await this.apiClient.patch(`${this.basePath}/${externalIdentifier}/status`, payload)
   }
 
-  async updateActive(nfdi4healthId: string, payload: IUpdateActivePayload): Promise<void> {
-    await this.apiClient.patch(`${this.basePath}/${nfdi4healthId}/active`, payload)
+  async updateActive(externalIdentifier: string, payload: IUpdateActivePayload): Promise<void> {
+    await this.apiClient.patch(`${this.basePath}/${externalIdentifier}/active`, payload)
   }
 
   async triggerSync(): Promise<{ message: string; startedAt: Date }> {

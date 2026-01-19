@@ -56,8 +56,8 @@ export const useDataSourceStore = defineStore('DataSource', {
       }
     },
 
-    async updateActive(nfdi4healthId: string, payload: IUpdateActivePayload): Promise<void> {
-      await this.apiService.updateActive(nfdi4healthId, payload)
+    async updateActive(externalIdentifier: string, payload: IUpdateActivePayload): Promise<void> {
+      await this.apiService.updateActive(externalIdentifier, payload)
       // Refresh current page if loaded
       if (this.currentPage) {
         const params: IDataSourceSearchParams = {

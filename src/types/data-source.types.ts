@@ -1,6 +1,7 @@
 export interface IDataSource {
   _id: string
-  nfdi4healthId: string
+  externalIdentifier: string
+  origin: DataSourceOrigin
   titles: IDataSourceLanguage[]
   descriptions: IDataSourceLanguage[]
   collection: string
@@ -28,10 +29,13 @@ export enum DataSourceStatus {
   APPROVED = 'APPROVED',
 }
 
+export enum DataSourceOrigin {
+  NFDI4HEALTH = 'NFDI4HEALTH',
+}
+
 export enum DataSourceSortField {
   TITLE = 'TITLE',
-  NFDI4HEALTH_ID = 'NFDI4HEALTH_ID',
-  STATUS = 'STATUS',
+  EXTERNAL_IDENTIFIER = 'EXTERNAL_IDENTIFIER',
   CREATED_AT = 'CREATED_AT',
   UPDATED_AT = 'UPDATED_AT',
 }

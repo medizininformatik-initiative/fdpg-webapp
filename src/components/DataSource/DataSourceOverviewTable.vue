@@ -27,8 +27,13 @@
             </div>
 
             <div class="data-source-row">
-              <div class="data-source-col">{{ t('general.nfdi4healthId') }}</div>
-              <div class="data-source-col">{{ expandProps.row.nfdi4healthId }}</div>
+              <div class="data-source-col">{{ t('general.externalIdentifier') }}</div>
+              <div class="data-source-col">{{ expandProps.row.externalIdentifier }}</div>
+            </div>
+
+            <div class="data-source-row">
+              <div class="data-source-col">{{ t('general.origin') }}</div>
+              <div class="data-source-col">{{ expandProps.row.origin }}</div>
             </div>
 
             <div class="data-source-row">
@@ -68,7 +73,7 @@
               <div class="data-source-col">{{ t('general.status') }}</div>
               <div class="data-source-col">
                 <el-tag :type="expandProps.row.status === DataSourceStatus.APPROVED ? 'success' : 'warning'">
-                  {{ expandProps.row.status }}
+                  {{ t(`general.${expandProps.row.status}`.toLowerCase()) }}
                 </el-tag>
               </div>
             </div>
@@ -105,7 +110,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="nfdi4healthId" :label="t('general.nfdi4healthId')" width="150" sortable="custom" />
+      <el-table-column
+        prop="externalIdentifier"
+        :label="t('general.externalIdentifier')"
+        width="150"
+        sortable="custom"
+      />
       <el-table-column :label="t('general.title')" prop="title" sortable="custom">
         <template #default="props">
           {{ getTitle(props.row) }}
@@ -127,7 +137,7 @@
         </template>
         <template #default="props">
           <el-tag :type="props.row.status === DataSourceStatus.APPROVED ? 'success' : 'warning'" size="small">
-            {{ props.row.status }}
+            {{ t(`general.${props.row.status}`.toLowerCase()) }}
           </el-tag>
         </template>
       </el-table-column>
@@ -239,9 +249,8 @@ const handlePageChange = (page: number) => {
 const handleSortChange = (sortInfo: { column: any; prop: string; order: string | null }) => {
   // Map table prop names to DataSourceSortField enum values
   const propToSortFieldMap: Record<string, DataSourceSortField> = {
-    nfdi4healthId: DataSourceSortField.NFDI4HEALTH_ID,
+    externalIdentifier: DataSourceSortField.EXTERNAL_IDENTIFIER,
     title: DataSourceSortField.TITLE,
-    status: DataSourceSortField.STATUS,
   }
 
   const sortField = sortInfo.prop ? propToSortFieldMap[sortInfo.prop] : undefined
@@ -253,7 +262,9 @@ const handleFilterChange = (filters: Record<string, any>) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@use '@/assets/sass/variable' as *;
+
 .data-source-table {
   width: 100%;
   overflow-x: auto;
@@ -291,7 +302,7 @@ const handleFilterChange = (filters: Record<string, any>) => {
 
 .data-source-row {
   display: flex;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid $gray-400;
   padding: 8px 0;
   min-height: 1.5em;
   align-items: flex-start;
