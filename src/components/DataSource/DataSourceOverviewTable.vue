@@ -60,11 +60,6 @@
             </div>
 
             <div class="data-source-row">
-              <div class="data-source-col">{{ t('general.collectionId') }}</div>
-              <div class="data-source-col">{{ expandProps.row.collectionId }}</div>
-            </div>
-
-            <div class="data-source-row">
               <div class="data-source-col">{{ t('general.classification') }}</div>
               <div class="data-source-col">{{ expandProps.row.classification }}</div>
             </div>

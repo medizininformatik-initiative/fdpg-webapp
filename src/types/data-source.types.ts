@@ -5,7 +5,6 @@ export interface IDataSource {
   titles: IDataSourceLanguage[]
   descriptions: IDataSourceLanguage[]
   collection: string
-  collectionId: number
   classification: string
   status: DataSourceStatus
   active: boolean
