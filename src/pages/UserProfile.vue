@@ -62,7 +62,7 @@ const resetPassword = () => {
       throw new Error('No User ID')
     }
   } catch {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 

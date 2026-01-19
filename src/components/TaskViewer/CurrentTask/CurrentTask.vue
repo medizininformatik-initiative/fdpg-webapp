@@ -2,7 +2,7 @@
   <section :id="task._id" role="region" class="task" :class="{ 'task--done': task.isDone }">
     <div class="task__header">
       <div>
-        <span class="task__header__owner">{{ $t(`roles.${task.owner.role}`) }}</span>
+        <span class="task__header__owner">{{ t(`roles.${task.owner.role}`) }}</span>
         <span class="task__header__date">{{ dateString }}</span>
       </div>
       <i
@@ -40,6 +40,7 @@ const { showErrorMessage } = useNotifications()
 const commentStore = useCommentStore()
 
 const i18n = useI18n()
+const { t } = i18n
 const dateString = computed(() => {
   return new Date(props.task.createdAt).toLocaleDateString(i18n.locale.value, {
     year: 'numeric',
@@ -58,7 +59,7 @@ const toggleIsDone = async () => {
   try {
     await commentStore.markCommentAsDone(props.task._id, !props.task.isDone)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
     console.log(error)
   }
   isDoneLoading.value = false

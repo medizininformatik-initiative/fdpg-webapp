@@ -168,7 +168,7 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
     await router.push({ name: RouteName.Dashboard })
   } catch (error) {
     console.log(error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 
@@ -497,7 +497,7 @@ const fetchProposal = async () => {
       },
     ])
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     await router.push({ name: RouteName.Dashboard })
     console.log(error)
   }

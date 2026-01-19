@@ -311,7 +311,7 @@ const removeParticipant = async (id: string | undefined) => {
     showSuccessMessage()
   } catch (error) {
     console.error('Error removing participant:', error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
   }
 }
 onBeforeMount(async () => {
@@ -341,7 +341,7 @@ const createUser = async (userToCreate: Omit<IResearcherIdentity, 'username'>) =
       users.forEach((user) => (user.isExisting = true))
       showSuccessMessage()
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedSubmit'))
     }
     isEmailSendingInProgress.value = false
   }
@@ -354,7 +354,7 @@ const resendInvitation = async (user: Pick<IResearcherIdentity | ParticipantInfo
     triggeredEmails.value.push(user.email)
     showSuccessMessage()
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
   isEmailSendingInProgress.value = false
 }
@@ -387,7 +387,7 @@ const handleParticipantTypeSelect = async (participant: ParticipantInfo, newType
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant type:', error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   }
 }
 
@@ -482,7 +482,7 @@ const handleParticipantRoleSelect = async (participant: ParticipantInfo, newRole
     showSuccessMessage()
   } catch (error) {
     console.error('Error updating participant role:', error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   }
 }
 
@@ -507,7 +507,7 @@ const handleParticipantSubmit = async (newParticipant: IParticipant) => {
     showSuccessMessage()
   } catch (error) {
     console.error('Error adding participant:', error)
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 

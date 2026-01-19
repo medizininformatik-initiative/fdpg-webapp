@@ -392,7 +392,7 @@ const isRateDeliveryEnabled = (subDelivery: ISubDelivery): boolean => {
 
 const setForwardDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
   if (openState && !deliveryInfo) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -402,7 +402,7 @@ const setForwardDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDelive
 
 const setCancelDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
   if (openState && !deliveryInfo) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -412,7 +412,7 @@ const setCancelDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliver
 
 const setRateDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo, subDelivery?: ISubDelivery) => {
   if (openState && (!deliveryInfo || !subDelivery)) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -422,7 +422,7 @@ const setRateDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryI
 
 const setExtendDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
   if (openState && !deliveryInfo) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -432,7 +432,7 @@ const setExtendDeliveryDialogOpen = (openState: boolean, deliveryInfo?: IDeliver
 
 const setConfirmFetchedResultsDialogOpen = (openState: boolean, deliveryInfo?: IDeliveryInfo) => {
   if (openState && !deliveryInfo) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -446,7 +446,7 @@ const setDeliveryInfoStatus = async (
   closeDialogFn: (openState: boolean) => void,
 ) => {
   if (!deliveryInfo) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -470,7 +470,7 @@ const setDeliveryInfoStatus = async (
 const onRateSubDelivery = async (rating: SubDeliveryStatus): Promise<void> => {
   const { deliveryInfo, subDelivery } = selectedSubDelivery.value ?? {}
   if (!deliveryInfo?._id || !subDelivery?._id || !rating) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 
@@ -484,7 +484,7 @@ const onRateSubDelivery = async (rating: SubDeliveryStatus): Promise<void> => {
       status: rating,
     })
   } catch (e) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   } finally {
     setRateDeliveryDialogOpen(false)
   }
@@ -492,7 +492,7 @@ const onRateSubDelivery = async (rating: SubDeliveryStatus): Promise<void> => {
 
 const onExtendDelivery = async (deliveryInfoId: string, newDeliveryDate: Date) => {
   if (!deliveryInfoId) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
 

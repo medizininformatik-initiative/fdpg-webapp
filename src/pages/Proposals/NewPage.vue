@@ -1644,7 +1644,7 @@ onMounted(async () => {
     await proposalStore.setCurrentProposal(params.id as string)
     await setUpPage()
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     router.push({ name: RouteName.Dashboard })
   }
 
@@ -1665,7 +1665,7 @@ onMounted(async () => {
 
       await scrollToAnchor()
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToLoadData'))
     }
   }
 
