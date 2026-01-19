@@ -8,11 +8,9 @@
   <NoRoleDashboard v-else />
 </template>
 <script setup lang="ts">
-import { computed, defineAsyncComponent, watch } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { Role } from '@/types/oidc.types'
-import { useConfigStore } from '@/stores/config/config.store'
-import { useProposalStore } from '@/stores/proposal/proposal.store'
 
 const ResearcherDashboard = defineAsyncComponent(() => import('./ResearcherDashboard.vue'))
 const FdpgMemberDashboard = defineAsyncComponent(() => import('./FdpgMemberDashboard.vue'))
@@ -22,19 +20,6 @@ const AdminDashboard = defineAsyncComponent(() => import('./AdminDashboard.vue')
 const RegisteringMemberDashboard = defineAsyncComponent(() => import('./RegisteringMemberDashboard.vue'))
 const NoRoleDashboard = defineAsyncComponent(() => import('./NoRoleDashboard.vue'))
 const authStore = useAuthStore()
-const configStore = useConfigStore()
 const singleKnownRole = computed(() => authStore.singleKnownRole)
 const isFdpgLevelUser = computed(() => authStore.hasFdpgLevelPermissions())
-const proposalStore = useProposalStore()
-
-watch(
-  () => authStore.singleKnownRole,
-  (newRole, oldRole) => {
-    if (newRole !== oldRole) {
-      proposalStore.getStatistics()
-      configStore.getAlertConfig()
-    }
-  },
-  { immediate: true },
-)
 </script>

@@ -192,7 +192,7 @@ export function useFdpgProposalCommon() {
       await proposalStore.updateDeadlines(proposalId.value, newDeadlines)
       showSuccessMessage()
     } catch (ex) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUpdateData'))
     }
   }
 
@@ -209,7 +209,7 @@ export function useFdpgProposalCommon() {
         await proposalStore.updateFdpgChecklistImmediate(proposalId.value, item)
         return Promise.resolve()
       } catch (error) {
-        showErrorMessage('Failed to update checklist item')
+        showErrorMessage(t('general.failedToUpdateData'))
         throw error
       }
     })
@@ -220,7 +220,7 @@ export function useFdpgProposalCommon() {
       await proposalStore.updateProjectAssignee(proposalId.value, newAssignee)
       await fetchProposal()
     } catch {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUpdateData'))
     }
   }
 
@@ -246,7 +246,7 @@ export function useFdpgProposalCommon() {
       try {
         await proposalStore.deleteCohort(_proposalId, cohort._id)
       } catch (e) {
-        showErrorMessage()
+        showErrorMessage(t('general.failedToDeleteData'))
       }
     }
     await handleCohortEdit()
@@ -272,7 +272,7 @@ export function useFdpgProposalCommon() {
         },
       ])
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToLoadData'))
       await router.push({ name: RouteName.Dashboard })
       console.log(error)
     }
@@ -293,7 +293,7 @@ export function useFdpgProposalCommon() {
   })
 
   const getLastDashboardTitle = (lastDashboard: string) => {
-    return t(`sidebar.${lastDashboard}`)
+    return t(`dashboard.${lastDashboard}`)
   }
 
   return {

@@ -152,7 +152,7 @@ const handleSubmit = async (content: string, locations: string[]) => {
 
     commentContent.value = ''
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 onBeforeMount(async () => {

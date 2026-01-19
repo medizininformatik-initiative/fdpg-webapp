@@ -58,16 +58,11 @@
           <FdpgTableDueDateRow :due-date="getNestedProperty(scope.row, column.prop)" />
         </template>
 
-        <template v-else-if="column.type === ColumnType.Status" #default="scope">
-          {{ getStatusFilter(getNestedProperty(scope.row, column.prop)) }}
-        </template>
-
-        <template v-else-if="column.type === ColumnType.ProjectStatus" #default="scope">
-          {{ getNestedProperty(scope.row, column.prop) }}
-        </template>
-
         <template v-else-if="column.type === ColumnType.ProjectSubstatus" #default="scope">
           {{ t(`projectStatus.SUBSTATUS__${getNestedProperty(scope.row, column.prop)}`) }}
+        </template>
+        <template v-else-if="column.type === ColumnType.ProjectAssignee" #default="scope">
+          {{ getNestedProperty(scope.row, column.prop) || '-' }}
         </template>
       </el-table-column>
     </el-table>
@@ -77,7 +72,7 @@
 <script setup lang="ts">
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { Role } from '@/types/oidc.types'
-import { ProposalStatus, type PanelType } from '@/types/proposal.types'
+import { type PanelType } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { PanelQuery, SortDirection } from '@/types/sort-filter.types'
 import useTableAccessibility from '@/composables/use-table-accessibility'
@@ -92,9 +87,8 @@ enum ColumnType {
   Tag = 'tag',
   DueDate = 'dueDate',
   Date = 'date',
-  Status = 'status',
-  ProjectStatus = 'projectStatus',
   ProjectSubstatus = 'projectSubstatus',
+  ProjectAssignee = 'projectAssignee',
 }
 
 interface IColumn {
@@ -164,19 +158,6 @@ const handleRowClick = async (row, event?: Event | KeyboardEvent) => {
   if (event instanceof KeyboardEvent) {
     event.preventDefault()
   }
-}
-const proposalStatusMap: Record<string, string[]> = {
-  [t('general.requested')]: [ProposalStatus.FdpgCheck, ProposalStatus.Rework],
-  [t('general.pending')]: [ProposalStatus.LocationCheck, ProposalStatus.Contracting],
-  [t('general.current')]: [
-    ProposalStatus.ExpectDataDelivery,
-    ProposalStatus.DataResearch,
-    ProposalStatus.FinishedProject,
-    ProposalStatus.DataCorrupt,
-  ],
-}
-const getStatusFilter = (statusTitle: string): string | undefined => {
-  return Object.keys(proposalStatusMap).find((key) => (proposalStatusMap[key].includes(statusTitle) ? key : ''))
 }
 
 const {

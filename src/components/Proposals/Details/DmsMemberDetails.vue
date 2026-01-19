@@ -164,7 +164,7 @@ const fetchProposal = async () => {
       },
     ])
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     await router.push({ name: RouteName.Dashboard })
     console.log(error)
   }
@@ -185,7 +185,7 @@ const handleDmsAcceptanceResponse = async (isAccepted: boolean) => {
         isAccepted ? DeliveryAcceptance.ACCEPTED : DeliveryAcceptance.DENIED,
       )
     } catch {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUpdateData'))
     }
   }
 }

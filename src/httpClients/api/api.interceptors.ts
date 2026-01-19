@@ -24,15 +24,42 @@ const responseInterceptor = {
   onFullfilled: (response: AxiosResponse<any, any>) => response,
   onRejected: async (error: AxiosError) => {
     const auth = useAuthStore()
+    const messageBoxStore = useMessageBoxStore()
 
+    // Handle 500+ Internal Server Errors
+    if (error.response?.status && error.response.status >= 500) {
+      messageBoxStore.setMessageBoxInfo({
+        cancelButtonText: 'general.cancel',
+        cancelButtonClass: 'el-button--text',
+        title: 'general.genericError',
+        message: 'general.internalError',
+        confirmButtonText: 'general.confirm',
+        callback: async () => undefined,
+        showCancelButton: false,
+      })
+      return Promise.reject(error)
+    }
+
+    // Handle 401 Unauthorized - Session Expired
     if (error.response?.status === 401 && !isHandling401) {
       isHandling401 = true
-      auth.logOut()
+      messageBoxStore.setMessageBoxInfo({
+        cancelButtonText: 'general.cancel',
+        cancelButtonClass: 'el-button--text',
+        title: 'general.genericError',
+        message: 'general.expiredSession',
+        confirmButtonText: 'general.confirm',
+        callback: async () => {
+          auth.logOut()
+        },
+        showCancelButton: false,
+      })
+      return Promise.reject(error)
     }
 
     const proposalId = extractIdFromPath(error.request?.responseURL)
-    const messageBoxStore = useMessageBoxStore()
 
+    // Handle 403 Forbidden - Authentication/Role Problems
     if (error.response?.status === 403 && auth.isLoggedIn && proposalId) {
       await Router.push({ name: RouteName.Dashboard })
       if (auth.roles.length > 1) {
@@ -50,6 +77,21 @@ const responseInterceptor = {
       }
       return Promise.resolve(undefined)
     }
+
+    // Handle 403 Forbidden - Generic Auth Error (no roles assigned yet)
+    if (error.response?.status === 403 && auth.isLoggedIn && !proposalId) {
+      messageBoxStore.setMessageBoxInfo({
+        cancelButtonText: 'general.cancel',
+        cancelButtonClass: 'el-button--text',
+        title: 'roles.changeRoleModalTitle',
+        message: 'general.authError',
+        confirmButtonText: 'general.confirm',
+        callback: async () => undefined,
+        showCancelButton: false,
+      })
+      return Promise.reject(error)
+    }
+
     return Promise.reject(error)
   },
 }

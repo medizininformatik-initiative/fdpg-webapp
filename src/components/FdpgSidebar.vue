@@ -29,8 +29,12 @@ import { RouteName } from '@/types/route-name.enum'
 import type { SidebarMenu, SidebarRouteMenu } from '@/types/sidebar-menu.types'
 import { MenuType } from '@/types/sidebar-menu.types'
 import type { ComputedRef } from 'vue'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useConfigStore } from '@/stores/config/config.store'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 
+const configStore = useConfigStore()
+const proposalStore = useProposalStore()
 const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
@@ -213,6 +217,16 @@ const secondaryMenu: SidebarMenu[] = [
     icon: 'fa fa-section',
   },
 ]
+watch(
+  () => authStore.singleKnownRole,
+  (newRole, oldRole) => {
+    if (newRole !== oldRole) {
+      proposalStore.getStatistics()
+      configStore.getAlertConfig()
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss">
