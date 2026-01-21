@@ -19,19 +19,6 @@
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
 
-    <div class="section">
-      <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
-      <DocumentList
-        :documents="documents"
-        :proposal-id="proposalId"
-        :is-loading="isDocumentsLoading"
-        :is-disabled="true"
-        :two-columns="true"
-        empty-alert-text="proposal.noAttachmentsYet"
-        @remove="handleDocumentRemove"
-      />
-    </div>
-
     <ReviewMemberCohortSelection
       v-if="proposalStore.currentProposal?.selectedDataSources?.includes?.(PlatformIdentifier.Mii)"
       v-model="proposalStore.currentProposal.userProject.cohorts.selectedCohorts"
@@ -115,7 +102,6 @@ import QuickInfo from '@/components/QuickInfo.vue'
 import ProjectPublications from '@/components/ProjectPublications.vue'
 import ProjectReports from '@/components/ProjectReports.vue'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
-import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import ReviewMemberCohortSelection from '@/pages/Proposals/Casesohort/ReviewMemberCohortSelection.vue'
 import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
@@ -138,8 +124,6 @@ const {
   status,
   isSubmitting,
   showPublicationsAndReports,
-  documents,
-  isDocumentsLoading,
   shouldDisplayDmsOverview,
   showDmsComments,
   possibleLocations,
@@ -164,7 +148,6 @@ const {
   onProjectAssigneeChange,
   addCohort,
   removeCohort,
-  handleDocumentRemove,
   handleExportProposalPdfClick,
   proposalStore,
   authStore,

@@ -11,19 +11,6 @@
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
 
-    <div class="section">
-      <h3 info="general.info" size="large">{{ t('proposal.checkAttachments', { count: documents.length }) }}</h3>
-      <DocumentList
-        :documents="documents"
-        :proposal-id="proposalId"
-        :is-loading="isDocumentsLoading"
-        :is-disabled="true"
-        :two-columns="true"
-        empty-alert-text="proposal.noAttachmentsYet"
-        @remove="handleDocumentRemove"
-      />
-    </div>
-
     <FdpgProjectAssignee
       v-model="currentProjectAssignee"
       :current-user-role="authStore.singleKnownRole ?? Role.DataSourceMember"
@@ -66,7 +53,6 @@ import QuickInfo from '@/components/QuickInfo.vue'
 import ProjectPublications from '@/components/ProjectPublications.vue'
 import ProjectReports from '@/components/ProjectReports.vue'
 import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
-import DocumentList from './DocumentList.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import FdpgProjectAssignee from '@/components/FdpgProjectAssignee.vue'
@@ -83,8 +69,6 @@ const {
   proposalId,
   status,
   showPublicationsAndReports,
-  documents,
-  isDocumentsLoading,
   showDmsComments,
   possibleLocations,
   currentProjectAssignee,
@@ -100,7 +84,6 @@ const {
   changeStatus,
   handleArchiveProjectClick,
   onProjectAssigneeChange,
-  handleDocumentRemove,
   handleExportProposalPdfClick,
   proposalStore,
   authStore,
