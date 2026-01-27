@@ -34,7 +34,7 @@
           </el-radio-group>
         </FdpgFormItem>
       </el-col>
-      <el-col :sm="24" :md="12">
+      <el-col :sm="24" :md="12" v-if="!isRegisteringForm">
         <FdpgFormItem
           v-if="generalProjectInformationForm.desiredStartTimeType === 'later'"
           prop="userProject.generalProjectInformation.desiredStartTime"
@@ -51,9 +51,21 @@
           />
         </FdpgFormItem>
       </el-col>
+
+      <el-col :sm="24" :md="12" v-if="isRegisteringForm">
+        <FdpgFormItem prop="registerInfo.startTime" data-testId="registerInfoForm.startTime">
+          <FdpgLabel required html-for="registeringForm.startTime" />
+          <FdpgDatePicker
+            v-model="registerInfoForm.startTime"
+            data-testId="registerInfoForm.startTime"
+            placeholder="proposal.pleaseEnterTheStartTime"
+            :disabled="reviewMode || registerInfoForm.isDone"
+          />
+        </FdpgFormItem>
+      </el-col>
       <el-col :sm="24" :md="12">
         <FdpgFormItem prop="userProject.generalProjectInformation.keywords">
-          <FdpgLabel html-for="proposal.keywords" />
+          <FdpgLabel html-for="proposal.keywords" :required="isRegisteringForm" />
           <el-input-tag
             v-model="generalProjectInformationForm.keywords"
             class="fdpg-input__tag"
@@ -105,11 +117,11 @@
       <template v-if="isRegisteringForm">
         <el-col :sm="24">
           <FdpgFormItem prop="registerInfo.projectCategory">
-            <FdpgLabel required html-for="proposal.projectCategory" />
+            <FdpgLabel required html-for="registeringForm.projectCategory" />
             <el-select
               v-model="registerInfoForm.projectCategory"
               data-testId="registerInfoForm.projectCategory"
-              placeholder="proposal.pleaseSelectProjectCategory"
+              placeholder="registeringForm.pleaseSelectProjectCategory"
               :disabled="reviewMode || generalProjectInformationForm.isDone"
               style="width: 100%"
             >
@@ -139,7 +151,7 @@
         </el-col>
         <el-col :sm="24">
           <FdpgFormItem prop="registerInfo.projectUrl">
-            <FdpgLabel required html-for="proposal.projectUrl" />
+            <FdpgLabe html-for="proposal.projectUrl" />
             <FdpgInput
               v-model="registerInfoForm.projectUrl"
               data-testId="registerInfoForm.projectUrl"
@@ -239,24 +251,20 @@ const registerInfoForm = useVModel(props, 'registerInfo', emit, { eventName: 'up
 const projectFundingEditor = ref()
 
 const projectCategories = computed(() => [
-  { value: 'category1', label: t('proposal.projectCategory1') },
-  { value: 'category2', label: t('proposal.projectCategory2') },
-  { value: 'category3', label: t('proposal.projectCategory3') },
-  { value: 'category4', label: t('proposal.projectCategory4') },
-  { value: 'category5', label: t('proposal.projectCategory5') },
-  { value: 'category6', label: t('proposal.projectCategory6') },
-  { value: 'category7', label: t('proposal.projectCategory7') },
-  { value: 'category8', label: t('proposal.projectCategory8') },
-  { value: 'category9', label: t('proposal.projectCategory9') },
-  { value: 'category10', label: t('proposal.projectCategory10') },
+  { value: 'category1', label: t('registeringForm.projectCategory1') },
+  { value: 'category2', label: t('registeringForm.projectCategory2') },
+  { value: 'category3', label: t('registeringForm.projectCategory3') },
+  { value: 'category4', label: t('registeringForm.projectCategory4') },
+  { value: 'category5', label: t('registeringForm.projectCategory5') },
+  { value: 'category6', label: t('registeringForm.projectCategory6') },
+  { value: 'category7', label: t('registeringForm.projectCategory7') },
+  { value: 'category8', label: t('registeringForm.projectCategory8') },
+  { value: 'category9', label: t('registeringForm.projectCategory9') },
+  { value: 'category10', label: t('registeringForm.projectCategory10') },
 ])
 
 const limitedStartDate = computed(() => {
-  if (!props.isRegisteringForm) {
-    const date = new Date()
-    return date
-  }
-  return
+  return new Date()
 })
 const proposalId = computed(() => props.proposalId as string)
 const isDisabled = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
@@ -299,11 +307,6 @@ const handleStartTimeTypeChange = (newValue: string) => {
     }, 0)
   }
 }
-onMounted(() => {
-  if (props.isRegisteringForm) {
-    generalProjectInformationForm.value.desiredStartTimeType = 'later'
-  }
-})
 </script>
 <style lang="scss" scoped>
 @use '@/assets/sass/variable' as *;

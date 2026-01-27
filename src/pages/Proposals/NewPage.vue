@@ -55,7 +55,7 @@
             :form-ref="formRef"
             v-if="isDifeSelected && !isRegisteringForm"
           />
-          <FdpgLabel html-for="proposal.MII" v-if="isMIISelected" size="large"></FdpgLabel>
+          <FdpgLabel html-for="proposal.MII" v-if="isMIISelected && !isRegisteringForm" size="large"></FdpgLabel>
 
           <RequestedData
             v-model="proposalForm.requestedData"
@@ -74,10 +74,19 @@
           <TaskViewer :object-id="proposalForm.userProject?.variableSelection?._id" />
 
           <ProjectAddresses
+            v-if="isMIISelected && !isRegisteringForm"
             v-model="proposalForm.userProject.addressees"
             :review-mode="isReviewMode"
-            v-if="isMIISelected || isRegisteringForm"
-            :isRegisteringForm="isRegisteringForm"
+            :isRegisteringForm="false"
+            :all-locations="allLocations"
+            :selected-data-sources="proposalForm.selectedDataSources"
+          />
+
+          <!-- For registering forms, locations are stored in registerInfo.locations -->
+          <RegisterProjectLocations
+            v-if="isRegisteringForm"
+            v-model="proposalForm.registerInfo!"
+            :review-mode="isReviewMode"
             :all-locations="allLocations"
             :selected-data-sources="proposalForm.selectedDataSources"
           />
@@ -335,6 +344,7 @@ import {
   projectAbbreviationValidationFunc,
   requiredValidationFunc,
   specialCharactersValidationFunc,
+  urlValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError } from 'async-validator'
 import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
@@ -352,6 +362,7 @@ import TypeOfUse from './DataUsage/TypeOfUse.vue'
 import ProjectDetails from './ResearchProject/ProjectDetails.vue'
 import EthicVote from './ResearchProject/EthicVote.vue'
 import ProjectAddresses from './Variables/ProjectAddresses.vue'
+import RegisterProjectLocations from './Variables/RegisterProjectLocations.vue'
 import InformationOnBioSample from './Variables/InformationOnBioSample/InformationOnBioSample.vue'
 import DIFEVariableSelection from './Variables/DIFEVariableSelection.vue'
 import DataSourceSelection from './DataSources/DataSourceSelection.vue'
@@ -382,6 +393,7 @@ const stepFieldsMap: Record<number, string[]> = {
     'userProject.informationOnRequestedBioSamples.biosamples',
     'registerInfo.diagnoses',
     'registerInfo.procedures',
+    'registerInfo.locations',
   ],
   [CreatPrposalSteps.Casesohort]: [
     'userProject.cohorts',
@@ -408,6 +420,8 @@ const stepFieldsMap: Record<number, string[]> = {
     'registerInfo.projectUrl',
     'registerInfo.projectCategory',
     'registerInfo.legalBasis',
+    'registerInfo.startTime',
+    'userProject.generalProjectInformation.keywords',
   ],
   [CreatPrposalSteps.ProjectParticipants]: ['applicant', 'projectResponsible', 'projectUser', 'participants'],
 
@@ -525,10 +539,6 @@ const rules = ref<Record<string, any>>({
       desiredStartTime: [
         {
           validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
-            if (isRegisteringForm.value) {
-              callback()
-              return
-            }
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
             if (isLater) {
               if (!value) {
@@ -555,6 +565,7 @@ const rules = ref<Record<string, any>>({
       projectFunding: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       fundingReferenceNumber: maxLengthValidationFunc(100),
       desiredStartTimeType: [requiredValidationFunc('string')],
+      keywords: isRegisteringForm.value ? [requiredValidationFunc('array')] : [],
     },
     feasibility: {
       details: [maxLengthValidationFunc(10000)],
@@ -621,82 +632,13 @@ const rules = ref<Record<string, any>>({
     desiredControlDataAmount: [requiredValidationFunc('number')],
   },
   registerInfo: {
-    // Required fields for ALL registering forms
-    projectCategory: [
-      {
-        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
-          if (!isRegisteringForm.value) {
-            callback()
-            return
-          }
-          if (!value || value.trim().length === 0) {
-            callback(new Error(t('general.requiredField')))
-          } else if (value.length > 200) {
-            callback(new Error(t('general.maxLengthExceeded', { max: 200 })))
-          } else {
-            callback()
-          }
-        },
-        trigger: ['blur', 'change'],
-      },
-    ],
-    projectUrl: [
-      {
-        validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
-          if (!isRegisteringForm.value) {
-            callback()
-            return
-          }
-          if (!value || value.trim().length === 0) {
-            callback(new Error(t('general.requiredField')))
-          } else if (value.length > 500) {
-            callback(new Error(t('general.maxLengthExceeded', { max: 500 })))
-          } else {
-            // Validate URL format
-            try {
-              new URL(value)
-              callback()
-            } catch {
-              callback(new Error(t('general.invalidUrl')))
-            }
-          }
-        },
-        trigger: ['blur', 'change'],
-      },
-    ],
-    diagnoses: [
-      {
-        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
-          if (!isRegisteringForm.value) {
-            callback()
-            return
-          }
-          if (!value || value.length === 0) {
-            callback(new Error(t('general.requiredField')))
-          } else {
-            callback()
-          }
-        },
-        trigger: ['blur', 'change'],
-      },
-    ],
-    procedures: [
-      {
-        validator: (_rule: any, value: string[] | undefined, callback: (error?: Error) => void) => {
-          if (!isRegisteringForm.value) {
-            callback()
-            return
-          }
-          if (!value || value.length === 0) {
-            callback(new Error(t('general.requiredField')))
-          } else {
-            callback()
-          }
-        },
-        trigger: ['blur', 'change'],
-      },
-    ],
+    projectCategory: [requiredValidationFunc('string')],
+    projectUrl: [urlValidationFunc(), maxLengthValidationFunc(200)],
+    diagnoses: requiredValidationFunc('array'),
+    procedures: requiredValidationFunc('array'),
     legalBasis: null,
+    locations: [requiredValidationFunc('array')],
+    startTime: requiredValidationFunc('string'),
   },
   status: null,
 })

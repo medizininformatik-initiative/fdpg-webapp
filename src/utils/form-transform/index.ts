@@ -64,6 +64,8 @@ const transformRegisterInfo = (registerInfo?: DeepPartial<IRegisterInfo>): DeepP
     lastSyncError: registerInfo?.lastSyncError,
     syncRetryCount: registerInfo?.syncRetryCount,
     acptPluginId: registerInfo?.acptPluginId,
+    startTime: registerInfo?.startTime,
+    locations: registerInfo?.locations,
   }
 }
 
@@ -110,7 +112,8 @@ export const transformForm = (
     projectUser: transformProjectUser(form?.projectUser),
     userProject: transformUserProject(form?.userProject, transformToApi),
     requestedData: transformRequestedData(form?.requestedData),
-    uploads: form?.uploads,
+    // Don't send uploads when saving to API - they are managed separately via upload api
+    uploads: transformToApi ? undefined : form?.uploads,
     isLocked: form?.isLocked,
     status: form?.status,
     locationStatus: form?.locationStatus,
