@@ -153,3 +153,23 @@ export const startDateInPastValidationFunc = () => {
     trigger: ['blur', 'change'],
   }
 }
+
+export const urlValidationFunc = () => ({
+  validator: (_rule, value: string, callback) => {
+    if (!value) {
+      callback()
+      return
+    }
+    try {
+      const url = new URL(value)
+      if (url.protocol === 'http:' || url.protocol === 'https:') {
+        callback()
+      } else {
+        callback(new Error(t('general.invalidField')))
+      }
+    } catch (_) {
+      callback(new Error(t('general.invalidField')))
+    }
+  },
+  trigger: ['blur', 'change'],
+})
