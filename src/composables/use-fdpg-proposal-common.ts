@@ -257,6 +257,7 @@ export function useFdpgProposalCommon() {
       const data = await proposalStore.setCurrentProposal(params.id as string)
       showPublicationsAndReports.value =
         (data.status ? showPublicationsProposalStatus.includes(data.status) : false) ||
+        data.type === ProposalType.RegisteringForm ||
         (data.status === 'ARCHIVED' && data.publications.length > 0)
 
       const lastDashboard = layoutStore.lastDashboard
