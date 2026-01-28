@@ -38,7 +38,7 @@ jobs:
           only_changed_files: true
 
   build_print:
-    uses: ./.github/workflows/build-and-publish.template.yaml
+    uses: .github/workflows/build-and-publish.template.yaml
     needs: verify
     with:
       nodeEnvironment: 'print'
@@ -47,7 +47,7 @@ jobs:
     secrets: inherit
 
   build_dev:
-    uses: ./.github/workflows/build-and-publish.template.yaml
+    uses: .github/workflows/build-and-publish.template.yaml
     needs: verify
     with:
       nodeEnvironment: 'dev'
@@ -56,7 +56,7 @@ jobs:
     secrets: inherit
 
   build_prelive:
-    uses: ./.github/workflows/build-and-publish.template.yaml
+    uses: .github/workflows/build-and-publish.template.yaml
     needs: verify
     with:
       nodeEnvironment: 'prelive'
@@ -65,7 +65,7 @@ jobs:
     secrets: inherit
 
   build_main:
-    uses: ./.github/workflows/build-and-publish.template.yaml
+    uses: .github/workflows/build-and-publish.template.yaml
     needs: verify
     with:
       nodeEnvironment: 'prod'
