@@ -2,7 +2,6 @@
   <el-container class="researcher-registering-form-details-page" v-if="proposalStore.currentProposal">
     <DetailTopBar :buttons="topBarButtons"></DetailTopBar>
     <QuickInfo :items="quickInfo"></QuickInfo>
-    <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
 
     <ProjectPublications
