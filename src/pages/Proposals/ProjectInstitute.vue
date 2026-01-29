@@ -6,7 +6,7 @@
       <FdpgSelect
         v-model="institute.miiLocation"
         :data-testId="`${identifier}.institute.miiLocation`"
-        placeholder="proposal.countryPlaceholder"
+        placeholder="proposal.institutePlaceholder"
         filterable
         :options="locationOptions"
         :disabled="reviewMode || institute.isDone || readonly"

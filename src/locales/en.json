@@ -837,12 +837,6 @@
     "downloadLocationCsv": "Download conditions",
     "typeOfUse_NONE_Info": "None of above",
     "typeOfUse_NONE": "None of above",
-    "projectCategory": "Project Category",
-    "pleaseSelectProjectCategory": "Please select a project category.",
-    "diagnoses": "Diagnoses",
-    "diagnosesPlaceholder": "Enter diagnoses and press Enter",
-    "procedures": "Procedures",
-    "proceduresPlaceholder": "Enter procedures and press Enter",
     "addBiosample": "Add Biosample",
     "researcherInstituteUnknown": "unnamed institute",
     "projectUrl": "Project URL",
@@ -874,7 +868,8 @@
     "substatus": "Substatus",
     "addDocuments": "Add documents",
     "selectDocumentType": "Select document type",
-    "feasibilityDocuments": "Feasibility Documents"
+    "feasibilityDocuments": "Feasibility Documents",
+    "institutePlaceholder": "Please select the location "
   },
   "roles": {
     "FdpgMember": "FDPG Employee",
@@ -1185,6 +1180,14 @@
     "bulkSyncResults": "Bulk Sync Results",
     "syncSuccessAll": "Successfully synced all {count} projects!",
     "lastSynced": "Last synced: {date}",
-    "sendForm": "Send Registeration"
+    "sendForm": "Send Registeration",
+    "registerLocations": "Locations",
+    "startTime": "Start time",
+    "projectCategory": "Project Category",
+    "pleaseSelectProjectCategory": "Please select a project category.",
+    "diagnoses": "Diagnoses",
+    "diagnosesPlaceholder": "Enter diagnoses and press Enter",
+    "procedures": "Procedures",
+    "proceduresPlaceholder": "Enter procedures and press Enter"
   }
 }

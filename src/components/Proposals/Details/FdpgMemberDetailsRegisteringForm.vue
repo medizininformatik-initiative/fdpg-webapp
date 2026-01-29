@@ -2,11 +2,7 @@
   <el-container v-if="proposalStore.currentProposal" class="fdpg-member-details-page">
     <DetailTopBar :buttons="topBarButtons"></DetailTopBar>
     <QuickInfo :items="quickInfo"></QuickInfo>
-    <AppendixInfo></AppendixInfo>
     <ProjectStatus :proposal-status="status"></ProjectStatus>
-    <ProjectTodos :project-todos="projectTodos"></ProjectTodos>
-
-    <ParticipatingResearcher v-if="proposalId"></ParticipatingResearcher>
 
     <ProjectPublications v-if="showPublicationsAndReports"></ProjectPublications>
     <ProjectReports v-if="showPublicationsAndReports"></ProjectReports>
@@ -42,24 +38,19 @@
 </template>
 
 <script setup lang="ts">
-import AppendixInfo from '@/components/AppendixInfo.vue'
 import DetailActionRow from '@/components/DetailActionRow.vue'
 import DetailTopBar from '@/components/DetailTopBar.vue'
-import FdpgCheckList from '@/components/FdpgCheckList.vue'
 import MessageCenter from '@/components/MessageCenter.vue'
 import ProjectStatus from '@/components/ProjectStatus.vue'
-import ProjectTodos from '@/components/ProjectTodos.vue'
 import QuickInfo from '@/components/QuickInfo.vue'
 import ProjectPublications from '@/components/ProjectPublications.vue'
 import ProjectReports from '@/components/ProjectReports.vue'
-import ParticipatingResearcher from '../../ParticipatingResearcher.vue'
 import ProjectHistory from './ProjectHistory.vue'
 import FdpgCheckNotes from '@/components/FdpgCheckNotes.vue'
 import FdpgProjectAssignee from '@/components/FdpgProjectAssignee.vue'
 import { computed } from 'vue'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import type { IDetailActionRow } from '@/types/detail-action-row.interface'
-import type { IProjectTodo } from '@/types/project-todo.interface'
 import type { IQuickInfo } from '@/types/quick-info.interface'
 import { ProposalStatus } from '@/types/proposal.types'
 import { useFdpgProposalCommon } from '@/composables/use-fdpg-proposal-common'
@@ -82,7 +73,6 @@ const {
   openReviewPage,
   openLockModal,
   changeStatus,
-  handleArchiveProjectClick,
   onProjectAssigneeChange,
   handleExportProposalPdfClick,
   proposalStore,
@@ -98,36 +88,8 @@ const {
   syncButtonLabel,
   handleSyncProposalClick,
   handleAcceptProposalClick,
-  handleRejectApplicationClick,
   handleRequestRevisionClick,
 } = useFdpgRegisteringForm(proposalId, changeStatus, showErrorMessage)
-
-const getIsCheckedTodo = (proposalStatus: ProposalStatus): IProjectTodo[] => {
-  if (proposalStatus === ProposalStatus.FdpgCheck) {
-    const isDoneCount = proposalStore.currentProposal?.isDoneOverview?.isDoneCount
-    const fieldCount = proposalStore.currentProposal?.isDoneOverview?.fieldCount
-    return [
-      {
-        title: t('proposal.checkedAreas', {
-          isDoneCount,
-          fieldCount,
-        }),
-        description: t('proposal.checkedAreasDescription'),
-        action: () => {},
-        isDone: isDoneCount !== undefined && isDoneCount === fieldCount,
-        type: 'info',
-        icon: 'bi bi-check-circle',
-        readonly: false,
-      },
-    ]
-  } else {
-    return []
-  }
-}
-
-const projectTodos = computed<IProjectTodo[]>(() => {
-  return getIsCheckedTodo(status.value)
-})
 
 const quickInfo = computed<IQuickInfo[]>(() => [
   {
@@ -193,37 +155,9 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     testId: 'button__toProposal',
     action: openReviewPage,
   },
-  {
-    type: 'primary',
-    label: 'proposal.archiveProject',
-    testId: 'button__archiveProposal',
-    action: handleArchiveProjectClick,
-    isHidden: !(status.value === ProposalStatus.Rejected || status.value === ProposalStatus.ReadyToArchive),
-  },
 ])
 
 const actionButtons = computed<IDetailActionRow[]>(() => [
-  {
-    label: 'proposal.rejectApplication',
-    testId: 'button__rejectProposal',
-    action: handleRejectApplicationClick,
-    position: 'left',
-    isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: !(
-      status.value === ProposalStatus.FdpgCheck ||
-      status.value === ProposalStatus.LocationCheck ||
-      status.value === ProposalStatus.Contracting ||
-      status.value === ProposalStatus.Rework
-    ),
-  },
-  {
-    label: 'proposal.requestRevision',
-    testId: 'button__requestRevision',
-    action: handleRequestRevisionClick,
-    position: 'left',
-    isDisabled: proposalStore.currentProposal?.isLocked,
-    isHidden: status.value !== ProposalStatus.FdpgCheck,
-  },
   {
     type: 'primary',
     label: 'proposal.acceptProposalToPublish',

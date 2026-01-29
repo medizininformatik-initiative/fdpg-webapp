@@ -837,12 +837,6 @@
     "downloadLocationCsv": "Auflagen herunterladen",
     "typeOfUse_NONE_Info": "Keiner von oben",
     "typeOfUse_NONE": "Keiner von oben",
-    "projectCategory": "Projektkategorie",
-    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
-    "diagnoses": "Diagnosen",
-    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
-    "procedures": "Prozeduren",
-    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
     "addBiosample": "Bioprobe hinzufügen",
     "researcherInstituteUnknown": "unbenanntes Institut",
     "projectUrl": "Projekt-URL",
@@ -874,7 +868,8 @@
     "substatus": "Substatus",
     "addDocuments": "Dokumente hinzufügen",
     "selectDocumentType": "Dokumententyp auswählen",
-    "feasibilityDocuments": "Machbarkeitsstudiendokumente"
+    "feasibilityDocuments": "Machbarkeitsstudiendokumente",
+    "institutePlaceholder": "Bitte wählen Sie den Standort"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -1183,6 +1178,14 @@
     "syncAll": "Alle synchronisieren",
     "confirmBulkSync": "Massensynchronisation bestätigen",
     "bulkSyncResults": "Ergebnisse der Massensynchronisation",
-    "sendForm": "Registrierung senden"
+    "sendForm": "Registrierung senden",
+    "registerLocations": "Standorte",
+    "startTime": "Beginnzeit",
+    "projectCategory": "Projektkategorie",
+    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
+    "diagnoses": "Diagnosen",
+    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
+    "procedures": "Prozeduren",
+    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken"
   }
 }
