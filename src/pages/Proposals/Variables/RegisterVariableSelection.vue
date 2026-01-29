@@ -9,7 +9,7 @@
     <el-row :gutter="20">
       <el-col :sm="24" :md="12">
         <FdpgFormItem prop="registerInfo.diagnoses">
-          <FdpgLabel required html-for="proposal.diagnoses" />
+          <FdpgLabel required html-for="registeringForm.diagnoses" />
           <el-input-tag
             v-model="registerInfoForm.diagnoses"
             data-testId="registerInfoForm.diagnoses"
@@ -21,7 +21,7 @@
       </el-col>
       <el-col :sm="24" :md="12">
         <FdpgFormItem prop="registerInfo.procedures">
-          <FdpgLabel required html-for="proposal.procedures" />
+          <FdpgLabel required html-for="registeringForm.procedures" />
           <el-input-tag
             v-model="registerInfoForm.procedures"
             data-testId="registerInfoForm.procedures"
