@@ -86,9 +86,9 @@ const {
   shouldShowSyncButton,
   syncDisabledReason,
   syncButtonLabel,
+  loading,
   handleSyncProposalClick,
   handleAcceptProposalClick,
-  handleRequestRevisionClick,
 } = useFdpgRegisteringForm(proposalId, changeStatus, showErrorMessage)
 
 const quickInfo = computed<IQuickInfo[]>(() => [
@@ -160,12 +160,13 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
 const actionButtons = computed<IDetailActionRow[]>(() => [
   {
     type: 'primary',
-    label: 'proposal.acceptProposalToPublish',
+    label: loading.value ? 'registeringForm.syncing' : 'proposal.acceptProposalToPublish',
     action: handleAcceptProposalClick,
     testId: 'button__acceptProposal',
     position: 'right',
     isHidden: status.value !== ProposalStatus.FdpgCheck,
-    isDisabled: proposalStore.currentProposal?.isLocked,
+    isDisabled: proposalStore.currentProposal?.isLocked || loading.value,
+    isLoading: loading.value,
   },
   {
     type: 'primary',
