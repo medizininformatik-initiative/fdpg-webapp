@@ -91,22 +91,6 @@ export function useFdpgProposalCommon() {
     showCancelButton: true,
   }
 
-  const {
-    uploadsForType: documents,
-    handleRemoveFile: handleDocumentRemove,
-    isAppendixLoading: isDocumentsLoading,
-  } = useUpload(
-    proposalId,
-    [
-      DirectUpload.GeneralAppendix,
-      DirectUpload.EthicVote,
-      DirectUpload.EthicVoteDeclarationOfNonResponsibility,
-      UseCaseUpload.FeasibilityQuery,
-      UseCaseUpload.ProposalPDF,
-    ],
-    showErrorMessage,
-  )
-
   const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
   const handleExportProposalPdfClick = async () => {
@@ -304,8 +288,6 @@ export function useFdpgProposalCommon() {
     isRegisteringForm,
     isSubmitting,
     showPublicationsAndReports,
-    documents,
-    isDocumentsLoading,
     shouldDisplayDmsOverview,
     showDmsComments,
     possibleLocations,
@@ -338,7 +320,6 @@ export function useFdpgProposalCommon() {
     addCohort,
     removeCohort,
     fetchProposal,
-    handleDocumentRemove,
     handleExportProposalPdfClick,
 
     // Stores
