@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useProposalSync } from '@/composables/use-proposal-sync'
@@ -10,6 +11,7 @@ export function useFdpgRegisteringForm(
 ) {
   const messageBoxStore = useMessageBoxStore()
   const { t } = useI18n()
+  const loading = ref(false)
 
   const {
     isSyncing,
@@ -44,8 +46,16 @@ export function useFdpgRegisteringForm(
       message: 'proposal.acceptProposalModalDescription',
       confirmButtonText: 'proposal.acceptProposal',
       cancelButtonText: 'general.cancel',
-      callback: async (decision: DecisionType) =>
-        decision === 'confirm' ? await changeStatus(ProposalStatus.Published) : undefined,
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          loading.value = true
+          try {
+            await changeStatus(ProposalStatus.Published)
+          } finally {
+            loading.value = false
+          }
+        }
+      },
     })
   }
 
@@ -80,6 +90,7 @@ export function useFdpgRegisteringForm(
     shouldShowSyncButton,
     syncDisabledReason,
     syncButtonLabel,
+    loading,
 
     // Methods
     handleSyncProposalClick,
