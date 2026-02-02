@@ -39,13 +39,13 @@ export const useDataSourceStore = defineStore('DataSource', {
       return data
     },
 
-    async getByNfdi4healthId(nfdi4healthId: string): Promise<IDataSource> {
-      const data = await this.apiService.getByNfdi4healthId(nfdi4healthId)
+    async getByExternalIdentifier(externalIdentifier: string): Promise<IDataSource> {
+      const data = await this.apiService.getByExternalIdentifier(externalIdentifier)
       return data
     },
 
-    async updateStatus(nfdi4healthId: string, payload: IUpdateStatusPayload): Promise<void> {
-      await this.apiService.updateStatus(nfdi4healthId, payload)
+    async updateStatus(externalIdentifier: string, payload: IUpdateStatusPayload): Promise<void> {
+      await this.apiService.updateStatus(externalIdentifier, payload)
       // Refresh current page if loaded
       if (this.currentPage) {
         const params: IDataSourceSearchParams = {
