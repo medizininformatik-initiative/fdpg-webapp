@@ -247,7 +247,7 @@ const handleEditContract = async () => {
   const file = uploadedFile.value?.raw
 
   if (!file || !uploadId.value) {
-    showErrorMessage()
+    showErrorMessage(t('general.pleaseSelectFile'))
     handleCloseDialog()
   } else {
     try {
@@ -256,7 +256,7 @@ const handleEditContract = async () => {
 
       await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
     } catch {
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUploadFile'))
     }
 
     handleCloseDialog()

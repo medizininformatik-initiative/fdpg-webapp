@@ -5,7 +5,7 @@ import { ProjectFetchingType, ProposalStatus } from '@/types/proposal.types'
 import { PanelQuery } from '@/types/sort-filter.types'
 import { cleanDueDateKey } from '@/utils/deadlines'
 
-export const countryOptions = (t) =>
+export const countryOptions = (t: (key: string) => string) =>
   Object.values(Countries).map((value) => ({
     label: t(`countries.${value}`),
     value,
@@ -114,6 +114,7 @@ export const tableColumns = {
       prop: 'projectAssignee.lastName',
       header: 'proposal.projectAssignee',
       sortable: true,
+      type: 'projectAssignee',
     },
     {
       prop: 'deadlines.DUE_DAYS_FDPG_CHECK',

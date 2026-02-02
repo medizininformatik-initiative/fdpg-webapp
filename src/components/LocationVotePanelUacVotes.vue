@@ -486,7 +486,7 @@ const acceptCondition = async (conditionId: string, decision: boolean) => {
   try {
     await proposalStore.markUacConditionAsAccepted(proposalId.value, conditionId, decision)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   }
 }
 

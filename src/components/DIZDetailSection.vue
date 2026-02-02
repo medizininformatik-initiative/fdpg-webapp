@@ -156,7 +156,7 @@ const handleSave = async () => {
 
     editingItem.value = null
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   } finally {
     isSubmitting.value = false
   }
