@@ -31,6 +31,9 @@
 
       <div class="dms__card__button_row">
         <el-button @click="() => setNewDmsDialogOpenState(true)">{{ t('dataDelivery.openSelectDmsDialog') }}</el-button>
+        <el-button type="primary" plain @click="() => setManualDeliveryInfoEntryDialogOpen(true)">{{
+          t('dataDelivery.manualEntry')
+        }}</el-button>
         <el-button type="primary" @click="() => setInitiateDeliveryDialogOpenState(true)">{{
           t('dataDelivery.createDataDelivery')
         }}</el-button>
