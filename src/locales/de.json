@@ -2,6 +2,7 @@
   "general": {
     "noPermissionToViewPage": "Du hast keine Berechtigung diese Seite zu sehen.",
     "goToDashboard": "Zum Dashboard",
+    "approved": "Angenommen",
     "requested": "Beantragt",
     "current": "Laufend",
     "completed": "Abgeschlossen",

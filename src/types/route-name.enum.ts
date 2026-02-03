@@ -14,6 +14,7 @@ export enum RouteName {
   EditRegisteredProject = 'EditRegisteredProject',
   RegisterNewProject = 'RegisterNewProject',
   Locations = 'Locations',
+  DataSources = 'DataSources',
   Overview = 'Overview',
 }
 

@@ -39,6 +39,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/data-sources',
+        name: RouteName.DataSources,
+        component: () => import('@/components/DataSource/DataSourceOverview.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [Role.FdpgMember],
+        },
+      },
+      {
         path: '/pending',
         name: RouteName.Pending,
         component: () => import('@/components/Dashboard/DashboardComponent.vue'),
