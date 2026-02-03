@@ -91,22 +91,6 @@ export function useFdpgProposalCommon() {
     showCancelButton: true,
   }
 
-  const {
-    uploadsForType: documents,
-    handleRemoveFile: handleDocumentRemove,
-    isAppendixLoading: isDocumentsLoading,
-  } = useUpload(
-    proposalId,
-    [
-      DirectUpload.GeneralAppendix,
-      DirectUpload.EthicVote,
-      DirectUpload.EthicVoteDeclarationOfNonResponsibility,
-      UseCaseUpload.FeasibilityQuery,
-      UseCaseUpload.ProposalPDF,
-    ],
-    showErrorMessage,
-  )
-
   const { downloadFile, isDownloadLoading } = useDraftDownload(proposalId, showErrorMessage)
 
   const handleExportProposalPdfClick = async () => {
@@ -257,6 +241,7 @@ export function useFdpgProposalCommon() {
       const data = await proposalStore.setCurrentProposal(params.id as string)
       showPublicationsAndReports.value =
         (data.status ? showPublicationsProposalStatus.includes(data.status) : false) ||
+        data.type === ProposalType.RegisteringForm ||
         (data.status === 'ARCHIVED' && data.publications.length > 0)
 
       const lastDashboard = layoutStore.lastDashboard
@@ -303,8 +288,6 @@ export function useFdpgProposalCommon() {
     isRegisteringForm,
     isSubmitting,
     showPublicationsAndReports,
-    documents,
-    isDocumentsLoading,
     shouldDisplayDmsOverview,
     showDmsComments,
     possibleLocations,
@@ -337,7 +320,6 @@ export function useFdpgProposalCommon() {
     addCohort,
     removeCohort,
     fetchProposal,
-    handleDocumentRemove,
     handleExportProposalPdfClick,
 
     // Stores

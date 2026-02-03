@@ -103,11 +103,6 @@ const props = defineProps({
     default: false,
     required: false,
   },
-  maxFileSize: {
-    type: Number,
-    default: 10 * 1024 * 1024, // 10MB default
-    required: false,
-  },
   maxFileSizeErrorMessage: {
     type: String,
     default: 'general.fileSizeExceedsLimit',
@@ -118,6 +113,10 @@ const props = defineProps({
 const emit = defineEmits(['change', 'remove'])
 const { showErrorMessage } = useNotifications()
 const { t } = useI18n()
+
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5 MB for images
+const MAX_FILE_SIZE = 15 * 1024 * 1024 // 15 MB for other files
+
 const formatFileSize = (bytes: number): string => {
   if (bytes === 0) return '0 Bytes'
   const k = 1024
@@ -126,13 +125,24 @@ const formatFileSize = (bytes: number): string => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
+const isImageFile = (file: UploadFile): boolean => {
+  return file.raw?.type.startsWith('image/') ?? false
+}
+
+const getMaxFileSizeForFile = (file: UploadFile): number => {
+  return isImageFile(file) ? MAX_IMAGE_SIZE : MAX_FILE_SIZE
+}
+
 const handleOnChange = (file: UploadFile) => {
   if (!props.isLoading || !props.isDisabled) {
-    if (file.raw && file.raw.size > props.maxFileSize) {
-      showErrorMessage(
-        `${t(props.maxFileSizeErrorMessage)}. Maximum allowed: ${formatFileSize(props.maxFileSize)}, File size: ${formatFileSize(file.raw.size)}`,
-      )
-      return
+    if (file.raw) {
+      const maxSize = getMaxFileSizeForFile(file)
+      if (file.raw.size > maxSize) {
+        showErrorMessage(
+          `${t(props.maxFileSizeErrorMessage)}. Maximum allowed: ${formatFileSize(maxSize)}, File size: ${formatFileSize(file.raw.size)}`,
+        )
+        return
+      }
     }
 
     emit('change', file)

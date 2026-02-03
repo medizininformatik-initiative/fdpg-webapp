@@ -101,7 +101,7 @@
 
   &.el-button--primary {
     &:active:not(.is-disabled) {
-      box-shadow: none
+      box-shadow: none;
     }
   }
 
@@ -386,10 +386,23 @@
 // Normalize Element Plus checkbox checkmark transform to match desired style
 //
 .el-checkbox__inner::after {
-  transform: rotate(45deg) scaleY(0) !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) rotate(45deg) scaleY(0) !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner::after {
+  transform: translate(-50%, -50%) rotate(45deg) scaleY(1) !important;
+}
+
+// Override for fdpg-checkbox which has custom positioning
+.fdpg-checkbox .el-checkbox__inner::after {
+  left: 4px !important;
+  top: 0 !important;
+  transform: rotate(45deg) scaleY(0) !important;
+}
+
+.fdpg-checkbox .el-checkbox__input.is-checked .el-checkbox__inner::after {
   transform: rotate(45deg) scaleY(1) !important;
 }
 
@@ -427,6 +440,3 @@
     color: $gray-900;
   }
 }
-
-
-

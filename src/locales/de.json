@@ -8,6 +8,7 @@
     "completed": "Abgeschlossen",
     "rejected": "Abgelehnt",
     "pending": "Ausstehend",
+    "approved": "Angenommen",
     "create": "Erstellen",
     "delete": "Löschen",
     "cancel": "Abbrechen",
@@ -530,6 +531,7 @@
     "uploadType_PROPOSAL_PDF": "Druckversion",
     "uploadType_Fallback": "Anhang",
     "uploadType_CONTRACT_APPENDIX": "Vertragsanhang",
+    "uploadType_ADDITIONAL_DOCUMENT": "Zusätzlicher Anhang",
     "viewTodoInProposal": "Aufgabe im Antrag ansehen",
     "acceptContractDescriptionResearcher": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet der die Teilnahme von {numberOfApprovedLocations} Standorten vorsieht. Stimmen Sie den Vertrag zu indem Sie diesen mit Ihrer Unterschrift versehen hochladen oder lehnen Sie den Vertragsvorschlag ab.",
     "acceptContractDescriptionUac": "Das Forschungsdatenportal hat Ihnen einen Vertragsvorschlag gesendet. Stimmen Sie den Vertrag zu, geben Sie die Patientenzahl an die Sie liefern können und geben Sie eventuelle Vertragsauflagen mit an. Sobald der Antragsteller den Vertrag unterschrieben hat, können Sie den Vertrag gegenzeichnen.",
@@ -836,12 +838,6 @@
     "downloadLocationCsv": "Auflagen herunterladen",
     "typeOfUse_NONE_Info": "Keiner von oben",
     "typeOfUse_NONE": "Keiner von oben",
-    "projectCategory": "Projektkategorie",
-    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
-    "diagnoses": "Diagnosen",
-    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
-    "procedures": "Prozeduren",
-    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
     "addBiosample": "Bioprobe hinzufügen",
     "researcherInstituteUnknown": "unbenanntes Institut",
     "projectUrl": "Projekt-URL",
@@ -870,7 +866,11 @@
     "initiateContractSkip": "Ohne Vertrag fortfahren",
     "researcherRepeatDeliveryModalTitle": "Mit Datenlieferung fortfahren?",
     "researcherRepeatDeliveryModalDescription": "Der Status des Antrags wird wieder auf Datenlieferung zurück gesetzt.",
-    "substatus": "Substatus"
+    "substatus": "Substatus",
+    "addDocuments": "Dokumente hinzufügen",
+    "selectDocumentType": "Dokumententyp auswählen",
+    "feasibilityDocuments": "Machbarkeitsstudiendokumente",
+    "institutePlaceholder": "Bitte wählen Sie den Standort"
   },
   "roles": {
     "FdpgMember": "FDPG Mitarbeiter",
@@ -1179,6 +1179,14 @@
     "syncAll": "Alle synchronisieren",
     "confirmBulkSync": "Massensynchronisation bestätigen",
     "bulkSyncResults": "Ergebnisse der Massensynchronisation",
-    "sendForm": "Registrierung senden"
+    "sendForm": "Registrierung senden",
+    "registerLocations": "Standorte",
+    "startTime": "Beginnzeit",
+    "projectCategory": "Projektkategorie",
+    "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
+    "diagnoses": "Diagnosen",
+    "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
+    "procedures": "Prozeduren",
+    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken"
   }
 }

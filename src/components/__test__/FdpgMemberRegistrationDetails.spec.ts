@@ -170,12 +170,6 @@ describe('FdpgMemberRegistrationDetails', () => {
       expect(quickInfo.exists()).toBe(true)
     })
 
-    it('renders AppendixInfo component', () => {
-      wrapper = mountComponent()
-      const appendixInfo = wrapper.findComponent({ name: 'AppendixInfo' })
-      expect(appendixInfo.exists()).toBe(true)
-    })
-
     it('renders FdpgProjectAssignee component', () => {
       wrapper = mountComponent()
       const fdpgProjectAssignee = wrapper.findComponent({ name: 'FdpgProjectAssignee' })
@@ -263,12 +257,10 @@ describe('FdpgMemberRegistrationDetails', () => {
       wrapper = mountComponent()
 
       // Check that complex registration form-specific components are not rendered
-      expect(wrapper.findComponent({ name: 'FdpgCheckList' }).exists()).toBe(false)
       expect(wrapper.findComponent({ name: 'InitiateContractDialog' }).exists()).toBe(false)
       expect(wrapper.findComponent({ name: 'LocationVotePanel' }).exists()).toBe(false)
 
       // Check that basic components are still rendered
-      expect(wrapper.findComponent({ name: 'AppendixInfo' }).exists()).toBe(true)
       expect(wrapper.findComponent({ name: 'FdpgProjectAssignee' }).exists()).toBe(true)
       expect(wrapper.findComponent({ name: 'MessageCenter' }).exists()).toBe(true)
     })
