@@ -3,13 +3,9 @@
     <!-- General Appendix/Documents Section -->
     <div class="general-appendix-title-row">
       <h2 class="section-title">{{ t('proposal.appendix') }} ({{ documents.length }})</h2>
-      <el-button
-        v-if="isEditable && authStore.hasFdpgLevelPermissions()"
-        type="primary"
-        plain
-        @click="handleOpenMultiUploadDialog"
-        >{{ t('proposal.addDocuments') }}</el-button
-      >
+      <el-button v-if="isManualUploadDialogVisible" type="primary" plain @click="handleOpenMultiUploadDialog">{{
+        t('proposal.addDocuments')
+      }}</el-button>
     </div>
 
     <DocumentList
@@ -144,6 +140,7 @@ import MultiUploadDialog from './Proposals/Details/MultiUploadDialog.vue'
 import type { UploadFile } from 'element-plus'
 import { useI18n } from 'vue-i18n'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
+import { Role } from '@/types/oidc.types'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
@@ -187,6 +184,10 @@ const isContractEditable = computed(
 
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
+})
+
+const isManualUploadDialogVisible = computed(() => {
+  return (isEditable.value && authStore.singleKnownRole === Role.Researcher) || authStore.hasFdpgLevelPermissions()
 })
 
 const { showErrorMessage } = useNotifications()
