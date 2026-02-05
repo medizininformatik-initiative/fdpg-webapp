@@ -269,7 +269,7 @@ const proposalId = computed(() => props.proposalId as string)
 const isDisabled = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
 const isReviewMode = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
 const { showErrorMessage } = useNotifications()
-const SupportedMimeType = ['image/png', 'image/jpeg', 'image/jpg', 'image/svg+xml']
+const SupportedMimeType = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/jpe']
 
 const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } = useUpload(
   proposalId,
