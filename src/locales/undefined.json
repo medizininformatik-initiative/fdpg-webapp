@@ -1,0 +1,25 @@
+{
+  "general": {},
+  "sidebar": {},
+  "history": {},
+  "header": {},
+  "dashboard": {},
+  "proposal": {},
+  "roles": {},
+  "countries": {},
+  "projectStatus": {},
+  "locationStatus": {},
+  "researcherStatus": {},
+  "departments": {},
+  "location": {},
+  "dataDelivery": {},
+  "registeringForm": {
+    "Step-DataSources": "Select Data sources",
+    "Step-Variables": "Select the Variables",
+    "Step-Casesohort": "Select the Cases/Cohorts/Patients",
+    "Step-DataUsage": "Planned Data use",
+    "Step-ProjectDetails": "General Project Details",
+    "Step-ProjectParticipants": "Project Participants",
+    "Step-ResearchProject": "Details of the research project"
+  }
+}

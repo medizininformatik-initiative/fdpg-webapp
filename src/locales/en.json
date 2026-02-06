@@ -716,7 +716,7 @@
     "additionalDocument": "Additional Information",
     "textPlaceholder": "Please enter the relevant information.",
     "targetFormatOther": "More information",
-    "targetFormat": "Information about the target format (for central analysis)",
+    "targetFormat": "Information about the target format",
     "suppSurveyReContacting": "Re-contacting for an additional survey (recruitment)",
     "suppSurveyReContactingText": "Reasons for selection (How many patients are affected? What criteria must patients meet? What type of additional survey is planned?)",
     "reContactIncidental": "Re-contacting due to incidental findings",
@@ -1188,6 +1188,14 @@
     "diagnoses": "Diagnoses",
     "diagnosesPlaceholder": "Enter diagnoses and press Enter",
     "procedures": "Procedures",
-    "proceduresPlaceholder": "Enter procedures and press Enter"
+    "proceduresPlaceholder": "Enter procedures and press Enter",
+    "Step-DataSources": "Select Data sources",
+    "Step-Variables": "Select the Variables",
+    "Step-Casesohort": "Select the Cases/Cohorts/Patients",
+    "Step-DataUsage": "Planned Data use Register",
+    "Step-ProjectDetails": "General Project Details",
+    "Step-ProjectParticipants": "Project Participants",
+    "Step-ResearchProject": "Details of the research project ",
+    "usageRegisterationForm": "Registeration Form"
   }
 }

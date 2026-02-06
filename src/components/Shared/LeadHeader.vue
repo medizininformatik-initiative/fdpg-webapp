@@ -1,6 +1,6 @@
 <template>
   <div class="lead">
-    <h1 class="title">{{ t('proposal.mIIUsageApplicationForm') }}</h1>
+    <h1 class="title">{{ t(title) }}</h1>
     <div class="button-spacer"></div>
   </div>
   <div class="button-container" v-if="proposalId">
@@ -15,6 +15,13 @@ import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
+
+const props = defineProps({
+  title: {
+    type: String,
+    required: true,
+  },
+})
 
 const router = useRouter()
 const params = useRoute().params

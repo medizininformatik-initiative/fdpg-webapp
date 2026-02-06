@@ -1,6 +1,8 @@
 <template>
   <el-container class="fdpg-new-proposal-page">
-    <LeadHeader />
+    <LeadHeader
+      :title="isRegisteringForm ? 'registeringForm.usageRegisterationForm' : 'proposal.mIIUsageApplicationForm'"
+    />
     <div class="lead align-right">
       <div>
         <el-button
