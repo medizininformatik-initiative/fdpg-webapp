@@ -638,7 +638,7 @@ const rules = ref<Record<string, any>>({
     procedures: requiredValidationFunc('array'),
     legalBasis: null,
     locations: [requiredValidationFunc('array')],
-    startTime: requiredValidationFunc('string'),
+    startTime: [requiredValidationFunc('date')],
   },
   status: null,
 })
