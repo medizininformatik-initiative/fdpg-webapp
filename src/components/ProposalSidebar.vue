@@ -29,7 +29,7 @@
               }"
             >
               <template #title>
-                <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
+                <span class="step-title">{{ t(stepKeyTranslations(step.step)) }}</span>
               </template>
               <template #description>
                 <span class="step-status">{{ t(`sidebar.${getStepStatus(getStepKey(step.step))}`) }}</span>
@@ -49,6 +49,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { ProposalType } from '@/types/proposal-type.enum'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -80,11 +81,6 @@ const getStepKey = (step: CreatPrposalSteps): string => {
 const steps = computed(() => {
   return layoutStore.createProposalSteps
 })
-
-// Method to check if a step is completed
-const isStepCompleted = (step: CreatPrposalSteps): boolean => {
-  return completedSteps.value.has(step)
-}
 
 // Method to get the status of a step
 const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' => {
@@ -118,6 +114,12 @@ const progressPercentage = computed(() => {
 
   return percentage
 })
+
+const isRegistrationForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
+
+const stepKeyTranslations = (step: CreatPrposalSteps) => {
+  return isRegistrationForm.value ? `registeringForm.Step-${getStepKey(step)}` : `sidebar.${getStepKey(step)}`
+}
 </script>
 
 <style lang="scss">

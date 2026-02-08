@@ -2,7 +2,6 @@
   "general": {
     "noPermissionToViewPage": "Du hast keine Berechtigung diese Seite zu sehen.",
     "goToDashboard": "Zum Dashboard",
-    "approved": "Angenommen",
     "requested": "Beantragt",
     "current": "Laufend",
     "completed": "Abgeschlossen",
@@ -717,7 +716,7 @@
     "additionalDocument": "Zusätzliche Informationen",
     "textPlaceholder": "Bitte geben Sie die entsprechenden Angaben ein.",
     "targetFormatOther": "Weitere Angaben",
-    "targetFormat": "Angaben zum Zielformat (bei einer Zentraler Analyse)",
+    "targetFormat": "Angaben zum Zielformat",
     "suppSurveyReContacting": "Re-Kontaktierung zur Durchführung einer Zusatzerhebung (Rekrutierung)",
     "suppSurveyReContactingText": "Begründung der Auswahl (Wie viele Patienten sind betroffen? Welche Kriterien müssen die Patienten erfüllen? Welcher Art ist die geplante Zusatzerhebung?)",
     "reContactIncidental": "Re-Kontaktierung aufgrund von Zufallsbefunden",
@@ -1187,6 +1186,14 @@
     "diagnoses": "Diagnosen",
     "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
     "procedures": "Prozeduren",
-    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken"
+    "proceduresPlaceholder": "Prozeduren eingeben und Enter drücken",
+    "Step-DataSources": "Auswahl der Datenquelle",
+    "Step-Variables": "Auswahl der Variablen",
+    "Step-Casesohort": "Auswahl der Fälle/Kohorte/Patienten",
+    "Step-DataUsage": "Geplante Datennutzung",
+    "Step-ProjectDetails": "Allgemeine Projektangaben",
+    "Step-ProjectParticipants": "Projektbeteiligte",
+    "Step-ResearchProject": "Details zum Forschungsprojekt",
+    "usageRegisterationForm": "Anmeldeformular"
   }
 }
