@@ -21,12 +21,11 @@ export function useProposalSync() {
     const registerInfo = proposal.value?.registerInfo
     if (!registerInfo) return false
 
-    const hasProjectUrl = !!registerInfo.projectUrl && registerInfo.projectUrl.trim().length > 0
     const hasProjectCategory = !!registerInfo.projectCategory && registerInfo.projectCategory.trim().length > 0
     const hasDiagnoses = registerInfo.diagnoses && registerInfo.diagnoses.length > 0
     const hasProcedures = registerInfo.procedures && registerInfo.procedures.length > 0
 
-    return hasProjectUrl && hasProjectCategory && hasDiagnoses && hasProcedures
+    return hasProjectCategory && hasDiagnoses && hasProcedures
   })
 
   const missingRequiredFields = computed(() => {
@@ -34,9 +33,7 @@ export function useProposalSync() {
     if (!registerInfo) return []
 
     const missing: string[] = []
-    if (!registerInfo.projectUrl || registerInfo.projectUrl.trim().length === 0) {
-      missing.push('Project URL')
-    }
+
     if (!registerInfo.projectCategory || registerInfo.projectCategory.trim().length === 0) {
       missing.push('Project Category')
     }
