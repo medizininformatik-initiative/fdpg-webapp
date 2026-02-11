@@ -74,5 +74,11 @@ export const getProjectStatus = (proposal: IProposal): IProjectStatus => {
         type: ProjectStatusType.info,
         description: 'projectStatus.READY_TO_ARCHIVE',
       }
+
+    case ProposalStatus.Published:
+      return {
+        type: ProjectStatusType.success,
+        description: 'projectStatus.PUBLISHED',
+      }
   }
 }

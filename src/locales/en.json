@@ -1002,7 +1002,8 @@
     "SUBSTATUS__READY_TO_ARCHIVE": "Ready to Archive",
     "SUBSTATUS__READY_TO_PUBLISH": "Ready to Publish",
     "SUBSTATUS__PUBLISHED": "Published",
-    "SUBSTATUS__ARCHIVED": "Archived"
+    "SUBSTATUS__ARCHIVED": "Archived",
+    "PUBLISHED": "The project has been published."
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Check",
