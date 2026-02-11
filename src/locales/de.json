@@ -184,7 +184,8 @@
     "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet",
     "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen",
     "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet",
-    "CONTRACTING_SKIPPED": "Vertragsschritt wurde übersprungen"
+    "CONTRACTING_SKIPPED": "Vertragsschritt wurde übersprungen",
+    "PROPOSAL_PUBLISHED": "Die Bewerbung wurde veröffentlicht."
   },
   "header": {
     "login": "Anmelden",

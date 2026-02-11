@@ -184,7 +184,8 @@
     "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher",
     "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled",
     "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded",
-    "CONTRACTING_SKIPPED": "Contracting procedure was skipped"
+    "CONTRACTING_SKIPPED": "Contracting procedure was skipped",
+    "PROPOSAL_PUBLISHED": "The application has been published."
   },
   "header": {
     "login": "Login",
