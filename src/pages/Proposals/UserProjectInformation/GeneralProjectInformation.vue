@@ -72,6 +72,7 @@
             data-testId="generalProjectInformationForm.keywords"
             :disabled="reviewMode || generalProjectInformationForm.isDone"
             :placeholder="t('proposal.keywordsPlaceholder')"
+            :validate-event="false"
             aria-label="Please click the Enter key after input"
           />
         </FdpgFormItem>
@@ -118,20 +119,14 @@
         <el-col :sm="24">
           <FdpgFormItem prop="registerInfo.projectCategory">
             <FdpgLabel required html-for="registeringForm.projectCategory" />
-            <el-select
+            <FdpgSelect
               v-model="registerInfoForm.projectCategory"
               data-testId="registerInfoForm.projectCategory"
               placeholder="registeringForm.pleaseSelectProjectCategory"
               :disabled="reviewMode || generalProjectInformationForm.isDone"
+              :options="projectCategories"
               style="width: 100%"
-            >
-              <el-option
-                v-for="category in projectCategories"
-                :key="category.value"
-                :label="category.label"
-                :value="category.value"
-              />
-            </el-select>
+            />
           </FdpgFormItem>
         </el-col>
         <el-col :sm="24">
@@ -171,6 +166,7 @@
             :proposal-id="proposalId"
             @change="handleUploadFile"
             @remove="handleRemoveFile"
+            :isDisabled="isReviewMode || isAppendixLoading"
           >
             <el-button
               class="upload-button"
@@ -199,6 +195,7 @@ import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgNumberInput from '@/components/FdpgNumberInput.vue'
 import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgSelect from '@/components/FdpgSelect.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IGeneralProjectInformation, IProposal } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
@@ -269,7 +266,7 @@ const proposalId = computed(() => props.proposalId as string)
 const isDisabled = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
 const isReviewMode = computed(() => props.reviewMode || generalProjectInformationForm.value.isDone)
 const { showErrorMessage } = useNotifications()
-const SupportedMimeType = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp', 'image/jpe']
+const SupportedMimeType = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'].toString()
 
 const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } = useUpload(
   proposalId,

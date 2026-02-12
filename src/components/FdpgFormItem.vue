@@ -20,14 +20,11 @@
 
       .fdpg-input,
       .fdpg-select,
-      .fdpg-date-picker {
-        &.is-focus {
-          .el-input__inner {
-            border-color: $red;
-          }
-        }
-
+      .fdpg-date-picker,
+      .fdpg-number-input {
         .el-input__inner {
+          border-color: $red;
+
           &:hover {
             border-color: $red;
           }
