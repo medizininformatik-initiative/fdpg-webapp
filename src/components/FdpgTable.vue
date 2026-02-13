@@ -254,7 +254,7 @@ watch([props], () => {
 
       &:hover {
         .el-table__cell {
-          background-color: $gray-200;
+          background-color: $gray-300;
         }
       }
 

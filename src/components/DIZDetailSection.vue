@@ -167,7 +167,7 @@ const handleSave = async () => {
 @use '@/assets/sass/variable' as *;
 
 .diz-details {
-  background-color: $gray-200;
+  background-color: $gray-300;
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 52px;

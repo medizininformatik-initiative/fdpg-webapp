@@ -157,7 +157,7 @@ const proposals = computed(() => proposalStore.filteredProposal[props.panel.quer
   min-height: 57px;
   border-radius: 8px;
   padding: 23px 20px 20px;
-  background-color: $gray-200;
+  background-color: $gray-300;
 
   .header {
     display: flex;

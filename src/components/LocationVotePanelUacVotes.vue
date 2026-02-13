@@ -566,7 +566,7 @@ onMounted(async () => {
         background-color: $blue;
       }
       &--red {
-        background-color: $red;
+        background-color: $error;
       }
       &--gray {
         background-color: $gray-900;
@@ -713,8 +713,8 @@ onMounted(async () => {
         }
 
         &.rejected {
-          background-color: color.adjust($red, $lightness: 40%);
-          border-color: $red;
+          background-color: color.adjust($error, $lightness: 40%);
+          border-color: $error;
           color: $black;
         }
       }
@@ -745,7 +745,7 @@ onMounted(async () => {
         padding: 0;
         width: 2rem;
         min-height: 1rem;
-        background-color: $gray-200;
+        background-color: $gray-300;
         border: none;
         color: $blue;
 
@@ -762,7 +762,7 @@ onMounted(async () => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red;
+            background-color: $error;
           }
 
           i {
@@ -784,7 +784,7 @@ onMounted(async () => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red;
+            color: $error;
           }
 
           &.positive {
@@ -812,6 +812,6 @@ onMounted(async () => {
 }
 
 :deep(.delayed) {
-  color: $red !important;
+  color: $error !important;
 }
 </style>

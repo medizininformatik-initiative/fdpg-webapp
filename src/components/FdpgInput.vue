@@ -60,7 +60,7 @@ const handleBlur = (e: FocusEvent) => {
   &.el-input--small {
     .el-input__inner {
       height: 40px;
-      background-color: $gray-100;
+      background-color: $gray-300;
       font-size: 16px;
 
       &:focus {
@@ -72,7 +72,7 @@ const handleBlur = (e: FocusEvent) => {
     }
     .el-textarea__inner {
       height: 40px;
-      background-color: $gray-100;
+      background-color: $gray-300;
       font-size: 16px;
 
       &:focus {
@@ -99,7 +99,7 @@ const handleBlur = (e: FocusEvent) => {
       font-weight: 600;
       border-width: 2px;
       border-color: $blue;
-      background-color: $gray-100;
+      background-color: $gray-300;
       box-shadow: 0 0 10px -5px $blue;
       transition: 1s;
       transition-property: background-color;
@@ -122,7 +122,7 @@ const handleBlur = (e: FocusEvent) => {
       font-weight: 600;
       border-width: 2px;
       border-color: $blue;
-      background-color: $gray-100;
+      background-color: $gray-300;
       box-shadow: 0 0 10px -5px $blue;
       transition: 1s;
       transition-property: background-color;

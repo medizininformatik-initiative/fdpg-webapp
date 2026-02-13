@@ -199,7 +199,7 @@ onMounted(async () => {
 
   .tab-bar {
     display: flex;
-    color: $blue-200;
+    color: $blue-hover;
     font-weight: 600;
     margin-bottom: 20px;
 
@@ -256,8 +256,8 @@ onMounted(async () => {
     }
 
     &.rejected {
-      background-color: color.adjust($red, $lightness: 40%);
-      border-color: $red;
+      background-color: color.adjust($error, $lightness: 40%);
+      border-color: $error;
       color: $black;
     }
   }

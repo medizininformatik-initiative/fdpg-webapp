@@ -58,7 +58,7 @@ defineProps({
     height: fit-content;
     border-radius: 4px;
     border: 1px solid $gray-700;
-    background-color: $gray-200;
+    background-color: $gray-300;
     white-space: nowrap;
   }
 }

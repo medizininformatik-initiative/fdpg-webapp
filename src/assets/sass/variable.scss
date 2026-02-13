@@ -1,25 +1,20 @@
-$red: hsl(1, 80%, 47%);
-$red-100: hsl(3, 82%, 49%);
-$blue: hsl(218, 34%, 47%);
-$blue-100: hsl(221, 36%, 49%);
-$blue-200: hsl(221,44%, 41%);
+$error: hsl(3, 82%, 49%);
+$blue: #4f6da1;
+$blue-hover:#476290;
+$blue-pressed: #3B5178;
 $blue-green: #6f929e;
 $green: #b7da2b;
-$green-100: #afc74f;
-$green-400: #90b36f;
+$green-hover: #A3C322;
+$green-pressed: #91AE1E;
 $white: #ffffff;
 $black: #333333;
-$gray-100: #eff2f7;
-$gray-200: #f1f2f3;
-$gray-250: #f2f5f9;
-$gray-300: #f4f4f6;
-$gray-400: #e9eaed;
-$gray-500: #e5e6e9;
-$gray-600: #ced7e7;
+$gray-300: #EFF0F2;
+$gray-500: #E0E2E5;
+$gray-600: #C1C5CB;
 $gray-650: #cfd2d8;
-$gray-700: #c3c7ce;
-$gray-800: #979ea9;
-$gray-900: #646d7c;
+$gray-700: #B1B6BD;
+$gray-800: #9399A3;
+$gray-900: #646D7C;
 
 // Grid breakpoints
 $xs: 0;

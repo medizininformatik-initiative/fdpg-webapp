@@ -136,8 +136,8 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
     background-color: $blue;
     color: $blue;
     &.is-error {
-      background-color: $red !important;
-      border-color: $red !important;
+      background-color: $error !important;
+      border-color: $error !important;
     }
   }
   .el-step__icon {
@@ -152,9 +152,9 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
   }
   &.is-error {
     .el-step__icon {
-      background-color: $red !important;
+      background-color: $error !important;
       color: $white !important;
-      border-color: $red !important;
+      border-color: $error !important;
     }
   }
   &.is-success {
@@ -175,7 +175,7 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
 }
 
 .el-step.is-vertical.is-process {
-  background-color: $gray-200;
+  background-color: $gray-300;
 }
 
 .proposal-sidebar {
@@ -186,7 +186,7 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
   background: $white;
   flex-direction: column;
   z-index: $sidebar-z-index;
-  border-right: 1px solid $gray-400;
+  border-right: 1px solid $gray-500;
   transition-duration: $sidebar-transition-duration;
   @include sidebar-block;
 
@@ -197,7 +197,7 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
   }
 
   .proposal-menu {
-    border-top: 1px solid $gray-100;
+    border-top: 1px solid $gray-300;
     width: 100%;
     height: 100%;
     padding-top: 15px;
@@ -243,7 +243,7 @@ const stepKeyTranslations = (step: CreatPrposalSteps) => {
 
       .progress-bar {
         :deep(.el-progress-bar__outer) {
-          background-color: $gray-200;
+          background-color: $gray-300;
         }
 
         :deep(.el-progress-bar__inner) {

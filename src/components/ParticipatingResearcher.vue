@@ -643,7 +643,7 @@ onMounted(async () => {
         align-items: center;
 
         &:not(:last-child) {
-          border-bottom: 1px solid $gray-200;
+          border-bottom: 1px solid $gray-300;
         }
 
         .el-col {
@@ -671,7 +671,7 @@ onMounted(async () => {
         height: 24px;
 
         &:hover:not(:disabled) {
-          background-color: $gray-100;
+          background-color: $gray-300;
           color: $blue;
         }
       }

@@ -100,7 +100,7 @@ const disabledDate = (time: Date) => {
         border-width: 2px;
         border-color: $blue;
         padding: 0 10px 0 45px;
-        background-color: $gray-100;
+        background-color: $gray-300;
         box-shadow: 0 0 10px -5px $blue;
       }
 
@@ -170,7 +170,7 @@ const disabledDate = (time: Date) => {
       border-width: 2px;
       border-color: $blue;
       padding: 0 10px 0 45px;
-      background-color: $gray-100;
+      background-color: $gray-300;
       box-shadow: 0 0 10px -5px $blue;
     }
   }

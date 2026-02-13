@@ -258,11 +258,11 @@ const deleteProposal = () => {
 
     &.warn {
       .title {
-        background-color: $red;
+        background-color: $error;
       }
 
       .due-date {
-        color: $red;
+        color: $error;
       }
     }
 

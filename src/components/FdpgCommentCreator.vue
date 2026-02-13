@@ -223,7 +223,7 @@ const setTextareaFocus = () => {
       margin-top: 0.3em;
 
       .delete-btn {
-        color: $red;
+        color: $error;
       }
 
       button {
