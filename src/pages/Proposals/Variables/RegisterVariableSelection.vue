@@ -15,6 +15,7 @@
             data-testId="registerInfoForm.diagnoses"
             :placeholder="t('proposal.diagnosesPlaceholder')"
             :disabled="reviewMode"
+            :validate-event="false"
             style="width: 100%"
           />
         </FdpgFormItem>
@@ -27,6 +28,7 @@
             data-testId="registerInfoForm.procedures"
             :placeholder="t('proposal.proceduresPlaceholder')"
             :disabled="reviewMode"
+            :validate-event="false"
             style="width: 100%"
           />
         </FdpgFormItem>

@@ -522,7 +522,7 @@ const { uploadsForType, handleUploadFile, handleRemoveFile, isAppendixLoading } 
   [DirectUpload.GeneralAppendix],
   showErrorMessage,
 )
-const rules = ref<Record<string, any>>({
+const rules = computed(() => ({
   projectAbbreviation: [
     requiredValidationFunc('string'),
     specialCharactersValidationFunc(),
@@ -643,7 +643,7 @@ const rules = ref<Record<string, any>>({
     startTime: [requiredValidationFunc('date')],
   },
   status: null,
-})
+}))
 
 // Helper function to check if proposal is in editable status
 const isProposalEditable = () => {
@@ -1152,6 +1152,15 @@ const handleSaveDraft = async () => {
   const stepsToValidate = stepProgressionOrder.slice(0, currentStepIndex + 1)
   const allFields = formRef.value?.fields || []
   const hasValidationErrors = await validateSteps(stepsToValidate, allFields)
+
+  const currentStepFieldPaths = stepFieldsMap[activeStep.value] || []
+  const currentStepFields = getStepFields(allFields, currentStepFieldPaths)
+  const validationPromises = currentStepFields
+    .filter(fieldHasRules)
+    .map((field) => formRef.value?.validateField([field.prop]).catch(() => {})) // Catch errors to prevent stopping
+
+  await Promise.all(validationPromises)
+
   // Ensure all field validateStates are updated before updating step status
   await waitForValidation()
   await updateValidatedStepsStatus(stepsToValidate)
