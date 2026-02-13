@@ -83,7 +83,7 @@
     "overview": "Overview",
     "textCopied": "Text copied to clipboard",
     "none": "None",
-    "internalError ": "There are problems with the system. Please try again later or contact the FDPG team (info{'@'}forschen-fuer-gesundheit.de",
+    "internalError": "There are problems with the system. Please try again later or contact the FDPG team (info{'@'}forschen-fuer-gesundheit.de)",
     "expiredSession": "Your session has expired, please renew your session.",
     "authError": "Please wait until your role has been assigned by the FDPG team. We are currently checking your registration. It takes longer than 48 hours (weekdays)? You may contact info{'@'}forschen-fuer-gesundheit.de”",
     "pleaseSelectFile": "Please select a file.",
