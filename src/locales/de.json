@@ -130,7 +130,7 @@
     "process": "AUSSTEHEND",
     "progress": "Fortschritt:",
     "completed": "{progress}% ausgefüllt ",
-    "published": "Veröffentlicht",
+    "published": "P-Registrierung",
     "overview": "Überblick"
   },
   "history": {
@@ -1185,6 +1185,16 @@
     "startTime": "Beginnzeit",
     "projectCategory": "Projektkategorie",
     "pleaseSelectProjectCategory": "Bitte wählen Sie eine Projektkategorie aus.",
+    "registerForm_projectCategory1": "Entscheidungsunterstützung",
+    "registerForm_projectCategory2": "Covid-19/Intensivmedizin",
+    "registerForm_projectCategory3": "Seltene Erkrankungen",
+    "registerForm_projectCategory4": "Versorgung/Qualitätsmanagement",
+    "registerForm_projectCategory5": "Biomarker/Labor/Mikrobiologie",
+    "registerForm_projectCategory6": "Onkologie/Pathologie",
+    "registerForm_projectCategory7": "Nervenkrankheiten/Parkinson",
+    "registerForm_projectCategory8": "Psychische Erkrankungen",
+    "registerForm_projectCategory9": "Herz-Kreislauf-Erkrankungen",
+    "registerForm_projectCategory10": "Auswirkungen von Medikamenten",
     "diagnoses": "Diagnosen",
     "diagnosesPlaceholder": "Diagnosen eingeben und Enter drücken",
     "procedures": "Prozeduren",
@@ -1192,10 +1202,12 @@
     "Step-DataSources": "Auswahl der Datenquelle",
     "Step-Variables": "Auswahl der Variablen",
     "Step-Casesohort": "Auswahl der Fälle/Kohorte/Patienten",
-    "Step-DataUsage": "Geplante Datennutzung",
+    "Step-DataUsage": "Art der Datennutzung",
     "Step-ProjectDetails": "Allgemeine Projektangaben",
     "Step-ProjectParticipants": "Projektbeteiligte",
     "Step-ResearchProject": "Details zum Forschungsprojekt",
-    "usageRegisterationForm": "Anmeldeformular"
+    "usageRegisterationForm": "Registrierformular",
+    "removeParticipant": "Institut entfernen",
+    "addAnotherPerson": "Weitere Institut hinzufügen"
   }
 }

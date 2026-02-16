@@ -247,16 +247,16 @@ const registerInfoForm = useVModel(props, 'registerInfo', emit, { eventName: 'up
 const projectFundingEditor = ref()
 
 const projectCategories = computed(() => [
-  { value: 'category1', label: t('registeringForm.projectCategory1') },
-  { value: 'category2', label: t('registeringForm.projectCategory2') },
-  { value: 'category3', label: t('registeringForm.projectCategory3') },
-  { value: 'category4', label: t('registeringForm.projectCategory4') },
-  { value: 'category5', label: t('registeringForm.projectCategory5') },
-  { value: 'category6', label: t('registeringForm.projectCategory6') },
-  { value: 'category7', label: t('registeringForm.projectCategory7') },
-  { value: 'category8', label: t('registeringForm.projectCategory8') },
-  { value: 'category9', label: t('registeringForm.projectCategory9') },
-  { value: 'category10', label: t('registeringForm.projectCategory10') },
+  { value: 'category1', label: t('registeringForm.registerForm_projectCategory1') },
+  { value: 'category2', label: t('registeringForm.registerForm_projectCategory2') },
+  { value: 'category3', label: t('registeringForm.registerForm_projectCategory3') },
+  { value: 'category4', label: t('registeringForm.registerForm_projectCategory4') },
+  { value: 'category5', label: t('registeringForm.registerForm_projectCategory5') },
+  { value: 'category6', label: t('registeringForm.registerForm_projectCategory6') },
+  { value: 'category7', label: t('registeringForm.registerForm_projectCategory7') },
+  { value: 'category8', label: t('registeringForm.registerForm_projectCategory8') },
+  { value: 'category9', label: t('registeringForm.registerForm_projectCategory9') },
+  { value: 'category10', label: t('registeringForm.registerForm_projectCategory10') },
 ])
 
 const limitedStartDate = computed(() => {
