@@ -19,7 +19,7 @@
         class="card-remove-button"
         @click="handleRemoveParticipant(index)"
         ><i class="fa fa-minus-circle" aria-hidden="true" /><span>{{
-          t('proposal.removeParticipant')
+          isRegisteringForm ? t('registeringForm.removeParticipant') : t('proposal.removeParticipant')
         }}</span></el-button
       >
 
@@ -68,7 +68,9 @@
     @click="handleAddAnotherPerson"
   >
     <i class="el-icon-plus" aria-hidden="true" />
-    <span class="add-text">{{ t('proposal.addAnotherPerson') }}</span>
+    <span class="add-text">{{
+      isRegisteringForm ? t('registeringForm.addAnotherPerson') : t('proposal.addAnotherPerson')
+    }}</span>
   </el-button>
 </template>
 

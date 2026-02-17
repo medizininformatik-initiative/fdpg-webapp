@@ -1,6 +1,8 @@
 <template>
   <section class="review-proposal">
-    <LeadHeader />
+    <LeadHeader
+      :title="isRegisteringForm ? 'registeringForm.usageRegisterationForm' : 'proposal.mIIUsageApplicationForm'"
+    />
     <template v-for="(section, sIdx) in getVisibleSections(sections)" :key="'section' + sIdx">
       <ReviewAreaLabel
         headline="h2"
@@ -136,6 +138,7 @@ import { biosampleSection } from '@/constants/print-structure/biosample-section'
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
+import { ProposalType } from '@/types/proposal-type.enum'
 
 const authStore = useAuthStore()
 
@@ -170,6 +173,8 @@ const possibleLocations = computed(() =>
     .map((locId) => locationMapRef.value?.[locId])
     .filter((loc) => loc),
 )
+
+const isRegisteringForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
 
 const { uploadsForType } = useUpload(proposalId, [
   DirectUpload.GeneralAppendix,
