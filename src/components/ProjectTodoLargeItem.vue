@@ -134,7 +134,7 @@ const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; butt
         padding: 0;
         width: 40px;
         min-height: 40px;
-        background-color: $gray-200;
+        background-color: $gray-300;
         border: none;
         color: $blue;
 
@@ -152,7 +152,7 @@ const onChildTriggeredDisableButton = ({ value, button }: { value: boolean; butt
             background-color: $green;
           }
           &.negative {
-            background-color: $red;
+            background-color: $error;
           }
 
           i {

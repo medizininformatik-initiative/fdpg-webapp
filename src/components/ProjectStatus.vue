@@ -129,11 +129,11 @@ onBeforeUnmount(() => {
   display: flex;
   border-radius: 4px;
   flex-direction: column;
-  background-color: $gray-100;
+  background-color: $gray-300;
 
   &.info {
     color: $blue;
-    background-color: $gray-100;
+    background-color: $gray-300;
 
     .steps {
       .step {
@@ -158,13 +158,13 @@ onBeforeUnmount(() => {
   }
 
   &.warning {
-    color: $red;
-    background-color: color.adjust($red, $lightness: 49%);
+    color: $error;
+    background-color: color.adjust($error, $lightness: 49%);
 
     .steps {
       .step {
         &.active {
-          background-color: $red;
+          background-color: $error;
         }
       }
     }

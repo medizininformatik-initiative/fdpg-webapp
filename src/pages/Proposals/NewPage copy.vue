@@ -617,7 +617,7 @@ onMounted(async () => {
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 52px;
-    background-color: $gray-200;
+    background-color: $gray-300;
 
     .form-label-mt-4 {
       margin-top: 4px;

@@ -536,6 +536,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 @use '@/assets/sass/variable' as *;
+@use 'sass:color';
 
 .delivery-info__el-collapse-item-row {
   display: flex;
@@ -595,34 +596,34 @@ onMounted(async () => {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
   border: 1px solid $gray-700;
-  background: $gray-100;
+  background: $gray-300;
   color: $black;
   line-height: 1.25rem;
 
   &[data-variant='PENDING'] {
-    background: $gray-100;
+    background: $gray-300;
     border-color: $gray-700;
   }
 
   &[data-variant='REPEATED'] {
-    background: $gray-100;
+    background: $gray-300;
     border-color: $gray-700;
   }
 
   &[data-variant='DELIVERED'] {
     color: $white;
     border-color: $blue;
-    background: $blue-100;
+    background: $blue-hover;
   }
 
   &[data-variant='ACCEPTED'] {
     background: $green;
-    border-color: $green-100;
+    border-color: $green-hover;
   }
 
   &[data-variant='CANCELED'] {
-    background: $red;
-    border-color: $red-100;
+    background: $error;
+    border-color: color.adjust($error, $lightness: 40%);
     color: $white;
   }
 }

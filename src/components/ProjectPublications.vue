@@ -180,7 +180,7 @@ const resetForm = () => {
       cursor: pointer;
     }
     .fa-trash:hover {
-      color: $red;
+      color: $error;
     }
     .fa-edit:hover {
       color: $blue;

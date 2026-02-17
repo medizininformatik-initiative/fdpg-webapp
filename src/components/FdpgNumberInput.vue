@@ -65,7 +65,7 @@ const handleBlur = (e) => {
       font-weight: 600;
       border-width: 2px;
       border-color: $blue;
-      background-color: $gray-100;
+      background-color: $gray-300;
       box-shadow: 0 0 10px -5px $blue;
       transition: 1s;
     }

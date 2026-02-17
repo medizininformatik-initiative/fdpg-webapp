@@ -297,7 +297,7 @@ const handleFilterChange = (filters: Record<string, any>) => {
 
 .data-source-row {
   display: flex;
-  border-bottom: 1px solid $gray-400;
+  border-bottom: 1px solid $gray-500;
   padding: 8px 0;
   min-height: 1.5em;
   align-items: flex-start;

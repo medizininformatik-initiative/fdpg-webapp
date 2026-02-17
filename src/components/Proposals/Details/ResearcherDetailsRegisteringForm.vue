@@ -233,7 +233,7 @@ onMounted(async () => {
   .section {
     margin-bottom: 32px;
     padding: 24px;
-    background-color: $gray-100;
+    background-color: $gray-300;
     border-radius: 8px;
 
     .section-title {

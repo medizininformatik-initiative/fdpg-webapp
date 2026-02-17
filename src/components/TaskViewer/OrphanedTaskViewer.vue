@@ -121,8 +121,8 @@ const deleteTask = (commentId: string) => {
 .orphaned-task-viewer {
   margin: 2rem 0;
   padding: 1.5rem;
-  background-color: $gray-100;
-  border: 1px solid $gray-400;
+  background-color: $gray-300;
+  border: 1px solid $gray-500;
   border-radius: 8px;
 
   &__header {
@@ -131,7 +131,7 @@ const deleteTask = (commentId: string) => {
 
   &__title {
     margin: 0 0 0.5rem 0;
-    color: $red;
+    color: $error;
     font-size: 1.1rem;
     font-weight: 600;
   }
@@ -151,7 +151,7 @@ const deleteTask = (commentId: string) => {
 }
 
 .orphaned-task {
-  background: $red;
+  background: $error;
   color: $white;
   padding: 10px 20px;
   border-radius: 20px 0px 20px 20px;

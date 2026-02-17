@@ -67,11 +67,11 @@
   }
 
   &.el-button--danger {
-    background-color: $red;
+    background-color: $error;
 
     &:active:not(.is-disabled) {
-      background-color: color.adjust($red, $lightness: -3%);
-      box-shadow: 0 0 5px 0 color.adjust($red, $lightness: 30%);
+      background-color: color.adjust($error, $lightness: -3%);
+      box-shadow: 0 0 5px 0 color.adjust($error, $lightness: 30%);
     }
   }
 
@@ -265,7 +265,7 @@
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red;
+          color: $error;
         }
       }
     }
@@ -276,7 +276,7 @@
   }
 
   .el-form-item__error {
-    color: $red;
+    color: $error;
   }
 }
 
@@ -285,7 +285,7 @@
   display: inline-flex;
   align-items: flex-start;
   padding: 19px 16px 17px 18px;
-  background-color: $gray-100;
+  background-color: $gray-300;
   white-space: normal;
 
   &.el-checkbox--small {
@@ -323,8 +323,8 @@
       }
 
       .el-checkbox__inner {
-        background-color: $gray-400;
-        border-color: $gray-400;
+        background-color: $gray-500;
+        border-color: $gray-500;
       }
     }
 
@@ -338,8 +338,8 @@
 
     .el-checkbox__input {
       .el-checkbox__inner {
-        border-color: $gray-200;
-        background-color: $gray-200;
+        border-color: $gray-300;
+        background-color: $gray-300;
 
         &::after {
           border-color: $black;
@@ -363,7 +363,7 @@
       margin-bottom: 4px;
       color: $gray-900;
       border-radius: 4px;
-      background-color: $gray-200;
+      background-color: $gray-300;
       border: 2px solid $gray-900;
 
       &::after {
@@ -425,7 +425,7 @@
 
 .el-badge {
   .el-badge__content--danger {
-    background-color: $red;
+    background-color: $error;
   }
 }
 
@@ -439,4 +439,14 @@
   .el-select__tags-text {
     color: $gray-900;
   }
+}
+.el-switch {
+
+  &__label.is-active {
+      color: $black !important;
+    }
+    &__core {
+      background-color: $blue !important;
+      border-color: $blue-hover !important;
+    }
 }

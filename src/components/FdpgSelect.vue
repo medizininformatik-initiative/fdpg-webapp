@@ -153,7 +153,7 @@ const handleCheckAll = (val: CheckboxValueType) => {
         border-width: 2px;
         border-color: $blue;
         padding: 0 35px 0 10px;
-        background-color: $gray-100;
+        background-color: $gray-300;
         box-shadow: 0 0 10px -5px $blue;
       }
     }

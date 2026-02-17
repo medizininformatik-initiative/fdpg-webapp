@@ -69,7 +69,7 @@ defineProps({
     display: inline-flex;
     margin: 0 10px 10px 0;
     padding: 20px 17px 16px;
-    background-color: $gray-100;
+    background-color: $gray-300;
 
     &:focus-within {
       outline: $blue auto 1px;
@@ -80,8 +80,8 @@ defineProps({
 
       .el-radio__input {
         .el-radio__inner {
-          border-color: $gray-200;
-          background-color: $gray-200;
+          border-color: $gray-300;
+          background-color: $gray-300;
 
           &::after {
             border-color: $black;
@@ -105,7 +105,7 @@ defineProps({
         height: 18px;
         color: $gray-900;
         border-radius: 4px;
-        background-color: $gray-200;
+        background-color: $gray-300;
         border: 2px solid $gray-900;
 
         &::after {
@@ -120,7 +120,7 @@ defineProps({
           border-radius: unset;
           box-sizing: content-box;
           transform-origin: center;
-          background-color: $gray-100;
+          background-color: $gray-300;
           transform: rotate(45deg) scaleY(0);
           transition: transform 0.15s ease-in 50ms;
         }

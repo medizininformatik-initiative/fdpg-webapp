@@ -245,7 +245,7 @@ watch(
   background: $white;
   flex-direction: column;
   z-index: $sidebar-z-index;
-  border-right: 1px solid $gray-400;
+  border-right: 1px solid $gray-500;
   transition-duration: $sidebar-transition-duration;
   @include sidebar-block;
 
@@ -279,7 +279,7 @@ watch(
       &.fdpg-menu__item--exact-active,
       &:focus,
       &:hover {
-        background-color: $gray-200;
+        background-color: $gray-300;
       }
 
       i {
@@ -328,8 +328,8 @@ watch(
           text-overflow: ellipsis;
 
           &--critical {
-            background: $red;
-            border-color: $red;
+            background: $error;
+            border-color: $error;
             color: $white;
           }
 

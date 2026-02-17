@@ -2,7 +2,11 @@
   <section class="section message-center">
     <div class="header-row">
       <h2>{{ t(titleForType) }}</h2>
-      <el-switch v-model="showDoneComments" class="switch" :inactive-text="t('proposal.showDoneComments')" />
+      <el-switch
+        v-model="showDoneComments"
+        class="switch fdpg-switch"
+        :inactive-text="t('proposal.showDoneComments')"
+      />
     </div>
 
     <section class="messages">

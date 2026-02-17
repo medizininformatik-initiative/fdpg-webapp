@@ -82,7 +82,7 @@ const progressItems = computed(() => {
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 52px;
-  background-color: $gray-200;
+  background-color: $gray-300;
 
   .progress-row {
     display: flex;
@@ -102,7 +102,7 @@ const progressItems = computed(() => {
       }
 
       &.danger :deep(.el-progress-bar__inner) {
-        background-color: $red;
+        background-color: $error;
       }
 
       .progress-content {

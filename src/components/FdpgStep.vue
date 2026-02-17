@@ -50,7 +50,7 @@ defineProps({
   &.medium-green {
     .el-step__icon,
     .el-step__line {
-      background: $green-400;
+      background: $green-pressed;
     }
   }
 

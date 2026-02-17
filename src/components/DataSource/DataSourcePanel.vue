@@ -303,7 +303,7 @@ onUnmounted(() => {
       }
 
       .status-completed {
-        color: $green-400;
+        color: $green-pressed;
       }
     }
   }

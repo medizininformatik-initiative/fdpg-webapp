@@ -161,10 +161,10 @@ onMounted(async () => {
   margin-top: 20px;
   padding: 15px;
   border-radius: 6px;
-  background-color: $gray-100;
+  background-color: $gray-300;
   border-style: solid;
   border-width: 1px;
-  border-color: $gray-400;
+  border-color: $gray-500;
 }
 
 .invalid-form {

@@ -155,7 +155,7 @@ onMounted(() => {
 .checklist {
   padding: 20px;
   border-radius: 10px;
-  background-color: $gray-200;
+  background-color: $gray-300;
 
   h3 {
     font-size: 20px;
@@ -174,7 +174,7 @@ onMounted(() => {
         background-color: $blue;
       }
       &.red {
-        background-color: $red;
+        background-color: $error;
       }
       &.gray {
         background-color: $gray-900;
@@ -322,8 +322,8 @@ onMounted(() => {
         }
 
         &.rejected {
-          background-color: color.adjust($red, $lightness: 40%);
-          border-color: $red;
+          background-color: color.adjust($error, $lightness: 40%);
+          border-color: $error;
           color: $black;
         }
       }
@@ -354,7 +354,7 @@ onMounted(() => {
         padding: 0;
         width: 2rem;
         min-height: 1rem;
-        background-color: $gray-200;
+        background-color: $gray-300;
         border: none;
         color: $blue;
 
@@ -371,7 +371,7 @@ onMounted(() => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red;
+            background-color: $error;
           }
 
           i {
@@ -393,7 +393,7 @@ onMounted(() => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red;
+            color: $error;
           }
 
           &.positive {

@@ -15,22 +15,28 @@
   &.is-error {
     .el-form-item__content {
       .fdpg-label {
-        color: $red;
+        color: $error;
       }
 
       .fdpg-input,
       .fdpg-select,
       .fdpg-date-picker,
       .fdpg-number-input {
+        &.is-focus {
+          .el-input__inner {
+            border-color: $error;
+          }
+        }
+
         .el-input__inner {
           border-color: $red;
 
           &:hover {
-            border-color: $red;
+            border-color: $error;
           }
 
           &:focus {
-            box-shadow: 0 0 10px -5px $red;
+            box-shadow: 0 0 10px -5px $error;
           }
         }
       }
