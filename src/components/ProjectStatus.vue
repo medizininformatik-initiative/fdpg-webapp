@@ -145,7 +145,7 @@ onBeforeUnmount(() => {
   }
 
   &.success {
-    color: $green-400;
+    color: $green-pressed;
     background-color: color.adjust($green, $lightness: 40%);
 
     .steps {
