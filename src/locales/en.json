@@ -130,7 +130,7 @@
     "process": "PENDING",
     "progress": "Progress:",
     "completed": "{progress}% filled out",
-    "published": "Published",
+    "published": "P-Registration",
     "overview": "Overview"
   },
   "history": {
@@ -1187,6 +1187,16 @@
     "startTime": "Start time",
     "projectCategory": "Project Category",
     "pleaseSelectProjectCategory": "Please select a project category.",
+    "registerForm_projectCategory1": "Decision support",
+    "registerForm_projectCategory2": "COVID-19/intensive care medicine",
+    "registerForm_projectCategory3": "Rare diseases",
+    "registerForm_projectCategory4": "Care/quality management",
+    "registerForm_projectCategory5": "Biomarkers/laboratory/microbiology",
+    "registerForm_projectCategory6": "Oncology/pathology",
+    "registerForm_projectCategory7": "Nervous system diseases/Parkinson's disease",
+    "registerForm_projectCategory8": "Mental illnesses",
+    "registerForm_projectCategory9": "Cardiovascular diseases",
+    "registerForm_projectCategory10": "Effects of medications",
     "diagnoses": "Diagnoses",
     "diagnosesPlaceholder": "Enter diagnoses and press Enter",
     "procedures": "Procedures",
@@ -1194,10 +1204,12 @@
     "Step-DataSources": "Select Data sources",
     "Step-Variables": "Select the Variables",
     "Step-Casesohort": "Select the Cases/Cohorts/Patients",
-    "Step-DataUsage": "Planned Data use Register",
+    "Step-DataUsage": "Type of Use",
     "Step-ProjectDetails": "General Project Details",
     "Step-ProjectParticipants": "Project Participants",
     "Step-ResearchProject": "Details of the research project ",
-    "usageRegisterationForm": "Registeration Form"
+    "usageRegisterationForm": "Registeration Form",
+    "removeParticipant": "Remove Institute",
+    "addAnotherPerson": "Add another Institute"
   }
 }
