@@ -29,7 +29,7 @@
         }
 
         .el-input__inner {
-          border-color: $red;
+          border-color: $error;
 
           &:hover {
             border-color: $error;
