@@ -83,7 +83,7 @@
     "overview": "Overview",
     "textCopied": "Text copied to clipboard",
     "none": "None",
-    "internalError ": "There are problems with the system. Please try again later or contact the FDPG team (info{'@'}forschen-fuer-gesundheit.de",
+    "internalError": "There are problems with the system. Please try again later or contact the FDPG team (info{'@'}forschen-fuer-gesundheit.de)",
     "expiredSession": "Your session has expired, please renew your session.",
     "authError": "Please wait until your role has been assigned by the FDPG team. We are currently checking your registration. It takes longer than 48 hours (weekdays)? You may contact info{'@'}forschen-fuer-gesundheit.de”",
     "pleaseSelectFile": "Please select a file.",
@@ -184,7 +184,8 @@
     "DATA_DELIVERY_FORWARDED": "Data delivery {deliveryName} has been forwarded to the researcher",
     "DATA_DELIVERY_CANCELED": "Data delivery {deliveryName} has been canceled",
     "DATA_DELIVERY_CONCLUDED": "Data delivery {deliveryName} has been concluded",
-    "CONTRACTING_SKIPPED": "Contracting procedure was skipped"
+    "CONTRACTING_SKIPPED": "Contracting procedure was skipped",
+    "PROPOSAL_PUBLISHED": "The application has been published."
   },
   "header": {
     "login": "Login",
@@ -1002,7 +1003,8 @@
     "SUBSTATUS__READY_TO_ARCHIVE": "Ready to Archive",
     "SUBSTATUS__READY_TO_PUBLISH": "Ready to Publish",
     "SUBSTATUS__PUBLISHED": "Published",
-    "SUBSTATUS__ARCHIVED": "Archived"
+    "SUBSTATUS__ARCHIVED": "Archived",
+    "PUBLISHED": "The project has been published."
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Check",

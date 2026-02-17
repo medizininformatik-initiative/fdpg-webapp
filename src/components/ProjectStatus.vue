@@ -61,6 +61,7 @@ const stepMap: Record<ProposalStatus | 'default', number> = {
   [ProposalStatus.Rejected]: 6,
   [ProposalStatus.Archived]: 6,
   [ProposalStatus.ReadyToArchive]: 6,
+  [ProposalStatus.Published]: 3,
 }
 const proposalStore = useProposalStore()
 const authStore = useAuthStore()
@@ -72,6 +73,7 @@ const proposalType = computed(() => proposalStore.currentProposal?.type)
 
 const totalSteps = proposalType.value === ProposalType.RegisteringForm ? 3 : 6
 const setStatusForRole = async () => {
+  const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
   switch (authStore.singleKnownRole) {
     case Role.Researcher:
       handler = await import('../utils/project-status-handling/project-status-researcher')
@@ -83,10 +85,14 @@ const setStatusForRole = async () => {
       handler = await import('../utils/project-status-handling/project-status-fdpg')
       break
     case Role.DizMember:
-      handler = await import('../utils/project-status-handling/project-status-diz')
+      handler = isRegisteringForm
+        ? await import('../utils/project-status-handling/project-status-researcher')
+        : await import('../utils/project-status-handling/project-status-diz')
       break
     case Role.UacMember:
-      handler = await import('../utils/project-status-handling/project-status-uac')
+      handler = isRegisteringForm
+        ? await import('../utils/project-status-handling/project-status-researcher')
+        : await import('../utils/project-status-handling/project-status-uac')
       break
 
     default:
@@ -139,8 +145,8 @@ onBeforeUnmount(() => {
   }
 
   &.success {
-    color: $green;
-    background-color: color.adjust($green, $lightness: 50%);
+    color: $green-400;
+    background-color: color.adjust($green, $lightness: 40%);
 
     .steps {
       .step {

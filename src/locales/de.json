@@ -83,7 +83,7 @@
     "overview": "Überblick",
     "textCopied": "Text wurde in die Zwischenablage kopiert",
     "none": "Keine",
-    "internalError ": "Es gibt Probleme mit dem System. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an das FDPG-Team (info{'@'}forschen-fuer-gesundheit.de",
+    "internalError": "Es gibt Probleme mit dem System. Bitte versuchen Sie es später noch einmal oder wenden Sie sich an das FDPG-Team (info{'@'}forschen-fuer-gesundheit.de)",
     "expiredSession": "Ihre Sitzung ist abgelaufen, bitte verlängern Sie Ihre Sitzung.",
     "authError": "Bitte warten Sie, bis Ihre Rolle vom FDPG-Team zugewiesen wurde. Wir prüfen gerade Ihre Anmeldung. Es dauert länger als 48 Stunden (Wochentage)? Sie können Kontakt aufnehmen mit info{'@'}forschen-fuer-gesundheit.de\"",
     "pleaseSelectFile": "Bitte wählen Sie eine Datei aus.",
@@ -184,7 +184,8 @@
     "DATA_DELIVERY_FORWARDED": "Die Datenlieferung {deliveryName} wurde an die Forschenden weitergeleitet",
     "DATA_DELIVERY_CANCELED": "Die Datenlieferung {deliveryName} wurde abgebrochen",
     "DATA_DELIVERY_CONCLUDED": "Die Datenlieferung {deliveryName} wurde beendet",
-    "CONTRACTING_SKIPPED": "Vertragsschritt wurde übersprungen"
+    "CONTRACTING_SKIPPED": "Vertragsschritt wurde übersprungen",
+    "PROPOSAL_PUBLISHED": "Die Bewerbung wurde veröffentlicht."
   },
   "header": {
     "login": "Anmelden",
@@ -587,7 +588,7 @@
     "participantCategory_BIOSAMPLE_RECEIVER": "Empfang von Bioproben",
     "participantCategory_DATA_AND_BIOSAMPLE_RECEIVER": "Empfang von Daten und Bioproben",
     "participantCategory_PROJECT_LEADER": "Projektleitung",
-    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weiterere Beteiligte",
+    "participantCategory_ADDITIONAL_PROJECT_LEADER": "Weitere Beteiligte",
     "termsDialogTitle": "Nutzungsordnung zustimmen",
     "lockProposal": "Antrag sperren",
     "lockModalDescription": "Bitte beachten Sie, dass dadurch jede Antragsfunktion deaktiviert wird.\n Die Sperrung kann jederzeit rückgängig gemacht werden.",
@@ -1002,7 +1003,8 @@
     "SUBSTATUS__READY_TO_ARCHIVE": "Bereit zur Archivierung",
     "SUBSTATUS__READY_TO_PUBLISH": "Bereit zur Veröffentlichung",
     "SUBSTATUS__PUBLISHED": "Veröffentlicht",
-    "SUBSTATUS__ARCHIVED": "Archiviert"
+    "SUBSTATUS__ARCHIVED": "Archiviert",
+    "PUBLISHED": "Das Projekt wurde veröffentlicht."
   },
   "locationStatus": {
     "DIZ_CHECK": "DIZ Prüfung",

@@ -20,7 +20,8 @@
 
       .fdpg-input,
       .fdpg-select,
-      .fdpg-date-picker {
+      .fdpg-date-picker,
+      .fdpg-number-input {
         &.is-focus {
           .el-input__inner {
             border-color: $error;
@@ -28,6 +29,8 @@
         }
 
         .el-input__inner {
+          border-color: $red;
+
           &:hover {
             border-color: $error;
           }

@@ -113,17 +113,6 @@ const { locale, t } = useI18n<{ locale: 'en' | 'de' }>()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 
-// Add watcher for usage changes
-watch(
-  () => typeOfUseForm.value.usage,
-  () => {
-    if (props.formRef) {
-      props.formRef.validateField('userProject.typeOfUse.usage')
-    }
-  },
-  { immediate: true },
-)
-
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {
