@@ -169,9 +169,10 @@ const triggerSync = async () => {
     }
     showSuccessMessage('dataSource.syncStarted')
     startSyncStatusPolling()
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.warn(e)
-    if (e.response?.status === 409) {
+    const error = e as { response?: { status?: number } }
+    if (error.response?.status === 409) {
       showErrorMessage('dataSource.syncAlreadyRunning')
     } else {
       showErrorMessage('dataSource.failedToStartSync')

@@ -229,17 +229,17 @@ const scrollToAnchor = async () => {
   }
 }
 
-const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: string[]) => {
+const shouldHideReviewCard = (dto: Record<string, unknown>, hideIfOtherValueIsTruthy?: string[]) => {
   if (!hideIfOtherValueIsTruthy || hideIfOtherValueIsTruthy.length === 0) {
     return false
   }
 
-  let value = dto
+  let value: unknown = dto
   for (const key of hideIfOtherValueIsTruthy) {
     if (value === undefined || value === null) {
       return false
     }
-    value = value[key]
+    value = (value as Record<string, unknown>)[key]
   }
 
   if (Array.isArray(value)) {
@@ -251,7 +251,7 @@ const shouldHideReviewCard = (dto: any, hideIfOtherValueIsTruthy?: string[]) => 
 
 const getArrayLabelFromSection = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
-  sectionItem: any,
+  sectionItem: Record<string, unknown>,
 ) => {
   const arrayLabel = section.arrayLabel
   const arrayLabelKey = section.arrayLabelKey
@@ -270,22 +270,22 @@ const getSectionObjectProposalData = (
   property: string,
   proposalData?: IProposal,
 ) =>
-  getVisibleCards(section.mapping, proposalData?.[section.key])
-    .map((mapping: any) => (proposalData?.[section.key] as any)?.[mapping.key])
-    .map((data: any) => (data ? data[property] : undefined))
+  getVisibleCards(section.mapping, proposalData?.[section.key] as Record<string, unknown>)
+    .map((mapping: Record<string, unknown>) => (proposalData?.[section.key] as Record<string, unknown>)?.[mapping.key as string])
+    .map((data: unknown) => (data && typeof data === 'object' ? (data as Record<string, unknown>)[property] : undefined))
 
 const getSectionArrayProposalData = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
   property: string,
-  sectionItem: any,
-) => section?.mapping?.map((mapping) => sectionItem[mapping.key]).map((data) => data[property]) ?? []
+  sectionItem: Record<string, unknown>,
+) => section?.mapping?.map((mapping) => sectionItem[mapping.key as string]).map((data) => (data as Record<string, unknown>)?.[property]) ?? []
 
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
 
-const HideReviewCheckbox = (section: any) => section.key === 'userProject' || section.key === 'biosample'
+const HideReviewCheckbox = (section: DefinitionSection<IProposal, keyof IProposal>) => section.key === 'userProject' || section.key === 'biosample'
 
-function getVisibleSections(sections: any[]) {
+function getVisibleSections(sections: DefinitionSection<IProposal, keyof IProposal>[]) {
   return sections.filter((section) => {
     if (section.shouldHide) {
       return false
@@ -311,8 +311,9 @@ const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
   return true
 }
 
-function getVisibleCards(cards: any, dto: any) {
-  return cards.filter((card: any) => {
+function getVisibleCards(cards: unknown, dto: Record<string, unknown>) {
+  if (!Array.isArray(cards)) return []
+  return cards.filter((card: Record<string, unknown>) => {
     if (shouldHideReviewCard(dto, card.hideIfOtherValueIsTruthy) || card.shouldHide) {
       return false
     }
@@ -324,7 +325,7 @@ function getVisibleCards(cards: any, dto: any) {
   })
 }
 
-function getVisibleItems(items: any[], card: any) {
+function getVisibleItems(items: unknown[], card: Record<string, unknown>) {
   return items
 }
 

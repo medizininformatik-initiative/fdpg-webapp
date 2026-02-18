@@ -322,8 +322,9 @@ const handleTermsConfirm = async () => {
     }
     showSuccessMessage(t('general.submitted'))
     router.push({ name: RouteName.Dashboard })
-  } catch (error: any) {
-    showErrorMessage(error.message)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+    showErrorMessage(errorMessage)
   }
 }
 
@@ -374,16 +375,18 @@ const handleSaveDraft = async () => {
       })
       proposalStore.currentProposal = transformForm(saveResult) as IProposal
       showSuccessMessage(t('general.savedAsDraft'))
-    } catch (error: any) {
-      showErrorMessage(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+      showErrorMessage(errorMessage)
     }
   } else {
     try {
       const saveResult = await proposalStore.createProposal({ ...getFormValues(), status: ProposalStatus.Draft })
       proposalStore.currentProposal = transformForm(saveResult) as IProposal
       showSuccessMessage(t('general.savedAsDraft'))
-    } catch (error: any) {
-      showErrorMessage(error.message)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+      showErrorMessage(errorMessage)
     }
   }
 
@@ -485,7 +488,7 @@ const waitForValidation = async () => {
   }
 }
 
-const getRulesArray = (rules: any): any[] => {
+const getRulesArray = (rules: unknown): unknown[] => {
   if (!rules) return []
   return Array.isArray(rules) ? rules.map((rule) => rule) : [rules]
 }

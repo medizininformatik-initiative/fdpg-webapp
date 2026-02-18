@@ -1,11 +1,11 @@
-import { ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import { useProposalSync } from '@/composables/use-proposal-sync'
 import { ProposalStatus } from '@/types/proposal.types'
 
 export function useFdpgRegisteringForm(
-  proposalId: any,
+  proposalId: Ref<string>,
   changeStatus: (status: ProposalStatus) => Promise<void>,
   showErrorMessage: (msg: string) => void,
 ) {

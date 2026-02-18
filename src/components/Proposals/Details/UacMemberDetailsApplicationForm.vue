@@ -177,8 +177,9 @@ const topBarButtons: IButtonConfig[] = [
       if (proposalId.value) {
         try {
           await proposalStore.exportAllUploadsAsZip()
-        } catch (error: any) {
-          showErrorMessage(error.message)
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : 'Failed to export uploads'
+          showErrorMessage(errorMessage)
         }
       }
     },

@@ -117,7 +117,7 @@ const activeName = ref<string>('projectProperties')
 
 const booleanCheckListStatusFields = ['isRegistrationLinkSent', 'initialViewing', 'depthCheck', 'ethicsCheck'] as const
 
-const updateChecklist = (key: keyof IFdpgChecklist, value: any) => {
+const updateChecklist = (key: keyof IFdpgChecklist, value: unknown) => {
   if (props.checklist && key in props.checklist) {
     emit('update:listItem', { [key]: value })
   }

@@ -118,7 +118,7 @@ export function useFdpgProposalCommon() {
       await proposalStore.updateLockingState(proposalId.value, newLockingState)
       showSuccessMessage(t('general.submitted'))
       await router.push({ name: layoutStore.lastDashboard })
-    } catch (error: any) {
+    } catch (error: unknown) {
       showErrorMessage(t('general.failedSubmit'))
     }
   }
@@ -128,7 +128,7 @@ export function useFdpgProposalCommon() {
       await proposalStore.updateProposalStatus(proposalId.value, proposalStatus)
       showSuccessMessage(t('general.submitted'))
       await router.push({ name: layoutStore.lastDashboard })
-    } catch (error: any) {
+    } catch (error: unknown) {
       showErrorMessage(t('general.failedSubmit'))
     }
   }
