@@ -27,9 +27,12 @@
   */
   &.el-button--primary {
     background-color: $blue;
+    &:hover {
+      background-color: $blue-hover;
+    }
 
     &:active:not(.is-disabled) {
-      background-color: color.adjust($blue, $lightness: -3%);
+      background-color: $blue-pressed;
       box-shadow: 0 0 5px 0 color.adjust($blue, $lightness: 30%);
     }
 
@@ -61,8 +64,11 @@
     background-color: $green;
 
     &:active {
-      background-color: color.adjust($green, $lightness: -3%);
+      background-color: $green-pressed;
       box-shadow: 0 0 5px 0 color.adjust($green, $lightness: 30%);
+    }
+    &:hover {
+      background-color: $green-hover;
     }
   }
 
