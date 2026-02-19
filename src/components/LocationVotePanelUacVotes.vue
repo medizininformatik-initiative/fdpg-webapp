@@ -513,7 +513,7 @@ const revertLocation = async (location: string) => {
   try {
     await proposalStore.revertLocationVote(proposalId.value, location)
     showSuccessMessage(t('general.submitted'))
-  } catch (error: any) {
+  } catch (error: unknown) {
     showErrorMessage(t('general.failedSubmit'))
   }
 }

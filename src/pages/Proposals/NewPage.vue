@@ -348,12 +348,20 @@ import {
   specialCharactersValidationFunc,
   urlValidationFunc,
 } from '@/validations'
-import type { ValidateFieldsError } from 'async-validator'
-import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp } from 'element-plus'
+import type { ValidateFieldsError, RuleItem } from 'async-validator'
+import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp, type FormItemRule } from 'element-plus'
 import type { PropType, Ref } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+
+// Type definition for form field
+interface FormField {
+  prop?: FormItemProp
+  rules?: FormItemRule | FormItemRule[]
+  validateState?: 'success' | 'error' | 'validating' | ''
+  validateMessage?: string
+}
 import ProjectApplicant from './ProjectApplicant.vue'
 import ProjectResponsibility from './ProjectResponsibility.vue'
 import ProjectUser from './ParticipatingScientists/ProjectUser.vue'
@@ -540,7 +548,7 @@ const rules = computed(() => ({
       projectTitle: [requiredValidationFunc('string'), maxLengthValidationFunc(10000)],
       desiredStartTime: [
         {
-          validator: (_rule: any, value: string | undefined, callback: (error?: Error) => void) => {
+          validator: (_rule: RuleItem, value: string | undefined, callback: (error?: Error) => void) => {
             const isLater = proposalForm.value?.userProject.generalProjectInformation.desiredStartTimeType === 'later'
             if (isLater) {
               if (!value) {
@@ -808,13 +816,14 @@ const handleTermsConfirm = async () => {
     }
     showSuccessMessage(t('general.submitted'))
     router.push({ name: RouteName.Dashboard })
-  } catch (error: any) {
-    showErrorMessage(error.message)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+    showErrorMessage(errorMessage)
   }
 }
 
 // Helper function to get applied rules for a field
-const getAppliedRules = (field: any) => {
+const getAppliedRules = (field: FormField) => {
   return {
     componentRules: getRulesArray(field.rules),
     formRules: getFormRuleArrayFromPath(rules.value, field.prop as string),
@@ -822,18 +831,18 @@ const getAppliedRules = (field: any) => {
 }
 
 // Helper function to check if field has validation rules
-const fieldHasRules = (field: any) => {
+const fieldHasRules = (field: FormField) => {
   const appliedRules = getAppliedRules(field)
   return [...appliedRules.formRules, ...appliedRules.componentRules].length > 0
 }
 
 // Helper function to get fields belonging to a step
-const getStepFields = (allFields: any[], stepFieldPaths: string[]) => {
+const getStepFields = (allFields: FormField[], stepFieldPaths: string[]) => {
   return allFields.filter((field) => stepFieldPaths.some((fieldPath) => field.prop?.toString().startsWith(fieldPath)))
 }
 
 // Helper function to validate a single field
-const validateSingleField = async (field: any): Promise<boolean> => {
+const validateSingleField = async (field: FormField): Promise<boolean> => {
   if (!field.prop) return true
   if (!isProposalEditable()) return true
 
@@ -851,7 +860,7 @@ const validateSingleField = async (field: any): Promise<boolean> => {
 }
 
 // Helper function to validate step fields
-const validateStepFields = async (stepFields: any[]): Promise<boolean> => {
+const validateStepFields = async (stepFields: FormField[]): Promise<boolean> => {
   // Skip validation for non-editable proposals
   if (!isProposalEditable()) return true
   const validationResults = await Promise.all(stepFields.map((field) => validateSingleField(field)))
@@ -892,7 +901,7 @@ const nextStep = async () => {
 }
 
 // Helper function to validate multiple steps
-const validateSteps = async (stepsToValidate: number[], allFields: any[]): Promise<boolean> => {
+const validateSteps = async (stepsToValidate: number[], allFields: FormField[]): Promise<boolean> => {
   // For non-editable proposals, treat as having no validation errors
   if (!isProposalEditable()) return false
   for (const stepValue of stepsToValidate) {
@@ -923,7 +932,7 @@ const handleSubmit = async () => {
 }
 
 // Helper function to check if step is valid based on field states and values
-const isStepValidByFieldStates = (stepFields: any[]) => {
+const isStepValidByFieldStates = (stepFields: FormField[]) => {
   const fieldsWithRules = stepFields.filter(fieldHasRules)
 
   if (fieldsWithRules.length === 0) return true
@@ -948,7 +957,7 @@ const getStepKey = (stepValue: number) => {
 }
 
 // Helper function to update a single step status
-const updateSingleStepStatus = (stepValue: number, allFields: any[]) => {
+const updateSingleStepStatus = (stepValue: number, allFields: FormField[]) => {
   const stepFieldPaths = stepFieldsMap[stepValue] || []
   const stepFields = getStepFields(allFields, stepFieldPaths)
   const isStepValid = isStepValidByFieldStates(stepFields)
@@ -1089,7 +1098,7 @@ const autoSaveDraft = async () => {
       await createNewProposal()
     }
     hasFormChanged.value = false
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Silently fail for auto-save to avoid disrupting user experience
   } finally {
     isAutoSaving.value = false
@@ -1134,8 +1143,9 @@ const saveProposalWithMessage = async () => {
 
     proposalStore.currentProposal = transformForm(saveResult) as IProposal
     showSuccessMessage(t('general.savedAsDraft'))
-  } catch (error: any) {
-    showErrorMessage(error.message)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+    showErrorMessage(errorMessage)
   }
 }
 
@@ -1200,7 +1210,7 @@ watch(
 )
 
 // Helper function to check if field is valid by value
-const isFieldValidByValue = (field: any): boolean => {
+const isFieldValidByValue = (field: FormField): boolean => {
   const fieldPath = field.prop as string
   const fieldValue = getFieldValue(fieldPath)
   const isFilled = isFieldMeaningfullyFilled(fieldValue)
@@ -1218,7 +1228,7 @@ const isFieldValidByValue = (field: any): boolean => {
 }
 
 // Helper function to validate step silently
-const validateStepSilently = (stepNumber: number, allFields: any[]): boolean => {
+const validateStepSilently = (stepNumber: number, allFields: FormField[]): boolean => {
   const stepFieldPaths = stepFieldsMap[stepNumber] || []
   const stepFields = getStepFields(allFields, stepFieldPaths)
   const fieldsWithRules = stepFields.filter(fieldHasRules)
@@ -1325,13 +1335,13 @@ const setValidationStatus = () => {
 }
 
 // Helper function to check if field is required
-const isFieldRequired = (field: any): boolean => {
+const isFieldRequired = (field: FormField): boolean => {
   const appliedRules = getAppliedRules(field)
   return [...appliedRules.formRules, ...appliedRules.componentRules].filter((rule) => rule.required).length > 0
 }
 
 // Helper function to check if field is valid and filled
-const isFieldValidAndFilled = (field: any): boolean => {
+const isFieldValidAndFilled = (field: FormField): boolean => {
   const fieldPath = field.prop as string
   const fieldValue = getFieldValue(fieldPath)
   const isFilled = isFieldMeaningfullyFilled(fieldValue)
@@ -1339,7 +1349,7 @@ const isFieldValidAndFilled = (field: any): boolean => {
 }
 
 // Helper function to check if all fields are valid
-const areAllFieldsValid = (requiredFields: any[], allFields: any[]): boolean => {
+const areAllFieldsValid = (requiredFields: FormField[], allFields: FormField[]): boolean => {
   const requiredFieldsValid = requiredFields.every((field) => {
     const fieldPath = field.prop as string
     const fieldValue = getFieldValue(fieldPath)
@@ -1382,7 +1392,7 @@ const getFieldValue = (path: string) => {
   if (!proposalForm.value) return undefined
 
   const keys = path.split('.')
-  let current: any = proposalForm.value
+  let current: Record<string, unknown> = proposalForm.value as unknown as Record<string, unknown>
 
   for (const key of keys) {
     if (current[key] === undefined) {
@@ -1395,7 +1405,7 @@ const getFieldValue = (path: string) => {
 }
 
 // Function to check if a field has meaningful content
-const isFieldMeaningfullyFilled = (value: any): boolean => {
+const isFieldMeaningfullyFilled = (value: unknown): boolean => {
   if (value === undefined || value === null) return false
 
   // Handle strings
@@ -1478,7 +1488,7 @@ const waitForValidation = async () => {
   }
 }
 
-const getRulesArray = (rules: any): any[] => {
+const getRulesArray = (rules: FormItemRule | FormItemRule[] | undefined): FormItemRule[] => {
   if (!rules) return []
   return Array.isArray(rules) ? rules.map((rule) => rule) : [rules]
 }

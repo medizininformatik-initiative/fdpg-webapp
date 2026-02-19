@@ -5,6 +5,7 @@ import { SyncStatus } from '@/types/sync-status.enum'
 import { ProposalStatus } from '@/types/proposal.types'
 import useNotifications from '@/composables/use-notifications'
 import { useI18n } from 'vue-i18n'
+import type { TranslationSchema } from '@/plugins/i18n'
 export function useProposalSync() {
   const proposalStore = useProposalStore()
   const messageBoxStore = useMessageBoxStore()
@@ -136,16 +137,16 @@ export function useProposalSync() {
     const confirmMessage = isRetry.value
       ? t('registeringForm.confirmRetrySync', { attempt: retryCount.value + 1 })
       : syncStatus.value === SyncStatus.OutOfSync
-        ? t('registeringForm.confirmResync')
-        : t('registeringForm.confirmPublish')
+        ? 'registeringForm.confirmResync'
+        : 'registeringForm.confirmPublish'
 
     messageBoxStore.setMessageBoxInfo({
       cancelButtonText: 'general.cancel',
       cancelButtonClass: 'el-button--text',
       showCancelButton: true,
-      title: 'registeringForm.confirmSync' as any,
-      message: confirmMessage as any,
-      confirmButtonText: 'registeringForm.sync' as any,
+      title: 'registeringForm.confirmSync',
+      message: confirmMessage as TranslationSchema,
+      confirmButtonText: 'registeringForm.sync',
       callback: async (decision: DecisionType) => {
         if (decision !== 'confirm') return
 
@@ -183,9 +184,9 @@ export function useProposalSync() {
       cancelButtonText: 'general.cancel',
       cancelButtonClass: 'el-button--text',
       showCancelButton: true,
-      title: 'registeringForm.confirmBulkSync' as any,
-      message: t('registeringForm.confirmBulkSyncMessage') as any,
-      confirmButtonText: 'registeringForm.syncAll' as any,
+      title: 'registeringForm.confirmBulkSync',
+      message: 'registeringForm.confirmBulkSyncMessage',
+      confirmButtonText: 'registeringForm.syncAll',
       callback: async (decision: DecisionType) => {
         if (decision !== 'confirm') return
 
@@ -200,19 +201,18 @@ export function useProposalSync() {
             const errorList = result.errors.map((e) => `- ${e.projectAbbreviation}: ${e.error}`).join('\n')
 
             messageBoxStore.setMessageBoxInfo({
-              cancelButtonText: 'general.ok' as any,
+              cancelButtonText: 'general.cancel',
               cancelButtonClass: 'el-button--text',
               showCancelButton: false,
-              title: 'registeringForm.bulkSyncResults' as any,
-              message: `Synced ${result.synced} of ${result.total} projects.\n\nFailed:\n${errorList}` as any,
-              confirmButtonText: 'general.ok' as any,
+              title: 'registeringForm.bulkSyncResults',
+              message: `Synced ${result.synced} of ${result.total} projects.\n\nFailed:\n${errorList}` as TranslationSchema,
+              confirmButtonText: 'general.confirm',
               callback: async () => {},
             })
           }
-        } catch (error: any) {
-          showErrorMessage(
-            t('registeringForm.syncFailed', { error: error.message || t('registeringForm.unknownError') }),
-          )
+        } catch (error: unknown) {
+          const errorMessage = error instanceof Error ? error.message : t('registeringForm.unknownError')
+          showErrorMessage(t('registeringForm.syncFailed', { error: errorMessage }))
         } finally {
           isSyncing.value = false
         }

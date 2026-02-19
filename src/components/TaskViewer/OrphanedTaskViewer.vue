@@ -64,7 +64,7 @@ const existingObjectIds = computed(() => {
 
   const ids = new Set<string>()
 
-  const extractIds = (obj: any) => {
+  const extractIds = (obj: unknown): void => {
     if (obj && typeof obj === 'object') {
       if (Array.isArray(obj)) {
         obj.forEach(extractIds)

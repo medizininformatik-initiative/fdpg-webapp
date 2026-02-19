@@ -1,7 +1,7 @@
 interface QueueItem<T> {
   task: () => Promise<T>
   resolve: (value: T) => void
-  reject: (reason?: any) => void
+  reject: (reason?: unknown) => void
 }
 
 export class PromiseQueue {
@@ -73,10 +73,10 @@ export class UpdateQueue<T = any> {
   private queue = new PromiseQueue()
   private latestItems = new Map<string, { item: T; generation: number }>()
   private processing = false
-  private latestUpdateFunction: ((item: T) => Promise<any>) | null = null
+  private latestUpdateFunction: ((item: T) => Promise<void>) | null = null
   private waiters = new Map<
     string,
-    Array<{ generation: number; resolve: (value: any) => void; reject: (reason?: any) => void }>
+    Array<{ generation: number; resolve: (value: unknown) => void; reject: (reason?: unknown) => void }>
   >()
   private generationById = new Map<string, number>()
 
@@ -143,8 +143,8 @@ export class UpdateQueue<T = any> {
     }
   }
 
-  private getId(item: any): string {
-    return item.id || item._id || JSON.stringify(item)
+  private getId(item: Record<string, unknown>): string {
+    return (item.id as string) || (item._id as string) || JSON.stringify(item)
   }
 
   clear() {
@@ -160,7 +160,7 @@ export class UpdateQueue<T = any> {
     return this.latestItems.size + this.queue.size
   }
 
-  private resolveWaitersUpToGeneration(itemId: string, generation: number, value: any) {
+  private resolveWaitersUpToGeneration(itemId: string, generation: number, value: unknown) {
     const list = this.waiters.get(itemId)
     if (!list || list.length === 0) return
     const remaining: typeof list = []
@@ -180,7 +180,7 @@ export class UpdateQueue<T = any> {
     }
   }
 
-  private rejectWaitersUpToGeneration(itemId: string, generation: number, reason: any) {
+  private rejectWaitersUpToGeneration(itemId: string, generation: number, reason: unknown) {
     const list = this.waiters.get(itemId)
     if (!list || list.length === 0) return
     const remaining: typeof list = []

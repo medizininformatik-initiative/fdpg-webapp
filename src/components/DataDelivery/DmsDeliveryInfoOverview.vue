@@ -517,7 +517,7 @@ const setClipboard = async (text: string) => {
   showInfoMessage(t('general.textCopied'))
 }
 
-const handleFhirQuestionnairResponseNotFoundOrDefaultError = (error: any, defaultMessage?: string) => {
+const handleFhirQuestionnairResponseNotFoundOrDefaultError = (error: unknown, defaultMessage?: string) => {
   if (axios.isAxiosError(error) && error.response?.data?.errors) {
     const isQrNotFound = error.response?.data.errors.find(
       (apiError: { code: string }) => apiError.code === BadRequestError.FhirQuestionnairResponseNotFound,

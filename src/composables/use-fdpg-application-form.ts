@@ -9,10 +9,11 @@ import { RouteName } from '@/types/route-name.enum'
 import type { UploadFile } from 'element-plus'
 import { useLocationStore } from '@/stores/locations/location.store'
 import type { ILocation } from '@/types/location.types'
+import type { Ref } from 'vue'
 
 export function useFdpgApplicationForm(
-  proposalId: any,
-  status: any,
+  proposalId: Ref<string>,
+  status: Ref<ProposalStatus>,
   changeStatus: (status: ProposalStatus) => Promise<void>,
   showErrorMessage: (msg: string) => void,
   showSuccessMessage: (msg: string) => void,
@@ -227,7 +228,7 @@ export function useFdpgApplicationForm(
       await proposalStore.initContracting(proposalId.value, file, selectedLocations)
       showSuccessMessage(t('general.submitted'))
       await router.push({ name: layoutStore.lastDashboard })
-    } catch (error: any) {
+    } catch (error: unknown) {
       showErrorMessage(t('general.failedSubmit'))
     }
   }
@@ -242,7 +243,7 @@ export function useFdpgApplicationForm(
       await proposalStore.skipContracting(proposalId.value, selectedLocations, file)
       showSuccessMessage(t('general.submitted'))
       await router.push({ name: layoutStore.lastDashboard })
-    } catch (error: any) {
+    } catch (error: unknown) {
       showErrorMessage(t('general.failedSubmit'))
     }
   }
@@ -285,7 +286,7 @@ export function useFdpgApplicationForm(
             await proposalStore.setToDataResearch(proposalId.value)
             showSuccessMessage(t('general.submitted'))
             await router.push({ name: layoutStore.lastDashboard })
-          } catch (error: any) {
+          } catch (error: unknown) {
             showErrorMessage(t('general.failedSubmit'))
           }
         }
@@ -311,8 +312,9 @@ export function useFdpgApplicationForm(
               name: RouteName.EditRegisteredProject,
               params: { id: copyId },
             })
-          } catch (error: any) {
-            showErrorMessage(error?.message || error?.toString() || 'general.genericError')
+          } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : (typeof error === 'string' ? error : 'general.genericError')
+            showErrorMessage(errorMessage)
           }
         }
       },
