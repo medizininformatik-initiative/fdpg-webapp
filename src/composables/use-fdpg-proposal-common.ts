@@ -7,7 +7,6 @@ import { useLocationStore } from '@/stores/locations/location.store'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 import useNotifications from '@/composables/use-notifications'
-import useUpload from '@/composables/use-upload'
 import useDraftDownload from '@/composables/use-draft-download'
 import {
   ProposalStatus,
@@ -331,8 +330,4 @@ export function useFdpgProposalCommon() {
     showErrorMessage,
     showSuccessMessage,
   }
-}
-
-function getLastDashboardTitle(lastDashboard: string) {
-  return lastDashboard
 }
