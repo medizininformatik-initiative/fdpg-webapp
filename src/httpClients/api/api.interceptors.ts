@@ -4,7 +4,7 @@ import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axio
 import Router from '../../router'
 import { useMessageBoxStore, type DecisionType } from '@/stores/messageBox.store'
 const requestInterceptor = {
-  onFullfilled: (config: InternalAxiosRequestConfig<any>) => {
+  onFullfilled: (config: InternalAxiosRequestConfig) => {
     const auth = useAuthStore()
     const token = auth.token
     if (token) {
@@ -21,7 +21,7 @@ const requestInterceptor = {
 
 let isHandling401 = false
 const responseInterceptor = {
-  onFullfilled: (response: AxiosResponse<any, any>) => response,
+  onFullfilled: (response: AxiosResponse) => response,
   onRejected: async (error: AxiosError) => {
     const auth = useAuthStore()
     const messageBoxStore = useMessageBoxStore()

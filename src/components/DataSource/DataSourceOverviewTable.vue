@@ -241,7 +241,7 @@ const handlePageChange = (page: number) => {
   emit('pageChange', page)
 }
 
-const handleSortChange = (sortInfo: { column: any; prop: string; order: string | null }) => {
+const handleSortChange = (sortInfo: { column: unknown; prop: string; order: string | null }) => {
   // Map table prop names to DataSourceSortField enum values
   const propToSortFieldMap: Record<string, DataSourceSortField> = {
     externalIdentifier: DataSourceSortField.EXTERNAL_IDENTIFIER,

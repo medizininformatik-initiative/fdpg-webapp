@@ -146,7 +146,7 @@ const fetchProposals = async () => {
   }
 }
 
-const handleRowClick = async (row, event?: Event | KeyboardEvent) => {
+const handleRowClick = async (row: { _id: any }, event?: Event | KeyboardEvent) => {
   if (props.clickActionDisabled) {
     return
   }
@@ -174,9 +174,14 @@ const {
   toggleSort,
 } = useTableAccessibility()
 
-const getNestedProperty = (obj: any, path: string) => {
+const getNestedProperty = (obj: Record<string, unknown>, path: string) => {
   const keys = path.replace(/\[([^\]]+)\]/g, '.$1').split('.')
-  return keys.reduce((current, key) => current?.[key], obj)
+  return keys.reduce((current: unknown, key: string) => {
+    if (current && typeof current === 'object') {
+      return (current as Record<string, unknown>)[key]
+    }
+    return undefined
+  }, obj)
 }
 
 const proposals = computed(() => proposalStore.filteredProposal[props.panel.query] || [])
