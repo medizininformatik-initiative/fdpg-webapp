@@ -146,7 +146,7 @@ const fetchProposals = async () => {
   }
 }
 
-const handleRowClick = async (row, event?: Event | KeyboardEvent) => {
+const handleRowClick = async (row: { _id: any }, event?: Event | KeyboardEvent) => {
   if (props.clickActionDisabled) {
     return
   }
