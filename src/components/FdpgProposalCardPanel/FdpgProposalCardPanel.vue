@@ -59,6 +59,7 @@ import type { PanelType } from '@/types/proposal.types'
 import { ProposalType } from '@/types/proposal-type.enum'
 import { SortDirection, PanelQuery } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
+import useNotifications from '@/composables/use-notifications'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -86,6 +87,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
 const displayCount = ref<number>(props.defaultLength)
 const loading = ref<boolean>(false)
 
@@ -99,7 +101,7 @@ const fetchProposals = async () => {
     loading.value = false
   } catch (error) {
     loading.value = false
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorFetchingData'))
   }
 }
 
@@ -107,7 +109,7 @@ const handleDelete = (id: string) => {
   try {
     proposalStore.deleteProposal(id, props.panel.query).then(fetchProposals)
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorDeletingProposal'))
   }
 }
 
@@ -115,7 +117,7 @@ const handleDuplicate = (id: string) => {
   try {
     proposalStore.duplicateProposal(id).then(fetchProposals)
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorDuplicatingProposal'))
   }
 }
 

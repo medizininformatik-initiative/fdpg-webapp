@@ -45,7 +45,7 @@
         <template v-else-if="column.type === ColumnType.Date" #default="scope">
           {{
             getNestedProperty(scope.row, column.prop)
-              ? new Date(getNestedProperty(scope.row, column.prop)).toLocaleDateString(undefined, {
+              ? new Date(getNestedProperty(scope.row, column.prop) as string | number | Date).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: '2-digit',
                   day: '2-digit',
@@ -55,7 +55,7 @@
         </template>
 
         <template v-else-if="column.type === ColumnType.DueDate" #default="scope">
-          <FdpgTableDueDateRow :due-date="getNestedProperty(scope.row, column.prop)" />
+          <FdpgTableDueDateRow :due-date="(getNestedProperty(scope.row, column.prop) as number | undefined)" />
         </template>
 
         <template v-else-if="column.type === ColumnType.ProjectSubstatus" #default="scope">
@@ -76,6 +76,7 @@ import { type PanelType } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
 import { PanelQuery, SortDirection } from '@/types/sort-filter.types'
 import useTableAccessibility from '@/composables/use-table-accessibility'
+import useNotifications from '@/composables/use-notifications'
 import { ElTable } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
@@ -131,6 +132,7 @@ const props = defineProps({
 defineEmits(['row-click'])
 
 const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
 
 const defaultLength = ref<number>(6)
 const displayCount = ref<number>(defaultLength.value)
@@ -142,11 +144,11 @@ const fetchProposals = async () => {
   try {
     await proposalStore.fetch({ order: SortDirection.DESC, panelQuery: props.panel.query })
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorFetchingData'))
   }
 }
 
-const handleRowClick = async (row: { _id: any }, event?: Event | KeyboardEvent) => {
+const handleRowClick = async (row: { _id: string }, event?: Event | KeyboardEvent) => {
   if (props.clickActionDisabled) {
     return
   }
