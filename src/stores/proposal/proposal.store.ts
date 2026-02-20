@@ -196,7 +196,6 @@ export const useProposalStore = defineStore('Proposal', {
           await this.apiService.removeFile(id, uploadId)
           successFullRemovalIds.push(uploadId)
         } catch (error) {
-          console.log(error)
           failCount++
         }
       }

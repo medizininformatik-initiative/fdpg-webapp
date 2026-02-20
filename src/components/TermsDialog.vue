@@ -107,7 +107,6 @@ onMounted(async () => {
       })
     } catch (error) {
       showErrorMessage(t('general.failedToLoadData'))
-      console.log(error)
     }
   }
 })

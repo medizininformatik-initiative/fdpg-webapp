@@ -141,7 +141,6 @@ const rejectConditionCheck = async (declineReason: string) => {
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: RouteName.Dashboard })
   } catch (error) {
-    console.log(error)
     showErrorMessage(t('general.failedSubmit'))
   }
 }
@@ -156,7 +155,6 @@ const acceptConditionCheck = async (dataAmount: number, conditionReasoning?: str
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: RouteName.Dashboard })
   } catch (error) {
-    console.log(error)
     showErrorMessage(t('general.failedSubmit'))
   }
 }
@@ -167,7 +165,6 @@ const setDizApproval = async (decision: DizApprovalDecision) => {
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: RouteName.Dashboard })
   } catch (error) {
-    console.log(error)
     showErrorMessage(t('general.failedSubmit'))
   }
 }
@@ -347,7 +344,6 @@ const updateAdditionalInformation = async (additionalInformation: IEditAdditiona
     await proposalStore.updateAdditionalLocationInformation(proposalId.value, additionalInformation)
     showSuccessMessage(t('general.submitted'))
   } catch (error) {
-    console.log(error)
     showErrorMessage(t('general.failedSubmit'))
   }
 }
@@ -499,7 +495,6 @@ const fetchProposal = async () => {
   } catch (error) {
     showErrorMessage(t('general.failedToLoadData'))
     await router.push({ name: RouteName.Dashboard })
-    console.log(error)
   }
 }
 

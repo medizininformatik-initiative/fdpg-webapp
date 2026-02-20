@@ -319,7 +319,7 @@ onBeforeMount(async () => {
     researcherIdentities.value = await proposalStore.getResearcherInfo(proposalId)
     participantsCount.value = researcherIdentities.value.length
   } catch (error) {
-    console.log(error)
+    showErrorMessage(t('general.failedToLoadData'))
   }
 })
 
