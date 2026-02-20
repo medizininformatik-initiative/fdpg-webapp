@@ -166,7 +166,6 @@ const fetchProposal = async () => {
   } catch (error) {
     showErrorMessage(t('general.failedToLoadData'))
     await router.push({ name: RouteName.Dashboard })
-    console.log(error)
   }
 }
 

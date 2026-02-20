@@ -60,7 +60,6 @@ const toggleIsDone = async () => {
     await commentStore.markCommentAsDone(props.task._id, !props.task.isDone)
   } catch (error) {
     showErrorMessage(t('general.failedToUpdateData'))
-    console.log(error)
   }
   isDoneLoading.value = false
 }

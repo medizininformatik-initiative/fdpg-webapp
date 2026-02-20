@@ -207,7 +207,6 @@ const fetchProposal = async () => {
   } catch (error) {
     showErrorMessage(t('general.failedToLoadData'))
     router.push({ name: RouteName.Dashboard })
-    console.log(error)
   }
 }
 
@@ -216,7 +215,6 @@ const fetchComments = async () => {
     await commentStore.fetchAll({ proposalId: proposalId.value })
   } catch (error) {
     showErrorMessage(t('general.failedToLoadData'))
-    console.log(error)
   }
 }
 const scrollToAnchor = async () => {

@@ -129,7 +129,6 @@ const setUacApproval = async (decision: UacApprovalDecision) => {
     showSuccessMessage(t('general.submitted'))
     await router.push({ name: RouteName.Dashboard })
   } catch (error) {
-    console.log(error)
     showErrorMessage(t('general.failedSubmit'))
   }
 }
@@ -284,7 +283,6 @@ const fetchProposal = async () => {
   } catch (error) {
     showErrorMessage(t('general.failedToLoadData'))
     await router.push({ name: RouteName.Dashboard })
-    console.log(error)
   }
 }
 

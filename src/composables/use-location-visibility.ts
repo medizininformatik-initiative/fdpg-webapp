@@ -27,7 +27,6 @@ export default (
     } else if (message.value.locations.length === 0) {
       return t('proposal.commentVisibleForNoLocation')
     } else if (message.value.locations?.length > 1) {
-      console.log({ possibleLocations, message })
       return t('proposal.commentVisibleForCount', { count: message.value.locations?.length })
     } else if (message.value.owner.miiLocation === message.value.locations[0]) {
       return t('proposal.commentVisibleForThisLocation')

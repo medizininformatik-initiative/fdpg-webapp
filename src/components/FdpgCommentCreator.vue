@@ -79,6 +79,7 @@ import { useRoute } from 'vue-router'
 import FdpgCommentForm from './FdpgCommentForm.vue'
 import type { ILocation } from '@/types/location.types'
 import { useI18n } from 'vue-i18n'
+import useNotifications from '@/composables/use-notifications'
 
 const props = defineProps({
   objectId: {
@@ -96,6 +97,7 @@ const props = defineProps({
 })
 
 const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
 
 const commentStore = useCommentStore()
 
@@ -126,7 +128,7 @@ const handleSubmit = async (comment: string) => {
       visibleCommentField.value = false
     }
   } catch (e) {
-    console.log('TODO: Handle Error')
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 
