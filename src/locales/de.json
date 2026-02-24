@@ -110,7 +110,8 @@
     "syncDataSources": "Synchronisieren",
     "operations": "Operationen",
     "syncInProgress": "Sync is running",
-    "syncInProgressMessage": "Sync is currently running"
+    "syncInProgressMessage": "Sync is currently running",
+    "errorFetchingData": "Beim Abrufen der Daten ist ein Fehler aufgetreten."
   },
   "sidebar": {
     "dashboard": "Dashboard",

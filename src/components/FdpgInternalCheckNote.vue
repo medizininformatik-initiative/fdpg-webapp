@@ -17,7 +17,7 @@
 import { ref, watch, onMounted } from 'vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
-import { defineProps, defineEmits } from '@vue/runtime-core'
+import { defineProps, defineEmits } from 'vue'
 import { debounce } from 'lodash-es'
 import { useI18n } from 'vue-i18n'
 

@@ -84,7 +84,7 @@ const route = useRoute()
 const isPrint = route.matched.some((route) => route.name === 'PrintLayout')
 
 const getValue = (dtoAccess, content) => {
-  if (!!content.subKeys) {
+  if (content.subKeys) {
     const result = (content.subKeys || []).reduce((acc, subKey) => acc?.[subKey], dtoAccess[content.key])
 
     return result

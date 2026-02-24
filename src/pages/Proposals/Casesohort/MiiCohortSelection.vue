@@ -297,9 +297,9 @@ const handleDelete = async (deletedCohort: ISelectedCohort) => {
     return
   }
 
-  if (!!deletedCohort._id) {
+  if (deletedCohort._id) {
     cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter((c) => c._id !== deletedCohort._id)
-  } else if (!!deletedCohort.feasibilityQueryId) {
+  } else if (deletedCohort.feasibilityQueryId) {
     cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter(
       (c) => c.feasibilityQueryId !== deletedCohort.feasibilityQueryId,
     )
