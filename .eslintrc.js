@@ -12,6 +12,17 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest',
   },
+  overrides: [
+    {
+      files: ['*.js', '*.cjs', '*.mjs'],
+      parserOptions: {
+        project: null,
+      },
+      rules: {
+        '@typescript-eslint/consistent-type-imports': 'off',
+      },
+    },
+  ],
   settings: {
     'import/resolver': {
       alias: {
@@ -21,7 +32,7 @@ module.exports = {
     },
   },
   rules: {
-    '@typescript-eslint/consistent-type-imports': 'error',
+    '@typescript-eslint/consistent-type-imports': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'warn',

@@ -209,7 +209,7 @@ const handleDelete = async (cohort: ISelectedCohort) => {
     emit('removeCohort', cohort)
   }
 
-  if (!!cohort._id) {
+  if (cohort._id) {
     cohorts.value = cohorts.value.filter((c) => c._id !== cohort._id)
   } else {
     showErrorMessage(t('general.failedToDeleteData'))
