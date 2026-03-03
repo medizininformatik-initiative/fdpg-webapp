@@ -2,7 +2,12 @@
   <div class="section reports--container">
     <div class="reports--table--title">
       <h2>{{ t('proposal.reports') }} {{ `(${reports?.length})` }}</h2>
-      <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
+      <el-button
+        v-if="accessForMaintenance"
+        link
+        :disabled="isDisabled || (limit !== undefined && (reports?.length ?? 0) >= limit)"
+        @click="isCreateOrEditModalVisible = true"
+      >
         {{ t('proposal.addReport') }}
       </el-button>
     </div>
@@ -112,6 +117,10 @@ const props = defineProps({
   isDisabled: {
     type: Boolean,
     default: false,
+  },
+  limit: {
+    type: Number,
+    default: undefined,
   },
 })
 const currentReport = ref<IReportGet>({

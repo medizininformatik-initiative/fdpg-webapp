@@ -13,6 +13,7 @@
       v-if="showPublicationsAndReports"
       :is-disabled="proposalStore.currentProposal?.isLocked"
       access-for-maintenance
+      :limit="3"
     ></ProjectReports>
 
     <ProjectHistory />
