@@ -1,7 +1,7 @@
 <template>
   <FdpgDialog
     v-model="dialogOpen"
-    :title="!publication._id ? $t('proposal.addPublication') : $t('proposal.editPublication')"
+    :title="!publication._id ? t('proposal.addPublication') : t('proposal.editPublication')"
     class="create-modal"
     @close="closeDialog"
   >
@@ -45,9 +45,9 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ t('general.cancel') }}</el-button>
         <el-button type="primary" @click="createOrUpdatePublication">
-          {{ $t('general.save') }}
+          {{ t('general.save') }}
         </el-button>
       </span>
     </template>
@@ -66,8 +66,10 @@ import FdpgDialog from './FdpgDialog.vue'
 import FdpgFormItem from './FdpgFormItem.vue'
 import FdpgInput from './FdpgInput.vue'
 import FdpgLabel from './FdpgLabel.vue'
+import { useI18n } from 'vue-i18n'
 
 const { showErrorMessage } = useNotifications()
+const { t } = useI18n()
 const publicationFormRef = ref<FormInstance>()
 const emit = defineEmits(['update:modelValue', 'reset'])
 const props = defineProps({
@@ -122,7 +124,7 @@ const createOrUpdatePublication = async () => {
             createOrUpdatePublicationValues.value,
           )
     } catch (error) {
-      showErrorMessage()
+      showErrorMessage(t('general.failedSubmit'))
     }
     closeDialog()
   }
@@ -137,7 +139,7 @@ const createOrUpdatePublication = async () => {
   &.is-error {
     .el-form-item__content {
       .fdpg-label {
-        color: $red;
+        color: $error;
       }
 
       .fdpg-input,
@@ -145,17 +147,17 @@ const createOrUpdatePublication = async () => {
       .fdpg-date-picker {
         &.is-focus {
           .el-input__inner {
-            border-color: $red;
+            border-color: $error;
           }
         }
 
         .el-input__inner {
           &:hover {
-            border-color: $red;
+            border-color: $error;
           }
 
           &:focus {
-            box-shadow: 0 0 10px -5px $red;
+            box-shadow: 0 0 10px -5px $error;
           }
         }
       }

@@ -16,7 +16,6 @@ export default (proposalId: Ref<string>, errorCb?: (...args) => void) => {
       link.click()
       URL.revokeObjectURL(link.href)
     } catch (error) {
-      console.log(error)
       if (errorCb) {
         errorCb()
       }

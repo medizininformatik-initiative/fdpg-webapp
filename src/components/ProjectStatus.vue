@@ -6,7 +6,7 @@
     <div :class="`project-status ${projectStatus.type}`">
       <div class="steps">
         <div
-          v-for="step of 6"
+          v-for="step of totalSteps"
           :key="`step-${step}`"
           class="step"
           :class="{ active: step <= stepMap[proposalStatus ?? 'default'] }"
@@ -34,6 +34,7 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
 import type { IProjectStatus } from '@/types/project-status'
+import { ProposalType } from '@/types/proposal-type.enum'
 import type { IProposal } from '@/types/proposal.types'
 import { ProposalStatus } from '@/types/proposal.types'
 import type { PropType } from 'vue'
@@ -60,6 +61,7 @@ const stepMap: Record<ProposalStatus | 'default', number> = {
   [ProposalStatus.Rejected]: 6,
   [ProposalStatus.Archived]: 6,
   [ProposalStatus.ReadyToArchive]: 6,
+  [ProposalStatus.Published]: 3,
 }
 const proposalStore = useProposalStore()
 const authStore = useAuthStore()
@@ -67,7 +69,11 @@ const authStore = useAuthStore()
 const projectStatus = ref<IProjectStatus>()
 let handler: { getProjectStatus: (proposal: IProposal) => IProjectStatus }
 
+const proposalType = computed(() => proposalStore.currentProposal?.type)
+
+const totalSteps = proposalType.value === ProposalType.RegisteringForm ? 3 : 6
 const setStatusForRole = async () => {
+  const isRegisteringForm = proposalStore.currentProposal?.type === ProposalType.RegisteringForm
   switch (authStore.singleKnownRole) {
     case Role.Researcher:
       handler = await import('../utils/project-status-handling/project-status-researcher')
@@ -79,10 +85,14 @@ const setStatusForRole = async () => {
       handler = await import('../utils/project-status-handling/project-status-fdpg')
       break
     case Role.DizMember:
-      handler = await import('../utils/project-status-handling/project-status-diz')
+      handler = isRegisteringForm
+        ? await import('../utils/project-status-handling/project-status-researcher')
+        : await import('../utils/project-status-handling/project-status-diz')
       break
     case Role.UacMember:
-      handler = await import('../utils/project-status-handling/project-status-uac')
+      handler = isRegisteringForm
+        ? await import('../utils/project-status-handling/project-status-researcher')
+        : await import('../utils/project-status-handling/project-status-uac')
       break
 
     default:
@@ -119,11 +129,11 @@ onBeforeUnmount(() => {
   display: flex;
   border-radius: 4px;
   flex-direction: column;
-  background-color: $gray-100;
+  background-color: $gray-300;
 
   &.info {
     color: $blue;
-    background-color: $gray-100;
+    background-color: $gray-300;
 
     .steps {
       .step {
@@ -135,8 +145,8 @@ onBeforeUnmount(() => {
   }
 
   &.success {
-    color: $green;
-    background-color: color.adjust($green, $lightness: 50%);
+    color: $green-pressed;
+    background-color: color.adjust($green, $lightness: 40%);
 
     .steps {
       .step {
@@ -148,13 +158,13 @@ onBeforeUnmount(() => {
   }
 
   &.warning {
-    color: $red;
-    background-color: color.adjust($red, $lightness: 49%);
+    color: $error;
+    background-color: color.adjust($error, $lightness: 49%);
 
     .steps {
       .step {
         &.active {
-          background-color: $red;
+          background-color: $error;
         }
       }
     }

@@ -4,12 +4,14 @@ export enum DirectUpload {
   EthicVoteDeclarationOfNonResponsibility = 'ETHIC_VOTE_DECLARATION_OF_NON_RESPONSIBILITY',
   AdditionalDocument = 'ADDITIONAL_DOCUMENT',
   ContractAppendix = 'CONTRACT_APPENDIX',
+  ProjectLogo = 'PROJECT_LOGO',
 }
 
 export enum UseCaseUpload {
   ContractCondition = 'CONTRACT_CONDITION',
   ContractDraft = 'CONTRACT_DRAFT',
   LocationContract = 'LOCATION_CONTRACT',
+  SkipContract = 'SKIP_CONTRACT',
   ResearcherContract = 'RESEARCHER_CONTRACT',
   FeasibilityQuery = 'FEASIBILITY_QUERY',
   ProposalPDF = 'PROPOSAL_PDF',

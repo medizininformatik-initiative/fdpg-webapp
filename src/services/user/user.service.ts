@@ -1,5 +1,6 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import { Role } from '@/types/oidc.types'
+import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IResearcherIdentity } from '@/types/proposal.types'
 import type { ICreateUser, IUpdateUser, IUserEmailsResponse, IUserEmailsQuery, IKeycloakUser } from '@/types/user.types'
 
@@ -44,13 +45,24 @@ export class UserService {
 
     await this.apiClient.put(`${this.basePath}/${userId}/password-reset`, resendPayload)
   }
+
   async getEmails(query?: IUserEmailsQuery): Promise<IUserEmailsResponse> {
     const params = new URLSearchParams()
+
     if (query?.startsWith) {
       params.append('startsWith', query.startsWith)
     }
+    if (query?.roles && query.roles.length > 0) {
+      params.append('roles', JSON.stringify(query.roles))
+    }
+    if (query?.dataSources && query.dataSources.length > 0) {
+      params.append('dataSources', JSON.stringify(query.dataSources))
+    }
 
-    const url = params.toString() ? `${this.basePath}/emails?${params.toString()}` : `${this.basePath}/emails`
+    const queryString = params.toString()
+
+    const url = queryString ? `${this.basePath}/emails?${queryString}` : `${this.basePath}/emails`
+
     const response = await this.apiClient.get<IUserEmailsResponse>(url)
     return response.data
   }
@@ -60,11 +72,15 @@ export class UserService {
     return response.emails
   }
 
-  async searchEmailsByPrefix(prefix: string): Promise<IUserEmailsResponse> {
+  async searchEmailsByPrefix(
+    prefix: string,
+    roles: Role[],
+    dataSources: PlatformIdentifier[],
+  ): Promise<IUserEmailsResponse> {
     if (!prefix || prefix.trim().length === 0) {
       throw new Error('Prefix must be at least 1 character')
     }
-    return this.getEmails({ startsWith: prefix.trim() })
+    return this.getEmails({ startsWith: prefix.trim(), roles, dataSources })
   }
 
   async getUserByEmail(email: string): Promise<IKeycloakUser> {

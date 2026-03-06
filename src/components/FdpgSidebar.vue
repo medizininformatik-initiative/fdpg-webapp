@@ -26,25 +26,52 @@ import { useAuthStore } from '@/stores/auth/auth.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { Role } from '@/types/oidc.types'
 import { RouteName } from '@/types/route-name.enum'
-import type { SidebarMenu } from '@/types/sidebar-menu.types'
+import type { SidebarMenu, SidebarRouteMenu } from '@/types/sidebar-menu.types'
 import { MenuType } from '@/types/sidebar-menu.types'
 import type { ComputedRef } from 'vue'
-import { computed } from 'vue'
-import { title } from 'process'
+import { computed, watch } from 'vue'
+import { useConfigStore } from '@/stores/config/config.store'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
 
+const configStore = useConfigStore()
+const proposalStore = useProposalStore()
 const layoutStore = useLayoutStore()
 const authStore = useAuthStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 
 const mainMenu: ComputedRef<SidebarMenu[]> = computed(() => {
-  return authStore.singleKnownRole ? mainMenuMap[authStore.singleKnownRole] : []
+  if (!authStore.singleKnownRole) return []
+
+  const baseMenu = [...(mainMenuMap[authStore.singleKnownRole] || [])]
+
+  // Add published page to base menu if user has RegisteringMember role (but not for RegisteringMember themselves)
+  if (authStore.singleKnownRole !== Role.FdpgMember && authStore.singleKnownRole !== Role.RegisteringMember) {
+    const hasRegisteringMemberRole = authStore.isRegisteringMember
+    if (hasRegisteringMemberRole) {
+      const publishedMenuItem: SidebarRouteMenu = {
+        kind: MenuType.Route,
+        to: RouteName.Published,
+        title: 'sidebar.published',
+        icon: 'bi bi-journal-check',
+      }
+
+      baseMenu.push(publishedMenuItem)
+    }
+  }
+
+  return baseMenu
 })
 
 interface Menu {
   [key: string]: SidebarMenu[]
 }
 
-const fdpgRoleSidebar = [
+const fdpgRoleSidebar: SidebarMenu[] = [
+  {
+    kind: MenuType.Route,
+    to: RouteName.Overview,
+    title: 'sidebar.overview',
+  },
   {
     kind: MenuType.Route,
     to: RouteName.Dashboard,
@@ -67,13 +94,23 @@ const fdpgRoleSidebar = [
   },
   {
     kind: MenuType.Route,
-    to: RouteName.Archive,
+    to: RouteName.Published,
+    title: 'sidebar.published',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.Archived,
     title: 'general.archive',
   },
   {
     kind: MenuType.Route,
     to: RouteName.Locations,
     title: 'general.locations',
+  },
+  {
+    kind: MenuType.Route,
+    to: RouteName.DataSources,
+    title: 'general.dataSources',
   },
 ]
 
@@ -87,7 +124,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -103,7 +140,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -117,7 +154,7 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
     },
@@ -131,9 +168,31 @@ const mainMenuMap: Menu = {
     },
     {
       kind: MenuType.Route,
-      to: RouteName.Archive,
+      to: RouteName.Archived,
       title: 'general.archive',
       icon: 'bi bi-archive-fill',
+    },
+  ],
+  [Role.RegisteringMember]: [
+    {
+      kind: MenuType.Route,
+      to: RouteName.Published,
+      title: 'sidebar.published',
+      icon: 'bi bi-journal-check',
+    },
+    {
+      kind: MenuType.Route,
+      to: RouteName.Archived,
+      title: 'general.archive',
+      icon: 'bi bi-archive-fill',
+    },
+  ],
+  [Role.DataManagementOffice]: [
+    {
+      kind: MenuType.Route,
+      to: RouteName.Dashboard,
+      title: 'sidebar.dashboard',
+      icon: 'bi bi-folder-fill',
     },
   ],
 }
@@ -158,6 +217,16 @@ const secondaryMenu: SidebarMenu[] = [
     icon: 'fa fa-section',
   },
 ]
+watch(
+  () => authStore.singleKnownRole,
+  (newRole, oldRole) => {
+    if (newRole !== oldRole) {
+      proposalStore.getStatistics()
+      configStore.getAlertConfig()
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss">
@@ -176,7 +245,7 @@ const secondaryMenu: SidebarMenu[] = [
   background: $white;
   flex-direction: column;
   z-index: $sidebar-z-index;
-  border-right: 1px solid $gray-400;
+  border-right: 1px solid $gray-500;
   transition-duration: $sidebar-transition-duration;
   @include sidebar-block;
 
@@ -210,7 +279,7 @@ const secondaryMenu: SidebarMenu[] = [
       &.fdpg-menu__item--exact-active,
       &:focus,
       &:hover {
-        background-color: $gray-200;
+        background-color: $gray-300;
       }
 
       i {
@@ -259,8 +328,8 @@ const secondaryMenu: SidebarMenu[] = [
           text-overflow: ellipsis;
 
           &--critical {
-            background: $red;
-            border-color: $red;
+            background: $error;
+            border-color: $error;
             color: $white;
           }
 

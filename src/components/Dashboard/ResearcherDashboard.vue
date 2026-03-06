@@ -7,14 +7,25 @@
         <h2 class="project-overview">{{ t('dashboard.projectOverview') }}</h2>
         <p class="project-count">{{ t('dashboard.projects', { count: proposalCount.total }) }}</p>
       </div>
-
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <router-link
+          :to="{ name: RouteName.RegisterNewProject }"
+          class="register-project-button"
+          v-if="isRegisteringMember"
+        >
+          <el-button type="primary">
+            {{ t('dashboard.registerProject') }}
+          </el-button>
+        </router-link>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+          :class="{ 'sort-select-full-width': !isRegisteringMember }"
+        />
+      </div>
     </div>
     <FdpgProposalCardPanel
       v-for="(panel, index) in panels"
@@ -33,13 +44,14 @@ import usePanels from '@/composables/use-panels'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IDashboardAction } from '@/types/dashboard-actions.interface'
 import { RouteName } from '@/types/route-name.enum'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import FdpgSortSelect from '../FdpgSortSelect.vue'
 import { sortOptions } from './constants'
 import { useI18n } from 'vue-i18n'
 import FdpgIAlertBox from '../FdpgIAlertBox.vue'
 import { useConfigStore } from '@/stores/config/config.store'
+import { useAuthStore } from '@/stores/auth/auth.store'
 
 const router = useRouter()
 const route = useRoute()
@@ -47,6 +59,7 @@ const { t } = useI18n()
 const configStore = useConfigStore()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 const alertConfig = computed(() => configStore.alertConfig)
+const authStore = useAuthStore()
 
 const dashboardActions: IDashboardAction[] = [
   {
@@ -78,9 +91,8 @@ const createProposal = () => {
 const checkFeasibility = () => {
   window.open(import.meta.env.VITE_FEASIBILITY_HOST)
 }
-onMounted(() => {
-  configStore.getAlertConfig()
-})
+
+const isRegisteringMember = computed(() => authStore.isRegisteringMember)
 </script>
 
 <style lang="scss" scoped>
@@ -89,5 +101,18 @@ onMounted(() => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 29px;
+}
+.sort {
+  display: flex;
+  justify-content: space-between;
+  max-width: 500px;
+  align-items: center;
+  width: 100%;
+  .register-project-button {
+    margin-top: 14px;
+  }
+  .sort-select-full-width {
+    margin-left: auto;
+  }
 }
 </style>

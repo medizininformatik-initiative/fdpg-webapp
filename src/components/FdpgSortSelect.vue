@@ -145,7 +145,7 @@ defineEmits(['sort-change', 'sort-order-change'])
       border-radius: 5px;
 
       &.hover {
-        background-color: $gray-100;
+        background-color: $gray-300;
       }
 
       &.selected {

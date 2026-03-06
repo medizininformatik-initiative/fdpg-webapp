@@ -113,24 +113,12 @@ const { locale, t } = useI18n<{ locale: 'en' | 'de' }>()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 
-// Add watcher for usage changes
-watch(
-  () => typeOfUseForm.value.usage,
-  () => {
-    if (props.formRef) {
-      props.formRef.validateField('userProject.typeOfUse.usage')
-    }
-  },
-  { immediate: true },
-)
-
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {
       await configStore.getDataPrivacy(props.platform)
     } catch (error) {
-      showErrorMessage()
-      console.log(error)
+      showErrorMessage(t('general.failedToLoadData'))
     }
   }
 
@@ -145,10 +133,10 @@ onMounted(async () => {
   margin-top: 20px;
   padding: 15px;
   border-radius: 6px;
-  background-color: $gray-100;
+  background-color: $gray-300;
   border-style: solid;
   border-width: 1px;
-  border-color: $gray-400;
+  border-color: $gray-500;
 }
 
 .invalid-form {

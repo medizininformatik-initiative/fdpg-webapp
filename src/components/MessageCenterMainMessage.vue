@@ -39,6 +39,7 @@ import { ref } from 'vue'
 import MessageCenterAnswerCreator from './MessageCenterAnswerCreator.vue'
 import MessageCenterItem from './MessageCenterItem.vue'
 import type { ILocation } from '@/types/location.types'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   message: {
@@ -46,7 +47,11 @@ const props = defineProps({
     required: true,
   },
   type: {
-    type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
+    type: String as PropType<
+      | CommentType.PROPOSAL_MESSAGE_TO_OWNER
+      | CommentType.PROPOSAL_MESSAGE_TO_LOCATION
+      | CommentType.PROPOSAL_MESSAGE_TO_DMST
+    >,
     required: true,
   },
   showDoneComments: {
@@ -67,13 +72,13 @@ const toggleAnswerMode = (value: boolean) => {
 }
 
 const commentStore = useCommentStore()
-
+const { t } = useI18n()
 const handleAnswerCreate = async (answer: ICreateAnswer) => {
   try {
     await commentStore.createAnswer(props.message._id, answer)
     toggleAnswerMode(false)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 
@@ -81,14 +86,14 @@ const handleCommentDone = async (commentId: string, value: boolean) => {
   try {
     await commentStore.markCommentAsDone(commentId, value)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   }
 }
 const handleAnswerDone = async (commentId: string, answerId: string, value: boolean) => {
   try {
     await commentStore.markAnswerAsDone(commentId, answerId, value)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   }
 }
 </script>

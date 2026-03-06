@@ -8,6 +8,7 @@
       :review-mode="reviewMode"
       @edit="handleEditParticipant"
       @remove="handleRemoveParticipant"
+      :is-registering-form="isRegisteringForm"
     />
     <!-- v-show instead of v-for is needed for the validation props -->
     <div v-show="index === activePanelKey" class="form-group-wrapper">
@@ -18,7 +19,7 @@
         class="card-remove-button"
         @click="handleRemoveParticipant(index)"
         ><i class="fa fa-minus-circle" aria-hidden="true" /><span>{{
-          t('proposal.removeParticipant')
+          isRegisteringForm ? t('registeringForm.removeParticipant') : t('proposal.removeParticipant')
         }}</span></el-button
       >
 
@@ -27,6 +28,7 @@
         :review-mode="reviewMode"
         :form-ref="formRef"
         :identifier="`participants.${index}`"
+        v-if="!isRegisteringForm"
       ></ProjectResearcher>
       <TaskViewer :object-id="participant.researcher._id" />
 
@@ -40,6 +42,7 @@
       <TaskViewer :object-id="participant.institute._id" />
 
       <ProjectParticipantCategory
+        v-if="!isRegisteringForm"
         v-model="participant.participantCategory"
         :review-mode="reviewMode"
         :form-ref="formRef"
@@ -65,7 +68,9 @@
     @click="handleAddAnotherPerson"
   >
     <i class="el-icon-plus" aria-hidden="true" />
-    <span class="add-text">{{ t('proposal.addAnotherPerson') }}</span>
+    <span class="add-text">{{
+      isRegisteringForm ? t('registeringForm.addAnotherPerson') : t('proposal.addAnotherPerson')
+    }}</span>
   </el-button>
 </template>
 
@@ -102,7 +107,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
   locations: {
     type: Array as PropType<ILocation[]>,
     required: true,

@@ -100,10 +100,10 @@
       <el-col :sm="24">
         <FdpgFormItem prop="requestedData.patientInfo">
           <FdpgLabel html-for="proposal.patientInfo" required />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="requestedDataForm.patientInfo"
             data-testId="requestedData.patientInfo"
-            placeholder="proposal.pleaseEnterYourDetailsForPatientSelectionHere"
+            :placeholder="t('proposal.pleaseEnterYourDetailsForPatientSelectionHere')"
             :disabled="reviewMode || requestedDataForm.isDone"
           />
         </FdpgFormItem>
@@ -126,6 +126,7 @@ import ManualCohortDialog from './ManualCohortDialog.vue'
 import useNotifications from '@/composables/use-notifications'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { UseCaseUpload } from '@/types/upload.types'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 
 const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
@@ -207,7 +208,7 @@ const handleAutomaticAdd = async (newCohorts: ISelectedCohort[]) => {
         .forEach(addCohort)
     }
   } catch {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
   }
 
   closeAutomaticDialog()
@@ -222,7 +223,7 @@ const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) 
   const _proposalId = proposalId.value
 
   if (!raw) {
-    showErrorMessage()
+    showErrorMessage(t('general.pleaseSelectFile'))
   }
 
   try {
@@ -244,7 +245,7 @@ const handleManualAdd = async (newCohort: ISelectedCohort, { raw }: UploadFile) 
       closeManualDialog()
     }
   } catch (e) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUploadFile'))
   }
 }
 
@@ -261,13 +262,13 @@ const closeManualDialog = () => {
 
 const downloadCsv = async (id?: number, label?: string) => {
   if (!id || !label) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
     return
   }
   try {
     await proposalStore.getFeasibilityCsvByQueryId(id, label)
   } catch (e) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
   }
 }
 
@@ -292,18 +293,18 @@ const handleDelete = async (deletedCohort: ISelectedCohort) => {
       }
     }
   } catch (e) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
     return
   }
 
-  if (!!deletedCohort._id) {
+  if (deletedCohort._id) {
     cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter((c) => c._id !== deletedCohort._id)
-  } else if (!!deletedCohort.feasibilityQueryId) {
+  } else if (deletedCohort.feasibilityQueryId) {
     cohort.value.selectedCohorts = cohort.value.selectedCohorts.filter(
       (c) => c.feasibilityQueryId !== deletedCohort.feasibilityQueryId,
     )
   } else {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
   }
 }
 </script>

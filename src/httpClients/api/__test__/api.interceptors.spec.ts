@@ -1,13 +1,14 @@
 import { NoErrorThrownError, getError } from '@/__test__/get-error'
-import { proposalCountMock } from '@/mocks/proposal-counts.mock'
+import { proposalStatisticsMock } from '@/mocks/proposal-counts.mock'
 import { useAuthStore } from '@/stores/auth/auth.store'
+import { useMessageBoxStore } from '@/stores/messageBox.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { createTestingPinia } from '@pinia/testing'
 import type { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios'
 import { AxiosError } from 'axios'
 import { setActivePinia } from 'pinia'
 import { requestInterceptor, responseInterceptor } from '../api.interceptors'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 describe('UsePanels', () => {
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
 
@@ -15,7 +16,7 @@ describe('UsePanels', () => {
     vi.clearAllMocks()
     setActivePinia(createTestingPinia())
     proposalStore = vi.mocked(useProposalStore())
-    proposalStore.counts = proposalCountMock
+    proposalStore.statistics = proposalStatisticsMock
   })
 
   it('should add Authoriation to header', async () => {
@@ -49,8 +50,9 @@ describe('UsePanels', () => {
     expect(result).toEqual(response)
   })
 
-  it('should log out on 401 error', async () => {
+  it('should show session expired message on 401 error', async () => {
     const authStore = useAuthStore()
+    const messageBoxStore = useMessageBoxStore()
     const axiosError = new AxiosError()
     axiosError.request = {
       responseURL: '',
@@ -69,6 +71,69 @@ describe('UsePanels', () => {
     expect(error).toBeDefined()
     expect(error).not.toBeInstanceOf(NoErrorThrownError)
     expect(error).toBeInstanceOf(AxiosError)
-    expect(authStore.logOut).toHaveBeenCalledTimes(1)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledTimes(1)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'general.expiredSession',
+      }),
+    )
+  })
+
+  it('should show internal error message on 500 error', async () => {
+    const messageBoxStore = useMessageBoxStore()
+    const axiosError = new AxiosError()
+    axiosError.request = {
+      responseURL: '',
+    }
+    axiosError.response = {
+      data: 's',
+      status: 500,
+      statusText: 'Internal Server Error',
+      headers: {} as AxiosResponseHeaders,
+      config: {} as AxiosRequestConfig,
+    } as AxiosResponse
+
+    const call = responseInterceptor.onRejected(axiosError)
+    const error = await getError(async () => await call)
+
+    expect(error).toBeDefined()
+    expect(error).not.toBeInstanceOf(NoErrorThrownError)
+    expect(error).toBeInstanceOf(AxiosError)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledTimes(1)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'general.internalError',
+      }),
+    )
+  })
+
+  it('should show auth error message on 403 error without proposalId', async () => {
+    const authStore = useAuthStore()
+    ;(authStore.isLoggedIn as any) = true
+    const messageBoxStore = useMessageBoxStore()
+    const axiosError = new AxiosError()
+    axiosError.request = {
+      responseURL: 'https://example.com/api/some-endpoint',
+    }
+    axiosError.response = {
+      data: 's',
+      status: 403,
+      statusText: 'Forbidden',
+      headers: {} as AxiosResponseHeaders,
+      config: {} as AxiosRequestConfig,
+    } as AxiosResponse
+
+    const call = responseInterceptor.onRejected(axiosError)
+    const error = await getError(async () => await call)
+
+    expect(error).toBeDefined()
+    expect(error).not.toBeInstanceOf(NoErrorThrownError)
+    expect(error).toBeInstanceOf(AxiosError)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledTimes(1)
+    expect(messageBoxStore.setMessageBoxInfo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        message: 'general.authError',
+      }),
+    )
   })
 })

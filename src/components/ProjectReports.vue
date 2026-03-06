@@ -1,29 +1,34 @@
 <template>
   <div class="section reports--container">
     <div class="reports--table--title">
-      <h2>{{ $t('proposal.reports') }} {{ `(${reports?.length})` }}</h2>
-      <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
-        {{ $t('proposal.addReport') }}
+      <h2>{{ t('proposal.reports') }} {{ `(${reports?.length})` }}</h2>
+      <el-button
+        v-if="accessForMaintenance"
+        link
+        :disabled="isDisabled || (limit !== undefined && (reports?.length ?? 0) >= limit)"
+        @click="isCreateOrEditModalVisible = true"
+      >
+        {{ t('proposal.addReport') }}
       </el-button>
     </div>
     <div v-if="reports?.length" class="reports--table--border">
       <el-table :data="reports" style="width: 100%">
-        <el-table-column prop="createdAt" :label="$t('general.date')">
+        <el-table-column prop="createdAt" :label="t('general.date')">
           <template #default="scope">
             {{ getLocaleDateString(scope.row.createdAt) }}
           </template>
         </el-table-column>
-        <el-table-column prop="title" :label="$t('proposal.researcherTitle')">
+        <el-table-column prop="title" :label="t('proposal.researcherTitle')">
           <template #default="scope">
             <span class="report-title">{{ scope.row.title }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="uploads" :label="$t('proposal.album')">
+        <el-table-column prop="uploads" :label="t('proposal.album')">
           <template #default="scope">
             <ReportGallery :uploads="scope.row.uploads" />
           </template>
         </el-table-column>
-        <el-table-column v-if="!isDisabled" prop="text" :label="$t('proposal.text')">
+        <el-table-column v-if="!isDisabled" prop="text" :label="t('proposal.text')">
           <template #default="scope">
             <span
               tabindex="0"
@@ -33,7 +38,7 @@
               @click="editReport($event, scope.row)"
             >
               <span class="fa fa-newspaper"></span> &nbsp;
-              {{ !accessForMaintenance ? $t('proposal.viewReport') : $t('proposal.editReport') }}</span
+              {{ !accessForMaintenance ? t('proposal.viewReport') : t('proposal.editReport') }}</span
             >
           </template>
         </el-table-column>
@@ -54,7 +59,7 @@
     </div>
     <div v-else class="reports--table--empty">
       <img src="@/assets/img/proposal/empty-reports.svg" alt="" />
-      <h5>{{ $t('proposal.noReport') }}</h5>
+      <h5>{{ t('proposal.noReport') }}</h5>
     </div>
   </div>
   <ReportDialog
@@ -83,11 +88,12 @@ import { type DecisionType, useMessageBoxStore } from '@/stores/messageBox.store
 import { getLocaleDateString } from '@/utils/date.util'
 import ReportGallery from '@/components/ReportGallery.vue'
 import useNotifications from '@/composables/use-notifications'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
 const ReportDialog = defineAsyncComponent(() => import('./ReportDialog.vue'))
 const ViewReportDialog = defineAsyncComponent(() => import('./ViewReportDialog.vue'))
-
 const messageBoxStore = useMessageBoxStore()
 const { showErrorMessage } = useNotifications()
 
@@ -100,7 +106,7 @@ onMounted(async () => {
   try {
     await proposalStore.getReports(proposalId.value)
   } catch {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToLoadData'))
   }
 })
 const props = defineProps({
@@ -111,6 +117,10 @@ const props = defineProps({
   isDisabled: {
     type: Boolean,
     default: false,
+  },
+  limit: {
+    type: Number,
+    default: undefined,
   },
 })
 const currentReport = ref<IReportGet>({
@@ -148,7 +158,7 @@ const deleteReport = async (reportId: string) => {
   try {
     await proposalStore.deleteReport(proposalId.value, reportId)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
   }
 }
 const resetForm = () => {
@@ -202,7 +212,7 @@ const resetForm = () => {
     align-items: center;
     justify-content: space-between;
     .fa-trash:hover {
-      color: $red;
+      color: $error;
     }
     .fa-edit:hover {
       color: $blue;

@@ -10,6 +10,7 @@ import type { Deadlines } from './due-date.enum'
 import type { DifeTypeOfUse } from './dife-type-of-use.enum'
 import type { PlatformIdentifier } from './platform-identifier.enum'
 import type { PseudonymizationInfoOptions } from './PseudonymizationInfo.enum'
+import { ProposalType } from './proposal-type.enum'
 
 export interface WithIdAndIsDone {
   isDone?: boolean
@@ -34,6 +35,42 @@ export enum ProposalStatus {
   DataCorrupt = 'DATA_CORRUPT',
   FinishedProject = 'FINISHED_PROJECT',
   ReadyToArchive = 'READY_TO_ARCHIVE',
+  ReadyToPublish = 'READY_TO_PUBLISH',
+  Published = 'PUBLISHED',
+}
+
+export enum ProposalSubstatus {
+  Draft = 'DRAFT',
+  Rejected = 'REJECTED',
+  Rework = 'REWORK',
+
+  FdpgCheckInitialView = 'FDPG_CHECK_INITIAL_VIEW',
+  FdpgCheckDepthCheck = 'FDPG_CHECK_DEPTH_CHECK',
+  FdpgCheckEthicsCheck = 'FDPG_CHECK_ETHICS_CHECK',
+  FdpgCheckDone = 'FDPG_CHECK_DONE',
+
+  LocationCheckVotingInProgress = 'LOCATION_CHECK_VOTING_IN_PROGRESS',
+  LocationCheckVotingDone = 'LOCATION_CHECK_VOTING_DONE',
+
+  ContractingResearcherStep = 'CONTRACTING_RESEARCHER_STEP',
+  ContractingLocationStep = 'CONTRACTING_LOCATION_STEP',
+  ContractingDone = 'CONTRACTING_DONE',
+
+  ExpectDataDeliverySelectDms = 'EXPECT_DATA_DELIVERY_SELECT_DMS',
+  ExpectDataDeliveryWaitingForDmsResponse = 'EXPECT_DATA_DELIVERY_WAITING_FOR_DMS_RESPONSE',
+  ExpectDataDeliveryDmsDenied = 'EXPECT_DATA_DELIVERY_DMS_DENIED',
+  ExpectDataDeliveryEmptyDeliveries = 'EXPECT_DATA_DELIVERY_EMPTY_DELIVIERIES',
+  ExpectDataDeliveryPending = 'EXPECT_DATA_DELIVERY_PENDING',
+  ExpectDataDeliveryDone = 'EXPECT_DATA_DELIVERY_DONE',
+
+  DataResearch = 'DATA_RESEARCH',
+  DataCorrupt = 'DATA_CORRUPT',
+
+  FinishedProject = 'FINISHED_PROJECT',
+  ReadyToArchive = 'READY_TO_ARCHIVE',
+  ReadyToPublish = 'READY_TO_PUBLISH',
+  Published = 'PUBLISHED',
+  Archived = 'ARCHIVED',
 }
 
 export enum ParticipantType {
@@ -312,6 +349,7 @@ export enum ProjectHistoryType {
   ProposalFinished = 'PROPOSAL_FINISHED',
   ProposalReadyToArchive = 'PROPOSAL_READY_TO_ARCHIVE',
   ProposalArchived = 'PROPOSAL_ARCHIVED',
+  ProposalCopyAsInternalRegistration = 'PROPOSAL_COPY_AS_INTERNAL_REGISTRATION',
 
   DizVoteAccept = 'DIZ_VOTE_ACCEPT',
   DizVoteDecline = 'DIZ_VOTE_DECLINE',
@@ -326,10 +364,24 @@ export enum ProjectHistoryType {
   ContractUacApproved = 'CONTRACT_UAC_APPROVED',
   ContractUacRejected = 'CONTRACT_UAC_REJECTED',
   ContractSystemRejected = 'CONTRACT_SYSTEM_REJECTED',
+  ContractingSkipped = 'CONTRACTING_SKIPPED',
   FdpgLocationVoteReverted = 'FDPG_LOCATION_VOTE_REVERTED',
   ParticipantAdded = 'PARTICIPANT_ADDED',
   ParticipantRemoved = 'PARTICIPANT_REMOVED',
   ParticipantUpdated = 'PARTICIPANT_UPDATED',
+
+  /** Data Delivery */
+  DmoRequest = 'DMO_REQUEST',
+  DmoDeny = 'DMO_DENY',
+  DmoAccept = 'DMO_ACCEPT',
+  DataDeliveryStarted = 'DATA_DELIVERY_STARTED',
+  DataDeliveryManualEntry = 'DATA_DELIVERY_MANUAL_ENTRY',
+  DataDeliveryForwarded = 'DATA_DELIVERY_FORWARDED',
+  DataDeliveryCanceled = 'DATA_DELIVERY_CANCELED',
+  DataDeliveryConcluded = 'DATA_DELIVERY_CONCLUDED',
+
+  // Misc
+  ProjectAssigneChange = 'FDPG_PROJECT_ASSIGNEE_CHANGE',
 }
 
 export enum UploadFileType {
@@ -362,6 +414,8 @@ export interface PanelType {
   query: PanelQuery
   header: string
   isTable?: boolean
+  hasClickAction?: boolean
+  fullHeight?: boolean
 }
 
 export interface IProposalHistory {
@@ -420,6 +474,9 @@ export interface IChecklistItem {
 
 export interface IFdpgChecklist {
   isRegistrationLinkSent: boolean
+  initialViewing: boolean
+  depthCheck: boolean
+  ethicsCheck: boolean
   checkListVerification: IChecklistItem[]
   fdpgInternalCheckNotes: string | null
   projectProperties: IChecklistItem[]
@@ -428,6 +485,9 @@ export interface IFdpgChecklist {
 export type FdpgChecklistItemUpdateResponse =
   | IChecklistItem
   | { _id: 'isRegistrationLinkSent'; isRegistrationLinkSent: boolean }
+  | { _id: 'initialViewing'; initialViewing: boolean }
+  | { _id: 'depthCheck'; depthCheck: boolean }
+  | { _id: 'ethicsCheck'; ethicsCheck: boolean }
   | { _id: 'fdpgInternalCheckNotes'; fdpgInternalCheckNotes: string | null }
 
 export interface IsDoneDetail {
@@ -511,7 +571,6 @@ export interface IOwner {
 // !!
 export interface IProposal {
   _id?: string
-  participants: IParticipant[]
   applicant: IApplicant
   projectResponsible: IProjectResponsible
   projectUser: IProjectUser
@@ -544,7 +603,8 @@ export interface IProposal {
   isDoneOverview?: IIsDoneOverview
   openFdpgTasks: IOpenFdpgTask[]
   selectedDataSources: PlatformIdentifier[]
-
+  registerInfo?: IRegisterInfo
+  registerFormId?: string
   // LOCATION Tasks --->
   // The following arrays should be used as a flow.
   // One location should only be in one state at the same time
@@ -576,6 +636,10 @@ export interface IProposal {
   fdpgCheckNotes?: string
   isParticipatingScientist?: boolean
   deadlines: Deadlines
+  type: ProposalType
+  dataDelivery?: IDataDelivery
+  projectAssignee?: IProjectAssignee
+  contractingSkipped: boolean
 }
 
 export enum FdpgTaskType {
@@ -625,6 +689,7 @@ export interface IProposalDetail {
   ownerName: string
 
   status: ProposalStatus
+  substatus?: ProposalSubstatus // computed only for dashboard list view
   requestedLocationsCount: number
   openDizChecksCount: number
   dizApprovedCount: number
@@ -640,6 +705,12 @@ export interface IProposalDetail {
   contractAcceptedByResearcher: boolean
   contractRejectedByResearcher: boolean
   selectedDataSources: PlatformIdentifier[]
+  type: ProposalType
+  registerInfo?: {
+    isInternalRegistration?: boolean
+    originalProposalId?: string
+  }
+  projectAssignee?: IProjectAssignee
 }
 
 export interface IDeclineReason {
@@ -690,4 +761,95 @@ export interface IAlertConfigGet {
   logoBase64: string
   message: string
   isVisible: boolean
+}
+export interface IRegisterInfo extends WithIdAndIsDone {
+  isInternalRegistration: boolean
+  originalProposalId: string
+  // Register-specific fields
+  projectUrl: string
+  legalBasis: boolean
+  projectCategory: string
+  diagnoses: string[]
+  procedures: string[]
+  startTime: string
+  locations: string[]
+  syncStatus?: string
+  lastSyncedAt?: string
+  lastSyncError?: string
+  syncRetryCount?: number
+  acptPluginId?: string
+}
+
+export interface IDataDelivery {
+  _id?: string
+  dataManagementSite: string
+  acceptance: DeliveryAcceptance
+  deliveryInfos: IDeliveryInfo[]
+  createdAt: string
+  updatedAt: string
+}
+
+export interface IDeliveryInfo {
+  _id?: string
+  name: string
+  deliveryDate: Date
+  status: DeliveryInfoStatus
+  subDeliveries: ISubDelivery[]
+  lastSynced?: Date
+  createdAt?: Date
+  updatedAt?: Date
+  manualEntry: boolean
+  resultUrl?: string
+  forwardedOnDate?: Date // forwarded or canceled date
+  fetchedResultsOn?: Date
+  dms: string
+}
+
+export interface ISubDelivery {
+  _id?: string
+  location: string
+  status: SubDeliveryStatus
+  createdAt?: Date
+  updatedAt?: Date
+}
+
+export enum SubDeliveryStatus {
+  PENDING = 'PENDING',
+  DELIVERED = 'DELIVERED',
+  ACCEPTED = 'ACCEPTED',
+  CANCELED = 'CANCELED',
+  REPEATED = 'REPEATED',
+}
+
+export enum DeliveryAcceptance {
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  DENIED = 'DENIED',
+}
+
+export enum DeliveryInfoStatus {
+  PENDING = 'PENDING',
+  CANCELED = 'CANCELED',
+  WAITING_FOR_DATA_SET = 'WAITING_FOR_DATA_SET',
+  RESULTS_AVAILABLE = 'RESULTS_AVAILABLE',
+  FETCHED_BY_RESEARCHER = 'FETCHED_BY_RESEARCHER',
+}
+
+export interface IProjectAssignee {
+  userId: string
+  firstName?: string
+  lastName?: string
+  email: string
+}
+export interface IProposalCountByStatus {
+  critical: number
+  high: number
+  low: number
+  medium: number
+  total: number
+}
+
+export interface IProposalStatistics {
+  panels: { [key in PanelQuery]?: IProposalCountByStatus }
+  total?: number
 }

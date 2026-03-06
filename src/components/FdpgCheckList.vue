@@ -1,7 +1,7 @@
 <template>
   <section class="section" v-if="checklist">
     <h2 class="section-title">
-      {{ $t('proposal.checklistTitle') }}
+      {{ t('proposal.checklistTitle') }}
     </h2>
     <ElCard>
       <ElRow>
@@ -30,7 +30,7 @@
                     ]"
                   ></span
                   >{{
-                    $t(`proposal.${table.title}`, {
+                    t(`proposal.${table.title}`, {
                       checkedCount: table.tableData?.filter((item) => item.isAnswered).length,
                       optionsCount: table.tableData?.length,
                     })
@@ -49,14 +49,18 @@
       </ElCard>
     </section>
 
-    <el-checkbox
-      v-model="checklist.isRegistrationLinkSent"
-      @change="updateChecklist('isRegistrationLinkSent', $event)"
-      class="fdpg-checkbox"
-      :size="FdpgInputSize.Small"
-    >
-      {{ $t('proposal.isRegistrationLinkSentLabel') }}
-    </el-checkbox>
+    <div class="section__status">
+      <el-checkbox
+        v-for="checklistStatus in booleanCheckListStatusFields"
+        :key="checklistStatus"
+        v-model="checklist[checklistStatus]"
+        @change="updateChecklist(checklistStatus, $event)"
+        class="fdpg-checkbox"
+        :size="FdpgInputSize.Small"
+      >
+        {{ t(`proposal.${checklistStatus}Label`) }}
+      </el-checkbox>
+    </div>
   </section>
 </template>
 
@@ -67,6 +71,8 @@ import { FdpgInputSize } from '@/types/component.types'
 import { type IChecklistItem, type IFdpgChecklist, ProposalStatus } from '@/types/proposal.types'
 import FdpgCheckListTable from './FdpgCheckListTable.vue'
 import { ElCard, ElCheckbox, ElCol, ElCollapse, ElCollapseItem, ElRow } from 'element-plus'
+import { useI18n } from 'vue-i18n'
+import FdpgInternalCheckNote from './FdpgInternalCheckNote.vue'
 
 const props = defineProps({
   modelValue: {
@@ -103,11 +109,15 @@ const tables = computed(() => {
   ]
 })
 
+const { t } = useI18n()
+
 const emit = defineEmits(['update:listItem'])
 
 const activeName = ref<string>('projectProperties')
 
-const updateChecklist = (key: string, value: any) => {
+const booleanCheckListStatusFields = ['isRegistrationLinkSent', 'initialViewing', 'depthCheck', 'ethicsCheck'] as const
+
+const updateChecklist = (key: keyof IFdpgChecklist, value: unknown) => {
   if (props.checklist && key in props.checklist) {
     emit('update:listItem', { [key]: value })
   }
@@ -117,9 +127,13 @@ onMounted(() => {
   if (
     props.status === ProposalStatus.FdpgCheck &&
     props.checklist?.checkListVerification.every((item) => item.isAnswered)
-  )
+  ) {
     activeName.value = 'checklistVerification'
-  else if (props.status === ProposalStatus.LocationCheck) activeName.value = ''
+  } else if (props.status === ProposalStatus.FdpgCheck) {
+    activeName.value = 'projectProperties'
+  } else {
+    activeName.value = ''
+  }
 })
 </script>
 
@@ -131,10 +145,17 @@ onMounted(() => {
     margin: 2rem 0;
   }
 }
+
+.section__status {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
 .checklist {
   padding: 20px;
   border-radius: 10px;
-  background-color: $gray-200;
+  background-color: $gray-300;
 
   h3 {
     font-size: 20px;
@@ -153,7 +174,7 @@ onMounted(() => {
         background-color: $blue;
       }
       &.red {
-        background-color: $red;
+        background-color: $error;
       }
       &.gray {
         background-color: $gray-900;
@@ -301,8 +322,8 @@ onMounted(() => {
         }
 
         &.rejected {
-          background-color: color.adjust($red, $lightness: 40%);
-          border-color: $red;
+          background-color: color.adjust($error, $lightness: 40%);
+          border-color: $error;
           color: $black;
         }
       }
@@ -333,7 +354,7 @@ onMounted(() => {
         padding: 0;
         width: 2rem;
         min-height: 1rem;
-        background-color: $gray-200;
+        background-color: $gray-300;
         border: none;
         color: $blue;
 
@@ -350,7 +371,7 @@ onMounted(() => {
             background-color: $green;
           }
           &.negative {
-            background-color: $red;
+            background-color: $error;
           }
 
           i {
@@ -372,7 +393,7 @@ onMounted(() => {
         &.rejected {
           background-color: transparent;
           i {
-            color: $red;
+            color: $error;
           }
 
           &.positive {

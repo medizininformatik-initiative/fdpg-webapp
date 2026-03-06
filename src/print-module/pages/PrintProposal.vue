@@ -112,9 +112,9 @@ const sections = computed<DefinitionSection<IProposal, keyof IProposal>[]>(() =>
   projectResponsibilitySection(locationLookupMap.value),
   projectUserSection,
   participantSection(locationLookupMap.value),
-  userProjectSection(assignedDataSources.value, locationLookupMap.value),
+  userProjectSection(assignedDataSources.value, locationLookupMap.value, proposalData.value?.selectedDataSources),
   requestedDataSection,
-  biosampleSection(assignedDataSources.value),
+  biosampleSection(assignedDataSources.value, proposalData.value?.selectedDataSources),
 ])
 
 const { t } = useI18n()
@@ -140,6 +140,7 @@ const dataPrivacyOverview = computed(() => {
     data.push({
       headline: t('proposal.dataPrivacyExtra'),
       text: proposalData.value?.userProject.typeOfUse.dataPrivacyExtra,
+      translation: false,
     })
   }
   return { content: { data } } as IVirtualWrap<IDataPrivacyOverview>

@@ -120,7 +120,7 @@ const dialogContent = computed<DialogContent>(() => {
 .submission-dialog {
   .submission-dialog-content {
     padding-bottom: 24px;
-    border-bottom: 1px solid $gray-200;
+    border-bottom: 1px solid $gray-300;
   }
 }
 </style>

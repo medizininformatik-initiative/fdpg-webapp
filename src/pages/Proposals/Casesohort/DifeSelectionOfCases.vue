@@ -1,5 +1,5 @@
 <template>
-  <FdpgLabel :html-for="'proposal.DIFE'" :size="'large'" :info="$t('proposal.difeSelectionOfCases_Info')" />
+  <FdpgLabel :html-for="'proposal.DIFE'" :size="'large'" info="proposal.difeSelectionOfCases_Info" />
   <el-card class="form-group form-group-mb-40">
     <FdpgFormItem prop="userProject.selectionOfCases.difeSelectionOfCases.selectedCases">
       <div class="dife-selection-of-variables">
@@ -12,7 +12,7 @@
               :disabled="reviewMode"
               :label="`proposal.difeSelectionOfCases_${entry}`"
               :value="entry"
-              size="small"
+              :size="FdpgInputSize.Small"
             />
           </div>
         </el-checkbox-group>
@@ -22,7 +22,7 @@
             <FdpgLabel html-for="proposal.difeSelectionOfCases_Other_Header" size="small" />
             <FdpgTextEditor
               v-model:model-value="difeSelectionOfCasesForm.otherExplanation"
-              :placeholder="$t('proposal.difeSelectionOfCases_Other_Placeholder')"
+              :placeholder="t('proposal.difeSelectionOfCases_Other_Placeholder')"
               :disabled="reviewMode"
               field-path="userProject.selectionOfCases.difeSelectionOfCases.otherExplanation"
             />
@@ -42,6 +42,10 @@ import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import { useVModel } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
+import FdpgCheckbox from '@/components/FdpgCheckbox.vue'
+import { FdpgInputSize } from '@/types/component.types'
+import FdpgFormItem from '@/components/FdpgFormItem.vue'
+import FdpgLabel from '@/components/FdpgLabel.vue'
 
 const props = defineProps({
   modelValue: {

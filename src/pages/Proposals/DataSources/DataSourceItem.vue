@@ -16,7 +16,7 @@
             type="primary"
             class="action-button"
             @click="addSelection(platformIdentifier)"
-            :disabled="isSelected"
+            :disabled="isSelected || !proposalId"
           >
             <i class="fa-solid fa-plus"></i> {{ $t('proposal.addDataSource') }}
           </el-button>
@@ -43,6 +43,9 @@ const props = defineProps({
   platformIdentifier: {
     type: String as () => PlatformIdentifier,
     required: true,
+  },
+  proposalId: {
+    type: String,
   },
 })
 

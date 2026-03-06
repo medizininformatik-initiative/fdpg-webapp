@@ -14,8 +14,8 @@ vi.mock('@/plugins/i18n', () => ({
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
-    t: vi.fn().mockImplementation((title, { checkedCount, optionsCount }) => {
-      return title + checkedCount + optionsCount
+    t: vi.fn().mockImplementation((title, p) => {
+      return title + p?.checkedCount + p?.optionsCount
     }),
     locale: {
       value: 'de-DE',
@@ -46,7 +46,7 @@ describe('FdpgCommentForm.vue', () => {
   })
 
   describe('if the is done is %s', () => {
-    beforeEach(() => { })
+    beforeEach(() => {})
 
     it('should emit save function', async () => {
       await wrapper.find('.edit-button').trigger('click')

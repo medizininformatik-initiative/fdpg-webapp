@@ -10,11 +10,11 @@
       <el-col :sm="24">
         <FdpgFormItem prop="requestedData.dataInfo">
           <FdpgLabel html-for="proposal.informationOnDataSelection" />
-          <FdpgInput
+          <FdpgTextEditor
             v-model="requestedDataForm.dataInfo"
             data-testId="requestedData.dataInfo"
-            placeholder="proposal.pleaseEnterYourDataSelectionInformationHere"
             :disabled="reviewMode || requestedDataForm.isDone"
+            :placeholder="t('proposal.pleaseEnterYourDataSelectionInformationHere')"
           />
         </FdpgFormItem>
       </el-col>
@@ -25,12 +25,13 @@
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IRequestedData } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   modelValue: {
@@ -47,4 +48,5 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const requestedDataForm = useVModel(props, 'modelValue', emit)
+const { t } = useI18n()
 </script>

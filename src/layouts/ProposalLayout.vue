@@ -75,7 +75,7 @@ const setSidebarVisiblity = (isVisible: boolean) => {
   .el-main {
     padding: 0 70px 0 39px;
     height: calc(100vh - 140px);
-    border-top: $gray-200 1px solid;
+    border-top: $gray-300 1px solid;
   }
   .fdpg-mask {
     width: 100%;

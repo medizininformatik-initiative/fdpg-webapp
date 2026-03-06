@@ -2,10 +2,10 @@ import type { DeepPartial } from '@/types/deep-partial.type'
 import type { IFdpgOidcProfile } from '@/types/oidc.types'
 import {
   ProposalTypeOfUse,
-  type IChecklistItem,
   type IFdpgChecklist,
   type IOwner,
   type IProposal,
+  type IRegisterInfo,
   type IRequestedData,
 } from '@/types/proposal.types'
 import type { IVersion } from '@/types/version.interface'
@@ -48,6 +48,27 @@ const transformOwner = (owner?: DeepPartial<IOwner>): DeepPartial<IOwner> => {
   }
 }
 
+const transformRegisterInfo = (registerInfo?: DeepPartial<IRegisterInfo>): DeepPartial<IRegisterInfo> => {
+  return {
+    _id: registerInfo?._id,
+    isDone: registerInfo?.isDone ?? false,
+    isInternalRegistration: registerInfo?.isInternalRegistration ?? false,
+    originalProposalId: transformEmptyStringToUndefined(registerInfo?.originalProposalId),
+    projectUrl: transformEmptyStringToUndefined(registerInfo?.projectUrl),
+    legalBasis: registerInfo?.legalBasis ?? false,
+    projectCategory: transformEmptyStringToUndefined(registerInfo?.projectCategory),
+    diagnoses: registerInfo?.diagnoses?.map(transformEmptyStringToUndefined) ?? [],
+    procedures: registerInfo?.procedures?.map(transformEmptyStringToUndefined) ?? [],
+    syncStatus: registerInfo?.syncStatus,
+    lastSyncedAt: registerInfo?.lastSyncedAt,
+    lastSyncError: registerInfo?.lastSyncError,
+    syncRetryCount: registerInfo?.syncRetryCount,
+    acptPluginId: registerInfo?.acptPluginId,
+    startTime: registerInfo?.startTime,
+    locations: registerInfo?.locations,
+  }
+}
+
 const transformChecklist = (
   usage: (ProposalTypeOfUse | undefined)[] | undefined,
   checklist: DeepPartial<IFdpgChecklist> | undefined,
@@ -55,6 +76,9 @@ const transformChecklist = (
   if (!checklist) {
     return {
       isRegistrationLinkSent: false,
+      initialViewing: false,
+      depthCheck: false,
+      ethicsCheck: false,
       checkListVerification: [],
       fdpgInternalCheckNotes: '',
       projectProperties: [],
@@ -88,7 +112,8 @@ export const transformForm = (
     projectUser: transformProjectUser(form?.projectUser),
     userProject: transformUserProject(form?.userProject, transformToApi),
     requestedData: transformRequestedData(form?.requestedData),
-    uploads: form?.uploads,
+    // Don't send uploads when saving to API - they are managed separately via upload api
+    uploads: transformToApi ? undefined : form?.uploads,
     isLocked: form?.isLocked,
     status: form?.status,
     locationStatus: form?.locationStatus,
@@ -136,5 +161,11 @@ export const transformForm = (
     uacApprovalsCount: form?.uacApprovalsCount,
     selectedDataSources: form?.selectedDataSources ?? [],
     dizDetails: form?.dizDetails ?? [],
+    type: form?.type,
+    registerInfo: transformRegisterInfo(form?.registerInfo),
+    registerFormId: form?.registerFormId,
+    dataDelivery: form?.dataDelivery,
+    projectAssignee: form?.projectAssignee,
+    contractingSkipped: form?.contractingSkipped,
   }
 }

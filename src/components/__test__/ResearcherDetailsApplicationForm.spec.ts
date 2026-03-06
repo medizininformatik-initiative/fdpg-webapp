@@ -1,15 +1,16 @@
 import { createTestingPinia } from '@pinia/testing'
-import DizMemberDetails from '../Proposals/Details/DizMemberDetails.vue'
+import ResearcherDetailsApplicationForm from '../Proposals/Details/ResearcherDetailsApplicationForm.vue'
 import { shallowMount } from '@vue/test-utils'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { useCommentStore } from '@/stores/comment/comment.store'
 import type { MockedObject } from 'vitest'
 import useNotifications from '@/composables/use-notifications'
 import { mockProposal } from '@/mocks/proposal.mock'
-import type { IProposal } from '@/types/proposal.types'
+import { ProposalStatus, type IProposal } from '@/types/proposal.types'
 import { useRouter } from 'vue-router'
 import type { IButtonConfig } from '@/types/button-config.interface'
 import { RouteName } from '@/types/route-name.enum'
+import { useMessageBoxStore, type IMessageBox } from '@/stores/messageBox.store'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
@@ -39,23 +40,21 @@ vi.mock('vue-router', () => {
   }
 })
 
-vi.mock('@/composables/use-notifications', () => ({
-  default: vi.fn().mockReturnValue({
-    showSuccessMessage: vi.fn(),
-    showErrorMessage: vi.fn(),
-  }),
-}))
+vi.mock('@/composables/use-notifications', () => {
+  const showSuccessMessage = vi.fn()
+  const showErrorMessage = vi.fn()
 
-vi.mock('@/validations', () => ({
-  maxLengthValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
-  numberValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
-  requiredValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
-  specialCharactersValidationFunc: vi.fn().mockReturnValue({ validator: (_rule: any, _value: any, cb: any) => cb() }),
-}))
+  return {
+    default: vi.fn().mockReturnValue({
+      showSuccessMessage,
+      showErrorMessage,
+    }),
+  }
+})
 
 const mountComponent = (withPinia = true) => {
   const plugins: any[] = withPinia ? [createTestingPinia()] : []
-  return shallowMount(DizMemberDetails, {
+  return shallowMount(ResearcherDetailsApplicationForm, {
     global: {
       plugins,
       stubs: {
@@ -66,12 +65,11 @@ const mountComponent = (withPinia = true) => {
   })
 }
 
-describe('DizMemberDetails', () => {
+describe('ResearcherDetailsApplicationForm', () => {
   let wrapper: ReturnType<typeof mountComponent>
   let proposalStore: MockedObject<ReturnType<typeof useProposalStore>>
   let commentStore: MockedObject<ReturnType<typeof useCommentStore>>
-
-  const { showSuccessMessage, showErrorMessage } = useNotifications()
+  let messageBoxStore: MockedObject<ReturnType<typeof useMessageBoxStore>>
 
   let proposal: IProposal
 
@@ -82,6 +80,7 @@ describe('DizMemberDetails', () => {
     proposal = JSON.parse(JSON.stringify(mockProposal))
     proposalStore = vi.mocked(useProposalStore())
     commentStore = vi.mocked(useCommentStore())
+    messageBoxStore = vi.mocked(useMessageBoxStore())
     proposalStore.setCurrentProposal.mockResolvedValueOnce(proposal)
     proposalStore.currentProposal = proposal
 
@@ -96,13 +95,11 @@ describe('DizMemberDetails', () => {
     })
 
     beforeEach(() => {
-      vi.clearAllMocks()
-
-      createTestingPinia()
       proposal = JSON.parse(JSON.stringify(mockProposal))
 
       proposalStore = vi.mocked(useProposalStore())
       commentStore = vi.mocked(useCommentStore())
+      messageBoxStore = vi.mocked(useMessageBoxStore())
       proposalStore.currentProposal = proposal
       proposalStore.setCurrentProposal.mockResolvedValueOnce(proposal)
 
@@ -113,6 +110,10 @@ describe('DizMemberDetails', () => {
       expect(proposalStore.setCurrentProposal).toHaveBeenCalledWith('proposalId')
     })
 
+    it('fetches the comments', () => {
+      expect(commentStore.fetchAll).toHaveBeenCalledWith({ proposalId: 'proposalId' })
+    })
+
     describe('Handling of top bar buttons', () => {
       it('opens the proposal', () => {
         const router = useRouter()
@@ -121,7 +122,36 @@ describe('DizMemberDetails', () => {
         const openButton = buttonProps.find((button) => button.label === 'proposal.toTheRequest')
         openButton?.action()
 
-        expect(router.push).toHaveBeenCalledWith({ name: RouteName.ReviewProposal, params: { id: 'proposalId' } })
+        expect(router.push).toHaveBeenCalledWith({ name: RouteName.EditProposal, params: { id: 'proposalId' } })
+      })
+
+      it('archives the proposal', async () => {
+        const router = useRouter()
+        const { showSuccessMessage, showErrorMessage } = useNotifications()
+
+        proposalStore.currentProposal!.status = ProposalStatus.ReadyToArchive
+
+        messageBoxStore.setMessageBoxInfo.mockImplementationOnce(async (config: IMessageBox) => {
+          config.callback('confirm')
+        })
+
+        const detailTopBar = wrapper.findComponent({ name: 'DetailTopBar' })
+        const buttonProps = detailTopBar.props('buttons') as IButtonConfig[]
+        const openButton = buttonProps.find((button) => button.label === 'proposal.archiveProject')
+        await openButton?.action()
+
+        expect(showSuccessMessage).toHaveBeenCalledWith('general.submitted')
+        expect(router.push).toHaveBeenCalledWith({ name: RouteName.Dashboard })
+      })
+
+      it('exports the proposal', async () => {
+        proposalStore.currentProposal!.status = ProposalStatus.Draft
+        const detailTopBar = wrapper.findComponent({ name: 'DetailTopBar' })
+        const buttonProps = detailTopBar.props('buttons') as IButtonConfig[]
+        const openButton = buttonProps.find((button) => button.label === 'proposal.exportPdfProposal')
+        await openButton?.action()
+
+        expect(proposalStore.getProposalPdfFile).toHaveBeenCalledWith('proposalId')
       })
     })
   })

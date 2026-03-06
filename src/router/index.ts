@@ -39,6 +39,16 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: '/data-sources',
+        name: RouteName.DataSources,
+        component: () => import('@/components/DataSource/DataSourceOverview.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [Role.FdpgMember],
+        },
+      },
+      {
         path: '/pending',
         name: RouteName.Pending,
         component: () => import('@/components/Dashboard/DashboardComponent.vue'),
@@ -69,13 +79,47 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
-        path: '/archive',
-        name: RouteName.Archive,
+        path: '/archived',
+        name: RouteName.Archived,
         component: () => import('@/pages/ArchivePage.vue'),
         meta: {
           resetBreadcrumbs: true,
           setLastDashboard: true,
-          roles: [Role.FdpgMember, Role.DataSourceMember, Role.Researcher, Role.DizMember, Role.UacMember],
+          roles: [
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.Researcher,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
+      },
+      {
+        path: '/published',
+        name: RouteName.Published,
+        component: () => import('@/pages/PublishedPage.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.RegisteringMember,
+            Role.Researcher,
+            Role.DizMember,
+            Role.UacMember,
+          ],
+        },
+      },
+      {
+        path: '/overview',
+        name: RouteName.Overview,
+        component: () => import('@/components/Dashboard/DashboardComponent.vue'),
+        meta: {
+          resetBreadcrumbs: true,
+          setLastDashboard: true,
+          roles: [Role.FdpgMember, Role.DataSourceMember],
         },
       },
 
@@ -85,7 +129,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/components/Proposals/Details/DetailComponent.vue'),
         props: true,
         meta: {
-          roles: [Role.Researcher, Role.FdpgMember, Role.DataSourceMember, Role.DizMember, Role.UacMember],
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+            Role.DataManagementOffice,
+          ],
         },
       },
       {
@@ -93,6 +145,16 @@ const routes: RouteRecordRaw[] = [
         name: RouteName.ReviewProposal,
         component: () => import('@/pages/Proposals/ReviewProposal.vue'),
         props: true,
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
       },
     ],
   },
@@ -119,6 +181,36 @@ const routes: RouteRecordRaw[] = [
         props: true,
         meta: {
           roles: [Role.Researcher],
+        },
+      },
+      {
+        path: '/register/create',
+        name: RouteName.RegisterNewProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
+        },
+      },
+      {
+        path: '/register/:id',
+        name: RouteName.EditRegisteredProject,
+        component: () => import('@/pages/Proposals/NewPage.vue'),
+        meta: {
+          roles: [
+            Role.Researcher,
+            Role.FdpgMember,
+            Role.DataSourceMember,
+            Role.DizMember,
+            Role.UacMember,
+            Role.RegisteringMember,
+          ],
         },
       },
     ],

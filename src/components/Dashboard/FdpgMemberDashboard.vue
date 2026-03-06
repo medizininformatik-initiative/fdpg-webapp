@@ -3,33 +3,42 @@
     <div class="header">
       <div class="lead">
         <h2 class="title">
-          {{ $t(header.main) }}
+          {{ t(header.main) }}
         </h2>
         <p class="description">
-          {{ $t(header.sub, { x: proposalCount.total }) }}
+          {{ t(header.sub, { x: proposalCount.total }) }}
         </p>
       </div>
-      <FdpgSortSelect
-        :sort-options="sortOptions"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-        @sort-change="proposalStore.setSortField"
-        @sort-order-change="proposalStore.toggleSortDirection()"
-      />
+      <div class="sort">
+        <router-link :to="{ name: RouteName.RegisterNewProject }" class="register-project-button">
+          <el-button type="primary">
+            {{ t('dashboard.registerProject') }}
+          </el-button>
+        </router-link>
+        <FdpgSortSelect
+          :sort-options="sortOptions"
+          :sort-by="proposalStore.currentSortField"
+          :sort-order="proposalStore.currentSortDirection"
+          @sort-change="proposalStore.setSortField"
+          @sort-order-change="proposalStore.toggleSortDirection()"
+        />
+      </div>
     </div>
     <template v-for="(panel, index) in panels" :key="'panel' + index">
-      <FdpgProposalCardPanel
-        v-if="!panel.isTable"
-        :panel="panel"
-        :sort-by="proposalStore.currentSortField"
-        :sort-order="proposalStore.currentSortDirection"
-      />
       <FdpgTable
         v-if="panel.isTable"
+        :table-header="panel.header"
         :panel="panel"
         :columns="tableColumns[panel.query]"
         :user-role="Role.FdpgMember"
-        @row-click="handleRowClick"
+        :click-action-disabled="!panel.hasClickAction"
+        :full-height="panel.fullHeight"
+      />
+      <FdpgProposalCardPanel
+        v-else
+        :panel="panel"
+        :sort-by="proposalStore.currentSortField"
+        :sort-order="proposalStore.currentSortDirection"
       />
     </template>
   </div>
@@ -47,10 +56,12 @@ import { Role } from '@/types/oidc.types'
 import type { FdpgDashboardRoutes } from '@/types/route-name.enum'
 import { RouteName } from '@/types/route-name.enum'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { sortOptions } from './constants'
+import { useI18n } from 'vue-i18n'
 
-const router = useRouter()
+const { t } = useI18n()
+
 const route = useRoute()
 const routeName = computed(() => route.name || RouteName.Dashboard)
 
@@ -77,7 +88,11 @@ const header = computed<Header>(() => {
         main: 'general.completed',
         sub: 'dashboard.xCompletedProjectContracts',
       }
-
+    case RouteName.Overview:
+      return {
+        main: 'dashboard.overview',
+        sub: 'dashboard.xProposals',
+      }
     default:
       return {
         main: 'general.requested',
@@ -91,10 +106,6 @@ const proposalStore = useProposalStore()
 proposalStore.setCurrentProposal(undefined)
 
 const { panels, proposalCount } = usePanels(routeName)
-
-const handleRowClick = ({ id }) => {
-  router.push({ name: RouteName.ProposalDetails, params: { id } })
-}
 </script>
 
 <style lang="scss" scoped>
@@ -118,6 +129,16 @@ const handleRowClick = ({ id }) => {
         font-weight: 600;
         margin: 0;
       }
+    }
+  }
+  .sort {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    align-items: center;
+    width: 100%;
+    .register-project-button {
+      margin-top: 14px;
     }
   }
 }

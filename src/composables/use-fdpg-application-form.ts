@@ -1,0 +1,350 @@
+import { ref, computed, markRaw, defineComponent } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { useLayoutStore } from '@/stores/layout.store'
+import { useMessageBoxStore, type DecisionType, type IMessageBox } from '@/stores/messageBox.store'
+import { DeliveryInfoStatus, ProposalStatus, type IChecklistItem } from '@/types/proposal.types'
+import { RouteName } from '@/types/route-name.enum'
+import type { UploadFile } from 'element-plus'
+import { useLocationStore } from '@/stores/locations/location.store'
+import type { ILocation } from '@/types/location.types'
+import type { Ref } from 'vue'
+
+export function useFdpgApplicationForm(
+  proposalId: Ref<string>,
+  status: Ref<ProposalStatus>,
+  changeStatus: (status: ProposalStatus) => Promise<void>,
+  showErrorMessage: (msg: string) => void,
+  showSuccessMessage: (msg: string) => void,
+) {
+  const messageBoxStore = useMessageBoxStore()
+  const proposalStore = useProposalStore()
+  const layoutStore = useLayoutStore()
+  const router = useRouter()
+  const { t } = useI18n()
+  const locationStore = useLocationStore()
+
+  const isInitiateContractDialogOpen = ref(false)
+  const isSkipContractDialogOpen = ref(false)
+
+  const messageBoxDefaults = {
+    cancelButtonText: t('general.cancel'),
+    cancelButtonClass: 'el-button--text',
+    showCancelButton: true,
+  }
+
+  const uacFullyApproved = computed(() => {
+    const conditionAccepted =
+      proposalStore.currentProposal?.conditionalApprovals.filter(
+        (condition) =>
+          condition.isAccepted &&
+          !proposalStore.currentProposal?.requestedButExcludedLocations.includes(condition.location),
+      ) ?? []
+    const uacApprovals =
+      proposalStore.currentProposal?.uacApprovals.filter(
+        (approval) => !proposalStore.currentProposal?.requestedButExcludedLocations.includes(approval.location),
+      ) ?? []
+    return [...uacApprovals, ...conditionAccepted]
+  })
+
+  const uacLocations = computed(() => uacFullyApproved.value.map((a) => a.location))
+
+  const showContractingParticipants = computed(() => {
+    return (
+      status.value === ProposalStatus.Contracting ||
+      status.value === ProposalStatus.ExpectDataDelivery ||
+      status.value === ProposalStatus.DataResearch ||
+      status.value === ProposalStatus.DataCorrupt ||
+      status.value === ProposalStatus.ReadyToArchive ||
+      status.value === ProposalStatus.FinishedProject ||
+      status.value === ProposalStatus.Archived ||
+      status.value === ProposalStatus.Rejected
+    )
+  })
+
+  const showLocationVotePanel = computed(() => {
+    return status.value === ProposalStatus.LocationCheck || showContractingParticipants.value
+  })
+
+  const isChecklistDone = computed(() => {
+    const checklist = proposalStore.currentProposal?.fdpgChecklist
+    if (!checklist) return false
+
+    const verification = checklist.checkListVerification
+    if (!verification || !Array.isArray(verification)) return false
+
+    const projectProperties = checklist.projectProperties
+    if (!projectProperties || !Array.isArray(projectProperties)) return false
+
+    return (
+      verification.every((item: IChecklistItem) => item.isAnswered) &&
+      checklist.isRegistrationLinkSent &&
+      checklist.initialViewing &&
+      checklist.depthCheck &&
+      checklist.ethicsCheck &&
+      projectProperties.every((item: IChecklistItem) => item.isAnswered)
+    )
+  })
+
+  const handleRequestRevisionClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.requestRevisionModalTitle',
+      message: 'proposal.requestRevisionModalDescription',
+      confirmButtonText: 'proposal.requestRevision',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.Rework) : undefined,
+    })
+  }
+
+  const handleRejectApplicationClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.rejectRequestModalTitle',
+      message: 'proposal.rejectRequestModalDescription',
+      confirmButtonText: 'proposal.rejectApplication',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.Rejected) : undefined,
+    })
+  }
+
+  const handleToLocationCheckClick = () => {
+    const messageComponent = markRaw(
+      defineComponent({
+        setup(props) {
+          return {}
+        },
+        template: `<h4>{{$t('proposal.listOfNoMarked')}}:</h4><ul v-if="listOfNoMarked"><li v-for="(item, i) in listOfNoMarked" :key="i">{{$t('proposal.' + item)}}</li></ul>`,
+        props: {
+          listOfNoMarked: {
+            type: Array,
+            required: true,
+          },
+        },
+      }),
+    )
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.toLocationCheckModalTitle',
+      message: 'proposal.toLocationCheckModalDescription',
+      confirmButtonText: 'proposal.toLocationCheck',
+      cancelButtonText: 'general.cancel',
+      messageComponent,
+      messageComponentProps: {
+        listOfNoMarked:
+          proposalStore.currentProposal?.fdpgChecklist?.checkListVerification?.reduce(
+            (acc: string[], item: IChecklistItem) => {
+              if (item.answer.some((a) => a === 'no')) {
+                acc.push(item.questionKey)
+              }
+              if (item.sublist && item.sublist.length > 0) {
+                item.sublist.forEach((subItem) => {
+                  if (subItem.answer.some((a) => a === 'no')) {
+                    acc.push(subItem.questionKey)
+                  }
+                })
+              }
+              return acc
+            },
+            [],
+          ) || [],
+      },
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          await changeStatus(ProposalStatus.LocationCheck)
+        }
+        messageBoxStore.$patch({
+          messageComponent: undefined,
+          messageComponentProps: {},
+        })
+      },
+    })
+  }
+
+  const handleToContractingClick = () => {
+    isInitiateContractDialogOpen.value = true
+  }
+
+  const handleToSkipContractingClick = () => {
+    isSkipContractDialogOpen.value = true
+  }
+
+  const handleToExpectDataDeliveryClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.toExpectDataDeliveryModalTitle',
+      message: 'proposal.toExpectDataDeliveryModalDescription',
+      confirmButtonText: 'proposal.toExpectDataDelivery',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.ExpectDataDelivery) : undefined,
+    })
+  }
+
+  const handleFinishProjectClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.toReadyToArchiveModalTitle',
+      message: 'proposal.toReadyToArchiveModalDescription',
+      confirmButtonText: 'proposal.finishProject',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.FinishedProject) : undefined,
+    })
+  }
+
+  const handleFinishProjectDeclineClick = () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.declineProjectFinish',
+      message: 'proposal.declineProjectFinish',
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) =>
+        decision === 'confirm' ? await changeStatus(ProposalStatus.DataResearch) : undefined,
+    })
+  }
+
+  const handleDownloadLocationCsvClick = async () => {
+    if (proposalId.value) {
+      await proposalStore.downloadLocationCsv(proposalId.value)
+    }
+  }
+
+  const handleContractSignConfirm = async (file: UploadFile, selectedLocations: string[]) => {
+    await initContracting(selectedLocations, file?.raw)
+  }
+
+  const initContracting = async (selectedLocations: string[], file?: File) => {
+    if (!file) {
+      showErrorMessage(t('general.failedSubmit'))
+      return
+    }
+
+    try {
+      await proposalStore.initContracting(proposalId.value, file, selectedLocations)
+      showSuccessMessage(t('general.submitted'))
+      await router.push({ name: layoutStore.lastDashboard })
+    } catch (error: unknown) {
+      showErrorMessage(t('general.failedSubmit'))
+    }
+  }
+
+  const handleSkipContractingConfirm = async (selectedLocations: string[], file?: File) => {
+    if (!file) {
+      showErrorMessage(t('general.failedSubmit'))
+      return
+    }
+
+    try {
+      await proposalStore.skipContracting(proposalId.value, selectedLocations, file)
+      showSuccessMessage(t('general.submitted'))
+      await router.push({ name: layoutStore.lastDashboard })
+    } catch (error: unknown) {
+      showErrorMessage(t('general.failedSubmit'))
+    }
+  }
+
+  const handleStartAnalysisClick = async () => {
+    const deliveries = proposalStore.currentProposal?.dataDelivery?.deliveryInfos ?? []
+    const deliveriesToBeCanceled =
+      deliveries
+        .filter(
+          ({ status }) =>
+            ![
+              DeliveryInfoStatus.RESULTS_AVAILABLE,
+              DeliveryInfoStatus.WAITING_FOR_DATA_SET,
+              DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+              DeliveryInfoStatus.CANCELED,
+            ].includes(status),
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    const deliveriesToBeMarkedAsReceived =
+      deliveries
+        .filter(
+          ({ status }) =>
+            [DeliveryInfoStatus.RESULTS_AVAILABLE, DeliveryInfoStatus.WAITING_FOR_DATA_SET].includes(status) &&
+            status !== DeliveryInfoStatus.FETCHED_BY_RESEARCHER,
+        )
+        .map(({ name }) => name)
+        .join(', ') || t('general.none')
+
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.startAnalysisModalTitle',
+      message: t('proposal.startAnalysisModalDescription', { deliveriesToBeCanceled, deliveriesToBeMarkedAsReceived }),
+      confirmButtonText: 'general.confirm',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          try {
+            await proposalStore.setToDataResearch(proposalId.value)
+            showSuccessMessage(t('general.submitted'))
+            await router.push({ name: layoutStore.lastDashboard })
+          } catch (error: unknown) {
+            showErrorMessage(t('general.failedSubmit'))
+          }
+        }
+      },
+    } as IMessageBox)
+  }
+
+  const handleRegisterProjectClick = async () => {
+    messageBoxStore.setMessageBoxInfo({
+      ...messageBoxDefaults,
+      title: 'proposal.registerProjectModalTitle',
+      message: 'proposal.registerProjectModalDescription',
+      confirmButtonText: 'proposal.registerProject',
+      cancelButtonText: 'general.cancel',
+      callback: async (decision: DecisionType) => {
+        if (decision === 'confirm') {
+          try {
+            const copyId = await proposalStore.copyAsInternalRegistration(proposalId.value)
+            showSuccessMessage('proposal.projectCopiedForRegistration')
+
+            // Navigate to register/edit route with the new copy ID
+            router.push({
+              name: RouteName.EditRegisteredProject,
+              params: { id: copyId },
+            })
+          } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : (typeof error === 'string' ? error : 'general.genericError')
+            showErrorMessage(errorMessage)
+          }
+        }
+      },
+    })
+  }
+
+  return {
+    // State
+    isInitiateContractDialogOpen,
+    isSkipContractDialogOpen,
+    uacFullyApproved,
+    uacLocations,
+    showContractingParticipants,
+    showLocationVotePanel,
+    isChecklistDone,
+
+    // Methods
+    handleRequestRevisionClick,
+    handleRejectApplicationClick,
+    handleToLocationCheckClick,
+    handleToContractingClick,
+    handleToSkipContractingClick,
+    handleToExpectDataDeliveryClick,
+    handleFinishProjectClick,
+    handleFinishProjectDeclineClick,
+    handleDownloadLocationCsvClick,
+    handleContractSignConfirm,
+    handleRegisterProjectClick,
+    initContracting,
+    handleSkipContractingConfirm,
+    handleStartAnalysisClick,
+  }
+}

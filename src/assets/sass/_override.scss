@@ -27,9 +27,12 @@
   */
   &.el-button--primary {
     background-color: $blue;
+    &:hover {
+      background-color: $blue-hover;
+    }
 
     &:active:not(.is-disabled) {
-      background-color: color.adjust($blue, $lightness: -3%);
+      background-color: $blue-pressed;
       box-shadow: 0 0 5px 0 color.adjust($blue, $lightness: 30%);
     }
 
@@ -61,17 +64,20 @@
     background-color: $green;
 
     &:active {
-      background-color: color.adjust($green, $lightness: -3%);
+      background-color: $green-pressed;
       box-shadow: 0 0 5px 0 color.adjust($green, $lightness: 30%);
+    }
+    &:hover {
+      background-color: $green-hover;
     }
   }
 
   &.el-button--danger {
-    background-color: $red;
+    background-color: $error;
 
     &:active:not(.is-disabled) {
-      background-color: color.adjust($red, $lightness: -3%);
-      box-shadow: 0 0 5px 0 color.adjust($red, $lightness: 30%);
+      background-color: color.adjust($error, $lightness: -3%);
+      box-shadow: 0 0 5px 0 color.adjust($error, $lightness: 30%);
     }
   }
 
@@ -101,7 +107,7 @@
 
   &.el-button--primary {
     &:active:not(.is-disabled) {
-      box-shadow: none
+      box-shadow: none;
     }
   }
 
@@ -265,7 +271,7 @@
         padding-right: 2.5em;
 
         &.invalid-form {
-          color: $red;
+          color: $error;
         }
       }
     }
@@ -276,7 +282,7 @@
   }
 
   .el-form-item__error {
-    color: $red;
+    color: $error;
   }
 }
 
@@ -285,7 +291,7 @@
   display: inline-flex;
   align-items: flex-start;
   padding: 19px 16px 17px 18px;
-  background-color: $gray-100;
+  background-color: $gray-300;
   white-space: normal;
 
   &.el-checkbox--small {
@@ -323,8 +329,8 @@
       }
 
       .el-checkbox__inner {
-        background-color: $gray-400;
-        border-color: $gray-400;
+        background-color: $gray-500;
+        border-color: $gray-500;
       }
     }
 
@@ -338,17 +344,17 @@
 
     .el-checkbox__input {
       .el-checkbox__inner {
-        border-color: $gray-200;
-        background-color: $gray-200;
+        border-color: $gray-300;
+        background-color: $gray-300;
 
         &::after {
-          border-color: $green;
+          border-color: $black;
         }
       }
     }
 
     .el-checkbox__label {
-      color: $white;
+      color: $black;
     }
   }
 
@@ -363,7 +369,7 @@
       margin-bottom: 4px;
       color: $gray-900;
       border-radius: 4px;
-      background-color: $gray-200;
+      background-color: $gray-300;
       border: 2px solid $gray-900;
 
       &::after {
@@ -386,10 +392,23 @@
 // Normalize Element Plus checkbox checkmark transform to match desired style
 //
 .el-checkbox__inner::after {
-  transform: rotate(45deg) scaleY(0) !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) rotate(45deg) scaleY(0) !important;
 }
 
 .el-checkbox__input.is-checked .el-checkbox__inner::after {
+  transform: translate(-50%, -50%) rotate(45deg) scaleY(1) !important;
+}
+
+// Override for fdpg-checkbox which has custom positioning
+.fdpg-checkbox .el-checkbox__inner::after {
+  left: 4px !important;
+  top: 0 !important;
+  transform: rotate(45deg) scaleY(0) !important;
+}
+
+.fdpg-checkbox .el-checkbox__input.is-checked .el-checkbox__inner::after {
   transform: rotate(45deg) scaleY(1) !important;
 }
 
@@ -412,7 +431,7 @@
 
 .el-badge {
   .el-badge__content--danger {
-    background-color: $red;
+    background-color: $error;
   }
 }
 
@@ -427,6 +446,13 @@
     color: $gray-900;
   }
 }
+.el-switch {
 
-
-
+  &__label.is-active {
+      color: $black !important;
+    }
+    &__core {
+      background-color: $blue !important;
+      border-color: $blue-hover !important;
+    }
+}

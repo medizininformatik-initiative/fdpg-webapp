@@ -6,6 +6,7 @@ import { Role } from '@/types/oidc.types'
 import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import FdpgCommentForm from '../FdpgCommentForm.vue'
+import { mockLocations } from '@/stores/locations/__mocks__/location.store'
 vi.mock('@/plugins/i18n', () => ({
   i18n: {
     global: {
@@ -24,8 +25,8 @@ vi.mock('vue-router', () => ({
 }))
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
-    t: vi.fn().mockImplementation((title, { checkedCount, optionsCount }) => {
-      return title + checkedCount + optionsCount
+    t: vi.fn().mockImplementation((title, p) => {
+      return title + p?.checkedCount + p?.optionsCount
     }),
     locale: {
       value: 'de-DE',
@@ -41,6 +42,7 @@ describe('FdpgCommentCreator.vue', () => {
       props: {
         type: CommentType.PROPOSAL_MESSAGE_TO_LOCATION,
         objectId: 'string',
+        possibleLocations: [],
       },
       global: {
         plugins: [createTestingPinia()],

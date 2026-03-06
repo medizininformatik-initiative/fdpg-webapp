@@ -2,7 +2,7 @@
   <div class="fdpg-card-panel">
     <div class="header">
       <div class="title-wrapper">
-        <h5 class="title">{{ $t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
+        <h5 class="title">{{ t(panel.header) }}{{ !loading ? ` (${proposals.length})` : '' }}</h5>
         <div v-loading="loading"></div>
       </div>
       <div class="action-wrapper">
@@ -12,23 +12,16 @@
           class="alert-btn"
           @click="handleShowAllClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showAll') }}</el-button
+          >{{ t('dashboard.showAll') }}</el-button
         >
-        <el-button
-          v-if="proposals.length > displayCount"
-          link
-          class="alert-btn"
-          @click="handleShowMoreClick"
-          @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showMore') }}</el-button
-        >
+
         <el-button
           v-if="displayCount > defaultLength"
           link
           class="alert-btn"
           @click="handleShowLessClick"
           @keydown.self.tab.shift="handleShiftTab($event)"
-          >{{ $t('dashboard.showLess') }}</el-button
+          >{{ t('dashboard.showLess') }}</el-button
         >
       </div>
     </div>
@@ -52,6 +45,7 @@
           @keydown.left="focusPreviousCard($event)"
           @keydown.tab="handleTab($event)"
           @focus="handleFocus($event)"
+          :isRegisteringForm="proposal.type === ProposalType.RegisteringForm"
         />
       </el-col>
     </el-row>
@@ -62,10 +56,13 @@
 import FdpgProposalCard from '@/components/FdpgProposalCardPanel/FdpgProposalCard/FdpgProposalCard.vue'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { PanelType } from '@/types/proposal.types'
-import { SortDirection } from '@/types/sort-filter.types'
+import { ProposalType } from '@/types/proposal-type.enum'
+import { SortDirection, PanelQuery } from '@/types/sort-filter.types'
 import useCardPanelAccessibility from '@/composables/use-card-panel-accessibility'
+import useNotifications from '@/composables/use-notifications'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   panel: {
@@ -88,6 +85,9 @@ const props = defineProps({
     default: SortDirection.ASC,
   },
 })
+
+const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
 const displayCount = ref<number>(props.defaultLength)
 const loading = ref<boolean>(false)
 
@@ -101,7 +101,7 @@ const fetchProposals = async () => {
     loading.value = false
   } catch (error) {
     loading.value = false
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorFetchingData'))
   }
 }
 
@@ -109,7 +109,7 @@ const handleDelete = (id: string) => {
   try {
     proposalStore.deleteProposal(id, props.panel.query).then(fetchProposals)
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorDeletingProposal'))
   }
 }
 
@@ -117,15 +117,8 @@ const handleDuplicate = (id: string) => {
   try {
     proposalStore.duplicateProposal(id).then(fetchProposals)
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorDuplicatingProposal'))
   }
-}
-
-const handleShowMoreClick = () => {
-  displayCount.value +=
-    proposals.value.length - displayCount.value >= props.defaultLength
-      ? props.defaultLength
-      : proposals.value.length % props.defaultLength
 }
 
 const handleShowLessClick = () => {
@@ -166,7 +159,7 @@ const proposals = computed(() => proposalStore.filteredProposal[props.panel.quer
   min-height: 57px;
   border-radius: 8px;
   padding: 23px 20px 20px;
-  background-color: $gray-200;
+  background-color: $gray-300;
 
   .header {
     display: flex;

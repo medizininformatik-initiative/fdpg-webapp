@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import type { TranslationSchema } from '@/plugins/i18n'
-import type { H } from 'vitest/dist/chunks/environment.LoooBwUu'
 import type { Component } from 'vue'
 
 export type DecisionType = 'confirm' | 'cancel' | 'close'

@@ -24,6 +24,7 @@ interface IDataPrivacyTexts extends Record<ProposalTypeOfUse, IDataPrivacyTextsC
 interface IDataPrivacyTextsContent {
   headline: string
   text: string
+  translation?: boolean
 }
 
 interface IMessages {
@@ -32,7 +33,7 @@ interface IMessages {
 }
 
 export type DataPrivacyTextsContentKeys = {
-  [key in keyof IDataPrivacyTextsContent]: string
+  [key in keyof IDataPrivacyTextsContent]: IDataPrivacyTextsContent[key]
 }
 
 export type DataPrivacyTextSingleLanguage = {

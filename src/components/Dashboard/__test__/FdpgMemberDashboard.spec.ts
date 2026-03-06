@@ -5,7 +5,7 @@ import { createTestingPinia } from '@pinia/testing'
 import type { VueWrapper } from '@vue/test-utils'
 import { shallowMount } from '@vue/test-utils'
 import FdpgMemberDashboard from '../FdpgMemberDashboard.vue'
-import type { MockedObject } from 'vitest'
+import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 
 vi.mock('vue-i18n', () => ({
   useI18n: vi.fn().mockImplementation(() => ({
@@ -58,11 +58,5 @@ describe('FdpgMemberDashboard.vue', () => {
     const selectElement = wrapper.findComponent(FdpgSortSelect)
     selectElement.vm.$emit('sortChange', 'test')
     expect(proposalStore.setSortField).toHaveBeenLastCalledWith('test')
-  })
-
-  it('calls the router to go to the detail page', () => {
-    const id = 'abc'
-    wrapper.vm.handleRowClick({ id, somethingElse: 'test' })
-    expect(mockPush).toBeCalledWith({ name: RouteName.ProposalDetails, params: { id } })
   })
 })

@@ -1,5 +1,5 @@
 <template>
-  <FdpgLabel html-for="proposal.MII" size="large" />
+  <FdpgLabel html-for="proposal.MII" size="large" v-if="!isRegisteringForm" />
   <el-card class="form-group">
     <el-row>
       <el-col :sm="24">
@@ -23,7 +23,7 @@
           </el-checkbox-group>
         </FdpgFormItem>
 
-        <div v-if="shouldDisplayDataPrivacyTextField" class="data-privacy-wrapper">
+        <div v-if="shouldDisplayDataPrivacyTextField && !isRegisteringForm" class="data-privacy-wrapper">
           <FdpgLabel html-for="proposal.typeOfUse_dataPrivacy" />
           <dl>
             <TypeOfUseDataPrivacyItem
@@ -87,6 +87,10 @@ const props = defineProps({
     required: false,
     default: () => undefined,
   },
+  isRegisteringForm: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const isInitialized = ref(false)
@@ -124,24 +128,24 @@ const { locale, t } = useI18n<{ locale: 'en' | 'de' }>()
 const { showErrorMessage } = useNotifications()
 const configStore = useConfigStore()
 
-// Add watcher for usage changes
 watch(
-  () => typeOfUseForm.value.usage,
-  () => {
-    if (props.formRef) {
-      props.formRef.validateField('userProject.typeOfUse.usage')
+  () => props.isRegisteringForm,
+  (newValue) => {
+    if (newValue) {
+      options.push({
+        value: 'NONE' as ProposalTypeOfUse,
+        info: 'proposal.typeOfUse_NONE_Info' as TranslationSchema,
+      })
     }
   },
   { immediate: true },
 )
-
 onMounted(async () => {
   if (!configStore.dataPrivacy[props.platform]) {
     try {
       await configStore.getDataPrivacy(props.platform)
     } catch (error) {
-      showErrorMessage()
-      console.log(error)
+      showErrorMessage(t('general.failedToLoadData'))
     }
   }
 
@@ -156,10 +160,10 @@ onMounted(async () => {
   margin-top: 20px;
   padding: 15px;
   border-radius: 6px;
-  background-color: $gray-100;
+  background-color: $gray-300;
   border-style: solid;
   border-width: 1px;
-  border-color: $gray-400;
+  border-color: $gray-500;
 }
 
 .invalid-form {

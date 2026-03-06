@@ -20,7 +20,7 @@
         <div style="height: 590px; max-width: 600px">
           <el-steps direction="vertical" :active="activeTab" finish-status="success">
             <el-step
-              v-for="step in layoutStore.createProposalSteps"
+              v-for="step in filteredSteps"
               :key="step.step"
               :status="getStepStatus(getStepKey(step.step))"
               @click="setActiveTab(step.step)"
@@ -29,7 +29,7 @@
               }"
             >
               <template #title>
-                <span class="step-title">{{ t(`sidebar.${getStepKey(step.step)}`) }}</span>
+                <span class="step-title">{{ t(stepKeyTranslations(step.step)) }}</span>
               </template>
               <template #description>
                 <span class="step-status">{{ t(`sidebar.${getStepStatus(getStepKey(step.step))}`) }}</span>
@@ -49,6 +49,7 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
+import { ProposalType } from '@/types/proposal-type.enum'
 
 const { t } = useI18n()
 const route = useRoute()
@@ -56,6 +57,10 @@ const layoutStore = useLayoutStore()
 const proposalStore = useProposalStore()
 const logoSrc = new URL('@/assets/img/logo/logo.svg', import.meta.url).href
 const activeTab = computed(() => layoutStore.activeStep)
+
+const filteredSteps = computed(() => {
+  return layoutStore.filteredSteps
+})
 
 const completedSteps = ref<Set<CreatPrposalSteps>>(new Set())
 
@@ -76,11 +81,6 @@ const getStepKey = (step: CreatPrposalSteps): string => {
 const steps = computed(() => {
   return layoutStore.createProposalSteps
 })
-
-// Method to check if a step is completed
-const isStepCompleted = (step: CreatPrposalSteps): boolean => {
-  return completedSteps.value.has(step)
-}
 
 // Method to get the status of a step
 const getStepStatus = (step: string): 'success' | 'process' | 'wait' | 'error' => {
@@ -114,6 +114,12 @@ const progressPercentage = computed(() => {
 
   return percentage
 })
+
+const isRegistrationForm = computed(() => proposalStore.currentProposal?.type === ProposalType.RegisteringForm)
+
+const stepKeyTranslations = (step: CreatPrposalSteps) => {
+  return isRegistrationForm.value ? `registeringForm.Step-${getStepKey(step)}` : `sidebar.${getStepKey(step)}`
+}
 </script>
 
 <style lang="scss">
@@ -130,8 +136,8 @@ const progressPercentage = computed(() => {
     background-color: $blue;
     color: $blue;
     &.is-error {
-      background-color: $red !important;
-      border-color: $red !important;
+      background-color: $error !important;
+      border-color: $error !important;
     }
   }
   .el-step__icon {
@@ -146,9 +152,9 @@ const progressPercentage = computed(() => {
   }
   &.is-error {
     .el-step__icon {
-      background-color: $red !important;
+      background-color: $error !important;
       color: $white !important;
-      border-color: $red !important;
+      border-color: $error !important;
     }
   }
   &.is-success {
@@ -169,7 +175,7 @@ const progressPercentage = computed(() => {
 }
 
 .el-step.is-vertical.is-process {
-  background-color: $gray-200;
+  background-color: $gray-300;
 }
 
 .proposal-sidebar {
@@ -180,7 +186,7 @@ const progressPercentage = computed(() => {
   background: $white;
   flex-direction: column;
   z-index: $sidebar-z-index;
-  border-right: 1px solid $gray-400;
+  border-right: 1px solid $gray-500;
   transition-duration: $sidebar-transition-duration;
   @include sidebar-block;
 
@@ -191,7 +197,7 @@ const progressPercentage = computed(() => {
   }
 
   .proposal-menu {
-    border-top: 1px solid $gray-100;
+    border-top: 1px solid $gray-300;
     width: 100%;
     height: 100%;
     padding-top: 15px;
@@ -237,7 +243,7 @@ const progressPercentage = computed(() => {
 
       .progress-bar {
         :deep(.el-progress-bar__outer) {
-          background-color: $gray-200;
+          background-color: $gray-300;
         }
 
         :deep(.el-progress-bar__inner) {

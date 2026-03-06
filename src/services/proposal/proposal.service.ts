@@ -1,24 +1,30 @@
 import { ApiClient } from '@/httpClients/api/api.client'
 import type { ISortAndOrderBy } from '@/types/sort-filter.types'
-import type {
-  IFdpgChecklist,
-  IProposal,
-  IProposalDetail,
-  IProposalMarkConditionAcceptedReturnDto,
-  IResearcherIdentity,
-  IPublicationGet,
-  IUpload,
+import {
+  DeliveryAcceptance,
   ProposalStatus,
-  IPublicationCreateAndUpdate,
-  IReportGet,
-  IReportCreate,
-  IReportUpdate,
-  IEditAdditionalLocationProposalInformation,
-  FdpgChecklistItemUpdateResponse,
-  ISelectedCohort,
-  IParticipant,
-  IDizDetails,
-  IApplicant,
+  type FdpgChecklistItemUpdateResponse,
+  type IApplicant,
+  type IDataDelivery,
+  type IDizDetails,
+  type IEditAdditionalLocationProposalInformation,
+  type IFdpgChecklist,
+  type IParticipant,
+  type IProjectAssignee,
+  type IProposal,
+  type IProposalDetail,
+  type IProposalMarkConditionAcceptedReturnDto,
+  type IPublicationCreateAndUpdate,
+  type IPublicationGet,
+  type IReportCreate,
+  type IReportGet,
+  type IReportUpdate,
+  type IResearcherIdentity,
+  type ISelectedCohort,
+  type IUpload,
+  type IDeliveryInfo,
+  type ISubDelivery,
+  type IProposalStatistics,
 } from '@/types/proposal.types'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
@@ -27,10 +33,16 @@ import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
+import type { AxiosResponse } from 'axios'
 
 export class ProposalService {
   private basePath = '/proposals'
   private apiClient = new ApiClient().client
+
+  async getStatistics(): Promise<IProposalStatistics> {
+    const response = await this.apiClient.get(`${this.basePath}/statistics`)
+    return response.data
+  }
 
   async create(proposal: DeepPartial<IProposal>): Promise<IProposal> {
     const response = await this.apiClient.post(this.basePath, proposal)
@@ -454,6 +466,148 @@ export class ProposalService {
       throw new Error('Could not generate location CSV download link')
     }
   }
+
+  async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.post<
+          IDataDelivery,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery`, {
+          dataManagementSite: dmsId,
+          acceptance: DeliveryAcceptance.PENDING,
+          deliveryInfos: [],
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async updateDmsForDataDelivery(proposalId: string, dataDelivery: IDataDelivery): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDataDelivery,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDataDelivery, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery`, dataDelivery)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async initiateDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/init-delivery-info`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/sync`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async rateSubDelivery(proposalId: string, deliveryInfoId: string, subDeliveryToUpdate: ISubDelivery) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<ISubDelivery, 'createdAt' | 'updatedAt'>
+        >(`${this.basePath}/${proposalId}/sub-delivery/rate`, subDeliveryToUpdate, { params: { deliveryInfoId } })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo) {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/set-status`, deliveryInfo)
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async setDmsAcceptance(proposalId: string, acceptance: DeliveryAcceptance): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.put<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/data-delivery/acceptance`, undefined, {
+          params: {
+            acceptance,
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async extendDeliveryInfo(proposalId: string, deliveryInfoId: string, newDeliveryDate: Date): Promise<IDataDelivery> {
+    try {
+      return (
+        await this.apiClient.patch<
+          IDeliveryInfo,
+          AxiosResponse<IDataDelivery>,
+          Omit<IDeliveryInfo, 'updatedAt' | 'createdAt'>
+        >(`${this.basePath}/${proposalId}/delivery-info/extend-delivery`, undefined, {
+          params: {
+            deliveryInfoId,
+            newDeliveryDate: newDeliveryDate.toISOString(),
+          },
+        })
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
+  async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+    await this.apiClient.put(`${this.basePath}/${proposalId}/assignee`, { projectAssignee })
+  }
+
+  async updateDelivieriesForAnalysis(proposalId: string): Promise<IProposal> {
+    try {
+      return (
+        await this.apiClient.put<IProposal, AxiosResponse<IProposal>>(
+          `${this.basePath}/${proposalId}/data-delivery/analysis-started`,
+        )
+      ).data
+    } catch (error: any) {
+      throw new Error(error)
+    }
+  }
+
   async catch(error: any) {
     if (error.response) {
       const status = error.response.status
@@ -471,5 +625,53 @@ export class ProposalService {
     } else {
       throw new Error(error.message || 'An unexpected error occurred while exporting files')
     }
+  }
+  async copyAsInternalRegistration(proposalId: string): Promise<string> {
+    const response = await this.apiClient.post<{ id: string }>(`/proposals/${proposalId}/copy-for-registration`)
+    return response.data.id
+  }
+
+  async syncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+    const response = await this.apiClient.post<{ success: boolean; error?: string }>(`/proposals/${proposalId}/sync`)
+    return response.data
+  }
+
+  async retrySyncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+    const response = await this.apiClient.post<{ success: boolean; error?: string }>(
+      `/proposals/${proposalId}/retry-sync`,
+    )
+    return response.data
+  }
+
+  async syncAllProposals(): Promise<{
+    total: number
+    synced: number
+    failed: number
+    errors: Array<{ projectAbbreviation: string; error: string }>
+  }> {
+    try {
+      const response = await this.apiClient.post<{
+        total: number
+        synced: number
+        failed: number
+        errors: Array<{ projectAbbreviation: string; error: string }>
+      }>(`/proposals/sync-all`)
+      return response.data
+    } catch (error: any) {
+      throw new Error(error.message || 'An unexpected error occurred while syncing all proposals')
+    }
+  }
+
+  async skipContracting(proposalId: string, locations: string[], file?: File): Promise<IProposal> {
+    const formData = new FormData()
+    formData.append('file', file as Blob)
+    formData.append('locations', JSON.stringify(locations))
+
+    const response = await this.apiClient.post(`${this.basePath}/${proposalId}/skip-contract`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
   }
 }

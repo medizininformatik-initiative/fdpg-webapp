@@ -1,24 +1,24 @@
 <template>
   <div class="section publications">
     <div class="table-title">
-      <h2>{{ $t('proposal.publications') }} {{ `(${publications?.length})` }}</h2>
+      <h2>{{ t('proposal.publications') }} {{ `(${publications?.length})` }}</h2>
       <el-button v-if="accessForMaintenance" link :disabled="isDisabled" @click="isCreateOrEditModalVisible = true">
-        {{ $t('proposal.addPublication') }}
+        {{ t('proposal.addPublication') }}
       </el-button>
     </div>
     <div v-if="publications?.length" class="table-border">
       <el-table :data="publications" style="width: 100%">
-        <el-table-column prop="createdAt" :label="$t('general.date')">
+        <el-table-column prop="createdAt" :label="t('general.date')">
           <template #default="scope">
             {{ getLocaleDateString(scope.row.createdAt) }}
           </template>
         </el-table-column>
-        <el-table-column prop="title" :label="$t('proposal.researcherTitle')" />
-        <el-table-column prop="doi" :label="$t('proposal.doi')" />
-        <el-table-column prop="link" :label="$t('proposal.link')">
+        <el-table-column prop="title" :label="t('proposal.researcherTitle')" />
+        <el-table-column prop="doi" :label="t('proposal.doi')" />
+        <el-table-column prop="link" :label="t('proposal.link')">
           <template #default="scope">
             <el-link :href="sanitizeUrl(scope.row.link)" target="_blank" rel="noopener" class="highligh-tabindex">{{
-              $t('proposal.publicationLinkItemInTable')
+              t('proposal.publicationLinkItemInTable')
             }}</el-link>
           </template>
         </el-table-column>
@@ -46,7 +46,7 @@
     </div>
     <div v-else class="table--empty">
       <img src="@/assets/img/proposal/emty-publications.svg" alt="" />
-      <h5>{{ $t('proposal.noPublications') }}</h5>
+      <h5>{{ t('proposal.noPublications') }}</h5>
     </div>
   </div>
   <PublicationDialog
@@ -67,12 +67,13 @@ import type { IPublicationGet } from '@/types/proposal.types'
 import { getLocaleDateString } from '@/utils/date.util'
 import { computed, defineAsyncComponent, ref } from 'vue'
 import { sanitizeUrl } from '@braintree/sanitize-url'
+import { useI18n } from 'vue-i18n'
 
 const PublicationDialog = defineAsyncComponent(() => import('./PublicationDialog.vue'))
 
 const messageBoxStore = useMessageBoxStore()
 const { showErrorMessage } = useNotifications()
-
+const { t } = useI18n()
 const proposalId = computed(() => proposalStore.currentProposal?._id ?? '')
 const proposalStore = useProposalStore()
 const isCreateOrEditModalVisible = ref(false)
@@ -125,7 +126,7 @@ const deletePublication = async (publicationId: string) => {
   try {
     await proposalStore.deletePublication(proposalId.value, publicationId)
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToDeleteData'))
   }
 }
 const resetForm = () => {
@@ -179,7 +180,7 @@ const resetForm = () => {
       cursor: pointer;
     }
     .fa-trash:hover {
-      color: $red;
+      color: $error;
     }
     .fa-edit:hover {
       color: $blue;

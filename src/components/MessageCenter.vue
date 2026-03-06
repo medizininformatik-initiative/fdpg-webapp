@@ -2,7 +2,11 @@
   <section class="section message-center">
     <div class="header-row">
       <h2>{{ t(titleForType) }}</h2>
-      <el-switch v-model="showDoneComments" class="switch" :inactive-text="t('proposal.showDoneComments')" />
+      <el-switch
+        v-model="showDoneComments"
+        class="switch fdpg-switch"
+        :inactive-text="t('proposal.showDoneComments')"
+      />
     </div>
 
     <section class="messages">
@@ -58,7 +62,11 @@ import type { ILocation } from '@/types/location.types'
 
 const props = defineProps({
   type: {
-    type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
+    type: String as PropType<
+      | CommentType.PROPOSAL_MESSAGE_TO_OWNER
+      | CommentType.PROPOSAL_MESSAGE_TO_LOCATION
+      | CommentType.PROPOSAL_MESSAGE_TO_DMST
+    >,
     required: true,
   },
   reviewMode: {
@@ -77,11 +85,21 @@ const { params } = useRoute()
 const { t } = useI18n()
 const proposalId = params.id as string
 
-const showDoneComments = ref(true)
+const showDoneCommentsValue = ref(localStorage.getItem(`showDoneComments_${proposalId}_${props.type}`) === 'true')
+
+const showDoneComments = computed({
+  get: () => showDoneCommentsValue.value,
+  set: (value: boolean) => {
+    showDoneCommentsValue.value = value
+    localStorage.setItem(`showDoneComments_${proposalId}_${props.type}`, value.toString())
+  },
+})
 
 const titleForType = computed<TranslationSchema>(() => {
   if (props.type === CommentType.PROPOSAL_MESSAGE_TO_OWNER) {
     return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToApplicants' : 'proposal.messagesToFdpg'
+  } else if (props.type === CommentType.PROPOSAL_MESSAGE_TO_DMST) {
+    return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToDms' : 'proposal.messagesToFdpg'
   } else {
     return authStore.hasFdpgLevelPermissions() ? 'proposal.messagesToLocations' : 'proposal.messagesToFdpg'
   }
@@ -138,7 +156,7 @@ const handleSubmit = async (content: string, locations: string[]) => {
 
     commentContent.value = ''
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedSubmit'))
   }
 }
 onBeforeMount(async () => {

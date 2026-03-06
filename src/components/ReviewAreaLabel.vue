@@ -102,8 +102,7 @@ const checkboxValue = computed({
       _isDone.value = value
       emit('update:isDone', value)
     } catch (error) {
-      console.log(error)
-      showErrorMessage()
+      showErrorMessage(t('general.failedToUpdateData'))
     }
 
     isCheckboxLoading.value = false

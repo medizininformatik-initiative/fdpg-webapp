@@ -8,6 +8,7 @@
         :dataSource="item"
         :platformIdentifier="i"
         :isSelected="isDataSourceSelected(i)"
+        :proposal-id="proposalId"
         @change="handleDataSourceChange(i)"
       />
     </div>
@@ -20,7 +21,7 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import DataSourceItem from './DataSourceItem.vue'
 import type { IDataSourceDto } from '@/types/proposal.types'
-import { onMounted, ref, defineExpose, computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useConfigStore } from '@/stores/config/config.store'
 import type { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { useVModel } from '@vueuse/core'

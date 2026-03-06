@@ -1,7 +1,7 @@
 <template>
   <FdpgDialog
     v-model="dialogOpen"
-    :title="!report._id ? $t('proposal.addReport') : $t('proposal.editReport')"
+    :title="!report._id ? t('proposal.addReport') : t('proposal.editReport')"
     class="reports--modal"
     @close="closeDialog"
   >
@@ -26,7 +26,7 @@
             <FdpgtextEditor
               v-model="report.content"
               data-testId="report.content"
-              :placeholder="$t('proposal.reportContentPlaceholder')"
+              :placeholder="t('proposal.reportContentPlaceholder')"
             />
           </FdpgFormItem>
         </el-col>
@@ -34,7 +34,7 @@
       <el-row>
         <el-col>
           <FdpgUpload
-            accept=".jpg, .png, .bmp, .gif, .tiff, .svg"
+            :accept="acceptedFileTypes.join(', ')"
             empty-alert-text="proposal.reportUploadPlaceholder"
             :hide-file-list="false"
             :file-list="uploadedFiles"
@@ -51,7 +51,7 @@
               link
               :class="{ 'disable-button': !!(uploadedFiles?.length + filesToBeUploaded?.length > 2) }"
             >
-              {{ $t('proposal.chooseAFile') }}
+              {{ t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
               </template>
@@ -62,9 +62,9 @@
     </el-form>
     <template #footer>
       <span>
-        <el-button link @click="closeDialog">{{ $t('general.cancel') }}</el-button>
+        <el-button link @click="closeDialog">{{ t('general.cancel') }}</el-button>
         <el-button :disabled="isSaveButtonDisabled" type="primary" @click="createOrUpdateReport">
-          {{ $t('general.save') }}
+          {{ t('general.save') }}
         </el-button>
       </span>
     </template>
@@ -86,7 +86,9 @@ import FdpgInput from './FdpgInput.vue'
 import FdpgLabel from './FdpgLabel.vue'
 import FdpgUpload from './FdpgUpload.vue'
 import FdpgtextEditor from './FdpgTextEditor.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const { showErrorMessage } = useNotifications()
 const ReportFormRef: Ref<typeof ElForm | undefined> = ref<typeof ElForm>()
 const emit = defineEmits(['update:modelValue', 'reset', 'update:report'])
@@ -109,7 +111,7 @@ const dialogOpen = useVModel(props, 'modelValue', emit)
 const filesToBeUploaded = ref<UploadRawFile[]>([])
 const uploadedFiles = ref<IReportFile[]>([])
 const keepUploads = ref<string[]>([])
-
+const acceptedFileTypes = ['image/jpeg', 'image/png', 'image/bmp', 'image/gif', 'image/tiff', 'image/svg+xml']
 watch(dialogOpen, async (newModelValue) => {
   if (newModelValue) {
     if (props.report._id) {
@@ -170,7 +172,7 @@ const createOrUpdateReport = async () => {
           } as IReportUpdate)
         }
       } catch (error) {
-        showErrorMessage()
+        showErrorMessage(t('general.failedSubmit'))
       }
       closeDialog()
     }
@@ -191,7 +193,7 @@ const createOrUpdateReport = async () => {
   &.is-error {
     .el-form-item__content {
       .fdpg-label {
-        color: $red;
+        color: $error;
       }
 
       .fdpg-input,
@@ -199,17 +201,17 @@ const createOrUpdateReport = async () => {
       .fdpg-date-picker {
         &.is-focus {
           .el-input__inner {
-            border-color: $red;
+            border-color: $error;
           }
         }
 
         .el-input__inner {
           &:hover {
-            border-color: $red;
+            border-color: $error;
           }
 
           &:focus {
-            box-shadow: 0 0 10px -5px $red;
+            box-shadow: 0 0 10px -5px $error;
           }
         }
       }

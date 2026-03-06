@@ -26,8 +26,10 @@ import FdpgLabel from '@/components/FdpgLabel.vue'
 import LocationSelect from '@/components/LocationSelect.vue'
 import type { ILocation } from '@/types/location.types'
 import type { IAddressees } from '@/types/proposal.types'
+import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
+import { watch } from 'vue'
 
 const props = defineProps({
   modelValue: {
@@ -39,10 +41,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-
   allLocations: {
     type: Array as PropType<ILocation[]>,
     required: true,
+  },
+  selectedDataSources: {
+    type: Array as PropType<PlatformIdentifier[]>,
+    default: () => [],
   },
 })
 

@@ -6,10 +6,10 @@
         html-for="proposal.intellectualPropertyRightCreationApplicationOptions"
         info="proposal.intellectualPropertyRightCreationApplicationOptionsInfo"
       />
-      <FdpgInput
+      <FdpgTextEditor
         v-model="propertyRightsForm.options"
         data-testId="propertyRightsForm.options"
-        placeholder="proposal.pleaseNameYourIntellectualPropertyRights"
+        :placeholder="t('proposal.pleaseNameYourIntellectualPropertyRights')"
         :disabled="reviewMode || propertyRightsForm.isDone"
       />
     </FdpgFormItem>
@@ -20,12 +20,15 @@
 
 <script setup lang="ts">
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
-import FdpgInput from '@/components/FdpgInput.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import TaskViewer from '@/components/TaskViewer/TaskViewer.vue'
 import type { IPropertyRights } from '@/types/proposal.types'
 import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   modelValue: {

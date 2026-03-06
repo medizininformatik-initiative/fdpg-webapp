@@ -1,10 +1,11 @@
 import { CardType } from '@/types/component.types'
 import { Countries } from '@/types/location.enum'
 import { Role } from '@/types/oidc.types'
-import { ProjectFetchingType } from '@/types/proposal.types'
+import { ProjectFetchingType, ProposalStatus } from '@/types/proposal.types'
 import { PanelQuery } from '@/types/sort-filter.types'
+import { cleanDueDateKey } from '@/utils/deadlines'
 
-export const countryOptions = (t) =>
+export const countryOptions = (t: (key: string) => string) =>
   Object.values(Countries).map((value) => ({
     label: t(`countries.${value}`),
     value,
@@ -30,6 +31,23 @@ const defaultColumns = [
   },
 ]
 export const tableColumns = {
+  // DIZ
+  [PanelQuery.DizComingUp]: [
+    ...defaultColumns,
+    {
+      prop: 'projectTitle',
+      header: 'dashboard.projectTitle',
+      sortable: true,
+    },
+    {
+      prop: 'computedDueDate',
+      header: 'dashboard.dueDate',
+      sortable: true,
+      type: 'dueDate',
+    },
+  ],
+
+  // FDPG
   [PanelQuery.FdpgRequestedInWork]: [
     ...defaultColumns,
     {
@@ -84,9 +102,61 @@ export const tableColumns = {
       sortable: true,
     },
   ],
+  [PanelQuery.FdpgOverview]: [
+    ...defaultColumns,
+    {
+      prop: 'substatus',
+      header: 'proposal.substatus',
+      sortable: true,
+      type: 'projectSubstatus',
+    },
+    {
+      prop: 'projectAssignee.lastName',
+      header: 'proposal.projectAssignee',
+      sortable: true,
+      type: 'projectAssignee',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_FDPG_CHECK',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_FDPG_CHECK')}`,
+      sortable: true,
+      type: 'date',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_LOCATION_CHECK',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_LOCATION_CHECK')}`,
+      sortable: true,
+      type: 'date',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_LOCATION_CONTRACTING',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_LOCATION_CONTRACTING')}`,
+      sortable: true,
+      type: 'date',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_EXPECT_DATA_DELIVERY',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_EXPECT_DATA_DELIVERY')}`,
+      sortable: true,
+      type: 'date',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_DATA_CORRUPT',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_DATA_CORRUPT')}`,
+      sortable: true,
+      type: 'date',
+    },
+    {
+      prop: 'deadlines.DUE_DAYS_FINISHED_PROJECT',
+      header: `researcherStatus.${cleanDueDateKey('DUE_DAYS_FINISHED_PROJECT')}`,
+      sortable: true,
+      type: 'date',
+    },
+  ],
 }
 
 const FdpgMemberQueries = {
+  [CardType.Overview]: PanelQuery.FdpgOverview,
   [CardType.Pending]: {
     [ProjectFetchingType.TO_CHECK]: PanelQuery.FdpgPendingToCheck,
     [ProjectFetchingType.IN_WORK]: PanelQuery.FdpgPendingInWork,
@@ -123,7 +193,13 @@ export const PanelQueryObj = {
   [Role.DizMember]: {
     [CardType.Pending]: PanelQuery.DizPending,
     [CardType.Ongoing]: PanelQuery.DizOngoing,
+    [CardType.ComingUp]: PanelQuery.DizComingUp,
     [CardType.Completed]: PanelQuery.DizFinished,
     [CardType.Requested]: PanelQuery.DizRequested,
+  },
+
+  [Role.DataManagementOffice]: {
+    [CardType.Pending]: PanelQuery.DmsPending,
+    [CardType.Ongoing]: PanelQuery.DmsApproved,
   },
 }

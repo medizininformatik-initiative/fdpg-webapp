@@ -1,35 +1,42 @@
 import { ProposalService } from '@/services/proposal/proposal.service'
 import type { ISortAndOrderBy, PanelQuery } from '@/types/sort-filter.types'
 import { SortDirection } from '@/types/sort-filter.types'
-import type {
-  IProposal,
-  IProposalDetail,
-  IProposalCount,
+import {
+  DeliveryAcceptance,
   ProposalStatus,
-  IFdpgChecklist,
-  IResearcherIdentity,
-  SortableFields,
-  IPublicationCreateAndUpdate,
-  IReportCreate,
-  IReportUpdate,
-  IEditAdditionalLocationProposalInformation,
-  IUpload,
-  ISelectedCohort,
-  IParticipant,
-  IApplicant,
+  SubDeliveryStatus,
+  type IApplicant,
+  type IDataDelivery,
+  type IDeliveryInfo,
+  type IDizDetails,
+  type IEditAdditionalLocationProposalInformation,
+  type IFdpgChecklist,
+  type IParticipant,
+  type IProjectAssignee,
+  type IProposal,
+  type IProposalCount,
+  type IProposalDetail,
+  type IProposalStatistics,
+  type IPublicationCreateAndUpdate,
+  type IReportCreate,
+  type IReportUpdate,
+  type IResearcherIdentity,
+  type ISelectedCohort,
+  type ISubDelivery,
+  type IUpload,
+  type SortableFields,
 } from '@/types/proposal.types'
 import { defineStore } from 'pinia'
 import type { DeepPartial } from '@/types/deep-partial.type'
 import type { DirectUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
-import { debounce } from 'lodash-es'
+import { debounce, update } from 'lodash-es'
 import { getDateDiff } from '@/utils/date.util'
 import type { ContractDecision } from '@/types/sign-contract.types'
 import type { DizApprovalDecision } from '@/types/diz-approval.types'
 import type { UacApprovalDecision } from '@/types/uac-approval.types'
 import type { DizConditionApprovalDecision } from '@/types/diz-condition-approval.types'
 import type { Deadlines } from '@/types/due-date.enum'
-import type { IDizDetails } from '@/types/proposal.types'
 
 export interface IProposalState {
   apiService: ProposalService
@@ -40,6 +47,7 @@ export interface IProposalState {
   counts: { [key in PanelQuery]?: IProposalCount }
   _checkListLastSuccess: IFdpgChecklist
   search?: string
+  statistics: IProposalStatistics
 }
 
 export const useProposalStore = defineStore('Proposal', {
@@ -52,19 +60,29 @@ export const useProposalStore = defineStore('Proposal', {
     counts: {},
     _checkListLastSuccess: {
       isRegistrationLinkSent: false,
+      initialViewing: false,
+      depthCheck: false,
+      ethicsCheck: false,
       checkListVerification: [],
       fdpgInternalCheckNotes: '',
       projectProperties: [],
     },
     search: undefined,
+    statistics: {
+      panels: {},
+      total: 0,
+    },
   }),
 
   actions: {
+    async getStatistics(): Promise<void> {
+      const data = await this.apiService.getStatistics()
+      this.statistics = data
+    },
     async fetch(sortAndFilterBy: ISortAndOrderBy<any>): Promise<IProposalDetail[]> {
       const { panelQuery } = sortAndFilterBy
       const data = await this.apiService.getAll(sortAndFilterBy)
       this.proposals[panelQuery] = data
-
       this.counts[panelQuery] = data.reduce(
         (acc, proposal) => {
           proposal.computedDueDate = proposal.dueDateForStatus ? getDateDiff(proposal.dueDateForStatus, 0) : undefined
@@ -178,7 +196,6 @@ export const useProposalStore = defineStore('Proposal', {
           await this.apiService.removeFile(id, uploadId)
           successFullRemovalIds.push(uploadId)
         } catch (error) {
-          console.log(error)
           failCount++
         }
       }
@@ -238,6 +255,12 @@ export const useProposalStore = defineStore('Proposal', {
 
         if ('isRegistrationLinkSent' in updatedItem) {
           checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('initialViewing' in updatedItem) {
+          checklistData.initialViewing = updatedItem.initialViewing
+        } else if ('depthCheck' in updatedItem) {
+          checklistData.depthCheck = updatedItem.depthCheck
+        } else if ('ethicsCheck' in updatedItem) {
+          checklistData.ethicsCheck = updatedItem.ethicsCheck
         } else if ('fdpgInternalCheckNotes' in updatedItem) {
           checklistData.fdpgInternalCheckNotes =
             updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
@@ -265,6 +288,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     }, 500),
 
@@ -285,6 +309,12 @@ export const useProposalStore = defineStore('Proposal', {
 
         if ('isRegistrationLinkSent' in updatedItem) {
           checklistData.isRegistrationLinkSent = updatedItem.isRegistrationLinkSent
+        } else if ('initialViewing' in updatedItem) {
+          checklistData.initialViewing = updatedItem.initialViewing
+        } else if ('depthCheck' in updatedItem) {
+          checklistData.depthCheck = updatedItem.depthCheck
+        } else if ('ethicsCheck' in updatedItem) {
+          checklistData.ethicsCheck = updatedItem.ethicsCheck
         } else if ('fdpgInternalCheckNotes' in updatedItem) {
           checklistData.fdpgInternalCheckNotes =
             updatedItem.fdpgInternalCheckNotes ?? checklistData.fdpgInternalCheckNotes
@@ -312,6 +342,7 @@ export const useProposalStore = defineStore('Proposal', {
         if (errorCb) {
           errorCb(error)
         }
+        throw error
       }
     },
 
@@ -505,6 +536,164 @@ export const useProposalStore = defineStore('Proposal', {
     },
     async downloadLocationCsv(proposalId: string): Promise<void> {
       await this.apiService.downloadLocationCsv(proposalId)
+    },
+    async copyAsInternalRegistration(proposalId: string): Promise<string> {
+      return await this.apiService.copyAsInternalRegistration(proposalId)
+    },
+
+    async syncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.syncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async retrySyncProposal(proposalId: string): Promise<{ success: boolean; error?: string }> {
+      const result = await this.apiService.retrySyncProposal(proposalId)
+
+      if (this.currentProposal?._id === proposalId) {
+        await this.setCurrentProposal(proposalId)
+      }
+
+      return result
+    },
+
+    async syncAllProposals(): Promise<{
+      total: number
+      synced: number
+      failed: number
+      errors: Array<{ projectAbbreviation: string; error: string }>
+    }> {
+      const result = await this.apiService.syncAllProposals()
+
+      const fdpgPublishedPanels: PanelQuery[] = [
+        'FDPG_PUBLISHED_READY' as PanelQuery,
+        'FDPG_PUBLISHED_PUBLISHED' as PanelQuery,
+      ]
+
+      await Promise.all(
+        fdpgPublishedPanels.map((panelQuery) =>
+          this.fetch({
+            panelQuery,
+            order: this.currentSortDirection,
+            sortBy: this.currentSortField,
+          }),
+        ),
+      )
+
+      return result
+    },
+
+    async registerDataDeliveryRequestAtDms(proposalId: string, dmsId: string): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.registerDataDeliveryRequestAtDms(proposalId, dmsId)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateDmsForDataDelivery(proposalId: string, transientDataDelivery: IDataDelivery): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.updateDmsForDataDelivery(proposalId, transientDataDelivery)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async initiateDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.initiateDeliveryInfo(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async syncDeliveryInfo(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.syncDeliveryInfo(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateDmsAcceptanceForDataDelivery(
+      proposalId: string,
+      acceptance: DeliveryAcceptance,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.setDmsAcceptance(proposalId, acceptance)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async rateSubDelivery(
+      proposalId: string,
+      deliveryInfoId: string,
+      subDelivery: ISubDelivery,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.rateSubDelivery(proposalId, deliveryInfoId, subDelivery)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async setDeliveryInfoStatus(proposalId: string, deliveryInfo: IDeliveryInfo): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.setDeliveryInfoStatus(proposalId, deliveryInfo)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async extendDeliveryInfo(
+      proposalId: string,
+      deliveryInfoId: string,
+      newDeliveryDate: Date,
+    ): Promise<IDataDelivery> {
+      const dataDelivery = await this.apiService.extendDeliveryInfo(proposalId, deliveryInfoId, newDeliveryDate)
+
+      if (proposalId === this.currentProposal?._id) {
+        this.currentProposal = { ...this.currentProposal, dataDelivery: dataDelivery }
+      }
+
+      return dataDelivery
+    },
+
+    async updateProjectAssignee(proposalId: string, projectAssignee?: IProjectAssignee): Promise<void> {
+      await this.apiService.updateProjectAssignee(proposalId, projectAssignee)
+    },
+
+    async setToDataResearch(proposalId: string): Promise<IProposal> {
+      await this.updateProposalStatus(proposalId, ProposalStatus.DataResearch)
+      const updatedProposal = await this.apiService.updateDelivieriesForAnalysis(proposalId)
+      if (updatedProposal) {
+        this.currentProposal = updatedProposal
+      }
+      return updatedProposal
+    },
+
+    async skipContracting(proposalId: string, locations: string[], file?: File): Promise<void> {
+      const proposal = await this.apiService.skipContracting(proposalId, locations, file)
+      this.currentProposal = { ...proposal }
     },
   },
 

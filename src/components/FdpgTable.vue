@@ -1,80 +1,95 @@
 <template>
-  <h3 class="title">{{ $t('dashboard.inProcess', { count: proposals.length }) }}</h3>
-  <el-table
-    :data="proposals"
-    :default-sort="{ prop: 'address', order: 'descending' }"
-    height="312"
-    class="fdpg-table"
-    role="table"
-    :tabindex="proposals.length > 0 ? '0' : '-1'"
-    @current-change="handleRowClick"
-    @row-click="handleRowClick"
-    @keydown.down="focusNextRow($event)"
-    @keydown.up="focusPreviousRow($event)"
-    @keydown.prevent.tab="handleTableTab($event)"
-    @keydown.tab.shift="handleShiftTab($event)"
-    @keydown.space="handleTableSpace($event)"
-    @keydown.esc="handleTableEsc($event)"
-    @blur="removeTableBodyListeners($event)"
-  >
-    <el-table-column
-      v-for="(column, index) of columns"
-      :key="index"
-      :sortable="column.sortable"
-      :prop="column.prop"
-      :width="column.width"
+  <h3 class="title">{{ t(tableHeader, { count: proposals.length }) }}</h3>
+  <div :class="['table-wrapper', { 'overview-mode': isOverviewMode }]">
+    <el-table
+      :data="proposals"
+      :default-sort="{ prop: 'address', order: 'descending' }"
+      :height="fullHeight ? '100%' : 312"
+      :class="['fdpg-table', { 'full-width': isOverviewMode }]"
+      :table-layout="isOverviewMode ? 'auto' : 'fixed'"
+      role="table"
+      :tabindex="proposals.length > 0 ? '0' : '-1'"
+      @current-change="handleRowClick"
+      @row-click="handleRowClick"
+      @keydown.down="focusNextRow($event)"
+      @keydown.up="focusPreviousRow($event)"
+      @keydown.prevent.tab="handleTableTab($event)"
+      @keydown.tab.shift="handleShiftTab($event)"
+      @keydown.space="handleTableSpace($event)"
+      @keydown.esc="handleTableEsc($event)"
+      @blur="removeTableBodyListeners($event)"
     >
-      <template #header
-        ><span
-          :tabindex="proposals.length > 0 ? '0' : '-1'"
-          class="columnHeader"
-          @keydown.enter="toggleSort($event)"
-          @keydown.left="focusPreviousColumnHeader($event)"
-          @keydown.right="focusNextColumnHeader($event)"
-          @keydown.prevent.tab="handleTableTab($event)"
-          >{{ $t(column.header) }}</span
-        ></template
+      <el-table-column
+        v-for="(column, index) of columns"
+        :key="index"
+        :sortable="column.sortable"
+        :prop="column.prop"
+        :width="isOverviewMode ? undefined : column.width"
       >
-      <template v-if="column.type === ColumnType.Tag" #default="scope">
-        <el-tag tabindex="0" @keydown.self.enter="handleRowClick(scope.row, $event)" @focus="handleFocus($event)">{{
-          scope.row[column.prop]
-        }}</el-tag>
-      </template>
+        <template #header
+          ><span
+            :tabindex="proposals.length > 0 ? '0' : '-1'"
+            class="columnHeader"
+            @keydown.enter="toggleSort($event)"
+            @keydown.left="focusPreviousColumnHeader($event)"
+            @keydown.right="focusNextColumnHeader($event)"
+            @keydown.prevent.tab="handleTableTab($event)"
+            >{{ t(column.header) }}</span
+          ></template
+        >
+        <template v-if="column.type === ColumnType.Tag" #default="scope">
+          <el-tag tabindex="0" @keydown.self.enter="handleRowClick(scope.row, $event)" @focus="handleFocus($event)">{{
+            getNestedProperty(scope.row, column.prop)
+          }}</el-tag>
+        </template>
+        <template v-else-if="column.type === ColumnType.Date" #default="scope">
+          {{
+            getNestedProperty(scope.row, column.prop)
+              ? new Date(getNestedProperty(scope.row, column.prop) as string | number | Date).toLocaleDateString(undefined, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })
+              : '-'
+          }}
+        </template>
 
-      <template v-else-if="column.type === ColumnType.Date" #default="scope">
-        {{
-          new Date(scope.row[column.prop]).toLocaleDateString(undefined, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-          })
-        }}
-      </template>
+        <template v-else-if="column.type === ColumnType.DueDate" #default="scope">
+          <FdpgTableDueDateRow :due-date="(getNestedProperty(scope.row, column.prop) as number | undefined)" />
+        </template>
 
-      <template v-else-if="column.type === ColumnType.DueDate" #default="scope">
-        <FdpgTableDueDateRow :due-date="scope.row[column.prop]" />
-      </template>
-    </el-table-column>
-  </el-table>
+        <template v-else-if="column.type === ColumnType.ProjectSubstatus" #default="scope">
+          {{ t(`projectStatus.SUBSTATUS__${getNestedProperty(scope.row, column.prop)}`) }}
+        </template>
+        <template v-else-if="column.type === ColumnType.ProjectAssignee" #default="scope">
+          {{ getNestedProperty(scope.row, column.prop) || '-' }}
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { Role } from '@/types/oidc.types'
-import type { PanelType } from '@/types/proposal.types'
+import { type PanelType } from '@/types/proposal.types'
 import { RouteName } from '@/types/route-name.enum'
-import { SortDirection } from '@/types/sort-filter.types'
+import { PanelQuery, SortDirection } from '@/types/sort-filter.types'
 import useTableAccessibility from '@/composables/use-table-accessibility'
+import useNotifications from '@/composables/use-notifications'
 import { ElTable } from 'element-plus'
 import type { PropType } from 'vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import FdpgTableDueDateRow from './FdpgTableDueDateRow.vue'
+import { useI18n } from 'vue-i18n'
 
 enum ColumnType {
   Tag = 'tag',
   DueDate = 'dueDate',
   Date = 'date',
+  ProjectSubstatus = 'projectSubstatus',
+  ProjectAssignee = 'projectAssignee',
 }
 
 interface IColumn {
@@ -100,9 +115,24 @@ const props = defineProps({
     type: String as PropType<Role>,
     required: true,
   },
+  tableHeader: {
+    type: String,
+    required: true,
+  },
+  clickActionDisabled: {
+    type: Boolean,
+    default: false,
+  },
+  fullHeight: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 defineEmits(['row-click'])
+
+const { t } = useI18n()
+const { showErrorMessage } = useNotifications()
 
 const defaultLength = ref<number>(6)
 const displayCount = ref<number>(defaultLength.value)
@@ -114,11 +144,15 @@ const fetchProposals = async () => {
   try {
     await proposalStore.fetch({ order: SortDirection.DESC, panelQuery: props.panel.query })
   } catch (error) {
-    console.log('TODO: Handle Error', error)
+    showErrorMessage(t('general.errorFetchingData'))
   }
 }
 
-const handleRowClick = async (row, event?: Event | KeyboardEvent) => {
+const handleRowClick = async (row: { _id: string }, event?: Event | KeyboardEvent) => {
+  if (props.clickActionDisabled) {
+    return
+  }
+
   await router.push({
     name: RouteName.ProposalDetails,
     params: { id: row._id },
@@ -142,7 +176,19 @@ const {
   toggleSort,
 } = useTableAccessibility()
 
+const getNestedProperty = (obj: Record<string, unknown>, path: string) => {
+  const keys = path.replace(/\[([^\]]+)\]/g, '.$1').split('.')
+  return keys.reduce((current: unknown, key: string) => {
+    if (current && typeof current === 'object') {
+      return (current as Record<string, unknown>)[key]
+    }
+    return undefined
+  }, obj)
+}
+
 const proposals = computed(() => proposalStore.filteredProposal[props.panel.query] || [])
+
+const isOverviewMode = computed(() => props.panel.query === PanelQuery.FdpgOverview)
 
 onMounted(async () => {
   fetchProposals()
@@ -215,7 +261,7 @@ watch([props], () => {
 
       &:hover {
         .el-table__cell {
-          background-color: $gray-200;
+          background-color: $gray-300;
         }
       }
 
@@ -252,6 +298,43 @@ watch([props], () => {
               outline: none;
             }
           }
+        }
+      }
+    }
+  }
+}
+
+.table-wrapper {
+  width: 100%;
+
+  &.overview-mode {
+    overflow-x: auto;
+    width: 100%;
+
+    .fdpg-table {
+      min-width: 100%;
+      width: max-content;
+      table-layout: auto;
+
+      .el-table__header,
+      .el-table__body {
+        width: max-content;
+        table-layout: auto;
+      }
+
+      .el-table__header-wrapper,
+      .el-table__body-wrapper {
+        overflow: visible;
+      }
+
+      .el-table__cell {
+        width: auto;
+        min-width: max-content;
+
+        .cell {
+          white-space: nowrap;
+          overflow: visible;
+          text-overflow: clip;
         }
       }
     }

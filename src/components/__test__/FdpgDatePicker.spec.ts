@@ -2,7 +2,16 @@ import FdpgDatePicker from '../FdpgDatePicker.vue'
 import { createTestingPinia } from '@pinia/testing'
 import { mount } from '@vue/test-utils'
 import { CommentType } from '@/types/comment.interface'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+vi.mock('vue-i18n', () => ({
+  useI18n: vi.fn().mockImplementation(() => ({
+    t: vi.fn().mockReturnValue('Test'),
+    locale: {
+      value: 'de-DE',
+    },
+  })),
+}))
 
 describe('FdpgDatePicker.vue', () => {
   let wrapper: any

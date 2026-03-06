@@ -1,19 +1,38 @@
 <template>
-  <div v-if="!(hideDocuments && hideContracts)" class="section">
-    <template v-if="!hideDocuments">
+  <div class="section">
+    <!-- General Appendix/Documents Section -->
+    <div class="general-appendix-title-row">
       <h2 class="section-title">{{ t('proposal.appendix') }} ({{ documents.length }})</h2>
+      <el-button v-if="isManualUploadDialogVisible" type="primary" plain @click="handleOpenMultiUploadDialog">{{
+        t('proposal.addDocuments')
+      }}</el-button>
+    </div>
+
+    <DocumentList
+      :documents="documents"
+      :proposal-id="proposalId"
+      :is-loading="isDocumentsLoading"
+      :is-disabled="!isEditable"
+      :two-columns="true"
+      empty-alert-text="proposal.noAttachmentsYet"
+      @remove="handleDocumentRemove"
+    />
+
+    <!-- Feasibility Queries Section -->
+    <template v-if="feasibilityQueryDocuments.length > 0">
+      <h2 class="section-title">{{ t('proposal.feasibilityDocuments') }} ({{ feasibilityQueryDocuments.length }})</h2>
 
       <DocumentList
-        :documents="documents"
+        :documents="feasibilityQueryDocuments"
         :proposal-id="proposalId"
-        :is-loading="isDocumentsLoading"
-        :is-disabled="!isEditable"
+        :is-loading="isFeasibilityQueryDocumentsLoading"
+        :is-disabled="true"
         :two-columns="true"
         empty-alert-text="proposal.noAttachmentsYet"
-        @remove="handleDocumentRemove"
       />
     </template>
 
+    <!-- Draft Contracts and Contracts Section Headers -->
     <el-row v-if="!hideContracts" :gutter="39">
       <el-col :span="12">
         <h2 class="section-title">
@@ -26,6 +45,8 @@
         </h2>
       </el-col>
     </el-row>
+
+    <!-- Draft Contracts and Contracts Document Lists (Two Columns) -->
     <el-row v-if="!hideContracts" :gutter="39">
       <el-col :span="12">
         <DocumentList
@@ -39,6 +60,7 @@
           @edit="handleContractDraftEditDialogOpen"
         />
       </el-col>
+
       <el-col :span="12">
         <DocumentList
           :documents="contracts"
@@ -51,6 +73,7 @@
       </el-col>
     </el-row>
 
+    <!-- Contract Appendix Section Header -->
     <el-row>
       <el-col :span="12">
         <h2 class="section-title">
@@ -63,6 +86,7 @@
       </el-col>
     </el-row>
 
+    <!-- Contract Appendix Document List -->
     <el-row>
       <el-col>
         <ContractAppendixList
@@ -78,66 +102,60 @@
     </el-row>
   </div>
 
-  <FdpgDialog v-model="editDialogOpen" :title="t('proposal.editContract')" width="50%">
-    <FdpgUpload
-      :is-loading="isContractDraftsLoading"
-      :is-disabled="false"
-      :hide-file-list="false"
-      :file-list="relevantEditContractDocuments"
-      @change="handleEditContractUpload"
-      :accept="SupportedMimetype"
-      :proposal-id="proposalId"
-      @remove="handleContractDraftRemove"
-      :hideRemoveButton="true"
-    >
-      <el-button class="upload-button" link>
-        {{ t('proposal.chooseAFile') }}
-        <template #icon>
-          <el-icon class="bi-paperclip"></el-icon>
-        </template>
-      </el-button>
-    </FdpgUpload>
+  <!-- Edit Contract Dialog -->
+  <EditContractDialog
+    v-model="editDialogOpen"
+    :proposal-id="proposalId"
+    :contract-drafts="contractDrafts"
+    :is-contract-drafts-loading="isContractDraftsLoading"
+    :supported-mimetype="SupportedMimetype"
+    :upload-id="uploadId"
+    @remove="handleContractDraftRemove"
+    @success="handleEditContractSuccess"
+  />
 
-    <div v-if="!!uploadedFile" class="display-uploaded">
-      <el-icon class="bi-paperclip"></el-icon>
-      <div>{{ uploadedFile.name }}</div>
-    </div>
-
-    <template #footer>
-      <span>
-        <el-button link @click="handleCloseDialog">
-          {{ t('general.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="handleEditContract" :disabled="isContractDraftsLoading || !uploadedFile">
-          {{ t('general.save') }}
-        </el-button>
-      </span>
-    </template>
-  </FdpgDialog>
+  <!-- Multi Upload Dialog -->
+  <MultiUploadDialog
+    v-model="multiUploadDialogOpen"
+    :proposal-id="proposalId"
+    :upload-types="generalAppendixTypes"
+    :supported-mimetype="SupportedMimetype"
+    @success="handleMultiUploadSuccess"
+  />
 </template>
+
 <script setup lang="ts">
 import DocumentList from '@/components/Proposals/Details/DocumentList.vue'
 import useNotifications from '@/composables/use-notifications'
 import useUpload from '@/composables/use-upload'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
-import { type IUpload, ProposalStatus } from '@/types/proposal.types'
+import { ProposalStatus } from '@/types/proposal.types'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ContractAppendixList from './Proposals/Details/ContractAppendixList.vue'
+import EditContractDialog from './Proposals/Details/EditContractDialog.vue'
+import MultiUploadDialog from './Proposals/Details/MultiUploadDialog.vue'
 import type { UploadFile } from 'element-plus'
-import FdpgDialog from './FdpgDialog.vue'
-import FdpgUpload from './FdpgUpload.vue'
 import { useI18n } from 'vue-i18n'
 import ESupportedMimetype from '@/types/supported-mimetype.enum'
+import { Role } from '@/types/oidc.types'
 
 const { params } = useRoute()
 const proposalId = computed(() => params.id as string)
 
 const proposalStore = useProposalStore()
+const authStore = useAuthStore()
 
 const { t } = useI18n()
+
+const generalAppendixTypes = [
+  DirectUpload.GeneralAppendix,
+  DirectUpload.EthicVote,
+  DirectUpload.EthicVoteDeclarationOfNonResponsibility,
+  DirectUpload.AdditionalDocument,
+]
 
 const hideContracts = computed(() => {
   const statesWithoutContracts = [
@@ -154,38 +172,35 @@ const hideContracts = computed(() => {
 })
 
 const status = computed(() => proposalStore.currentProposal?.status)
-const isEditable = computed(() => status.value === ProposalStatus.Draft || status.value === ProposalStatus.Rework)
+const isEditable = computed(
+  () =>
+    status.value === ProposalStatus.Draft ||
+    status.value === ProposalStatus.Rework ||
+    (authStore.hasFdpgLevelPermissions() && status.value === ProposalStatus.FdpgCheck),
+)
 const isContractEditable = computed(
   () => status.value === ProposalStatus.Contracting && authStore.hasFdpgLevelPermissions(),
 )
-
-const authStore = useAuthStore()
-const hideDocuments = computed(() => {
-  const isFdpgCheck = proposalStore.currentProposal?.status === ProposalStatus.FdpgCheck
-  const isFdpgMember = authStore.hasFdpgLevelPermissions()
-
-  return isFdpgCheck && isFdpgMember
-})
 
 const SupportedMimetype = computed(() => {
   return Object.values(ESupportedMimetype).join(',')
 })
 
-const { showErrorMessage, showSuccessMessage } = useNotifications()
+const isManualUploadDialogVisible = computed(() => {
+  return (isEditable.value && authStore.singleKnownRole === Role.Researcher) || authStore.hasFdpgLevelPermissions()
+})
+
+const { showErrorMessage } = useNotifications()
+
 const {
   uploadsForType: documents,
   handleRemoveFile: handleDocumentRemove,
   isAppendixLoading: isDocumentsLoading,
-} = useUpload(
+} = useUpload(proposalId, [...generalAppendixTypes, UseCaseUpload.ProposalPDF], showErrorMessage)
+
+const { uploadsForType: feasibilityQueryDocuments, isAppendixLoading: isFeasibilityQueryDocumentsLoading } = useUpload(
   proposalId,
-  [
-    DirectUpload.GeneralAppendix,
-    DirectUpload.EthicVote,
-    DirectUpload.EthicVoteDeclarationOfNonResponsibility,
-    DirectUpload.AdditionalDocument,
-    UseCaseUpload.ProposalPDF,
-    UseCaseUpload.FeasibilityQuery,
-  ],
+  [UseCaseUpload.FeasibilityQuery],
   showErrorMessage,
 )
 
@@ -206,7 +221,11 @@ const {
   uploadsForType: contracts,
   handleRemoveFile: handleContractRemove,
   isAppendixLoading: isContractsLoading,
-} = useUpload(proposalId, [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract], showErrorMessage)
+} = useUpload(
+  proposalId,
+  [UseCaseUpload.LocationContract, UseCaseUpload.ResearcherContract, UseCaseUpload.SkipContract],
+  showErrorMessage,
+)
 
 const handleContractAppendixAdd = async (file: UploadFile) => {
   await handleContractAppendixUpload(file)
@@ -214,57 +233,33 @@ const handleContractAppendixAdd = async (file: UploadFile) => {
 }
 
 const editDialogOpen = ref<boolean>(false)
-const uploadedFile = ref<UploadFile | null>(null)
 const uploadId = ref<string | null>(null)
-const relevantEditContractDocuments = computed<IUpload[]>(() => {
-  return contractDrafts.value.filter((doc) => doc._id === uploadId.value)
-})
 
 const handleContractDraftEditDialogOpen = (id: string) => {
   uploadId.value = id
-  handleOpenDialog()
-}
-
-const handleOpenDialog = () => {
   editDialogOpen.value = true
 }
 
-const handleCloseDialog = () => {
-  uploadedFile.value = null
+const handleEditContractSuccess = async () => {
   uploadId.value = null
-  editDialogOpen.value = false
 }
 
-const handleEditContractUpload = async (file: UploadFile) => {
-  uploadedFile.value = file
+const multiUploadDialogOpen = ref<boolean>(false)
+
+const handleOpenMultiUploadDialog = () => {
+  multiUploadDialogOpen.value = true
 }
 
-const handleEditContract = async () => {
-  const file = uploadedFile.value?.raw
-
-  if (!file || !uploadId.value) {
-    showErrorMessage()
-    handleCloseDialog()
-  } else {
-    try {
-      await proposalStore.updateContracting(proposalId.value, file as File, uploadId.value)
-      showSuccessMessage(t('general.submitted'))
-
-      await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
-    } catch {
-      showErrorMessage()
-    }
-
-    handleCloseDialog()
-  }
+const handleMultiUploadSuccess = async () => {
+  await proposalStore.setCurrentProposal(proposalStore.currentProposal?._id)
 }
 </script>
 
 <style lang="scss" scoped>
-.display-uploaded {
+.general-appendix-title-row {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  margin-bottom: 10px;
 }
 </style>

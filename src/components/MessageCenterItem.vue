@@ -77,7 +77,11 @@ const props = defineProps({
     default: false,
   },
   type: {
-    type: String as PropType<CommentType.PROPOSAL_MESSAGE_TO_OWNER | CommentType.PROPOSAL_MESSAGE_TO_LOCATION>,
+    type: String as PropType<
+      | CommentType.PROPOSAL_MESSAGE_TO_OWNER
+      | CommentType.PROPOSAL_MESSAGE_TO_LOCATION
+      | CommentType.PROPOSAL_MESSAGE_TO_DMST
+    >,
     required: true,
   },
   possibleLocations: {

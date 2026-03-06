@@ -129,6 +129,7 @@ watch(
   () => {
     possibleLocations.value = [...props.locations.map((locId) => locationsMap.value[locId])]
   },
+  { deep: true },
 )
 
 const possibleLocations: Ref<ILocation[]> = ref([])

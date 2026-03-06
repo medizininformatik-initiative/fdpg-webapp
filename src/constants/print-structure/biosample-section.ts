@@ -85,11 +85,12 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
 const biosampleCards = [informationOnRequestedBioSamplesCard, biosamplesCard]
 
 export const biosampleSection = (
-  dataSources: PlatformIdentifier[] = [],
+  assignedDataSources: PlatformIdentifier[] = [],
+  selectedDataSources: PlatformIdentifier[] = [],
 ): DefinitionSection<IProposal, 'userProject'> => {
   return {
     sectionLabel: 'proposal.selectedBioSamples',
-    shouldHide: shouldHideForPlatform(dataSources, PlatformIdentifier.Mii),
+    shouldHide: shouldHideForPlatform(assignedDataSources, PlatformIdentifier.Mii, selectedDataSources),
     kind: 'object',
     key: 'userProject',
     mapping: biosampleCards,

@@ -19,7 +19,7 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
     return proposalStore.currentProposal?.uploads?.filter((upload) => uploadTypes.includes(upload.type)) ?? []
   })
 
-  const handleUploadError = (error: any) => {
+  const handleUploadError = (error: unknown) => {
     let message: string | undefined
     if (axios.isAxiosError(error) && error.response?.data?.errors) {
       const isWrongMimetype = error.response?.data.errors.find(
@@ -44,7 +44,7 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
       } else {
         console.error('Upload not valid for direct upload')
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       handleUploadError(error)
     }
     isAppendixLoading.value = false
@@ -56,7 +56,7 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
     if (appendix) {
       try {
         await proposalStore.removeUpload(proposalId.value, id)
-      } catch (error: any) {
+      } catch (error: unknown) {
         if (errorCb) {
           errorCb()
         }
@@ -71,7 +71,7 @@ export default (proposalId: Ref<string>, uploadTypes: UploadType[], errorCb?: (.
 
     try {
       await proposalStore.removeUploads(proposalId.value, ids)
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (errorCb) {
         errorCb()
       }

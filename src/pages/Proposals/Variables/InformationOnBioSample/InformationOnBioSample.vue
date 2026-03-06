@@ -6,7 +6,7 @@
     size="medium"
     :section-id="informationOnRequestedBioSamplesForm!._id"
   />
-  <el-card class="form-group">
+  <el-card class="form-group" v-if="!isRegisteringForm">
     <FdpgFormItem
       v-if="informationOnRequestedBioSamplesForm"
       :prop="'userProject.informationOnRequestedBioSamples.noSampleRequired'"
@@ -89,29 +89,32 @@
                 </FdpgRadio>
               </el-radio-group>
             </FdpgFormItem>
+
             <FdpgFormItem
-              v-if="!reviewMode && !informationOnRequestedBioSamplesForm.isDone"
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].typeDetails`"
-              :rules="biosampleRules.typeDetails"
+              :rules="isRegisteringForm ? [] : biosampleRules.typeDetails"
             >
-              <FdpgInput
+              <FdpgLabel html-for="proposal.biosampleTypeDetails" />
+
+              <FdpgTextEditor
                 v-model="biosample.typeDetails"
                 :data-testId="'biosample.typeDetails__' + index"
-                placeholder="proposal.biosampleTypePlaceholder"
+                :placeholder="t('proposal.biosampleTypePlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
               />
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].requirements`"
               :rules="biosampleRules.requirements"
             >
               <FdpgLabel html-for="proposal.biosampleMaterialRequirements" required />
-              <FdpgInput
+              <FdpgTextEditor
                 v-model="biosample.requirements"
                 :data-testId="'biosample.requirements__' + index"
-                placeholder="proposal.biosampleMaterialRequirementsPlaceholder"
+                :placeholder="t('proposal.biosampleMaterialRequirementsPlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
               />
             </FdpgFormItem>
@@ -139,6 +142,7 @@
               />
             </FdpgFormItem>
           </el-col>
+
           <el-col :sm="24">
             <FdpgFormItem :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].sampleCode`">
               <FdpgLabel html-for="proposal.sampleCode" />
@@ -161,6 +165,7 @@
                     >
                     </Fdpgcheckbox>
                     <FdpgFormItem
+                      v-if="!isRegisteringForm"
                       :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}][${option.value}]`"
                     >
                       <FdpgInput
@@ -175,7 +180,8 @@
               </el-checkbox-group>
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].method`"
               :rules="biosampleRules.method"
@@ -191,7 +197,7 @@
               />
             </FdpgFormItem>
           </el-col>
-          <el-col :sm="24">
+          <el-col :sm="24" v-if="!isRegisteringForm">
             <FdpgFormItem
               :prop="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransfer`"
             >
@@ -275,6 +281,11 @@ const props = defineProps({
   },
 
   reviewMode: {
+    type: Boolean,
+    default: false,
+  },
+
+  isRegisteringForm: {
     type: Boolean,
     default: false,
   },

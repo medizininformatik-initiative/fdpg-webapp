@@ -14,7 +14,7 @@
           </template>
 
           <div class="table-container">
-            <el-table :data="tableData" stripe style="width: 100%">
+            <el-table :data="tableData" stripe>
               <el-table-column
                 prop="localProjectIdentifier"
                 :label="t('proposal.localProjectIdentifier')"
@@ -70,10 +70,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, reactive, type PropType, onMounted } from 'vue'
+import { ref, computed, reactive, type PropType } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute } from 'vue-router'
-import { Document } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth/auth.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import useNotifications from '@/composables/use-notifications'
@@ -81,10 +80,9 @@ import type { IDizDetails } from '@/types/proposal.types'
 import FdpgFormItem from '@/components/FdpgFormItem.vue'
 import FdpgInput from './FdpgInput.vue'
 import FdpgTextEditor from './FdpgTextEditor.vue'
-import type { FormInstance, FormRules } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 import ProjectTodoLargeItem from '@/components/ProjectTodoLargeItem.vue'
 import type { IProjectTodo } from '@/types/project-todo.interface'
-import type { MiiLocation } from '@/types/location.enum'
 
 const props = defineProps({
   editable: { type: Boolean, default: false },
@@ -128,7 +126,7 @@ const tableData = computed<IDizDetails[]>(() => {
       {
         localProjectIdentifier: '',
         documentationLinks: '',
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       },
     ]
 })
@@ -142,7 +140,7 @@ const handleSave = async () => {
       await proposalStore.createDizDetails(proposalId.value, {
         localProjectIdentifier: tableData.value[0].localProjectIdentifier,
         documentationLinks: tableData.value[0].documentationLinks,
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       })
       showSuccessMessage(t('proposal.dizDetailsCreated'))
     } else {
@@ -151,14 +149,14 @@ const handleSave = async () => {
         _id: tableData.value[0]._id as string,
         localProjectIdentifier: tableData.value[0].localProjectIdentifier,
         documentationLinks: tableData.value[0].documentationLinks,
-        location: userLocation.value as MiiLocation,
+        location: userLocation.value,
       })
       showSuccessMessage(t('proposal.dizDetailsUpdated'))
     }
 
     editingItem.value = null
   } catch (error) {
-    showErrorMessage()
+    showErrorMessage(t('general.failedToUpdateData'))
   } finally {
     isSubmitting.value = false
   }
@@ -169,7 +167,7 @@ const handleSave = async () => {
 @use '@/assets/sass/variable' as *;
 
 .diz-details {
-  background-color: $gray-200;
+  background-color: $gray-300;
   padding: 20px;
   border-radius: 10px;
   margin-bottom: 52px;
