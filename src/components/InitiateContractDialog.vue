@@ -10,7 +10,7 @@
     <div>
       <p>{{ t('proposal.toContractingModalDescription') }}</p>
       <div v-if="contractDraft" class="fdpg-upload-list-item">
-        <p class="fdpg-upload-file__name">{{ contractDraft.name }}</p>
+        <p class="fdpg-upload-file__name" :title="contractDraft.name">{{ contractDraft.name }}</p>
         <span>({{ ((contractDraft?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
         <el-icon
           class="el-icon-close"

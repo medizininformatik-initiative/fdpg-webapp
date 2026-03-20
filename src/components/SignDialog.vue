@@ -2,35 +2,35 @@
   <FdpgDialog
     v-model="dialogOpen"
     width="50%"
-    :title="$t('proposal.acceptContractProposal')"
+    :title="t('proposal.acceptContractProposal')"
     :before-close="closeDialog"
     :show-close="false"
     aria-modal="true"
   >
     <div>
-      <p>{{ $t('proposal.acceptContractProposalModalDescription') }}</p>
+      <p>{{ t('proposal.acceptContractProposalModalDescription') }}</p>
       <el-steps direction="vertical">
-        <FdpgStep step-icon-color="blue" :title="$t('proposal.downloadContract')">
-          <p>{{ $t('proposal.downloadContractDescription') }}</p>
+        <FdpgStep step-icon-color="blue" :title="t('proposal.downloadContract')">
+          <p>{{ t('proposal.downloadContractDescription') }}</p>
           <div class="el-contracts-list">
             <el-button v-if="contractDraft" link class="contract-download" @click="downloadContractDraft">
               {{ contractDraft?.fileName }}
             </el-button>
-            <span v-else class="no-contract-hint">{{ $t('proposal.noContractDraftYet') }}</span>
+            <span v-else class="no-contract-hint">{{ t('proposal.noContractDraftYet') }}</span>
           </div>
         </FdpgStep>
 
         <FdpgStep
           step-icon-color="blue-green"
-          :title="$t('proposal.sign')"
-          :description="$t('proposal.pleaseSignTheContractDescription')"
+          :title="t('proposal.sign')"
+          :description="t('proposal.pleaseSignTheContractDescription')"
         />
 
-        <FdpgStep step-icon-color="light-green" :title="$t('proposal.uploadSignitureTitle')">
-          <p>{{ $t('proposal.uploadSignitureDescription') }}</p>
+        <FdpgStep step-icon-color="light-green" :title="t('proposal.uploadSignitureTitle')">
+          <p>{{ t('proposal.uploadSignitureDescription') }}</p>
           <div v-if="contractFile" class="fdpg-upload-list-item">
-            <p class="fdpg-upload-file__name">{{ contractFile.name }}</p>
-            <span>({{ (contractFile.size / 1024).toFixed(1) }}KB)</span>
+            <p class="fdpg-upload-file__name" :title="contractFile.name">{{ contractFile.name }}</p>
+            <span>({{ ((contractFile?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
             <el-icon class="el-icon-close" tabindex="0" @click="handleRemoveFile()" @keyup.enter="handleRemoveFile()" />
           </div>
           <FdpgUpload
@@ -41,7 +41,7 @@
             @change="handleChangeFileList"
           >
             <el-button v-if="!contractFile" class="upload-button" link>
-              {{ $t('proposal.chooseAFile') }}
+              {{ t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
               </template>
@@ -61,7 +61,7 @@
     <template #footer>
       <span>
         <el-button link data-testId="button__closeSignDialog" @click="closeDialog">
-          {{ $t('general.cancel') }}
+          {{ t('general.cancel') }}
         </el-button>
         <el-button
           type="primary"
@@ -69,7 +69,7 @@
           data-testid="button__acceptContract"
           @click="acceptContract"
         >
-          {{ $t('proposal.acceptContract') }}
+          {{ t('proposal.acceptContract') }}
         </el-button>
       </span>
     </template>
@@ -89,12 +89,15 @@ import useUpload from '@/composables/use-upload'
 import { UseCaseUpload } from '@/types/upload.types'
 import { useVModel } from '@vueuse/core'
 import useDownload from '@/composables/use-download'
+import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['update:modelValue', 'closeDialog', 'acceptContract'])
 
 const props = defineProps<{
   modelValue: boolean
 }>()
+
+const { t } = useI18n()
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
 const closeDialog = () => {
