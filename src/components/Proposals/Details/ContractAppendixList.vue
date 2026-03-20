@@ -16,7 +16,7 @@
             @keydown.enter="handleDownload(_id)"
           >
             <div class="upload-file">
-              <p class="upload-file__name">{{ fileName }}</p>
+              <p class="upload-file__name" :title="fileName">{{ fileName }}</p>
               <p class="upload-file__size">{{ t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
             </div>
             <div class="upload-button-row">
@@ -234,6 +234,8 @@ const addContractAppendix = async () => {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
+      flex: 1;
+      min-width: 0;
 
       .upload-file {
         .upload-file__name {
@@ -242,6 +244,9 @@ const addContractAppendix = async () => {
           margin-top: 2px;
           font-weight: 700;
           margin-bottom: 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .upload-file__size {

@@ -10,8 +10,8 @@
         <i class="bi-file-earmark" aria-hidden="true" />
         <div class="upload-file-wrapper" tabindex="0" @click="handleDownload(_id)" @keydown.enter="handleDownload(_id)">
           <div class="upload-file">
-            <p class="upload-file__name">{{ fileName }}</p>
-            <p class="upload-file__size">{{ $t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
+            <p class="upload-file__name" :title="fileName">{{ fileName }}</p>
+            <p class="upload-file__size">{{ t(displayType) }} {{ (fileSize / 1024).toFixed(1) }} KB</p>
           </div>
           <div class="upload-button-row">
             <el-button link class="file-button" :disabled="isLoading">
@@ -34,11 +34,11 @@
       </div>
     </div>
     <el-button v-if="documents.length > 2" link @click="handleTogglePanel()">
-      {{ isCollapsed ? $t('dashboard.showMore') : $t('dashboard.showLess') }}
+      {{ isCollapsed ? t('dashboard.showMore') : t('dashboard.showLess') }}
     </el-button>
   </template>
   <p v-else-if="emptyAlertText" class="documents--empty">
-    {{ $t(emptyAlertText) }}
+    {{ t(emptyAlertText) }}
   </p>
 </template>
 
@@ -50,6 +50,7 @@ import type { IReportFile, IUpload } from '@/types/proposal.types'
 import type { UploadType } from '@/types/upload.types'
 import type { PropType } from 'vue'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   documents: {
@@ -91,6 +92,8 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['remove', 'edit'])
+
+const { t } = useI18n()
 
 const proposalId = computed(() => props.proposalId)
 const isCollapsed = ref<boolean>(true)
@@ -178,17 +181,24 @@ const handleEdit = (id: string) => {
 
     .upload-file-wrapper {
       flex: 1;
+      min-width: 0;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
 
       .upload-file {
+        flex: 1;
+        min-width: 0;
+
         .upload-file__name {
           color: $blue;
           font-size: 18px;
           margin-top: 2px;
           font-weight: 700;
           margin-bottom: 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .upload-file__size {
