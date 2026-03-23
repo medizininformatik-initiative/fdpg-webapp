@@ -194,6 +194,8 @@ const setTextareaFocus = () => {
   .comment-card {
     flex-grow: 1;
     margin-bottom: 20px;
+    overflow: visible !important;
+    display: block;
 
     &:last-child {
       margin-bottom: 0;

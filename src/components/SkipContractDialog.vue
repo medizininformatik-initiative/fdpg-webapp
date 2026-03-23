@@ -10,7 +10,7 @@
     <div>
       <p>{{ t('proposal.toContractingSkipModalDescription') }}</p>
       <div v-if="contractSkipFile" class="fdpg-upload-list-item">
-        <p class="fdpg-upload-file__name">{{ contractSkipFile.name }}</p>
+        <p class="fdpg-upload-file__name" :title="contractSkipFile.name">{{ contractSkipFile.name }}</p>
         <span>({{ ((contractSkipFile?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
         <el-icon
           class="el-icon-close"

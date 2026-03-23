@@ -3,17 +3,17 @@
     v-model="dialogOpen"
     class="uac-approval-modal"
     width="50%"
-    :title="$t('proposal.uacApprovalModalTitle')"
+    :title="t('proposal.uacApprovalModalTitle')"
     :before-close="closeDialog"
   >
     <div>
-      <p>{{ $t('proposal.uacApprovalModalDescription') }}</p>
+      <p>{{ t('proposal.uacApprovalModalDescription') }}</p>
       <el-steps direction="vertical">
-        <FdpgStep step-icon-color="blue" :title="$t('proposal.addConditionsOptional')">
-          <p>{{ $t('proposal.yourConditionWillBeCheckedByFdpg') }}</p>
+        <FdpgStep step-icon-color="blue" :title="t('proposal.addConditionsOptional')">
+          <p>{{ t('proposal.yourConditionWillBeCheckedByFdpg') }}</p>
           <div v-if="conditionFile" class="fdpg-upload-list-item">
-            <p class="fdpg-upload-file__name">{{ conditionFile.name }}</p>
-            <span>({{ (conditionFile.size / 1024).toFixed(1) }}KB)</span>
+            <p class="fdpg-upload-file__name" :title="conditionFile.name">{{ conditionFile.name }}</p>
+            <span>({{ ((conditionFile?.size ?? 0) / 1024).toFixed(1) }}KB)</span>
             <el-icon
               class="el-icon-close"
               tabindex="0"
@@ -29,7 +29,7 @@
             @change="handleChangeFileList"
           >
             <el-button v-if="!conditionFile" class="upload-button" link>
-              {{ $t('proposal.chooseAFile') }}
+              {{ t('proposal.chooseAFile') }}
               <template #icon>
                 <el-icon class="bi-paperclip"></el-icon>
               </template>
@@ -40,7 +40,7 @@
           <FdpgTextEditor
             v-model="conditionReasoning"
             data-testId="reasoning"
-            :placeholder="$t('proposal.acceptReasonPlaceholder')"
+            :placeholder="t('proposal.acceptReasonPlaceholder')"
             type="textarea"
             :rows="2"
             autosize
@@ -49,14 +49,14 @@
 
         <FdpgStep
           step-icon-color="blue-green"
-          :title="$t('proposal.furtherProcessingByDicTitle')"
-          :description="$t('proposal.furtherProcessingByDicDescription')"
+          :title="t('proposal.furtherProcessingByDicTitle')"
+          :description="t('proposal.furtherProcessingByDicDescription')"
         />
 
         <FdpgStep
           step-icon-color="medium-green"
-          :title="$t('proposal.preperationOfContractTitle')"
-          :description="$t('proposal.preperationOfContractDescription')"
+          :title="t('proposal.preperationOfContractTitle')"
+          :description="t('proposal.preperationOfContractDescription')"
         />
       </el-steps>
     </div>
@@ -64,10 +64,10 @@
     <template #footer>
       <span>
         <el-button link data-testId="button__closeApprovalDialog" @click="closeDialog">
-          {{ $t('general.cancel') }}
+          {{ t('general.cancel') }}
         </el-button>
         <el-button type="primary" data-testId="button__uacApproval-accept" @click="acceptContract">
-          {{ $t('proposal.uacApprovalModalAgreeButton') }}
+          {{ t('proposal.uacApprovalModalAgreeButton') }}
         </el-button>
       </span>
     </template>
@@ -77,6 +77,9 @@
 <script setup lang="ts">
 import type { UploadFile } from 'element-plus'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 import FdpgLabel from '@/components/FdpgLabel.vue'
 import FdpgStep from '@/components/FdpgStep.vue'

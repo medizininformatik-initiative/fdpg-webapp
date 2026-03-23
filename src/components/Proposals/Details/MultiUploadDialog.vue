@@ -26,7 +26,7 @@
           <i class="bi-file-earmark" aria-hidden="true" />
           <div class="upload-file-wrapper">
             <div class="file-header">
-              <p class="upload-file__name">{{ fileItem.file.name }}</p>
+              <p class="upload-file__name" :title="fileItem.file.name">{{ fileItem.file.name }}</p>
               <el-button class="file-button" @click.stop="handleRemoveFile(index)">
                 <i class="fa fa-trash" aria-hidden="true" />
               </el-button>
