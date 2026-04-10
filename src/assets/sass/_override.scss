@@ -447,12 +447,12 @@
   }
 }
 .el-switch {
-
   &__label.is-active {
-      color: $black !important;
-    }
-    &__core {
-      background-color: $blue !important;
-      border-color: $blue-hover !important;
-    }
+    color: $black !important;
+  }
+
+  &.is-checked &__core {
+    background-color: $blue !important;
+    border-color: $blue-hover !important;
+  }
 }

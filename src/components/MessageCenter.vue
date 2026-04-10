@@ -171,11 +171,5 @@ onBeforeMount(async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  .switch {
-    &:focus-within {
-      outline: $blue auto 1px;
-      outline-offset: 3px;
-    }
-  }
 }
 </style>
