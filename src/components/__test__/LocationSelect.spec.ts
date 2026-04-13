@@ -4,7 +4,7 @@ import { createTestingPinia } from '@pinia/testing'
 import { mount, type VueWrapper } from '@vue/test-utils'
 import { beforeEach, describe, expect, it, vi, type MockedObject } from 'vitest'
 import { mockProposal } from '@/mocks/proposal.mock'
-import { ElSelect } from 'element-plus'
+import { ElCheckbox, ElSelect } from 'element-plus'
 import { mockLocations, useMockLocationStore } from '@/stores/locations/__mocks__/location.store'
 
 vi.mock('vue-i18n', () => ({
@@ -75,5 +75,86 @@ describe('LocationSelect.vue', () => {
     wrapper.setProps({ modelValue: ['Charité'] })
     wrapper.findComponent(ElSelect).vm.$emit('update:modelValue', ['KC', 'Charité'])
     expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual(['KC', 'Charité'])
+  })
+
+  describe('checkAll and indeterminate state', () => {
+    it('should set indeterminate to true when some but not all locations are selected on mount', () => {
+      // mounted with ['KC', 'KUM', 'MHH'] which is a subset of all locations
+      expect(wrapper.vm.indeterminate).toBe(true)
+      expect(wrapper.vm.checkAll).toBe(false)
+    })
+
+    it('should set checkAll to true and indeterminate to false when all locations are selected on mount', () => {
+      const allIds = mockLocations.map((loc) => loc._id)
+      const allSelectedWrapper = mount(LocationSelect, {
+        props: {
+          modelValue: allIds,
+          placeholder: 'placeholder',
+          minimumSelection: ['KC'],
+          allLocations: [...mockLocations],
+        },
+        global: {
+          plugins: [createTestingPinia()],
+          stubs: ['el-progress'],
+        },
+      })
+
+      expect(allSelectedWrapper.vm.checkAll).toBe(true)
+      expect(allSelectedWrapper.vm.indeterminate).toBe(false)
+    })
+
+    it('should set checkAll and indeterminate to false when no locations are selected on mount', () => {
+      const emptyWrapper = mount(LocationSelect, {
+        props: {
+          modelValue: [],
+          placeholder: 'placeholder',
+          minimumSelection: [],
+          allLocations: [...mockLocations],
+        },
+        global: {
+          plugins: [createTestingPinia()],
+          stubs: ['el-progress'],
+        },
+      })
+
+      expect(emptyWrapper.vm.checkAll).toBe(false)
+      expect(emptyWrapper.vm.indeterminate).toBe(false)
+    })
+
+    it('should update indeterminate when modelValue changes from partial to all', async () => {
+      expect(wrapper.vm.indeterminate).toBe(true)
+
+      const allIds = mockLocations.map((loc) => loc._id)
+      await wrapper.setProps({ modelValue: allIds })
+
+      expect(wrapper.vm.checkAll).toBe(true)
+      expect(wrapper.vm.indeterminate).toBe(false)
+    })
+
+    it('should update indeterminate when modelValue changes from all to partial', async () => {
+      const allIds = mockLocations.map((loc) => loc._id)
+      await wrapper.setProps({ modelValue: allIds })
+      expect(wrapper.vm.checkAll).toBe(true)
+      expect(wrapper.vm.indeterminate).toBe(false)
+
+      await wrapper.setProps({ modelValue: ['KC'] })
+      expect(wrapper.vm.checkAll).toBe(false)
+      expect(wrapper.vm.indeterminate).toBe(true)
+    })
+
+    it('should select all locations when checkAll checkbox is toggled on', async () => {
+      const checkbox = wrapper.findComponent(ElCheckbox)
+      checkbox.vm.$emit('change', true)
+
+      const allIds = mockLocations.map((loc) => loc._id)
+      expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual(allIds)
+    })
+
+    it('should deselect all locations when checkAll checkbox is toggled off', async () => {
+      const checkbox = wrapper.findComponent(ElCheckbox)
+      checkbox.vm.$emit('change', false)
+
+      expect(wrapper.emitted('update:modelValue')?.at(-1)?.at(-1)).toEqual([])
+    })
   })
 })

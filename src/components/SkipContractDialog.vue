@@ -96,9 +96,24 @@ const props = defineProps({
 })
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
+
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal) {
+      resetState()
+    }
+  },
+)
+
 const closeDialog = () => {
-  contractSkipFile.value = null
+  resetState()
   dialogOpen.value = false
+}
+
+const resetState = () => {
+  contractSkipFile.value = null
+  selectedLocations.value = []
 }
 
 const { params } = useRoute()
