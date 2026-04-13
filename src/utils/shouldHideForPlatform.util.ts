@@ -5,7 +5,5 @@ export const shouldHideForPlatform = (
   platform: PlatformIdentifier,
   selectedDataSources: PlatformIdentifier[],
 ): boolean => {
-  return (
-    (!assignedDataSources.includes(platform) && !!assignedDataSources.length) || !selectedDataSources.includes(platform)
-  )
+  return !((assignedDataSources || []).includes(platform) || (selectedDataSources || []).includes(platform))
 }
