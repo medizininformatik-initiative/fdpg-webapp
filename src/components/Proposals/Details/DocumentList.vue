@@ -112,6 +112,7 @@ const displayTypeMap: Partial<Record<UploadType, TranslationSchema>> = {
   FEASIBILITY_QUERY: 'proposal.uploadType_FEASIBILITY_QUERY',
   PROPOSAL_PDF: 'proposal.uploadType_PROPOSAL_PDF',
   REPORT_UPLOAD: 'proposal.uploadType_REPORT_UPLOAD',
+  ADDITIONAL_DOCUMENT: 'proposal.uploadType_ADDITIONAL_DOCUMENT',
 }
 type MappedType = IUpload & { displayType: TranslationSchema }
 const mappedDocuments = computed<MappedType[]>(() => {

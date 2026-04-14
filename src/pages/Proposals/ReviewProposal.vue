@@ -181,6 +181,7 @@ const { uploadsForType } = useUpload(proposalId, [
   DirectUpload.EthicVote,
   DirectUpload.EthicVoteDeclarationOfNonResponsibility,
   UseCaseUpload.ProposalPDF,
+  DirectUpload.AdditionalDocument,
 ])
 
 const { showErrorMessage } = useNotifications()
@@ -269,19 +270,28 @@ const getSectionObjectProposalData = (
   proposalData?: IProposal,
 ) =>
   getVisibleCards(section.mapping, proposalData?.[section.key] as Record<string, unknown>)
-    .map((mapping: Record<string, unknown>) => (proposalData?.[section.key] as Record<string, unknown>)?.[mapping.key as string])
-    .map((data: unknown) => (data && typeof data === 'object' ? (data as Record<string, unknown>)[property] : undefined))
+    .map(
+      (mapping: Record<string, unknown>) =>
+        (proposalData?.[section.key] as Record<string, unknown>)?.[mapping.key as string],
+    )
+    .map((data: unknown) =>
+      data && typeof data === 'object' ? (data as Record<string, unknown>)[property] : undefined,
+    )
 
 const getSectionArrayProposalData = (
   section: Partial<IDefinitionSectionArray<IProposal, keyof IProposal, never>>,
   property: string,
   sectionItem: Record<string, unknown>,
-) => section?.mapping?.map((mapping) => sectionItem[mapping.key as string]).map((data) => (data as Record<string, unknown>)?.[property]) ?? []
+) =>
+  section?.mapping
+    ?.map((mapping) => sectionItem[mapping.key as string])
+    .map((data) => (data as Record<string, unknown>)?.[property]) ?? []
 
 const isSinglePersonEntry = (section: IDefinitionSectionObject<IProposal, keyof IProposal>) =>
   section.key === 'applicant' || section.key === 'projectResponsible'
 
-const HideReviewCheckbox = (section: DefinitionSection<IProposal, keyof IProposal>) => section.key === 'userProject' || section.key === 'biosample'
+const HideReviewCheckbox = (section: DefinitionSection<IProposal, keyof IProposal>) =>
+  section.key === 'userProject' || section.key === 'biosample'
 
 function getVisibleSections(sections: DefinitionSection<IProposal, keyof IProposal>[]) {
   return sections.filter((section) => {
