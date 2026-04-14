@@ -76,10 +76,11 @@ const locationMap = computed(() => Object.fromEntries(props.allLocations.map((lo
 
 watch(
   () => props.modelValue,
-  (newVal, oldVal) => {
+  (newVal) => {
     checkAll.value = newVal.length === props.allLocations.length
+    indeterminate.value = newVal.length > 0 && newVal.length < props.allLocations.length
   },
-  { deep: true },
+  { deep: true, immediate: true },
 )
 
 const handleCheckAll = (val: CheckboxValueType) => {

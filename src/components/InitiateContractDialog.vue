@@ -96,9 +96,23 @@ const props = defineProps({
 })
 
 const dialogOpen = useVModel(props, 'modelValue', emit)
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    if (newVal) {
+      resetState()
+    }
+  },
+)
+
 const closeDialog = () => {
-  contractDraft.value = null
+  resetState()
   dialogOpen.value = false
+}
+
+const resetState = () => {
+  contractDraft.value = null
+  selectedLocations.value = []
 }
 
 const { params } = useRoute()
