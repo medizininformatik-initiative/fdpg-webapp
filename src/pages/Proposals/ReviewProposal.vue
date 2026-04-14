@@ -124,8 +124,7 @@ import { RouteName } from '@/types/route-name.enum'
 import { DirectUpload, UseCaseUpload } from '@/types/upload.types'
 import { transformForm } from '@/utils/form-transform'
 import { getLastDashboardTitle } from '@/utils/breadcrumbs.util'
-import { ElButton } from 'element-plus'
-import { computed, nextTick, onMounted, ref, watch, type Ref } from 'vue'
+import { computed, nextTick, onMounted, ref, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { applicantSection } from '@/constants/print-structure/applicant-section'
 import { projectResponsibilitySection } from '@/constants/print-structure/project-responsibility-section'
@@ -137,7 +136,7 @@ import { useI18n } from 'vue-i18n'
 import { biosampleSection } from '@/constants/print-structure/biosample-section'
 import LeadHeader from '@/components/Shared/LeadHeader.vue'
 import { useLocationStore } from '@/stores/locations/location.store'
-import type { ILocation, ILocationKeyLabel } from '@/types/location.types'
+import type { ILocationKeyLabel } from '@/types/location.types'
 import { ProposalType } from '@/types/proposal-type.enum'
 
 const authStore = useAuthStore()
@@ -319,7 +318,7 @@ const shouldShowBiosampleSection = (proposal?: IProposal): boolean => {
   return true
 }
 
-function getVisibleCards(cards: unknown, dto: Record<string, unknown>) {
+const getVisibleCards = (cards: unknown, dto: Record<string, unknown>) => {
   if (!Array.isArray(cards)) return []
   return cards.filter((card: Record<string, unknown>) => {
     if (shouldHideReviewCard(dto, card.hideIfOtherValueIsTruthy) || card.shouldHide) {
@@ -333,7 +332,7 @@ function getVisibleCards(cards: unknown, dto: Record<string, unknown>) {
   })
 }
 
-function getVisibleItems(items: unknown[], card: Record<string, unknown>) {
+const getVisibleItems = (items: unknown[], card: Record<string, unknown>) => {
   return items
 }
 

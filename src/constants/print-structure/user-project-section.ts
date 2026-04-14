@@ -412,7 +412,7 @@ const userProjectCards = (
     propertyRightsCard(assignedDataSources, selectedDataSources),
     plannedPublicationCardEmpty,
     plannedPublicationCard,
-    addresseesCard(assignedDataSources, locationMap),
+    addresseesCard(assignedDataSources, locationMap, selectedDataSources),
     typeOfUseCard(assignedDataSources, selectedDataSources),
     cohortsCard(assignedDataSources, selectedDataSources),
     variableSelectionCard(assignedDataSources, selectedDataSources),
