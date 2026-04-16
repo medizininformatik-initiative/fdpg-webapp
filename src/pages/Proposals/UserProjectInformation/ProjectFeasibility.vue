@@ -31,7 +31,7 @@
             :disabled="reviewMode || feasibilityForm.isDone"
             :form-ref="formRef"
             field-path="userProject.feasibility.details"
-            :max-length="10_000">
+            :max-length="10_000"
           />
         </FdpgFormItem>
       </el-col>
