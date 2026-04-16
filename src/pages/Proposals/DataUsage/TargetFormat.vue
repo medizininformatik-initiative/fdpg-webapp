@@ -29,6 +29,7 @@
             :disabled="reviewMode || typeOfUseForm.isDone"
             :form-ref="formRef"
             field-path="userProject.typeOfUse.targetFormatDetails"
+            :max-length="5_000"
           />
         </FdpgFormItem>
       </el-col>

@@ -99,6 +99,7 @@
             data-testId="generalProjectInformation.projectFunding"
             :form-ref="formRef"
             field-path="userProject.generalProjectInformation.projectFunding"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>

@@ -11,6 +11,7 @@
         data-testId="propertyRightsForm.options"
         :placeholder="t('proposal.pleaseNameYourIntellectualPropertyRights')"
         :disabled="reviewMode || propertyRightsForm.isDone"
+        :maxLength="10_000"
       />
     </FdpgFormItem>
   </el-card>

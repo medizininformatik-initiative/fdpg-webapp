@@ -15,6 +15,7 @@
             data-testId="requestedData.dataInfo"
             :disabled="reviewMode || requestedDataForm.isDone"
             :placeholder="t('proposal.pleaseEnterYourDataSelectionInformationHere')"
+            :max-length="10_000"
           />
         </FdpgFormItem>
       </el-col>

@@ -94,6 +94,7 @@
             :disabled="reviewMode || cohort.isDone"
             :form-ref="formRef"
             field-path="userProject.cohorts.details"
+            :max-length="10_000"
           />
         </FdpgFormItem>
       </el-col>
@@ -105,6 +106,7 @@
             data-testId="requestedData.patientInfo"
             :placeholder="t('proposal.pleaseEnterYourDetailsForPatientSelectionHere')"
             :disabled="reviewMode || requestedDataForm.isDone"
+            :max-length="10_000"
           />
         </FdpgFormItem>
       </el-col>
