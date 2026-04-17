@@ -42,6 +42,7 @@
               data-testId="typeOfUseForm.dataPrivacyExtra"
               :placeholder="t('proposal.dataPrivacyExtraPlaceholder')"
               :disabled="reviewMode || typeOfUseForm.isDone"
+              :maxLength="10_000"
             />
           </FdpgFormItem>
         </div>

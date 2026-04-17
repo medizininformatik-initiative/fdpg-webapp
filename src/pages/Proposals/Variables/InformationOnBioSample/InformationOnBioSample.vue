@@ -33,6 +33,7 @@
         size="medium"
         :formRef="formRef"
         :field-path="'userProject.informationOnRequestedBioSamples.laboratoryResources'"
+        :maxLength="10_000"
       />
     </FdpgFormItem>
   </el-card>
@@ -101,6 +102,7 @@
                 :data-testId="'biosample.typeDetails__' + index"
                 :placeholder="t('proposal.biosampleTypePlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
+                :maxLength="10_000"
               />
             </FdpgFormItem>
           </el-col>
@@ -116,6 +118,7 @@
                 :data-testId="'biosample.requirements__' + index"
                 :placeholder="t('proposal.biosampleMaterialRequirementsPlaceholder')"
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
+                :maxLength="10_000"
               />
             </FdpgFormItem>
             <FdpgFormItem
@@ -194,6 +197,7 @@
                 :disabled="reviewMode || informationOnRequestedBioSamplesForm.isDone"
                 :formRef="formRef"
                 :field-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].method`"
+                :maxLength="3_000"
               />
             </FdpgFormItem>
           </el-col>
@@ -222,6 +226,7 @@
                 :placeholder="t('proposal.externalLabTransferDetailsPlaceholder')"
                 :formRef="formRef"
                 :field-path="`userProject.informationOnRequestedBioSamples.biosamples[${index}].externalLabTransferDetails`"
+                :maxLength="1_000"
               />
             </FdpgFormItem>
           </el-col>

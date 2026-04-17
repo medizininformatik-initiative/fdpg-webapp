@@ -8,6 +8,7 @@
         v-model="declineReason"
         data-testId="declineReason"
         :placeholder="$t('proposal.declineReasonPlaceholder')"
+        :maxLength="10_000"
       />
     </div>
 

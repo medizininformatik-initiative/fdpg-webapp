@@ -40,6 +40,7 @@
                       type="textarea"
                       :placeholder="t('proposal.documentationLinks')"
                       :disabled="!editable"
+                      :maxLength="5_000"
                     />
                   </FdpgFormItem>
                 </template>

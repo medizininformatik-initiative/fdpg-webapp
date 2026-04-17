@@ -5,27 +5,28 @@
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.simpleProjectDescription" v-if="isMIISelected">
           <FdpgLabel html-for="proposal.simpleProjectDescription" required />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.simpleProjectDescription"
             data-testId="projectDetailsForm.simpleProjectDescription"
             :placeholder="t('proposal.describeTheProject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.simpleProjectDescription"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
         <FdpgFormItem prop="userProject.projectDetails.executiveSummaryUac">
           <FdpgLabel html-for="proposal.executiveSummaryUac" required />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.executiveSummaryUac"
             data-testId="projectDetailsForm.executiveSummaryUac"
             :placeholder="t('proposal.describeTheProject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.executiveSummaryUac"
-            :maxLength="3000"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
@@ -51,13 +52,14 @@
             info="proposal.hypothesisAndQuestionProjectGoalsInfo"
             required
           />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.hypothesisAndQuestionProjectGoals"
             data-testId="projectDetailsForm.hypothesisAndQuestionProjectGoals"
             :placeholder="t('proposal.indicationOrRepresentationOfAimsObjectives')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.hypothesisAndQuestionProjectGoals"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
         <p class="example">{{ t('proposal.egAccordingToOrFromAbstract') }}</p>
@@ -65,52 +67,56 @@
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.scientificBackground">
           <FdpgLabel html-for="proposal.scientificBackground" required />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.scientificBackground"
             data-testId="projectDetailsForm.scientificBackground"
             :placeholder="t('proposal.publicationsOnTheSubject')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.scientificBackground"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.materialAndMethods">
           <FdpgLabel html-for="proposal.materialAndMethods" required />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.materialAndMethods"
             data-testId="projectDetailsForm.materialAndMethods"
             :placeholder="t('proposal.describeTheMaterialsAndMethods')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.materialAndMethods"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24">
         <FdpgFormItem prop="userProject.projectDetails.literature">
           <FdpgLabel html-for="proposal.literature" />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.literature"
             data-testId="projectDetailsForm.literature"
             :placeholder="t('proposal.literaturePlaceholder')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.literature"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
       <el-col :sm="24" v-if="isMIISelected && !isRegisteringForm">
         <FdpgFormItem prop="userProject.projectDetails.biometric">
           <FdpgLabel html-for="proposal.biometric" />
-          <FdpgtextEditor
+          <FdpgTextEditor
             v-model="projectDetailsForm.biometric"
             data-testId="projectDetailsForm.biometric"
             :placeholder="t('proposal.biometricPlaceholder')"
             :disabled="reviewMode || projectDetailsForm.isDone"
             :form-ref="formRef"
             field-path="userProject.projectDetails.biometric"
+            :maxLength="10_000"
           />
         </FdpgFormItem>
       </el-col>
@@ -153,10 +159,8 @@ import { useVModel } from '@vueuse/core'
 import type { PropType } from 'vue'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import FdpgtextEditor from '@/components/FdpgTextEditor.vue'
+import FdpgTextEditor from '@/components/FdpgTextEditor.vue'
 import type { FormInstance } from 'element-plus'
-import useUpload from '@/composables/use-upload'
-import { DirectUpload } from '@/types/upload.types'
 import useNotifications from '@/composables/use-notifications'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 
