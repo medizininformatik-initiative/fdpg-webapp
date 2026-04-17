@@ -24,6 +24,7 @@
               :placeholder="t('proposal.difeTypeOfUseExplanationPlaceholder')"
               :form-ref="formRef"
               field-path="userProject.variableSelection.DIFE.typeOfUseExplanation"
+              :maxLength="10_000"
             />
           </FdpgFormItem>
         </el-col>

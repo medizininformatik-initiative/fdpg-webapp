@@ -10,7 +10,17 @@
       :readOnly="disabled"
       :placeholder="placeholder"
       @blur="handleBlur"
+      @text-change="handleTextChange"
     />
+    <div
+      v-if="props.maxLength && showCharCount"
+      :class="[
+        'fdpg-text-editor__char-count',
+        charCount > props.maxLength ? 'fdpg-text-editor__char-count--exceeded' : '',
+      ]"
+    >
+      {{ charCount }} / {{ props.maxLength }}
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -34,11 +44,35 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  maxLength: {
+    type: Number,
+    required: false,
+    default: undefined,
+  },
 })
 const emit = defineEmits(['update:modelValue', 'blur'])
 
 const textEditor = ref()
 const isBlurred = ref(false)
+const charCount = ref(0)
+
+const showCharCount = computed(() => {
+  if (!props.maxLength) return false
+  return charCount.value >= Math.floor((props.maxLength * 2) / 3)
+})
+
+const handleTextChange = () => {
+  if (!props.maxLength) return
+  const quill = textEditor.value?.getQuill()
+  if (!quill) return
+
+  const length = Math.max(0, quill.getText().length - 1)
+  charCount.value = length
+
+  if (length > props.maxLength) {
+    quill.deleteText(props.maxLength, length - props.maxLength)
+  }
+}
 
 watch(
   () => props.placeholder,
@@ -96,6 +130,7 @@ defineExpose({
   textEditor,
   isEmpty,
   isBlurred,
+  charCount,
 })
 
 watch(
@@ -152,5 +187,17 @@ onBeforeMount(() => {
 .el-table .cell:has(.fdpg-text-editor),
 .el-collapse-item__wrap:has(.fdpg-text-editor) {
   overflow: visible !important ;
+}
+
+.fdpg-text-editor__char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #909399;
+  margin-top: 4px;
+
+  &.fdpg-text-editor__char-count--exceeded {
+    color: #f56c6c;
+    font-weight: 600;
+  }
 }
 </style>

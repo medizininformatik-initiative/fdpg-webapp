@@ -27,6 +27,7 @@
               v-model="report.content"
               data-testId="report.content"
               :placeholder="t('proposal.reportContentPlaceholder')"
+              :maxLength="10_000"
             />
           </FdpgFormItem>
         </el-col>
