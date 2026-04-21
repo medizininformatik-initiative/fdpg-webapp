@@ -1,17 +1,6 @@
 <template>
   <div :class="['w-full fdpg-text-editor', disabled ? 'readonly-view' : '']">
-    <QuillEditor
-      theme="snow"
-      v-model:content="value"
-      contentType="html"
-      ref="textEditor"
-      :options="options"
-      :enable="!disabled"
-      :readOnly="disabled"
-      :placeholder="placeholder"
-      @blur="handleBlur"
-      @text-change="handleTextChange"
-    />
+    <div ref="editorContainer"></div>
     <div
       v-if="props.maxLength && showCharCount"
       :class="[
@@ -24,11 +13,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
-import { computed, onBeforeMount, ref, watch } from 'vue'
+import Quill from 'quill'
+import 'quill/dist/quill.snow.css'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { FormInstance } from 'element-plus'
 import type { PropType } from 'vue'
+
+const TOOLBAR = [
+  [{ header: [1, 2, 3, false] }],
+  ['bold', 'italic', 'underline', 'link'],
+  [{ list: 'ordered' }, { list: 'bullet' }],
+  ['clean'],
+]
 
 const props = defineProps({
   modelValue: String,
@@ -52,7 +48,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue', 'blur'])
 
-const textEditor = ref()
+const editorContainer = ref<HTMLElement>()
+let quill: Quill | null = null
+
 const isBlurred = ref(false)
 const charCount = ref(0)
 
@@ -61,69 +59,136 @@ const showCharCount = computed(() => {
   return charCount.value >= Math.floor((props.maxLength * 2) / 3)
 })
 
-const handleTextChange = () => {
-  if (!props.maxLength) return
-  const quill = textEditor.value?.getQuill()
-  if (!quill) return
-
-  const length = Math.max(0, quill.getText().length - 1)
-  charCount.value = length
-
-  if (length > props.maxLength) {
-    quill.deleteText(props.maxLength, length - props.maxLength)
-  }
+function isEffectivelyEmpty(html: string | undefined): boolean {
+  return !html || html.replace(/<[^>]*>/g, '').replace(/\s/g, '') === ''
 }
 
+/**
+ * Convert an HTML string to a Quill Delta using the clipboard module.
+ * In Quill v2, clipboard.convert expects { html, text } — NOT a bare string
+ * as in Quill v1. @vueup/vue-quill was passing a bare string, which caused
+ * clipboard.convert to receive undefined for the html property, resulting in
+ * an empty Delta and missing content (especially <ul>/<li> lists).
+ */
+function htmlToContents(html: string) {
+  return quill!.clipboard.convert({ html, text: '' })
+}
+
+function setEditorContent(html: string | undefined) {
+  if (!quill) return
+  if (isEffectivelyEmpty(html)) {
+    quill.setText('', 'api')
+    return
+  }
+  const delta = htmlToContents(html!)
+  quill.setContents(delta, 'api')
+}
+
+onMounted(() => {
+  if (!editorContainer.value) return
+
+  quill = new Quill(editorContainer.value, {
+    theme: 'snow',
+    readOnly: props.disabled,
+    placeholder: props.disabled ? '' : (props.placeholder ?? ''),
+    modules: {
+      toolbar: TOOLBAR,
+    },
+  })
+
+  if (!isEffectivelyEmpty(props.modelValue)) {
+    setEditorContent(props.modelValue)
+  }
+
+  quill.on('text-change', (_delta, _old, source) => {
+    // Ignore programmatic updates (setContents/setText with source='api')
+    // to prevent the emit → watcher → setContents loop.
+    if (source === 'api' || !quill) return
+
+    if (props.maxLength) {
+      const length = Math.max(0, quill.getText().length - 1)
+      if (length > props.maxLength) {
+        // Use 'api' source so this deleteText call does not re-trigger the handler.
+        quill.deleteText(props.maxLength, length - props.maxLength, 'api')
+        charCount.value = props.maxLength
+        // Emit truncated value after deletion.
+        const truncatedHtml = quill.root.innerHTML
+        emit('update:modelValue', isEffectivelyEmpty(truncatedHtml) ? '' : truncatedHtml)
+        return
+      }
+      charCount.value = length
+    }
+
+    const html = quill.root.innerHTML
+    const value = isEffectivelyEmpty(html) ? '' : html
+    emit('update:modelValue', value)
+    if (props.formRef && props.fieldPath) {
+      props.formRef.validateField(props.fieldPath)
+    }
+  })
+
+  quill.on('selection-change', (range) => {
+    if (range === null) {
+      isBlurred.value = true
+      emit('blur')
+      if (props.formRef && props.fieldPath) {
+        props.formRef.validateField(props.fieldPath)
+      }
+    }
+  })
+})
+
+onBeforeUnmount(() => {
+  quill = null
+})
+
 watch(
-  () => props.placeholder,
-  () => {
-    const editorInstance = textEditor.value.getQuill()
-    editorInstance.root.dataset.placeholder = props.placeholder
+  () => props.modelValue,
+  (newValue) => {
+    if (!quill) return
+    // Only update if what Quill currently shows differs from the incoming value.
+    // Comparing root.innerHTML avoids redundant setContents calls when the
+    // text-change handler already emitted this exact value.
+    const current = isEffectivelyEmpty(quill.root.innerHTML) ? '' : quill.root.innerHTML
+    const incoming = isEffectivelyEmpty(newValue) ? '' : newValue
+    if (current === incoming) return
+    setEditorContent(newValue)
   },
 )
 
-const value = computed<string | null>({
-  get() {
-    return props.modelValue || null
+watch(
+  () => props.disabled,
+  (disabled) => {
+    quill?.enable(!disabled)
+    if (!quill) return
+    quill.root.dataset.placeholder = disabled ? '' : (props.placeholder ?? '')
   },
-  set(val) {
-    if (!val) {
-      emit('update:modelValue', '')
-      if (props.formRef && props.fieldPath) {
-        props.formRef.validateField(props.fieldPath)
-      }
-      return
-    }
+)
 
-    const cleanContent = val.replace(/<[^>]*>/g, '').replace(/\s/g, '')
-
-    if (cleanContent === '') {
-      emit('update:modelValue', '')
-      if (props.formRef && props.fieldPath) {
-        props.formRef.validateField(props.fieldPath)
-      }
-    } else {
-      emit('update:modelValue', val)
-    }
+watch(
+  () => props.placeholder,
+  (newPlaceholder) => {
+    if (!quill || props.disabled) return
+    quill.root.dataset.placeholder = newPlaceholder ?? ''
   },
-})
-const options = ref({})
-const placeholder = ref<string | undefined>('')
+)
 
 const isEmpty = () => {
-  if (!textEditor.value) return true
-  const contents = textEditor.value.getContents()
-  return contents.length() === 0 || (contents.length() === 1 && contents.get(0).length() === 0)
+  if (!quill) return true
+  const length = quill.getLength()
+  return length === 0 || length === 1
 }
 
-const handleBlur = () => {
-  isBlurred.value = true
-  emit('blur')
-
-  // Handle form validation if formRef and fieldPath are provided
-  if (props.formRef && props.fieldPath) {
-    props.formRef.validateField(props.fieldPath)
-  }
+// Expose the same surface as before so external refs (e.g. in tests or
+// MessageCenterAnswerCreator) keep working.
+const textEditor = {
+  getQuill: () => quill,
+  getContents: () => quill?.getContents(),
+  setContents: (delta: Parameters<Quill['setContents']>[0] | null) => {
+    if (!quill) return
+    if (!delta) quill.setText('', 'api')
+    else quill.setContents(delta, 'api')
+  },
 }
 
 defineExpose({
@@ -131,19 +196,6 @@ defineExpose({
   isEmpty,
   isBlurred,
   charCount,
-})
-
-watch(
-  () => props.modelValue,
-  (newValue) => {
-    if (!newValue || newValue.replace(/<[^>]*>/g, '').replace(/\s/g, '') === '') {
-      textEditor.value?.setContents(null)
-    }
-  },
-)
-
-onBeforeMount(() => {
-  placeholder.value = !props.disabled ? props.placeholder : ''
 })
 </script>
 <style>
@@ -163,6 +215,11 @@ onBeforeMount(() => {
 
 .ql-editor.ql-blank::before {
   position: unset;
+}
+
+.ql-toolbar .ql-picker-label {
+  display: flex;
+  align-items: center;
 }
 
 .el-card:has(.fdpg-text-editor) {

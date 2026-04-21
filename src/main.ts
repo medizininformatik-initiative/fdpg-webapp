@@ -10,7 +10,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import './fonts.css'
 import './assets/sass/style.scss'
 import { initAuthPlugin } from './plugins/auth/auth.plugin'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import 'quill/dist/quill.snow.css'
 
 const main = async () => {
   const app = createApp(App)

@@ -22,9 +22,9 @@
     "@fortawesome/fontawesome-free": "^6.7.1",
     "@headlessui/vue": "^1.7.23",
     "@testing-library/user-event": "^14.6.1",
-    "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^13.5.0",
     "axios": "^1.10.0",
+    "quill": "^2.0.3",
     "bootstrap-icons": "^1.13.1",
     "element-plus": "^2.10.4",
     "lodash-es": "^4.17.21",
@@ -75,7 +75,6 @@
   },
   "resolutions": {
     "minimatch": "^9.0.5",
-    "eslint-visitor-keys": "^4.2.0",
-    "quill": "^2.0.3"
+    "eslint-visitor-keys": "^4.2.0"
   }
 }
