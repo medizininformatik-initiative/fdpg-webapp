@@ -130,6 +130,14 @@ onMounted(() => {
   quill.on('selection-change', (range) => {
     if (range === null) {
       isBlurred.value = true
+      // Sync the parent's data with what the editor actually shows before
+      // emitting blur. This is critical when a stale API response replaced
+      // the parent's value while the editor had focus (and the watcher
+      // skipped the update to preserve the cursor). Without this, the
+      // parent's blur handler would read the stale value.
+      const html = quill!.root.innerHTML
+      const value = isEffectivelyEmpty(html) ? '' : html
+      emit('update:modelValue', value)
       emit('blur')
       if (props.formRef && props.fieldPath) {
         props.formRef.validateField(props.fieldPath)
@@ -146,9 +154,10 @@ watch(
   () => props.modelValue,
   (newValue) => {
     if (!quill) return
-    // Only update if what Quill currently shows differs from the incoming value.
-    // Comparing root.innerHTML avoids redundant setContents calls when the
-    // text-change handler already emitted this exact value.
+    // Skip external updates while the user is actively editing to prevent
+    // cursor jumps caused by stale API responses overwriting the editor.
+    // The parent's data will be synced on blur (selection-change handler).
+    if (quill.hasFocus()) return
     const current = isEffectivelyEmpty(quill.root.innerHTML) ? '' : quill.root.innerHTML
     const incoming = isEffectivelyEmpty(newValue) ? '' : newValue
     if (current === incoming) return
