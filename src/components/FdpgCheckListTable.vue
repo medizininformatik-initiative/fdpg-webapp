@@ -38,7 +38,7 @@
             <FdpgTextEditor
               v-model="row.comment"
               @blur="handleOptionChange(row)"
-              @input="debouncedHandleOptionChange(row)"
+              @update:model-value="debouncedHandleOptionChange(row)"
               :disabled="isDisabled"
             ></FdpgTextEditor>
           </td>
@@ -88,7 +88,7 @@
                     <FdpgTextEditor
                       v-model="subItem.comment"
                       @blur="handleOptionChange(row)"
-                      @input="debouncedHandleOptionChange(row)"
+                      @update:model-value="debouncedHandleOptionChange(row)"
                       :disabled="isDisabled"
                     ></FdpgTextEditor>
                   </td>
@@ -125,9 +125,18 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:listItem'])
 
-const debouncedHandleOptionChange = debounce((row) => {
-  handleOptionChange(row)
-}, 500)
+const rowDebounceMap = new Map()
+
+const debouncedHandleOptionChange = (row) => {
+  const id = row._id
+  if (!rowDebounceMap.has(id)) {
+    rowDebounceMap.set(
+      id,
+      debounce((r) => handleOptionChange(r), 500),
+    )
+  }
+  rowDebounceMap.get(id)(row)
+}
 
 const haveActualText = (htmlContent) => {
   const strippedContent = htmlContent.replace(/<[^>]*>/g, '').trim()
@@ -136,6 +145,16 @@ const haveActualText = (htmlContent) => {
 }
 
 const handleOptionChange = (row) => {
+  // Flush pending debounces for OTHER rows so their text changes are saved
+  // before this row's update. This covers the case where Quill's blur event
+  // hasn't fired yet when clicking a radio/checkbox in a different row.
+  for (const [id, debouncedFn] of rowDebounceMap) {
+    if (id !== row._id) {
+      debouncedFn.flush()
+    }
+  }
+  // Cancel this row's own debounce — we're about to emit directly.
+  rowDebounceMap.get(row._id)?.cancel()
   const item = { ...row }
 
   if (row.answer.length) {
