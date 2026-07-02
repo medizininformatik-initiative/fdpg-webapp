@@ -4,7 +4,7 @@ import type {
   IDefinitionCardArray,
 } from '@/components/Shared/definition-card.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
-import type { IProposal, IUserProject } from '@/types/proposal.types'
+import { BiosampleCode, type IProposal, type IUserProject } from '@/types/proposal.types'
 import { shouldHideForPlatform } from '@/utils/shouldHideForPlatform.util'
 
 const informationOnRequestedBioSamplesCard: IDefinitionCard<IUserProject, 'informationOnRequestedBioSamples'> = {
@@ -35,9 +35,14 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
       definitions: [[{ key: 'type' }]],
     },
     {
-      label: 'proposal.biosampleMaterialRequirements',
+      label: 'proposal.biosampleTypeDetails',
       size: 24,
       definitions: [[{ key: 'typeDetails' }]],
+    },
+    {
+      label: 'proposal.biosampleMaterialRequirements',
+      size: 24,
+      definitions: [[{ key: 'requirements' }]],
     },
     {
       label: 'proposal.biosampleCount',
@@ -45,14 +50,9 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
       definitions: [[{ key: 'count' }]],
     },
     {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'requirements' }]],
-    },
-    {
       label: 'proposal.optionalBiosample',
       size: 24,
-      definitions: [[{ key: 'optionalBiosample' }]],
+      definitions: [[{ key: 'optionalBiosample', kind: 'boolean', true: 'proposal.yes', false: 'proposal.no' }]],
     },
     {
       label: 'proposal.sampleCode',
@@ -60,19 +60,29 @@ const biosamplesCard: IDefinitionCardArray<IUserProject, 'informationOnRequested
       definitions: [[{ key: 'sampleCode' }]],
     },
     {
+      label: 'proposal.SNOMED',
+      size: 24,
+      definitions: [[{ key: BiosampleCode.SNOMED }]],
+    },
+    {
+      label: 'proposal.SPREC',
+      size: 24,
+      definitions: [[{ key: BiosampleCode.SPREC }]],
+    },
+    {
+      label: 'proposal.parameter',
+      size: 24,
+      definitions: [[{ key: 'parameter' }]],
+    },
+    {
       label: 'proposal.biosampleMethod',
       size: 24,
       definitions: [[{ key: 'method' }]],
     },
     {
-      label: 'proposal.biosampleMaterialRequirements',
-      size: 24,
-      definitions: [[{ key: 'requirements' }]],
-    },
-    {
       label: 'proposal.externalLabTransfer',
       size: 24,
-      definitions: [[{ key: 'externalLabTransfer' }]],
+      definitions: [[{ key: 'externalLabTransfer', kind: 'boolean', true: 'proposal.yes', false: 'proposal.no' }]],
     },
     {
       label: 'proposal.biosampleMaterialRequirements',
