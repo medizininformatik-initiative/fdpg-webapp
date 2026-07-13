@@ -6,8 +6,8 @@ function fixStringValues(obj) {
   if (typeof obj === 'string') {
     // Escape invalid control characters except \n and \t
     let fixed = obj.replace(/[\x00-\x08\x0B-\x0C\x0E-\x1F\x7F]/g, '');
-    // Replace all @ with {'@'}
-    fixed = fixed.replace(/@/g, `{'@'}`);
+    // Replace @ with {'@'}, skipping any that are already escaped (idempotent)
+    fixed = fixed.replace(/\{'@'\}|@/g, (match) => (match === '@' ? `{'@'}` : match));
     return fixed;
   } else if (Array.isArray(obj)) {
     return obj.map(fixStringValues);
