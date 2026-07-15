@@ -243,7 +243,7 @@
     "mIIUsageApplicationForm": "Nutzungsantragsformular und Studienprotokoll",
     "proposalId": "Antrags-ID",
     "submittedAt": "Datum der Antragstellung",
-    "projectAbbreviation": "Datum der Antragstellung",
+    "projectAbbreviation": "Projektkürzel",
     "projectAbbreviationInfo": "Das Projektkürzel erleichtert die Zuordnung des Projekts in der Kommunikation mit den verschiedenen Beteiligten. Es muss einzigartig sein und darf maximal 15 Zeichen enthalten, einschließlich alphanumerischer Zeichen und der Sonderzeichen &/\\\\?.:#\\*+-\\_{'@'}.",
     "egWestStorm": "Bitte geben Sie das Projektkürzel ein.",
     "projectResponsible": "Projektverantwortlich",
