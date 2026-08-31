@@ -385,6 +385,8 @@
     "saveDraft": "Save application",
     "submitApplication": "Submit application",
     "thereIsAlreadyExistingProposalWithTheName": "There is already existing proposal with the name",
+    "projectAbbreviationCheckFailed": "The project abbreviation could not be verified. Please check your connection and try again.",
+    "checkingProjectAbbreviation": "Checking availability…",
     "participantsAreRequired": "It is required to provide participants",
     "leaveAComment": "Leave a Comment...",
     "department": "Department",
