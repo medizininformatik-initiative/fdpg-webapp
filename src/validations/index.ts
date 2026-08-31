@@ -1,6 +1,7 @@
 import { i18n } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IUpload } from '@/types/proposal.types'
+import { AsyncValidationState } from '@/types/component.types'
 import type { Ref } from 'vue'
 import type { FormRules } from 'element-plus'
 
@@ -95,26 +96,88 @@ export const requiredIfEmptyValidationFunc = (
 export const projectAbbreviationValidationFunc = (
   proposalId: Ref<string | undefined>,
   bypassDebounce: Ref<boolean>,
+  validationStatus?: Ref<AsyncValidationState>,
+  onCheckFailed?: (message: string) => void,
 ) => {
   const debounceTime = 1500
   let debounceTimeout: number | undefined = undefined
+  // Every trigger (blur/change, plus programmatic validateField calls) shares this single
+  // debounce timer, so a call it supersedes must still be settled here - otherwise that
+  // caller's await on validateField hangs forever instead of just being superseded.
+  let pendingCallbacks: Array<(error?: Error) => void> = []
+  // trigger: ['blur', 'change'] means typing (debounced) and then leaving the field both fire a
+  // check. Without this, an unchanged value gets checked against the API twice in a row - once
+  // when the debounce settles, again on blur right after. Cache the last value actually checked
+  // (technical failures are not cached, so those retry) and reuse it instead of re-hitting the API.
+  let lastChecked: { value: string; error?: Error } | undefined
+
+  const flushPending = (error?: Error) => {
+    const callbacks = pendingCallbacks
+    pendingCallbacks = []
+    callbacks.forEach((cb) => cb(error))
+  }
+
   return {
-    asyncValidator: async (_rule, value: string, callback) => {
-      return new Promise(function () {
+    // async-validator attaches its own .then() to whatever this returns and, the moment that
+    // promise settles, calls the field's callback again with no error - silently forcing the
+    // field back to "valid" regardless of what our own callback() calls below determine. So this
+    // must stay wrapped in a Promise that never resolves/rejects; only our own callback(...)
+    // calls (via the debounce below) may ever settle the field's real validation state.
+    asyncValidator: (_rule, value: string, callback: (error?: Error) => void) => {
+      return new Promise<void>(() => {
+        if (!value?.trim()) {
+          if (debounceTimeout !== undefined) {
+            window.clearTimeout(debounceTimeout)
+            debounceTimeout = undefined
+          }
+          flushPending()
+          if (validationStatus) validationStatus.value = AsyncValidationState.Idle
+          callback()
+          return
+        }
+
+        pendingCallbacks.push(callback)
         if (debounceTimeout !== undefined) {
           window.clearTimeout(debounceTimeout)
-          debounceTimeout = undefined
         }
+        if (validationStatus) validationStatus.value = AsyncValidationState.Validating
 
         debounceTimeout = window.setTimeout(
           async () => {
-            const proposalStore = useProposalStore()
-            const isUnique = await proposalStore.checkUnique(value, proposalId.value)
+            debounceTimeout = undefined
 
-            if (isUnique === true) {
-              callback()
-            } else {
-              callback(new Error(t('proposal.thereIsAlreadyExistingProposalWithTheName')))
+            if (lastChecked && lastChecked.value === value) {
+              if (validationStatus) {
+                validationStatus.value = lastChecked.error ? AsyncValidationState.Error : AsyncValidationState.Success
+              }
+              flushPending(lastChecked.error)
+              return
+            }
+
+            try {
+              const proposalStore = useProposalStore()
+              const isUnique = await proposalStore.checkUnique(value, proposalId.value)
+
+              if (isUnique === true) {
+                lastChecked = { value }
+                if (validationStatus) validationStatus.value = AsyncValidationState.Success
+                flushPending()
+              } else {
+                // Already has visible feedback via the field's own red border + inline message -
+                // no need for a notification on top.
+                const error = new Error(t('proposal.thereIsAlreadyExistingProposalWithTheName'))
+                lastChecked = { value, error }
+                if (validationStatus) validationStatus.value = AsyncValidationState.Error
+                flushPending(error)
+              }
+            } catch {
+              // Network/API failure: don't leave the callback hanging (that's what previously
+              // left the field stuck 'validating' forever with no red border and no message).
+              // Not cached, so the next trigger retries for real instead of repeating the failure.
+              const message = t('proposal.projectAbbreviationCheckFailed')
+              if (validationStatus) validationStatus.value = AsyncValidationState.Error
+              onCheckFailed?.(message)
+              flushPending(new Error(message))
             }
           },
           bypassDebounce.value ? 0 : debounceTime,

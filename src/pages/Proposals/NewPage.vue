@@ -36,7 +36,38 @@
                     data-test-id="proposalForm.projectAbbreviation"
                     placeholder="proposal.egWestStorm"
                     :disabled="isReviewMode"
-                  />
+                  >
+                    <template #suffix>
+                      <el-icon
+                        v-if="projectAbbreviationValidationStatus === AsyncValidationState.Validating"
+                        class="is-loading fdpg-validation-icon fdpg-validation-icon--loading"
+                        data-test-id="proposalForm.projectAbbreviation.validating"
+                      >
+                        <Loading />
+                      </el-icon>
+                      <el-icon
+                        v-else-if="projectAbbreviationValidationStatus === AsyncValidationState.Success"
+                        class="fdpg-validation-icon fdpg-validation-icon--success"
+                        data-test-id="proposalForm.projectAbbreviation.success"
+                      >
+                        <CircleCheck />
+                      </el-icon>
+                      <el-icon
+                        v-else-if="projectAbbreviationValidationStatus === AsyncValidationState.Error"
+                        class="fdpg-validation-icon fdpg-validation-icon--error"
+                        data-test-id="proposalForm.projectAbbreviation.error"
+                      >
+                        <CircleClose />
+                      </el-icon>
+                    </template>
+                  </FdpgInput>
+                  <span
+                    v-if="projectAbbreviationValidationStatus === AsyncValidationState.Validating"
+                    class="fdpg-validation-hint"
+                    data-test-id="proposalForm.projectAbbreviation.validatingHint"
+                  >
+                    {{ $t('proposal.checkingProjectAbbreviation') }}
+                  </span>
                 </FdpgFormItem>
               </el-col>
               <el-col :sm="24">
@@ -331,6 +362,7 @@ import { useCommentStore } from '@/stores/comment/comment.store'
 import { useLayoutStore } from '@/stores/layout.store'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import { Role } from '@/types/oidc.types'
+import { AsyncValidationState } from '@/types/component.types'
 import { PlatformIdentifier } from '@/types/platform-identifier.enum'
 import type { IProposal, IUserProject } from '@/types/proposal.types'
 import { ProposalStatus, ProposalTypeOfUse } from '@/types/proposal.types'
@@ -350,6 +382,7 @@ import {
 } from '@/validations'
 import type { ValidateFieldsError, RuleItem } from 'async-validator'
 import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp, type FormItemRule } from 'element-plus'
+import { CircleCheck, CircleClose, Loading } from '@element-plus/icons-vue'
 import type { PropType, Ref } from 'vue'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -488,6 +521,7 @@ const formRef = ref<FormInstance>()
 const fileList = ref([])
 
 const bypassDebounce = ref(false)
+const projectAbbreviationValidationStatus = ref<AsyncValidationState>(AsyncValidationState.Idle)
 const isAutoSaving = ref(false)
 const hasFormChanged = ref(false)
 const isBiosampleToggleInProgress = ref(false)
@@ -534,7 +568,9 @@ const rules = computed(() => ({
   projectAbbreviation: [
     requiredValidationFunc('string'),
     specialCharactersValidationFunc(),
-    projectAbbreviationValidationFunc(proposalId, bypassDebounce),
+    projectAbbreviationValidationFunc(proposalId, bypassDebounce, projectAbbreviationValidationStatus, (message) =>
+      showErrorMessage(message),
+    ),
     maxLengthValidationFunc(25),
   ],
   participants: [
@@ -1678,6 +1714,13 @@ onMounted(async () => {
   flex-direction: column;
   padding-bottom: 100px;
   position: relative;
+
+  .fdpg-validation-hint {
+    display: block;
+    color: $blue;
+    font-size: 12px;
+    margin-top: 4px;
+  }
 
   .lead {
     margin-bottom: 37px;

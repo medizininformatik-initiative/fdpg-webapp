@@ -8,7 +8,11 @@
     @blur="handleBlur"
     @focus="handleFocus"
     :disabled="isDisabled"
-  />
+  >
+    <template v-if="$slots.suffix" #suffix>
+      <slot name="suffix" />
+    </template>
+  </el-input>
 </template>
 
 <script setup lang="ts">
@@ -80,6 +84,22 @@ const handleBlur = (e: FocusEvent) => {
         font-weight: 500;
         transition-property: border-color;
       }
+    }
+  }
+
+  .fdpg-validation-icon {
+    font-size: 20px;
+
+    &--loading {
+      color: $blue;
+    }
+
+    &--success {
+      color: $green;
+    }
+
+    &--error {
+      color: $error;
     }
   }
 
