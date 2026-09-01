@@ -3,6 +3,13 @@ export enum FdpgInputSize {
   Small = 'small',
 }
 
+export enum AsyncValidationState {
+  Idle = 'idle',
+  Validating = 'validating',
+  Success = 'success',
+  Error = 'error',
+}
+
 export enum CardType {
   Draft = 'Draft',
   ComingUp = 'ComingUp',

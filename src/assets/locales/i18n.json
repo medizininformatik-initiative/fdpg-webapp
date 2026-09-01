@@ -1463,7 +1463,7 @@
       "en": "As a data provider you have to specify a quantity"
     },
     "dataVolume": {
-      "de": "Datenmenge (Anzahl Patienten/Fälle)",
+      "de": "Datenmenge (Anzahl Patienten)",
       "en": "Data volume"
     },
     "proposedDataVolume": {

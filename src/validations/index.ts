@@ -1,10 +1,20 @@
 import { i18n } from '@/plugins/i18n'
 import { useProposalStore } from '@/stores/proposal/proposal.store'
 import type { IUpload } from '@/types/proposal.types'
+import { AsyncValidationState } from '@/types/component.types'
 import type { Ref } from 'vue'
 import type { FormRules } from 'element-plus'
 
 const { t } = i18n.global
+
+// Mirrors fdpg-api's PROPOSAL_SHORTCUT_REGEX (src/shared/constants/regex.constants.ts) exactly -
+// keep both in sync. Without this, a value the backend's @Matches(PROPOSAL_SHORTCUT_REGEX) would
+// reject (e.g. leading/trailing whitespace) could still pass the uniqueness check here and show
+// as valid, only to fail once the proposal is actually saved.
+const PROJECT_ABBREVIATION_ALLOWED_CHARS = `[\\wÀ-ž&\\\\#/*?.:+\\-|@]`
+const PROJECT_ABBREVIATION_FORMAT_REGEX = new RegExp(
+  `^${PROJECT_ABBREVIATION_ALLOWED_CHARS}+(?:\\s${PROJECT_ABBREVIATION_ALLOWED_CHARS}+)*$`,
+)
 
 export const requiredValidationFunc = (
   type: 'array' | 'string' | 'number' | 'date' | 'boolean' | 'any' = 'any',
@@ -95,26 +105,121 @@ export const requiredIfEmptyValidationFunc = (
 export const projectAbbreviationValidationFunc = (
   proposalId: Ref<string | undefined>,
   bypassDebounce: Ref<boolean>,
+  validationStatus?: Ref<AsyncValidationState>,
+  onCheckFailed?: (message: string) => void,
 ) => {
   const debounceTime = 1500
   let debounceTimeout: number | undefined = undefined
+  // Every trigger (blur/change, plus programmatic validateField calls) shares this single
+  // debounce timer, so a call it supersedes must still be settled here - otherwise that
+  // caller's await on validateField hangs forever instead of just being superseded.
+  let pendingCallbacks: Array<(error?: Error) => void> = []
+  // trigger: ['blur', 'change'] means typing (debounced) and then leaving the field both fire a
+  // check. Without this, an unchanged value gets checked against the API twice in a row - once
+  // when the debounce settles, again on blur right after. Cache the last value actually checked
+  // (technical failures are not cached, so those retry) and reuse it instead of re-hitting the API.
+  let lastChecked: { value: string; error?: Error } | undefined
+  // Bumped on every invocation. checkUnique() is a real network call that can still be in flight
+  // when a newer invocation (e.g. the value becoming regex-invalid) already settled the field -
+  // its eventual resolution must not clobber that newer state, so it checks this before applying.
+  let currentGeneration = 0
+
+  const flushPending = (error?: Error) => {
+    const callbacks = pendingCallbacks
+    pendingCallbacks = []
+    callbacks.forEach((cb) => cb(error))
+  }
+
   return {
-    asyncValidator: async (_rule, value: string, callback) => {
-      return new Promise(function () {
+    // async-validator attaches its own .then() to whatever this returns and, the moment that
+    // promise settles, calls the field's callback again with no error - silently forcing the
+    // field back to "valid" regardless of what our own callback() calls below determine. So this
+    // must stay wrapped in a Promise that never resolves/rejects; only our own callback(...)
+    // calls (via the debounce below) may ever settle the field's real validation state.
+    asyncValidator: (_rule, value: string, callback: (error?: Error) => void) => {
+      return new Promise<void>(() => {
+        currentGeneration += 1
+        const myGeneration = currentGeneration
+
+        if (!value) {
+          // Truly empty - defer entirely to the separate `required` rule. A whitespace-only
+          // value (e.g. "   ") is NOT empty by that rule's own check (it only tests `!value`,
+          // not a trimmed one), so it falls through to the regex check below instead of landing
+          // here - and that regex correctly rejects it too, since it never starts with an
+          // allowed non-whitespace character.
+          if (debounceTimeout !== undefined) {
+            window.clearTimeout(debounceTimeout)
+            debounceTimeout = undefined
+          }
+          flushPending()
+          if (validationStatus) validationStatus.value = AsyncValidationState.Idle
+          callback()
+          return
+        }
+
+        if (!PROJECT_ABBREVIATION_FORMAT_REGEX.test(value)) {
+          // Fails the backend's format rule - reject immediately, without ever calling
+          // checkUnique, so an invalid value can never resolve to a false "success".
+          if (debounceTimeout !== undefined) {
+            window.clearTimeout(debounceTimeout)
+            debounceTimeout = undefined
+          }
+          flushPending()
+          if (validationStatus) validationStatus.value = AsyncValidationState.Error
+          callback(new Error(t('general.invalidField')))
+          return
+        }
+
+        pendingCallbacks.push(callback)
         if (debounceTimeout !== undefined) {
           window.clearTimeout(debounceTimeout)
-          debounceTimeout = undefined
         }
+        if (validationStatus) validationStatus.value = AsyncValidationState.Validating
 
         debounceTimeout = window.setTimeout(
           async () => {
-            const proposalStore = useProposalStore()
-            const isUnique = await proposalStore.checkUnique(value, proposalId.value)
+            debounceTimeout = undefined
 
-            if (isUnique === true) {
-              callback()
-            } else {
-              callback(new Error(t('proposal.thereIsAlreadyExistingProposalWithTheName')))
+            if (lastChecked && lastChecked.value === value) {
+              if (validationStatus) {
+                validationStatus.value = lastChecked.error ? AsyncValidationState.Error : AsyncValidationState.Success
+              }
+              flushPending(lastChecked.error)
+              return
+            }
+
+            try {
+              const proposalStore = useProposalStore()
+              const isUnique = await proposalStore.checkUnique(value, proposalId.value)
+
+              // A newer invocation (e.g. the value has since become regex-invalid, or changed
+              // again) already settled the field while this request was in flight - its callback
+              // was already resolved then, so applying this now-stale result would silently
+              // overwrite that newer, more current state (e.g. flipping the icon back to success).
+              if (myGeneration !== currentGeneration) return
+
+              if (isUnique === true) {
+                lastChecked = { value }
+                if (validationStatus) validationStatus.value = AsyncValidationState.Success
+                flushPending()
+              } else {
+                // Already has visible feedback via the field's own red border + inline message -
+                // no need for a notification on top.
+                const error = new Error(t('proposal.thereIsAlreadyExistingProposalWithTheName'))
+                lastChecked = { value, error }
+                if (validationStatus) validationStatus.value = AsyncValidationState.Error
+                flushPending(error)
+              }
+            } catch {
+              if (myGeneration !== currentGeneration) return
+
+              // Network/API failure: don't leave the callback hanging (that's what previously
+              // left the field stuck 'validating' forever with no red border and no message).
+              // Not cached, so the next trigger retries for real instead of repeating the failure.
+              const message = t('proposal.projectAbbreviationCheckFailed')
+              if (validationStatus) validationStatus.value = AsyncValidationState.Error
+              onCheckFailed?.(message)
+              flushPending(new Error(message))
             }
           },
           bypassDebounce.value ? 0 : debounceTime,
