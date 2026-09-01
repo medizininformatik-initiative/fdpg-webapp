@@ -7,6 +7,15 @@ import type { FormRules } from 'element-plus'
 
 const { t } = i18n.global
 
+// Mirrors fdpg-api's PROPOSAL_SHORTCUT_REGEX (src/shared/constants/regex.constants.ts) exactly -
+// keep both in sync. Without this, a value the backend's @Matches(PROPOSAL_SHORTCUT_REGEX) would
+// reject (e.g. leading/trailing whitespace) could still pass the uniqueness check here and show
+// as valid, only to fail once the proposal is actually saved.
+const PROJECT_ABBREVIATION_ALLOWED_CHARS = `[\\wÀ-ž&\\\\#/*?.:+\\-|@]`
+const PROJECT_ABBREVIATION_FORMAT_REGEX = new RegExp(
+  `^${PROJECT_ABBREVIATION_ALLOWED_CHARS}+(?:\\s${PROJECT_ABBREVIATION_ALLOWED_CHARS}+)*$`,
+)
+
 export const requiredValidationFunc = (
   type: 'array' | 'string' | 'number' | 'date' | 'boolean' | 'any' = 'any',
   required: boolean = true,
@@ -110,6 +119,10 @@ export const projectAbbreviationValidationFunc = (
   // when the debounce settles, again on blur right after. Cache the last value actually checked
   // (technical failures are not cached, so those retry) and reuse it instead of re-hitting the API.
   let lastChecked: { value: string; error?: Error } | undefined
+  // Bumped on every invocation. checkUnique() is a real network call that can still be in flight
+  // when a newer invocation (e.g. the value becoming regex-invalid) already settled the field -
+  // its eventual resolution must not clobber that newer state, so it checks this before applying.
+  let currentGeneration = 0
 
   const flushPending = (error?: Error) => {
     const callbacks = pendingCallbacks
@@ -125,7 +138,15 @@ export const projectAbbreviationValidationFunc = (
     // calls (via the debounce below) may ever settle the field's real validation state.
     asyncValidator: (_rule, value: string, callback: (error?: Error) => void) => {
       return new Promise<void>(() => {
-        if (!value?.trim()) {
+        currentGeneration += 1
+        const myGeneration = currentGeneration
+
+        if (!value) {
+          // Truly empty - defer entirely to the separate `required` rule. A whitespace-only
+          // value (e.g. "   ") is NOT empty by that rule's own check (it only tests `!value`,
+          // not a trimmed one), so it falls through to the regex check below instead of landing
+          // here - and that regex correctly rejects it too, since it never starts with an
+          // allowed non-whitespace character.
           if (debounceTimeout !== undefined) {
             window.clearTimeout(debounceTimeout)
             debounceTimeout = undefined
@@ -133,6 +154,19 @@ export const projectAbbreviationValidationFunc = (
           flushPending()
           if (validationStatus) validationStatus.value = AsyncValidationState.Idle
           callback()
+          return
+        }
+
+        if (!PROJECT_ABBREVIATION_FORMAT_REGEX.test(value)) {
+          // Fails the backend's format rule - reject immediately, without ever calling
+          // checkUnique, so an invalid value can never resolve to a false "success".
+          if (debounceTimeout !== undefined) {
+            window.clearTimeout(debounceTimeout)
+            debounceTimeout = undefined
+          }
+          flushPending()
+          if (validationStatus) validationStatus.value = AsyncValidationState.Error
+          callback(new Error(t('general.invalidField')))
           return
         }
 
@@ -158,6 +192,12 @@ export const projectAbbreviationValidationFunc = (
               const proposalStore = useProposalStore()
               const isUnique = await proposalStore.checkUnique(value, proposalId.value)
 
+              // A newer invocation (e.g. the value has since become regex-invalid, or changed
+              // again) already settled the field while this request was in flight - its callback
+              // was already resolved then, so applying this now-stale result would silently
+              // overwrite that newer, more current state (e.g. flipping the icon back to success).
+              if (myGeneration !== currentGeneration) return
+
               if (isUnique === true) {
                 lastChecked = { value }
                 if (validationStatus) validationStatus.value = AsyncValidationState.Success
@@ -171,6 +211,8 @@ export const projectAbbreviationValidationFunc = (
                 flushPending(error)
               }
             } catch {
+              if (myGeneration !== currentGeneration) return
+
               // Network/API failure: don't leave the callback hanging (that's what previously
               // left the field stuck 'validating' forever with no red border and no message).
               // Not cached, so the next trigger retries for real instead of repeating the failure.

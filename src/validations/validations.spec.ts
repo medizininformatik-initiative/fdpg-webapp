@@ -231,6 +231,89 @@ describe('Validations', () => {
       expect.assertions(1)
     })
 
+    describe('format check (mirrors the backend PROPOSAL_SHORTCUT_REGEX)', () => {
+      it.each([
+        [' test', 'leading space'],
+        ['test ', 'trailing space'],
+        ['te  st', 'double space'],
+        ['te;st', 'disallowed character'],
+      ])('rejects "%s" (%s) without ever calling the uniqueness check', async (value) => {
+        vi.useFakeTimers()
+        const validationStatus = ref(AsyncValidationState.Idle)
+        const result = projectAbbreviationValidationFunc(proposalId, bypassDebounce, validationStatus)
+        let callbackResult: any
+        const callback = vi.fn().mockImplementation((error) => {
+          callbackResult = error
+        })
+
+        mockedProposalStore.checkUnique.mockClear()
+        mockedProposalStore.checkUnique.mockResolvedValue(true)
+        result.asyncValidator({}, value, callback)
+
+        vi.runAllTimers()
+        const flushPromises = () => new Promise(setImmediate)
+        await flushPromises()
+
+        expect(callbackResult).toEqual(new Error('general.invalidField'))
+        expect(validationStatus.value).toEqual(AsyncValidationState.Error)
+        expect(mockedProposalStore.checkUnique).not.toHaveBeenCalled()
+      })
+
+      it.each([['test'], ['test-2'], ['te st'], ['a&b/c#d@e']])(
+        'accepts "%s" and proceeds to the uniqueness check',
+        async (value) => {
+          vi.useFakeTimers()
+          const result = projectAbbreviationValidationFunc(proposalId, bypassDebounce)
+          const callback = vi.fn()
+
+          mockedProposalStore.checkUnique.mockClear()
+          mockedProposalStore.checkUnique.mockResolvedValue(true)
+          result.asyncValidator({}, value, callback)
+
+          vi.runAllTimers()
+          const flushPromises = () => new Promise(setImmediate)
+          await flushPromises()
+
+          expect(mockedProposalStore.checkUnique).toHaveBeenCalledWith(value, 'proposalId')
+        },
+      )
+
+      it('does not let an in-flight (already unique) check overwrite a newer regex-invalid result', async () => {
+        vi.useFakeTimers()
+        const debounced = ref(false)
+        const validationStatus = ref(AsyncValidationState.Idle)
+        const result = projectAbbreviationValidationFunc(proposalId, debounced, validationStatus)
+        const flushPromises = () => new Promise(setImmediate)
+
+        let resolveCheckUnique: (value: boolean) => void
+        mockedProposalStore.checkUnique.mockClear()
+        mockedProposalStore.checkUnique.mockReturnValueOnce(
+          new Promise((resolve) => {
+            resolveCheckUnique = resolve
+          }),
+        )
+
+        // "test" is valid and passes format - starts the (still-pending) uniqueness check.
+        result.asyncValidator({}, 'test', vi.fn())
+        vi.runAllTimers()
+        await flushPromises()
+        expect(validationStatus.value).toEqual(AsyncValidationState.Validating)
+
+        // While that check is still in flight, the user keeps typing and the value becomes
+        // regex-invalid (trailing space) - this settles immediately as an error.
+        const laterCallback = vi.fn()
+        result.asyncValidator({}, 'test ', laterCallback)
+        expect(validationStatus.value).toEqual(AsyncValidationState.Error)
+        expect(laterCallback).toHaveBeenCalledWith(new Error('general.invalidField'))
+
+        // The original (now-stale) check finally resolves as unique.
+        resolveCheckUnique!(true)
+        await flushPromises()
+
+        expect(validationStatus.value).toEqual(AsyncValidationState.Error)
+      })
+    })
+
     it('should call the callback if the value is unique', async () => {
       vi.useFakeTimers()
       const result = projectAbbreviationValidationFunc(proposalId, bypassDebounce)
@@ -328,11 +411,27 @@ describe('Validations', () => {
       // The returned promise intentionally never settles (see the comment in the source) so
       // async-validator can't force a false "valid" callback of its own - only callback() drives
       // the result here, and it fires synchronously for the empty-value guard.
-      result.asyncValidator({}, '  ', callback)
+      result.asyncValidator({}, '', callback)
 
       expect(callback).toHaveBeenCalledWith()
       expect(mockedProposalStore.checkUnique).not.toHaveBeenCalled()
       expect(validationStatus.value).toEqual(AsyncValidationState.Idle)
+    })
+
+    it('rejects a whitespace-only value as invalid rather than treating it as empty/idle', () => {
+      const validationStatus = ref(AsyncValidationState.Idle)
+      const result = projectAbbreviationValidationFunc(proposalId, bypassDebounce, validationStatus)
+      const callback = vi.fn()
+
+      // async-validator's own `required` check only tests `!value`, so a whitespace-only value
+      // like "   " is NOT caught by `required` - it must be caught here instead, not waved
+      // through as idle, otherwise the field could end up looking fully valid with no content.
+      mockedProposalStore.checkUnique.mockClear()
+      result.asyncValidator({}, '   ', callback)
+
+      expect(callback).toHaveBeenCalledWith(new Error('general.invalidField'))
+      expect(mockedProposalStore.checkUnique).not.toHaveBeenCalled()
+      expect(validationStatus.value).toEqual(AsyncValidationState.Error)
     })
 
     it('does not re-check the API for an unchanged value on a later trigger (e.g. blur right after typing settles)', async () => {
