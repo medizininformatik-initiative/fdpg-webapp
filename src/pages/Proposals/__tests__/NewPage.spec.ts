@@ -287,6 +287,22 @@ describe('Newpage.vue', () => {
         })
       })
 
+      describe('handles a failed save', () => {
+        it('does not wipe unsaved form edits (e.g. a race where someone else took the abbreviation)', async () => {
+          proposalStore.updateProposal.mockRejectedValueOnce(new Error('duplicate'))
+          proposalStore.createProposal.mockRejectedValueOnce(new Error('duplicate'))
+
+          await wrapper.vm.$nextTick()
+          await flushPromises()
+          ;(wrapper.vm as any).proposalForm.projectAbbreviation = 'DCrops_V2'
+
+          await wrapper.vm.handleSaveDraft()
+          await flushPromises()
+
+          expect((wrapper.vm as any).proposalForm.projectAbbreviation).toBe('DCrops_V2')
+        })
+      })
+
       describe('handles submitting', () => {
         beforeEach(async () => {
           proposalStore.updateProposal.mockResolvedValueOnce({
@@ -412,6 +428,62 @@ describe('Newpage.vue', () => {
         expect(showErrorMessage).toHaveBeenCalledTimes(1)
       })
     })
+
+    describe.each([undefined, MOCK_PROPOSAL_ID])(
+      'Failed to save as draft due to backend field validation',
+      (proposalId?: string) => {
+        let authStore: MockedObject<ReturnType<typeof useAuthStore>>
+        beforeEach(() => {
+          createTestingPinia()
+          proposalStore = vi.mocked(useProposalStore())
+          commentStore = vi.mocked(useCommentStore())
+          authStore = vi.mocked(useAuthStore())
+
+          authStore.profile = {
+            sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+            email: 'lars.schaefer@appsfactory.de',
+          } as any
+
+          proposalStore.currentProposal = JSON.parse(
+            JSON.stringify({ ...mockProposal, status: ProposalStatus.Draft, _id: proposalId }),
+          )
+
+          const validationError = {
+            isAxiosError: true,
+            response: {
+              data: {
+                errors: [
+                  {
+                    constraint: 'isNotEmptyString',
+                    property: 'userProject.generalProjectInformation.projectTitle',
+                    message: 'projectTitle should not be an empty string',
+                  },
+                  {
+                    constraint: 'isEnum',
+                    property: 'userProject.typeOfUse.usage',
+                    message: 'each value in usage must be a valid enum value',
+                  },
+                ],
+              },
+            },
+          }
+          proposalStore.updateProposal.mockRejectedValueOnce(validationError)
+          proposalStore.createProposal.mockRejectedValueOnce(validationError)
+          wrapper = mountComponent(false) as any
+        })
+
+        it('lists the responsible fields with translated required/invalid hints', async () => {
+          const button = wrapper.find('[data-test-id="saveDraft"]')
+          await button.trigger('click')
+          await flushPromises()
+
+          expect(showErrorMessage).toHaveBeenCalledWith([
+            'proposal.projectTitle: general.requiredField',
+            'proposal.usage: general.invalidField',
+          ])
+        })
+      },
+    )
 
     describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to submit', (proposalId?: string) => {
       let authStore: MockedObject<ReturnType<typeof useAuthStore>>
