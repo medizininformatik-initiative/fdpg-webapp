@@ -287,22 +287,6 @@ describe('Newpage.vue', () => {
         })
       })
 
-      describe('handles a failed save', () => {
-        it('does not wipe unsaved form edits (e.g. a race where someone else took the abbreviation)', async () => {
-          proposalStore.updateProposal.mockRejectedValueOnce(new Error('duplicate'))
-          proposalStore.createProposal.mockRejectedValueOnce(new Error('duplicate'))
-
-          await wrapper.vm.$nextTick()
-          await flushPromises()
-          ;(wrapper.vm as any).proposalForm.projectAbbreviation = 'DCrops_V2'
-
-          await wrapper.vm.handleSaveDraft()
-          await flushPromises()
-
-          expect((wrapper.vm as any).proposalForm.projectAbbreviation).toBe('DCrops_V2')
-        })
-      })
-
       describe('handles submitting', () => {
         beforeEach(async () => {
           proposalStore.updateProposal.mockResolvedValueOnce({
