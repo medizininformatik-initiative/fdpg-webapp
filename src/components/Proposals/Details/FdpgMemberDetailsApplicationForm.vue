@@ -280,11 +280,7 @@ const topBarButtons = computed<IButtonConfig[]>(() => [
     testId: 'button__exportPdf',
     action: () => handleExportProposalPdfClick(),
     isLoading: isDownloadLoading.value,
-    isHidden: !(
-      status.value === ProposalStatus.Draft ||
-      status.value === ProposalStatus.FdpgCheck ||
-      status.value === ProposalStatus.Rework
-    ),
+    isHidden: ![ProposalStatus.Draft, ProposalStatus.FdpgCheck, ProposalStatus.Rework].includes(status.value),
   },
   {
     type: proposalStore.currentProposal?.isLocked ? 'success' : 'danger',
