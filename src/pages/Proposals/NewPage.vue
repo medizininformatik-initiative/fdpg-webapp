@@ -381,6 +381,7 @@ import {
   urlValidationFunc,
 } from '@/validations'
 import type { ValidateFieldsError, RuleItem } from 'async-validator'
+import axios from 'axios'
 import { ElButton, ElCol, ElForm, type FormInstance, type FormItemProp, type FormItemRule } from 'element-plus'
 import { CircleCheck, CircleClose, Loading } from '@element-plus/icons-vue'
 import type { PropType, Ref } from 'vue'
@@ -829,6 +830,34 @@ const raiseErrors = (invalidFields: ValidateFieldsError) => {
   showErrorMessage(errors)
 }
 
+interface IValidationErrorInfo {
+  constraint: string
+  message: string
+  property: string
+  code?: string
+}
+
+// ponytail: naive keyword heuristic for required-vs-invalid, upgrade to an explicit
+// constraint->label map if a constraint gets misclassified
+const isRequiredConstraint = (constraint: string) => /empty|defined|required/i.test(constraint)
+
+const translateValidationError = ({ constraint, property }: IValidationErrorInfo) => {
+  const translatedField = t(`proposal.${property.split('.').pop()}`)
+  const kind = t(isRequiredConstraint(constraint) ? 'general.requiredField' : 'general.invalidField')
+  return `${translatedField}: ${kind}`
+}
+
+// Handles both backend field validation errors (400 with { errors }) and generic failures
+const handleSaveError = (error: unknown) => {
+  const validationErrors = axios.isAxiosError(error) ? error.response?.data?.errors : undefined
+  if (Array.isArray(validationErrors) && validationErrors.length > 0) {
+    showErrorMessage(validationErrors.map(translateValidationError))
+    return
+  }
+  const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
+  showErrorMessage(errorMessage)
+}
+
 const handleExportProposalPdfClick = async () => {
   if (proposalId.value && !isDownloadLoading.value) {
     await downloadFile()
@@ -853,8 +882,7 @@ const handleTermsConfirm = async () => {
     showSuccessMessage(t('general.submitted'))
     router.push({ name: RouteName.Dashboard })
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
-    showErrorMessage(errorMessage)
+    handleSaveError(error)
   }
 }
 
@@ -1180,8 +1208,7 @@ const saveProposalWithMessage = async () => {
     proposalStore.currentProposal = transformForm(saveResult) as IProposal
     showSuccessMessage(t('general.savedAsDraft'))
   } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : t('general.failedSubmit')
-    showErrorMessage(errorMessage)
+    handleSaveError(error)
   }
 }
 
