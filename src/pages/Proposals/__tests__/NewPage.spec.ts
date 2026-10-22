@@ -413,6 +413,62 @@ describe('Newpage.vue', () => {
       })
     })
 
+    describe.each([undefined, MOCK_PROPOSAL_ID])(
+      'Failed to save as draft due to backend field validation',
+      (proposalId?: string) => {
+        let authStore: MockedObject<ReturnType<typeof useAuthStore>>
+        beforeEach(() => {
+          createTestingPinia()
+          proposalStore = vi.mocked(useProposalStore())
+          commentStore = vi.mocked(useCommentStore())
+          authStore = vi.mocked(useAuthStore())
+
+          authStore.profile = {
+            sub: 'a7fb1f28-8680-4453-92d8-ff5b153911c8',
+            email: 'lars.schaefer@appsfactory.de',
+          } as any
+
+          proposalStore.currentProposal = JSON.parse(
+            JSON.stringify({ ...mockProposal, status: ProposalStatus.Draft, _id: proposalId }),
+          )
+
+          const validationError = {
+            isAxiosError: true,
+            response: {
+              data: {
+                errors: [
+                  {
+                    constraint: 'isNotEmptyString',
+                    property: 'userProject.generalProjectInformation.projectTitle',
+                    message: 'projectTitle should not be an empty string',
+                  },
+                  {
+                    constraint: 'isEnum',
+                    property: 'userProject.typeOfUse.usage',
+                    message: 'each value in usage must be a valid enum value',
+                  },
+                ],
+              },
+            },
+          }
+          proposalStore.updateProposal.mockRejectedValueOnce(validationError)
+          proposalStore.createProposal.mockRejectedValueOnce(validationError)
+          wrapper = mountComponent(false) as any
+        })
+
+        it('lists the responsible fields with translated required/invalid hints', async () => {
+          const button = wrapper.find('[data-test-id="saveDraft"]')
+          await button.trigger('click')
+          await flushPromises()
+
+          expect(showErrorMessage).toHaveBeenCalledWith([
+            'proposal.projectTitle: general.requiredField',
+            'proposal.usage: general.invalidField',
+          ])
+        })
+      },
+    )
+
     describe.each([undefined, MOCK_PROPOSAL_ID])('Failed to submit', (proposalId?: string) => {
       let authStore: MockedObject<ReturnType<typeof useAuthStore>>
       beforeEach(() => {
