@@ -4,11 +4,11 @@ const PublicGoogleSheetsParser = require('public-google-sheets-parser')
 
 /**
  * This ID can be extracted from the Google Docs URL
- * https://docs.google.com/spreadsheets/d/1LdXRWTpKVwk8Zgfzb4467hIbOqvIr5TIIv5zjYCz1fA
+ * https://docs.google.com/spreadsheets/d/1725pmNZUL7A1-GiGY2I4SrzQxE5Jg64LvqVN7c3NeCw
  * Duplicate it via "File -> Make a copy" and make it accessible to "Anyone with the link"
  * When adding a new category add the sheet name into the 'index' sheet
  */
-const SPREADSHEET_ID = '1LdXRWTpKVwk8Zgfzb4467hIbOqvIr5TIIv5zjYCz1fA'
+const SPREADSHEET_ID = '1725pmNZUL7A1-GiGY2I4SrzQxE5Jg64LvqVN7c3NeCw'
 const OUTPUT_PATH = path.resolve(__dirname, '../locales')
 
 const getSheet = (spreadsheetId, sheetName) => {
