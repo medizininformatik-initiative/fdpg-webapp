@@ -385,8 +385,6 @@
     "saveDraft": "Save application",
     "submitApplication": "Submit application",
     "thereIsAlreadyExistingProposalWithTheName": "There is already existing proposal with the name",
-    "projectAbbreviationCheckFailed": "The project abbreviation could not be verified. Please check your connection and try again.",
-    "checkingProjectAbbreviation": "Checking availability…",
     "participantsAreRequired": "It is required to provide participants",
     "leaveAComment": "Leave a Comment...",
     "department": "Department",
@@ -670,7 +668,7 @@
     "checklistTitle": "Application processing",
     "DICpreCheck": "Are ICD, LOINC and ATC codes defined? Has consideration been given to the fact that several LOINC codes may be applicable?",
     "titleUnique": "The title and project content are unique.",
-    "realisticDuration": "The project duration is at least 12 months, and the project start date is at least two months in the future.",
+    "realisticDuration": "The project duration is at least 12 months, and the project start date is at least two months in the future. Will there be more than one data delivery?",
     "analysisPlanClear": "Clear description of the analysis plan and meta-analysis across multiple sites.",
     "exampleScriptsAttached": "Sample scripts, algorithms as attachments or links.",
     "distributedAnalysis": "Distributed analysis using",
@@ -874,7 +872,9 @@
     "selectDocumentType": "Select document type",
     "feasibilityDocuments": "Feasibility Documents",
     "institutePlaceholder": "Please select the location ",
-    "parameter": "Parameter"
+    "parameter": "Parameter",
+    "projectAbbreviationCheckFailed": "The project abbreviation could not be verified. Please check your connection and try again.",
+    "checkingProjectAbbreviation": "Checking availability…"
   },
   "roles": {
     "FdpgMember": "FDPG Employee",

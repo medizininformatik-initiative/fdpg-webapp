@@ -11,7 +11,9 @@
       :placement="placement"
     >
       <template #header>
-        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll"> All </el-checkbox>
+        <el-checkbox v-model="checkAll" :indeterminate="indeterminate" @change="handleCheckAll">{{
+          t('general.selectAll')
+        }}</el-checkbox>
       </template>
       <el-option
         v-for="item in locationOptions"
